@@ -1,0 +1,27 @@
+[gd_scene load_steps=4 format=3 uid="uid://ced7xhu6jah7w"]
+
+[ext_resource type="Script" uid="uid://374o2dbtf0tj" path="res://Code/Godot/MainScene.cs" id="1_hpc76"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_hpc76"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tr2i4"]
+albedo_color = Color(0.0031137874, 0.0078549795, 0.010090075, 1)
+
+[node name="MainScene" type="Node3D"]
+script = ExtResource("1_hpc76")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(0.1851791, 0.5736109, -0.79792184, 0.028234283, 0.8085242, 0.58778524, 0.9822991, -0.1313743, 0.1335263, -3.89, 2.065, -3.405)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 2.695)
+light_energy = 5.0
+shadow_enabled = true
+shadow_blur = 5.0
+omni_range = 50.0
+omni_attenuation = 0.5
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, -1.001, 0)
+mesh = SubResource("PlaneMesh_hpc76")
+surface_material_override/0 = SubResource("StandardMaterial3D_tr2i4")
