@@ -15,7 +15,7 @@ public static class KoreColorIO
     {
         if (value < 0f) return 0;
         if (value > 1f) return 255;
-        return (byte)(value * 255);
+        return (byte)(value * 255f);
     }
 
     public static float ByteToFloat(byte value)
@@ -41,7 +41,7 @@ public static class KoreColorIO
 
     public static string RBGtoDecimalString(KoreColorRGB rgb)
     {
-        return $"R:{rgb.R:F2}, G:{rgb.G:F2}, B:{rgb.B:F2}, A:{rgb.A:F2}";
+        return $"R:{rgb.R}, G:{rgb.G}, B:{rgb.B}, A:{rgb.A}";
     }
 
     public static string HSVtoDecimalString(KoreColorHSV hsv)

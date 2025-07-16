@@ -11,10 +11,10 @@ public struct KoreColorRGB
     public byte B { get; set; }
     public byte A { get; set; }
 
-    public float Rf => R / (float)KoreColorIO.MaxByte;
-    public float Gf => G / (float)KoreColorIO.MaxByte;
-    public float Bf => B / (float)KoreColorIO.MaxByte;
-    public float Af => A / (float)KoreColorIO.MaxByte;
+    public float Rf => KoreColorIO.ByteToFloat(R);
+    public float Gf => KoreColorIO.ByteToFloat(G);
+    public float Bf => KoreColorIO.ByteToFloat(B);
+    public float Af => KoreColorIO.ByteToFloat(A);
 
     public bool IsTransparent => (A < KoreColorIO.MaxByte);
 

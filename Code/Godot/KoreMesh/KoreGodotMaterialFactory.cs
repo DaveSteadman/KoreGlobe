@@ -14,6 +14,8 @@ public static class KoreGodotMaterialFactory
         return material;
     }
 
+    // --------------------------------------------------------------------------------------------
+
     // Function to create a transparent colored material
     // Color Alpha value sets the extent of transparency
     public static StandardMaterial3D TransparentColoredMaterial(Color color)
@@ -24,7 +26,8 @@ public static class KoreGodotMaterialFactory
 
         return material;
     }
-    
+
+    // --------------------------------------------------------------------------------------------
 
     // Usage: ShaderMaterial vertexColorMaterial = KoreGodotMaterialFactory.VertexColorMaterial();
     public static ShaderMaterial VertexColorMaterial()
@@ -47,15 +50,18 @@ void fragment() {
 
         Shader shader = new Shader();
         shader.Code = shaderCode;
-        
+
         ShaderMaterial material = new ShaderMaterial();
         material.Shader = shader;
-        
+
         return material;
-    }    
+    }
+
+    // --------------------------------------------------------------------------------------------
 
     // Function to create a vertex-colored transparent material
     // Uses vertex colors for both color and transparency
+    // Usage: StandardMaterial3D material = KoreGodotMaterialFactory.VertexColorTransparentMaterial();
     public static StandardMaterial3D VertexColorTransparentMaterial()
     {
         StandardMaterial3D material = new StandardMaterial3D();
@@ -64,7 +70,12 @@ void fragment() {
         material.VertexColorUseAsAlbedo = true; // Use vertex colors as the albedo
         material.NoDepthTest = false; // Keep depth testing for proper sorting
         material.CullMode = BaseMaterial3D.CullModeEnum.Back; // Standard back-face culling
-        
+
         return material;
     }
 }
+
+
+
+
+

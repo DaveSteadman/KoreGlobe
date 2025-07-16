@@ -103,23 +103,25 @@ public partial class KoreGodotSurfaceMesh : Node3D
             _surfaceTool.AddIndex(indexC);
         }
 
-        // Check if any vertex colors have transparency
-        bool hasTransparency = false;
-        foreach (var vertexColor in newMeshData.VertexColors.Values)
-        {
-            if (vertexColor.A < 1.0f)
-            {
-                hasTransparency = true;
-                break;
-            }
-        }
+        // // Check if any vertex colors have transparency
+        // bool hasTransparency = false;
+        // foreach (var vertexColor in newMeshData.VertexColors.Values)
+        // {
+        //     if (vertexColor.A < 1.0f)
+        //     {
+        //         hasTransparency = true;
+        //         break;
+        //     }
+        // }
 
         // Choose material based on whether transparency is needed
-        StandardMaterial3D material;
+        // StandardMaterial3D material;
         // if (hasTransparency)
         // {
             // Use the new vertex color transparent material
-            material = KoreGodotMaterialFactory.TransparentColoredMaterial(new Color(1, 0, 0, 0.5f));
+        StandardMaterial3D material = KoreGodotMaterialFactory.TransparentColoredMaterial(new Color(1, 0, 0, 0.5f));
+        ShaderMaterial material2 = KoreGodotMaterialFactory.VertexColorMaterial();
+        StandardMaterial3D material3 = KoreGodotMaterialFactory.VertexColorTransparentMaterial();
         // }
         // else
         // {

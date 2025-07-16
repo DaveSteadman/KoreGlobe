@@ -24,7 +24,7 @@ public partial class MainScene : Node3D
         // You can use 'delta' to make frame-rate independent calculations.
         // GD.Print("Processing frame with delta: " + delta);
 
-    }
+    } 
 
 
     // ---------------------------------------------------------------------------------------------

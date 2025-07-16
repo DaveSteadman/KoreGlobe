@@ -173,13 +173,15 @@ public static partial class KoreMeshDataPrimitives
         // Using the EXACT same triangle winding as the working BasicCube function
         // Each triangle automatically calculates and assigns the correct face normal
 
+        float noiseFactor = 0.1f; // Adjust noise factor as needed
+
         // Copy the triangulation from BasicCube (which works perfectly)
-        mesh.AddIsolatedTriangle(v0, v1, v2, color, color); mesh.AddIsolatedTriangle(v0, v2, v3, color, color);
-        mesh.AddIsolatedTriangle(v0, v3, v4, color, color); mesh.AddIsolatedTriangle(v3, v7, v4, color, color);
-        mesh.AddIsolatedTriangle(v4, v7, v6, color, color); mesh.AddIsolatedTriangle(v4, v6, v5, color, color);
-        mesh.AddIsolatedTriangle(v5, v6, v2, color, color); mesh.AddIsolatedTriangle(v5, v2, v1, color, color);
-        mesh.AddIsolatedTriangle(v2, v7, v3, color, color); mesh.AddIsolatedTriangle(v2, v6, v7, color, color); // top
-        mesh.AddIsolatedTriangle(v0, v5, v1, color, color); mesh.AddIsolatedTriangle(v0, v4, v5, color, color); // bottom
+        mesh.AddIsolatedTriangle(v0, v1, v2, KoreColorOps.ColorWithRGBNoise(color, noiseFactor), color); mesh.AddIsolatedTriangle(v0, v2, v3, KoreColorOps.ColorWithRGBNoise(color, noiseFactor), color);
+        mesh.AddIsolatedTriangle(v0, v3, v4, KoreColorOps.ColorWithRGBNoise(color, noiseFactor), color); mesh.AddIsolatedTriangle(v3, v7, v4, KoreColorOps.ColorWithRGBNoise(color, noiseFactor), color);
+        mesh.AddIsolatedTriangle(v4, v7, v6, KoreColorOps.ColorWithRGBNoise(color, noiseFactor), color); mesh.AddIsolatedTriangle(v4, v6, v5, KoreColorOps.ColorWithRGBNoise(color, noiseFactor), color);
+        mesh.AddIsolatedTriangle(v5, v6, v2, KoreColorOps.ColorWithRGBNoise(color, noiseFactor), color); mesh.AddIsolatedTriangle(v5, v2, v1, KoreColorOps.ColorWithRGBNoise(color, noiseFactor), color);
+        mesh.AddIsolatedTriangle(v2, v7, v3, KoreColorOps.ColorWithRGBNoise(color, noiseFactor), color); mesh.AddIsolatedTriangle(v2, v6, v7, KoreColorOps.ColorWithRGBNoise(color, noiseFactor), color); // top
+        mesh.AddIsolatedTriangle(v0, v5, v1, KoreColorOps.ColorWithRGBNoise(color, noiseFactor), color); mesh.AddIsolatedTriangle(v0, v4, v5, KoreColorOps.ColorWithRGBNoise(color, noiseFactor), color); // bottom
 
         // Add wireframe lines using the same 8 corner vertices
         int lv0 = mesh.AddVertex(v0, null, color);

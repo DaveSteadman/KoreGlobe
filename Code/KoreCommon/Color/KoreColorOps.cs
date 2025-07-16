@@ -1,4 +1,5 @@
 using System;
+using Godot;
 
 // Static class to convert color structs
 namespace KoreCommon;
@@ -59,14 +60,23 @@ public static class KoreColorOps
 
     // Function to output a new color with a random noise factor on each RGB channel
 
-    // KoreColorUtil.ColorWithRGBNoise(new Color(0.5f, 0.5f, 0.5f), 0.1f);
-
+    // KoreColorRGB noiseCol = KoreColorOps.ColorWithRGBNoise(originalColor, 0.1f);
     public static KoreColorRGB ColorWithRGBNoise(KoreColorRGB color, float fractionNoise)
     {
-        float r = KoreValueUtils.Clamp(color.R + (float)(rnd.NextDouble() - 0.5f) * fractionNoise, 0f, 1f);
-        float g = KoreValueUtils.Clamp(color.G + (float)(rnd.NextDouble() - 0.5f) * fractionNoise, 0f, 1f);
-        float b = KoreValueUtils.Clamp(color.B + (float)(rnd.NextDouble() - 0.5f) * fractionNoise, 0f, 1f);
-        return new KoreColorRGB(r, g, b, color.A);
+        float rfnoise = (float)(rnd.NextDouble() - 0.5f) * fractionNoise;
+        float gfnoise = (float)(rnd.NextDouble() - 0.5f) * fractionNoise;
+        float bfnoise = (float)(rnd.NextDouble() - 0.5f) * fractionNoise;
+
+        float rf = KoreValueUtils.Clamp(color.Rf + rfnoise, 0f, 1f);
+        float gf = KoreValueUtils.Clamp(color.Gf + gfnoise, 0f, 1f);
+        float bf = KoreValueUtils.Clamp(color.Bf + bfnoise, 0f, 1f);
+
+
+        KoreColorRGB newColor = new KoreColorRGB(rf, gf, bf, color.Af);
+        
+        GD.Print($"ColorWithRGBNoise: Original: {KoreColorIO.RBGtoDecimalString(color)}, Noise: ({rfnoise:F2}, {gfnoise:F2}, {bfnoise:F2}), New: {KoreColorIO.RBGtoDecimalString(newColor)}");
+
+        return newColor;
     }
 
     // --------------------------------------------------------------------------------------------
