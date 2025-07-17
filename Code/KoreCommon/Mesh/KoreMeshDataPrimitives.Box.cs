@@ -173,7 +173,7 @@ public static partial class KoreMeshDataPrimitives
         // Using the EXACT same triangle winding as the working BasicCube function
         // Each triangle automatically calculates and assigns the correct face normal
 
-        float noiseFactor = 0.1f; // Adjust noise factor as needed
+        float noiseFactor = 0.8f; // Adjust noise factor as needed
 
         // Copy the triangulation from BasicCube (which works perfectly)
         mesh.AddIsolatedTriangle(v0, v1, v2, KoreColorOps.ColorWithRGBNoise(color, noiseFactor), color); mesh.AddIsolatedTriangle(v0, v2, v3, KoreColorOps.ColorWithRGBNoise(color, noiseFactor), color);

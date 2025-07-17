@@ -132,7 +132,7 @@ public partial class KoreGodotSurfaceMesh : Node3D
         // Commit the mesh and assign it to the MeshInstance3D
         Mesh mesh = _surfaceTool.Commit();
         _meshInstance.Mesh = mesh;
-        _meshInstance.MaterialOverride = material;
+        _meshInstance.MaterialOverride = material2;
 
         _meshNeedsUpdate = false;
     }

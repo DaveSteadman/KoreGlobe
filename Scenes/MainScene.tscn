@@ -1,27 +1,96 @@
-[gd_scene load_steps=4 format=3 uid="uid://ced7xhu6jah7w"]
+[gd_scene load_steps=9 format=3 uid="uid://ced7xhu6jah7w"]
 
 [ext_resource type="Script" uid="uid://374o2dbtf0tj" path="res://Code/Godot/MainScene.cs" id="1_hpc76"]
+[ext_resource type="Script" uid="uid://cp231wjyfg10i" path="res://Code/Godot/KoreNodeMover.cs" id="2_tr2i4"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_hpc76"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tr2i4"]
 albedo_color = Color(0.0031137874, 0.0078549795, 0.010090075, 1)
 
+[sub_resource type="BoxMesh" id="BoxMesh_tr2i4"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7rqgy"]
+vertex_color_use_as_albedo = true
+metallic = 0.51
+metallic_specular = 0.55
+roughness = 0.65
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nhkr4"]
+metallic = 1.0
+emission_enabled = true
+emission = Color(0, 0.8120254, 0.8120254, 1)
+emission_energy_multiplier = 21.55
+emission_on_uv2 = true
+rim_enabled = true
+subsurf_scatter_strength = 0.68
+disable_receive_shadows = true
+
+[sub_resource type="SphereMesh" id="SphereMesh_7rqgy"]
+
 [node name="MainScene" type="Node3D"]
 script = ExtResource("1_hpc76")
 
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(0.1851791, 0.5736109, -0.79792184, 0.028234283, 0.8085242, 0.58778524, 0.9822991, -0.1313743, 0.1335263, -3.89, 2.065, -3.405)
+[node name="CameraMount" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5)
+script = ExtResource("2_tr2i4")
 
-[node name="OmniLight3D" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 2.695)
-light_energy = 5.0
+[node name="Camera3D" type="Camera3D" parent="CameraMount"]
+transform = Transform3D(1, -1.4901161e-08, 0, 1.4901161e-08, 1, 0, 2.9802322e-08, 0, 1, 0, 0, 0)
+fov = 50.0
+
+[node name="OmniLight3D-Magenta" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.346623, 2.150301, -6.9993267)
+light_color = Color(1, 0, 1, 1)
+light_energy = 8.0
 shadow_enabled = true
 shadow_blur = 5.0
 omni_range = 50.0
 omni_attenuation = 0.5
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="OmniLight3D-Green" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.2500763, 1.8530807, 0.1592133)
+light_color = Color(0, 0.66888636, 0.19879529, 1)
+light_energy = 12.0
+shadow_enabled = true
+shadow_blur = 5.0
+omni_range = 50.0
+omni_attenuation = 0.5
+
+[node name="OmniLight3D-Yellow" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.693246, 19.314701, 4.1954365)
+light_color = Color(0.784544, 0.64490634, 0.06742191, 1)
+light_energy = 8.0
+shadow_enabled = true
+shadow_blur = 5.0
+omni_range = 50.0
+omni_attenuation = 0.01
+
+[node name="MeshInstance3D-Plane" type="MeshInstance3D" parent="."]
 transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, -1.001, 0)
 mesh = SubResource("PlaneMesh_hpc76")
 surface_material_override/0 = SubResource("StandardMaterial3D_tr2i4")
+
+[node name="MeshInstance3D-TestCube" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.7850225, -0.28801394, -2.916768)
+gi_mode = 2
+mesh = SubResource("BoxMesh_tr2i4")
+skeleton = NodePath("../MeshInstance3D-OrbLight")
+surface_material_override/0 = SubResource("StandardMaterial3D_7rqgy")
+
+[node name="MeshInstance3D-OrbLight" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.665, -4.272)
+material_override = SubResource("StandardMaterial3D_nhkr4")
+gi_mode = 2
+mesh = SubResource("SphereMesh_7rqgy")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="MeshInstance3D-OrbLight"]
+light_color = Color(0, 0.61914825, 0.6124426, 1)
+light_energy = 16.0
+light_size = 0.3
+light_specular = 0.3
+shadow_enabled = true
+distance_fade_enabled = true
+omni_range = 20.0
+omni_attenuation = 0.1
+omni_shadow_mode = 0

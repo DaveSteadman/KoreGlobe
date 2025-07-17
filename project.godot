@@ -18,6 +18,7 @@ config/icon="res://icon.svg"
 
 project/assembly_name="KoreCommonTest"
 
+
 [rendering]
 
 anti_aliasing/quality/msaa_3d=1
