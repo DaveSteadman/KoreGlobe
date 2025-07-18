@@ -16,6 +16,24 @@ public static class KoreGodotMaterialFactory
 
     // --------------------------------------------------------------------------------------------
 
+    // Function to create a standard colored material (opaque with proper lighting)
+    // This is the basic material that casts shadows properly
+    public static StandardMaterial3D StandardColoredMaterial(Color color)
+    {
+        StandardMaterial3D material = new StandardMaterial3D();
+        material.AlbedoColor = color;
+        material.Roughness = 0.7f;
+        material.Metallic = 0.0f;
+        
+        // Settings to help with smooth shading
+        material.ShadingMode = BaseMaterial3D.ShadingModeEnum.PerPixel;
+        material.SpecularMode = BaseMaterial3D.SpecularModeEnum.SchlickGgx;
+        
+        return material;
+    }
+
+    // --------------------------------------------------------------------------------------------
+
     // Function to create a transparent colored material
     // Color Alpha value sets the extent of transparency
     public static StandardMaterial3D TransparentColoredMaterial(Color color)
@@ -59,20 +77,48 @@ void fragment() {
 
     // --------------------------------------------------------------------------------------------
 
-    // Function to create a vertex-colored transparent material
-    // Uses vertex colors for both color and transparency
-    // Usage: StandardMaterial3D material = KoreGodotMaterialFactory.VertexColorTransparentMaterial();
-    public static StandardMaterial3D VertexColorTransparentMaterial()
+    // Function to create a vertex-colored material (opaque with proper lighting)
+    // Uses vertex colors but with StandardMaterial3D for proper shadow casting
+    public static StandardMaterial3D VertexColorStandardMaterial()
     {
         StandardMaterial3D material = new StandardMaterial3D();
         material.AlbedoColor = new Color(1, 1, 1, 1); // White base color
-        material.Transparency = BaseMaterial3D.TransparencyEnum.Alpha;
         material.VertexColorUseAsAlbedo = true; // Use vertex colors as the albedo
-        material.NoDepthTest = false; // Keep depth testing for proper sorting
-        material.CullMode = BaseMaterial3D.CullModeEnum.Back; // Standard back-face culling
-
+        material.Roughness = 0.7f;
+        material.Metallic = 0.0f;
+        
+        // Settings to help with smooth shading
+        material.ShadingMode = BaseMaterial3D.ShadingModeEnum.PerPixel;
+        material.SpecularMode = BaseMaterial3D.SpecularModeEnum.SchlickGgx;
+        
         return material;
     }
+
+    // --------------------------------------------------------------------------------------------
+
+    // Function to create a vertex-colored transparent material (with proper lighting)
+    // Uses vertex colors with transparency and StandardMaterial3D for proper shadow casting
+    public static StandardMaterial3D VertexColorTransparentStandardMaterial()
+    {
+        StandardMaterial3D material = new StandardMaterial3D();
+        material.AlbedoColor = new Color(1, 1, 1, 1); // White base color
+        material.VertexColorUseAsAlbedo = true; // Use vertex colors as the albedo
+        material.Transparency = BaseMaterial3D.TransparencyEnum.Alpha;
+        material.Roughness = 0.7f;
+        material.Metallic = 0.0f;
+        material.NoDepthTest = false; // Keep depth testing for proper sorting
+        material.CullMode = BaseMaterial3D.CullModeEnum.Back; // Standard back-face culling
+        
+        // Settings to help with smooth shading
+        material.ShadingMode = BaseMaterial3D.ShadingModeEnum.PerPixel;
+        material.SpecularMode = BaseMaterial3D.SpecularModeEnum.SchlickGgx;
+        
+        return material;
+    }
+
+    // --------------------------------------------------------------------------------------------
+    // MARK: Legacy shader-based materials (kept for compatibility)
+    // --------------------------------------------------------------------------------------------
 }
 
 

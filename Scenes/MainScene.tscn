@@ -1,7 +1,7 @@
 [gd_scene load_steps=9 format=3 uid="uid://ced7xhu6jah7w"]
 
 [ext_resource type="Script" uid="uid://374o2dbtf0tj" path="res://Code/Godot/MainScene.cs" id="1_hpc76"]
-[ext_resource type="Script" uid="uid://cp231wjyfg10i" path="res://Code/Godot/KoreNodeMover.cs" id="2_tr2i4"]
+[ext_resource type="Script" uid="uid://kfeni70658w" path="res://Code/Godot/KoreNodeMoverPlus.cs" id="2_tr2i4"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_hpc76"]
 
@@ -40,16 +40,19 @@ transform = Transform3D(1, -1.4901161e-08, 0, 1.4901161e-08, 1, 0, 2.9802322e-08
 fov = 50.0
 
 [node name="OmniLight3D-Magenta" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.346623, 2.150301, -6.9993267)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.298, 3.57, -7.054)
+visible = false
 light_color = Color(1, 0, 1, 1)
 light_energy = 8.0
 shadow_enabled = true
 shadow_blur = 5.0
-omni_range = 50.0
-omni_attenuation = 0.5
+omni_range = 200.0
+omni_attenuation = 0.2
+omni_shadow_mode = 0
 
 [node name="OmniLight3D-Green" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.2500763, 1.8530807, 0.1592133)
+visible = false
 light_color = Color(0, 0.66888636, 0.19879529, 1)
 light_energy = 12.0
 shadow_enabled = true
@@ -59,6 +62,7 @@ omni_attenuation = 0.5
 
 [node name="OmniLight3D-Yellow" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.693246, 19.314701, 4.1954365)
+visible = false
 light_color = Color(0.784544, 0.64490634, 0.06742191, 1)
 light_energy = 8.0
 shadow_enabled = true
@@ -79,8 +83,9 @@ skeleton = NodePath("../MeshInstance3D-OrbLight")
 surface_material_override/0 = SubResource("StandardMaterial3D_7rqgy")
 
 [node name="MeshInstance3D-OrbLight" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.665, -4.272)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2597427, 1.245, -1.437)
 material_override = SubResource("StandardMaterial3D_nhkr4")
+cast_shadow = 0
 gi_mode = 2
 mesh = SubResource("SphereMesh_7rqgy")
 

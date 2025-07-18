@@ -75,6 +75,9 @@ public partial class KoreGodotLineMesh : Node3D
         // Commit the mesh and assign it to the MeshInstance3D
         Mesh mesh = _surfaceTool.Commit();
         _meshInstance.Mesh = mesh;
+        
+        // Disable shadow casting for line meshes (lines typically shouldn't cast shadows)
+        _meshInstance.CastShadow = GeometryInstance3D.ShadowCastingSetting.On;
 
         _meshNeedsUpdate = false;
     }

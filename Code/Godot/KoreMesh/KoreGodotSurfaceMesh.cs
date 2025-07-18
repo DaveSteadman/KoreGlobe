@@ -103,36 +103,49 @@ public partial class KoreGodotSurfaceMesh : Node3D
             _surfaceTool.AddIndex(indexC);
         }
 
-        // // Check if any vertex colors have transparency
-        // bool hasTransparency = false;
-        // foreach (var vertexColor in newMeshData.VertexColors.Values)
-        // {
-        //     if (vertexColor.A < 1.0f)
-        //     {
-        //         hasTransparency = true;
-        //         break;
-        //     }
-        // }
+        // Check if any vertex colors have transparency
+        bool hasTransparency = false;
+        bool hasVertexColors = newMeshData.VertexColors.Count > 0;
+        
+        foreach (var vertexColor in newMeshData.VertexColors.Values)
+        {
+            if (vertexColor.A < 255) // Check for transparency in byte values
+            {
+                hasTransparency = true;
+                break;
+            }
+        }
 
-        // Choose material based on whether transparency is needed
-        // StandardMaterial3D material;
-        // if (hasTransparency)
-        // {
-            // Use the new vertex color transparent material
-        StandardMaterial3D material = KoreGodotMaterialFactory.TransparentColoredMaterial(new Color(1, 0, 0, 0.5f));
-        ShaderMaterial material2 = KoreGodotMaterialFactory.VertexColorMaterial();
-        StandardMaterial3D material3 = KoreGodotMaterialFactory.VertexColorTransparentMaterial();
-        // }
-        // else
-        // {
-        //     // Use vertex color shader for opaque colors
-        //     material = KoreGodotMaterialFactory.VertexColorMaterial();
-        // }
+        // Choose material based on vertex colors and transparency
+        StandardMaterial3D material;
+        if (hasVertexColors && hasTransparency)
+        {
+            // Use vertex color transparent material
+            material = KoreGodotMaterialFactory.VertexColorTransparentStandardMaterial();
+        }
+        else if (hasVertexColors)
+        {
+            // Use vertex color opaque material
+            material = KoreGodotMaterialFactory.VertexColorStandardMaterial();
+        }
+        else
+        {
+            // Use standard colored material with default color
+            material = KoreGodotMaterialFactory.StandardColoredMaterial(new Color(0.8f, 0.2f, 0.2f));
+        }
 
         // Commit the mesh and assign it to the MeshInstance3D
         Mesh mesh = _surfaceTool.Commit();
+        
+        // Generate normals if they weren't provided
+        //_surfaceTool.GenerateNormals();
+        //mesh = _surfaceTool.Commit();
+        
         _meshInstance.Mesh = mesh;
-        _meshInstance.MaterialOverride = material2;
+        _meshInstance.MaterialOverride = material;
+        
+        // Enable shadow casting for surface meshes
+        _meshInstance.CastShadow = GeometryInstance3D.ShadowCastingSetting.On;
 
         _meshNeedsUpdate = false;
     }
