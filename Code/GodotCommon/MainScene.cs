@@ -190,8 +190,18 @@ public partial class MainScene : Node3D
             KoreGodotLineMesh childMeshNode1 = new KoreGodotLineMesh();
             childMeshNode1.UpdateMesh(ribbonMesh);
 
-            RibbonNode.AddChild(childMeshNode1);
+            KoreGodotSurfaceMesh childSurfaceMeshNode1 = new KoreGodotSurfaceMesh();
+            childSurfaceMeshNode1.UpdateMesh(ribbonMesh);
 
+            // debug print the mesh
+            {
+                GD.Print("Ribbon Mesh Vertices Count: " + ribbonMesh.Vertices.Count);
+                GD.Print("Ribbon Mesh Triangles Count: " + ribbonMesh.Triangles.Count);
+                GD.Print("Ribbon Mesh Lines Count: " + ribbonMesh.Lines.Count);
+            }
+
+            RibbonNode.AddChild(childMeshNode1);
+            RibbonNode.AddChild(childSurfaceMeshNode1);
         }
     }
 

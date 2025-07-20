@@ -22,6 +22,9 @@ public static partial class KoreMeshDataPrimitives
         if (leftPoints.Count != rightPoints.Count || leftUVs.Count != rightUVs.Count)
             throw new ArgumentException("Left and right points/UVs must have the same count.");
 
+        // Track the "current" vertex IDs that will be reused in the next iteration
+        int pntIdL0 = -1, pntIdR0 = -1;
+
         // Loop through the points list (-1), and use the current position and the next position to create two triangles at a time.
         for (int i = 0; i < leftPoints.Count - 1; i++)
         {
@@ -37,30 +40,22 @@ public static partial class KoreMeshDataPrimitives
             KoreXYVector rightUVCurrent = rightUVs[i];
             KoreXYVector rightUVNext    = rightUVs[i + 1];
 
-            int pntIdL0 = 0;
-            int pntIdL1 = 0;
-            int pntIdR0 = 0;
-            int pntIdR1 = 0;
-
-            // If we are on the first pass, add all the points, otherwise just add the +1 points
+            // If we are on the first pass, add the current points, otherwise they're already set from previous iteration
             if (i == 0)
             {
                 pntIdL0 = mesh.AddVertex(leftCurrent, null, null, leftUVCurrent);
                 pntIdR0 = mesh.AddVertex(rightCurrent, null, null, rightUVCurrent);
-                pntIdL1 = mesh.AddVertex(leftNext, null, null, leftUVNext);
-                pntIdR1 = mesh.AddVertex(rightNext, null, null, rightUVNext);
             }
-            else
-            {
-                pntIdL1 = mesh.AddVertex(leftNext, null, null, leftUVNext);
-                pntIdR1 = mesh.AddVertex(rightNext, null, null, rightUVNext);
-            }
+
+            // Always add the "next" points for this iteration
+            int pntIdL1 = mesh.AddVertex(leftNext, null, null, leftUVNext);
+            int pntIdR1 = mesh.AddVertex(rightNext, null, null, rightUVNext);
 
             // Create two triangles (two faces) for the current segment
             mesh.AddTriangle(pntIdL0, pntIdR0, pntIdR1);
             mesh.AddTriangle(pntIdL0, pntIdR1, pntIdL1);
 
-            // move the IDs back one step
+            // Update the "current" IDs for the next iteration
             pntIdL0 = pntIdL1;
             pntIdR0 = pntIdR1;
         }
