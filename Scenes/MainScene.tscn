@@ -1,7 +1,7 @@
 [gd_scene load_steps=9 format=3 uid="uid://ced7xhu6jah7w"]
 
-[ext_resource type="Script" uid="uid://374o2dbtf0tj" path="res://Code/Godot/MainScene.cs" id="1_hpc76"]
-[ext_resource type="Script" uid="uid://kfeni70658w" path="res://Code/Godot/KoreNodeMoverPlus.cs" id="2_tr2i4"]
+[ext_resource type="Script" uid="uid://374o2dbtf0tj" path="res://Code/GodotCommon/MainScene.cs" id="1_hpc76"]
+[ext_resource type="Script" uid="uid://clnw1arvg2wlq" path="res://Code/GodotCommon/UserInput/KoreNodeMoverPlus.cs" id="2_tr2i4"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_hpc76"]
 
@@ -83,7 +83,7 @@ skeleton = NodePath("../MeshInstance3D-OrbLight")
 surface_material_override/0 = SubResource("StandardMaterial3D_7rqgy")
 
 [node name="MeshInstance3D-OrbLight" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2597427, 1.245, -1.437)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.26, 0.855, -1.437)
 material_override = SubResource("StandardMaterial3D_nhkr4")
 cast_shadow = 0
 gi_mode = 2

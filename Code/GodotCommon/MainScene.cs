@@ -17,6 +17,8 @@ public partial class MainScene : Node3D
 
         CreateTestMeshData_Box();
         AddTestMeshData_Pyramid();
+        AddTestMeshData_Sphere();
+        AddTestMeshData_Ribbon();
     }
 
     public override void _Process(double delta)
@@ -29,7 +31,7 @@ public partial class MainScene : Node3D
 
 
     // ---------------------------------------------------------------------------------------------
-    // MARK: Test Common Mesh
+    // MARK: BOX
     // ---------------------------------------------------------------------------------------------
 
     // Functions to test KoreMeshData
@@ -91,6 +93,8 @@ public partial class MainScene : Node3D
     }
 
     // ---------------------------------------------------------------------------------------------
+    // MARK: PYRAMID
+    // ---------------------------------------------------------------------------------------------
 
     public void AddTestMeshData_Pyramid()
     {
@@ -142,4 +146,53 @@ public partial class MainScene : Node3D
             Pyramid2Node.AddChild(childSurfaceMeshNode2);
         }
     }
+    // ---------------------------------------------------------------------------------------------
+    // MARK: SPHERE
+    // ---------------------------------------------------------------------------------------------
+
+    public void AddTestMeshData_Sphere()
+    {
+        // Function to add a test sphere mesh
+        Node3D SphereNode = new Node3D() { Name = "SphereNode" };
+        AddChild(SphereNode);
+        SphereNode.Position = new Vector3(0, 1.6f, 0);
+
+        // 1 - Basic Sphere
+        {
+            var sphereMesh1 = KoreMeshDataPrimitives.BasicSphere(0.5f, new KoreColorRGB(0, 0, 255), 16);
+
+            KoreGodotLineMesh childMeshNode1 = new KoreGodotLineMesh();
+            childMeshNode1.UpdateMesh(sphereMesh1);
+
+            KoreGodotSurfaceMesh childSurfaceMeshNode1 = new KoreGodotSurfaceMesh();
+            childSurfaceMeshNode1.UpdateMesh(sphereMesh1);
+
+            SphereNode.AddChild(childMeshNode1);
+            SphereNode.AddChild(childSurfaceMeshNode1);
+        }
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // MARK: RIBBON
+    // ---------------------------------------------------------------------------------------------
+
+    public void AddTestMeshData_Ribbon()
+    {
+        // Function to add a test ribbon mesh
+        Node3D RibbonNode = new Node3D() { Name = "RibbonNode" };
+        AddChild(RibbonNode);
+        RibbonNode.Position = new Vector3(0, 0, 1.6f);
+
+        // Test Ribbon Mesh
+        {
+            var ribbonMesh = GodotMeshPrimitivesDropEdgeTile.TestRibbon();
+
+            KoreGodotLineMesh childMeshNode1 = new KoreGodotLineMesh();
+            childMeshNode1.UpdateMesh(ribbonMesh);
+
+            RibbonNode.AddChild(childMeshNode1);
+
+        }
+    }
+
 }

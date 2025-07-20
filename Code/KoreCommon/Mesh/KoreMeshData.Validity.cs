@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 #nullable enable
 
@@ -41,14 +42,27 @@ public partial class KoreMeshData
 
         RemoveBrokenTriangleColors(); // Remove triangle colors that don't have supporting triangle IDs.
     }
-    
 
+    // --------------------------------------------------------------------------------------------
+    // MARK: Populate: Max Ids
+    // --------------------------------------------------------------------------------------------
+
+    // Reset the Next IDs, looking for the max values in the current lists - Note that after numerous
+    // operations, the IDs can be non-sequential, so we need to find the max value in each list.
+
+    public void ResetMaxIDs()
+    {
+        // Reset the next IDs based on the current max values in the dictionaries
+        NextVertexId   = Vertices.Count  > 0 ? Vertices.Keys.Max()  + 1 : 0;
+        NextLineId     = Lines.Count     > 0 ? Lines.Keys.Max()     + 1 : 0;
+        NextTriangleId = Triangles.Count > 0 ? Triangles.Keys.Max() + 1 : 0;
+    }
 
     // --------------------------------------------------------------------------------------------
     // MARK: Populate: LineId
     // --------------------------------------------------------------------------------------------
 
-    // Functions to fill out the population of the lists based on a line ID.
+        // Functions to fill out the population of the lists based on a line ID.
 
     public void CreateMissingLineColors(KoreColorRGB? defaultColor = null)
     {
@@ -68,9 +82,9 @@ public partial class KoreMeshData
     }
 
 
-    
-    
-    
+
+
+
     // -----------------------------------------------------------------------------
     // MARK: Vertices
     // -----------------------------------------------------------------------------
@@ -192,8 +206,8 @@ public partial class KoreMeshData
             if (triangle.A == vertexId || triangle.B == vertexId || triangle.C == vertexId)
             {
                 // Get the three vertices of this triangle
-                if (!Vertices.ContainsKey(triangle.A) || 
-                    !Vertices.ContainsKey(triangle.B) || 
+                if (!Vertices.ContainsKey(triangle.A) ||
+                    !Vertices.ContainsKey(triangle.B) ||
                     !Vertices.ContainsKey(triangle.C))
                     continue; // Skip broken triangles
 
@@ -204,10 +218,10 @@ public partial class KoreMeshData
                 // Calculate the face normal using cross product (same as AddIsolatedTriangle)
                 KoreXYZVector ab = b - a;  // Vector from A to B
                 KoreXYZVector ac = c - a;  // Vector from A to C
-                
+
                 // Cross product gives us the face normal (right-hand rule)
                 KoreXYZVector faceNormal = KoreXYZVector.CrossProduct(ab, ac);
-                
+
                 // Normalize and invert the face normal (matching AddIsolatedTriangle behavior)
                 faceNormal = faceNormal.Normalize();
                 faceNormal = faceNormal.Invert();
@@ -220,6 +234,19 @@ public partial class KoreMeshData
     }
 
     public void SetNormalsFromTriangles(List<int> vertexIds) => vertexIds.ForEach(SetNormalFromFirstTriangle);
+
+    // Set normals for all vertices based on the first triangle that contains each vertex
+    // Usage: mesh.SetNormalsFromTriangles();
+    public void SetNormalsFromTriangles()
+    {
+        // Loop through the triangles in the mesh and set normals for each vertex
+        foreach (var triangle in Triangles.Values)
+        {
+            SetNormalFromFirstTriangle(triangle.A);
+            SetNormalFromFirstTriangle(triangle.B);
+            SetNormalFromFirstTriangle(triangle.C);
+        }
+    }
 
     // --------------------------------------------------------------------------------------------
     // MARK: UVs
@@ -279,7 +306,7 @@ public partial class KoreMeshData
                 VertexColors[vertexId] = fallback;
         }
     }
-    
+
     // --------------------------------------------------------------------------------------------
     // MARK: Lines
     // --------------------------------------------------------------------------------------------
