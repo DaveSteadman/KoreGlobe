@@ -9,6 +9,21 @@ namespace KoreCommon;
 public partial class KoreMeshData
 {
     // --------------------------------------------------------------------------------------------
+    // MARK: Populate: Max Ids
+    // --------------------------------------------------------------------------------------------
+
+    // Reset the Next IDs, looking for the max values in the current lists - Note that after numerous
+    // operations, the IDs can be non-sequential, so we need to find the max value in each list.
+
+    public void ResetMaxIDs()
+    {
+        // Reset the next IDs based on the current max values in the dictionaries
+        NextVertexId   = Vertices.Count  > 0 ? Vertices.Keys.Max()  + 1 : 0;
+        NextLineId     = Lines.Count     > 0 ? Lines.Keys.Max()     + 1 : 0;
+        NextTriangleId = Triangles.Count > 0 ? Triangles.Keys.Max() + 1 : 0;
+    }
+
+    // --------------------------------------------------------------------------------------------
     // MARK: Validity Ops
     // --------------------------------------------------------------------------------------------
 

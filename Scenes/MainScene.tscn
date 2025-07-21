@@ -1,8 +1,9 @@
-[gd_scene load_steps=10 format=3 uid="uid://ced7xhu6jah7w"]
+[gd_scene load_steps=11 format=3 uid="uid://ced7xhu6jah7w"]
 
-[ext_resource type="Script" uid="uid://374o2dbtf0tj" path="res://Code/Godot/MainScene.cs" id="1_hpc76"]
-[ext_resource type="Script" uid="uid://v2mfrrw8pmol" path="res://Code/Godot/KoreGodot2DDrawTest.cs" id="2_nhkr4"]
-[ext_resource type="Script" uid="uid://kfeni70658w" path="res://Code/Godot/KoreNodeMoverPlus.cs" id="2_tr2i4"]
+[ext_resource type="Script" uid="uid://374o2dbtf0tj" path="res://Code/GodotCommon/MainScene.cs" id="1_hpc76"]
+[ext_resource type="Script" uid="uid://v2mfrrw8pmol" path="res://Code/GodotCommon/KoreGodot2DDrawTest.cs" id="2_nhkr4"]
+[ext_resource type="Script" uid="uid://clnw1arvg2wlq" path="res://Code/GodotCommon/UserInput/KoreNodeMoverPlus.cs" id="2_tr2i4"]
+[ext_resource type="Texture2D" uid="uid://btpgdc0gdsy2w" path="res://icon.svg" id="3_7rqgy"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_hpc76"]
 
@@ -37,6 +38,10 @@ script = ExtResource("1_hpc76")
 [node name="Node2D" type="Node2D" parent="CanvasLayer"]
 script = ExtResource("2_nhkr4")
 
+[node name="Sprite2D" type="Sprite2D" parent="CanvasLayer"]
+position = Vector2(257, 240)
+texture = ExtResource("3_7rqgy")
+
 [node name="CameraMount" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5)
 script = ExtResource("2_tr2i4")
@@ -47,7 +52,6 @@ fov = 50.0
 
 [node name="OmniLight3D-Magenta" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.298, 3.57, -7.054)
-visible = false
 light_color = Color(1, 0, 1, 1)
 light_energy = 8.0
 shadow_enabled = true
@@ -67,7 +71,6 @@ omni_attenuation = 0.5
 
 [node name="OmniLight3D-Yellow" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.693246, 19.314701, 4.1954365)
-visible = false
 light_color = Color(0.784544, 0.64490634, 0.06742191, 1)
 light_energy = 8.0
 shadow_enabled = true
@@ -88,7 +91,7 @@ skeleton = NodePath("../MeshInstance3D-OrbLight")
 surface_material_override/0 = SubResource("StandardMaterial3D_7rqgy")
 
 [node name="MeshInstance3D-OrbLight" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2597427, 1.245, -1.437)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.055, 0.385, -2.477)
 material_override = SubResource("StandardMaterial3D_nhkr4")
 cast_shadow = 0
 gi_mode = 2
