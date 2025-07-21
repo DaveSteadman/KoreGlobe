@@ -42,8 +42,6 @@ public partial class KoreMeshData
 
         RemoveBrokenTriangleColors(); // Remove triangle colors that don't have supporting triangle IDs.
     }
-    
-
 
     // --------------------------------------------------------------------------------------------
     // MARK: Bounding Box
@@ -78,26 +76,6 @@ public partial class KoreMeshData
 
         return new KoreXYZBox(center, width, height, length);
     }
-
-    // Functions to fill out the population of the lists based on a line ID.
-
-    public void CreateMissingLineColors(KoreColorRGB? defaultColor = null)
-    {
-        // Define the default color to pad the LineColors list if it doesn't match the lines count.
-        KoreColorRGB fallback = defaultColor ?? new KoreColorRGB(1, 1, 1);
-
-        // Loop through the lines dictionary
-        foreach (var kvp in Lines)
-        {
-            int lineId = kvp.Key;
-            KoreMeshLine line = kvp.Value;
-
-            // If the line colors dictionary does not contain this ID, add it with the fallback color
-            if (!LineColors.ContainsKey(lineId))
-                LineColors[lineId] = new KoreMeshLineColour(fallback, fallback);
-        }
-    }
-
 
     // -----------------------------------------------------------------------------
     // MARK: Vertices
