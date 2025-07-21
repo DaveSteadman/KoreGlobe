@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 #nullable enable
 
@@ -41,11 +42,13 @@ public partial class KoreMeshData
 
         RemoveBrokenTriangleColors(); // Remove triangle colors that don't have supporting triangle IDs.
     }
+    
+
 
     // --------------------------------------------------------------------------------------------
     // MARK: Bounding Box
     // --------------------------------------------------------------------------------------------
-
+  
     // Loop through the vertices, recording the max/min X, Y, Z values. Then return a KoreXYZBox
     
     public KoreXYZBox GetBoundingBox()
@@ -75,6 +78,26 @@ public partial class KoreMeshData
 
         return new KoreXYZBox(center, width, height, length);
     }
+
+    // Functions to fill out the population of the lists based on a line ID.
+
+    public void CreateMissingLineColors(KoreColorRGB? defaultColor = null)
+    {
+        // Define the default color to pad the LineColors list if it doesn't match the lines count.
+        KoreColorRGB fallback = defaultColor ?? new KoreColorRGB(1, 1, 1);
+
+        // Loop through the lines dictionary
+        foreach (var kvp in Lines)
+        {
+            int lineId = kvp.Key;
+            KoreMeshLine line = kvp.Value;
+
+            // If the line colors dictionary does not contain this ID, add it with the fallback color
+            if (!LineColors.ContainsKey(lineId))
+                LineColors[lineId] = new KoreMeshLineColour(fallback, fallback);
+        }
+    }
+
 
     // -----------------------------------------------------------------------------
     // MARK: Vertices
@@ -197,8 +220,8 @@ public partial class KoreMeshData
             if (triangle.A == vertexId || triangle.B == vertexId || triangle.C == vertexId)
             {
                 // Get the three vertices of this triangle
-                if (!Vertices.ContainsKey(triangle.A) || 
-                    !Vertices.ContainsKey(triangle.B) || 
+                if (!Vertices.ContainsKey(triangle.A) ||
+                    !Vertices.ContainsKey(triangle.B) ||
                     !Vertices.ContainsKey(triangle.C))
                     continue; // Skip broken triangles
 
@@ -209,10 +232,10 @@ public partial class KoreMeshData
                 // Calculate the face normal using cross product (same as AddIsolatedTriangle)
                 KoreXYZVector ab = b - a;  // Vector from A to B
                 KoreXYZVector ac = c - a;  // Vector from A to C
-                
+
                 // Cross product gives us the face normal (right-hand rule)
                 KoreXYZVector faceNormal = KoreXYZVector.CrossProduct(ab, ac);
-                
+
                 // Normalize and invert the face normal (matching AddIsolatedTriangle behavior)
                 faceNormal = faceNormal.Normalize();
                 faceNormal = faceNormal.Invert();
@@ -225,6 +248,19 @@ public partial class KoreMeshData
     }
 
     public void SetNormalsFromTriangles(List<int> vertexIds) => vertexIds.ForEach(SetNormalFromFirstTriangle);
+
+    // Set normals for all vertices based on the first triangle that contains each vertex
+    // Usage: mesh.SetNormalsFromTriangles();
+    public void SetNormalsFromTriangles()
+    {
+        // Loop through the triangles in the mesh and set normals for each vertex
+        foreach (var triangle in Triangles.Values)
+        {
+            SetNormalFromFirstTriangle(triangle.A);
+            SetNormalFromFirstTriangle(triangle.B);
+            SetNormalFromFirstTriangle(triangle.C);
+        }
+    }
 
     // --------------------------------------------------------------------------------------------
     // MARK: UVs
@@ -284,7 +320,7 @@ public partial class KoreMeshData
                 VertexColors[vertexId] = fallback;
         }
     }
-    
+
     // --------------------------------------------------------------------------------------------
     // MARK: Lines
     // --------------------------------------------------------------------------------------------

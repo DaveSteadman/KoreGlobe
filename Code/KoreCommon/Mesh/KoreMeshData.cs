@@ -36,9 +36,9 @@ public partial class KoreMeshData
     public Dictionary<int, KoreMeshTriangleColour> TriangleColors = new();
 
     // Internal counters for unique IDs
-    private int _nextVertexId = 0;
-    private int _nextLineId = 0;
-    private int _nextTriangleId = 0;
+    private int NextVertexId = 0;
+    private int NextLineId = 0;
+    private int NextTriangleId = 0;
 
     // --------------------------------------------------------------------------------------------
     // MARK: Constructors
@@ -94,9 +94,9 @@ public partial class KoreMeshData
         VertexColors.Clear();
         LineColors.Clear();
         TriangleColors.Clear();
-        _nextVertexId = 0;
-        _nextLineId = 0;
-        _nextTriangleId = 0;
+        NextVertexId = 0;
+        NextLineId = 0;
+        NextTriangleId = 0;
     }
 
 
@@ -108,13 +108,13 @@ public partial class KoreMeshData
     // Add a vertex and return its ID
     public int AddVertex(KoreXYZVector vertex, KoreXYZVector? normal = null, KoreColorRGB? color = null, KoreXYVector? uv = null)
     {
-        int id = _nextVertexId++;
+        int id = NextVertexId++;
         Vertices[id] = vertex;
-        
+
         if (normal.HasValue) Normals[id] = normal.Value;
-        if (color.HasValue) VertexColors[id] = color.Value;
-        if (uv.HasValue) UVs[id] = uv.Value;
-        
+        if (color.HasValue)  VertexColors[id] = color.Value;
+        if (uv.HasValue)     UVs[id] = uv.Value;
+
         return id;
     }
 
@@ -132,9 +132,9 @@ public partial class KoreMeshData
     {
         Vertices[vertexId] = vertex;
 
-        if (normal.HasValue) Normals[vertexId] = normal.Value;
-        if (color.HasValue) VertexColors[vertexId] = color.Value;
-        if (uv.HasValue) UVs[vertexId] = uv.Value;
+        if (normal.HasValue) Normals[vertexId]      = normal.Value;
+        if (color.HasValue)  VertexColors[vertexId] = color.Value;
+        if (uv.HasValue)     UVs[vertexId]          = uv.Value;
     }
 
     // --------------------------------------------------------------------------------------------
@@ -143,7 +143,7 @@ public partial class KoreMeshData
 
     public int AddNormal(KoreXYZVector normal)
     {
-        int id = _nextVertexId++;
+        int id = NextVertexId++;
 
         Normals[id] = normal;
         return id;
@@ -181,10 +181,10 @@ public partial class KoreMeshData
         // Can only set a vertex colour for a valid vertex ID
         if (!Vertices.ContainsKey(vertexId))
             throw new ArgumentOutOfRangeException(nameof(vertexId), "Vertex ID is not found.");
-            
+
         VertexColors[vertexId] = color;
     }
-    
+
     // --------------------------------------------------------------------------------------------
     // MARK: Lines
     // --------------------------------------------------------------------------------------------
@@ -192,7 +192,7 @@ public partial class KoreMeshData
     // Add a line and return its ID
     public int AddLine(int vertexIdA, int vertexIdB, KoreColorRGB? colStart = null, KoreColorRGB? colEnd = null)
     {
-        int id = _nextLineId++;
+        int id = NextLineId++;
         Lines[id] = new KoreMeshLine(vertexIdA, vertexIdB);
 
         if (colStart.HasValue && colEnd.HasValue)
@@ -240,7 +240,7 @@ public partial class KoreMeshData
     // Add a triangle and return its ID
     public int AddTriangle(int vertexIdA, int vertexIdB, int vertexIdC, KoreColorRGB? color = null)
     {
-        int id = _nextTriangleId++;
+        int id = NextTriangleId++;
         Triangles[id] = new KoreMeshTriangle(vertexIdA, vertexIdB, vertexIdC);
 
         if (color.HasValue)
@@ -284,16 +284,16 @@ public partial class KoreMeshData
 
     // Add an isolated triangle with automatically calculated normals for sharp edges.
     // Creates three separate vertices (no sharing) with proper face normals for crisp rendering.
-    public int AddIsolatedTriangle(KoreXYZVector a, KoreXYZVector b, KoreXYZVector c, 
+    public int AddIsolatedTriangle(KoreXYZVector a, KoreXYZVector b, KoreXYZVector c,
         KoreColorRGB? vertexColor = null, KoreColorRGB? triangleColor = null)
     {
         // Calculate the face normal using cross product
         KoreXYZVector ab = b - a;  // Vector from A to B
         KoreXYZVector ac = c - a;  // Vector from A to C
-        
+
         // Cross product gives us the face normal (right-hand rule)
         KoreXYZVector faceNormal = KoreXYZVector.CrossProduct(ab, ac);
-        
+
         // Normalize the face normal using the built-in method
         faceNormal = faceNormal.Normalize();
         faceNormal = faceNormal.Invert();
