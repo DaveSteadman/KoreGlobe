@@ -39,7 +39,7 @@ script = ExtResource("1_hpc76")
 script = ExtResource("2_nhkr4")
 
 [node name="Sprite2D" type="Sprite2D" parent="CanvasLayer"]
-position = Vector2(257, 240)
+position = Vector2(146, 156)
 texture = ExtResource("3_7rqgy")
 
 [node name="CameraMount" type="Node3D" parent="."]
