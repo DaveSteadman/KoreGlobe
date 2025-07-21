@@ -1,6 +1,7 @@
-[gd_scene load_steps=9 format=3 uid="uid://ced7xhu6jah7w"]
+[gd_scene load_steps=10 format=3 uid="uid://ced7xhu6jah7w"]
 
 [ext_resource type="Script" uid="uid://374o2dbtf0tj" path="res://Code/Godot/MainScene.cs" id="1_hpc76"]
+[ext_resource type="Script" uid="uid://v2mfrrw8pmol" path="res://Code/Godot/KoreGodot2DDrawTest.cs" id="2_nhkr4"]
 [ext_resource type="Script" uid="uid://kfeni70658w" path="res://Code/Godot/KoreNodeMoverPlus.cs" id="2_tr2i4"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_hpc76"]
@@ -31,6 +32,11 @@ disable_receive_shadows = true
 [node name="MainScene" type="Node3D"]
 script = ExtResource("1_hpc76")
 
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Node2D" type="Node2D" parent="CanvasLayer"]
+script = ExtResource("2_nhkr4")
+
 [node name="CameraMount" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5)
 script = ExtResource("2_tr2i4")
@@ -52,7 +58,6 @@ omni_shadow_mode = 0
 
 [node name="OmniLight3D-Green" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.2500763, 1.8530807, 0.1592133)
-visible = false
 light_color = Color(0, 0.66888636, 0.19879529, 1)
 light_energy = 12.0
 shadow_enabled = true

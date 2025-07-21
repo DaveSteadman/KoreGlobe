@@ -41,36 +41,41 @@ public partial class KoreMeshData
 
         RemoveBrokenTriangleColors(); // Remove triangle colors that don't have supporting triangle IDs.
     }
+
+    // --------------------------------------------------------------------------------------------
+    // MARK: Bounding Box
+    // --------------------------------------------------------------------------------------------
+
+    // Loop through the vertices, recording the max/min X, Y, Z values. Then return a KoreXYZBox
     
-
-
-    // --------------------------------------------------------------------------------------------
-    // MARK: Populate: LineId
-    // --------------------------------------------------------------------------------------------
-
-    // Functions to fill out the population of the lists based on a line ID.
-
-    public void CreateMissingLineColors(KoreColorRGB? defaultColor = null)
+    public KoreXYZBox GetBoundingBox()
     {
-        // Define the default color to pad the LineColors list if it doesn't match the lines count.
-        KoreColorRGB fallback = defaultColor ?? new KoreColorRGB(1, 1, 1);
+        if (Vertices.Count == 0)
+            return KoreXYZBox.Zero;
 
-        // Loop through the lines dictionary
-        foreach (var kvp in Lines)
+        double minX = double.MaxValue, maxX = double.MinValue;
+        double minY = double.MaxValue, maxY = double.MinValue;
+        double minZ = double.MaxValue, maxZ = double.MinValue;
+
+        foreach (var kvp in Vertices)
         {
-            int lineId = kvp.Key;
-            KoreMeshLine line = kvp.Value;
-
-            // If the line colors dictionary does not contain this ID, add it with the fallback color
-            if (!LineColors.ContainsKey(lineId))
-                LineColors[lineId] = new KoreMeshLineColour(fallback, fallback);
+            KoreXYZVector vertex = kvp.Value;
+            if (vertex.X < minX) minX = vertex.X;
+            if (vertex.X > maxX) maxX = vertex.X;
+            if (vertex.Y < minY) minY = vertex.Y;
+            if (vertex.Y > maxY) maxY = vertex.Y;
+            if (vertex.Z < minZ) minZ = vertex.Z;
+            if (vertex.Z > maxZ) maxZ = vertex.Z;
         }
+
+        KoreXYZPoint center = new KoreXYZPoint((minX + maxX) / 2, (minY + maxY) / 2, (minZ + maxZ) / 2);
+        double width = maxX - minX;
+        double height = maxY - minY;
+        double length = maxZ - minZ;
+
+        return new KoreXYZBox(center, width, height, length);
     }
 
-
-    
-    
-    
     // -----------------------------------------------------------------------------
     // MARK: Vertices
     // -----------------------------------------------------------------------------
@@ -345,6 +350,25 @@ public partial class KoreMeshData
             {
                 LineColors.Remove(lineId);
             }
+        }
+    }
+
+    // Functions to fill out the population of the lists based on a line ID.
+
+    public void CreateMissingLineColors(KoreColorRGB? defaultColor = null)
+    {
+        // Define the default color to pad the LineColors list if it doesn't match the lines count.
+        KoreColorRGB fallback = defaultColor ?? new KoreColorRGB(1, 1, 1);
+
+        // Loop through the lines dictionary
+        foreach (var kvp in Lines)
+        {
+            int lineId = kvp.Key;
+            KoreMeshLine line = kvp.Value;
+
+            // If the line colors dictionary does not contain this ID, add it with the fallback color
+            if (!LineColors.ContainsKey(lineId))
+                LineColors[lineId] = new KoreMeshLineColour(fallback, fallback);
         }
     }
 

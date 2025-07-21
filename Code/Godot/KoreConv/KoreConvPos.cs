@@ -1,4 +1,6 @@
 
+using System.Collections.Generic;
+
 using KoreCommon;
 using Godot;
 
@@ -57,4 +59,24 @@ public static class KoreConvPos
         return new KoreXYZPoint { X = pos.X, Y = pos.Y, Z = pos.Z };
     }
 
+    // ---------------------------------------------------------------------------------------------------
+    // MARK: KoreXYZBox to Vector3 List
+    // ---------------------------------------------------------------------------------------------------
+
+    // usage: List<Vector3> points = KoreConvPos.KoreXYZBoxToV3List(koreBox);
+    public static List<Vector3> KoreXYZBoxToV3List(KoreXYZBox box)
+    {
+        List<Vector3> points = new List<Vector3>
+        {
+            PosToV3(box.Corner(KoreXYZBox.EnumCorner.TopLeftFront)),
+            PosToV3(box.Corner(KoreXYZBox.EnumCorner.TopRightFront)),
+            PosToV3(box.Corner(KoreXYZBox.EnumCorner.BottomRightFront)),
+            PosToV3(box.Corner(KoreXYZBox.EnumCorner.BottomLeftFront)),
+            PosToV3(box.Corner(KoreXYZBox.EnumCorner.TopLeftBack)),
+            PosToV3(box.Corner(KoreXYZBox.EnumCorner.TopRightBack)),
+            PosToV3(box.Corner(KoreXYZBox.EnumCorner.BottomRightBack)),
+            PosToV3(box.Corner(KoreXYZBox.EnumCorner.BottomLeftBack))
+        };
+        return points;
+    }
 }
