@@ -57,7 +57,20 @@ public partial class KoreGodotLineMesh : Node3D
             int pointBId = line.B;
             KoreXYZVector vecA = newMeshData.Vertices[pointAId];
             KoreXYZVector vecB = newMeshData.Vertices[pointBId];
-            KoreMeshLineColour lineColour = newMeshData.LineColors[i];
+
+            // Get the line color, if available, otherwise use default color
+            KoreMeshLineColour lineColour;
+            if (newMeshData.LineColors.ContainsKey(i))
+            {
+                // Use the line color if it exists
+                lineColour = newMeshData.LineColors[i];
+            }
+            else
+            {
+                // Default to white if no color is specified
+                // This can be changed to any default color you prefer
+                lineColour = new KoreMeshLineColour(new KoreColorRGB(255, 255, 255), new KoreColorRGB(255, 255, 255));
+            }
 
             // Convert the line details to Godot terms
             Vector3 godotPosA = KoreConvPos.VecToV3(vecA);

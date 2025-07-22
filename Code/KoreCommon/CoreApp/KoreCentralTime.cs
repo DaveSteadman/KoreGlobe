@@ -16,7 +16,7 @@ public static class KoreCentralTime
     }
 
     // Property to get the elapsed time in seconds since the application started
-    public static float RuntimeSecs => (float)stopwatch.Elapsed.TotalSeconds;
+    public static float RuntimeSecs => (float)stopwatch.Elapsed.TotalSeconds; // Usage: KoreCentralTime.RuntimeSecs
     public static int RuntimeIntSecs => (int)stopwatch.Elapsed.TotalSeconds; // Usage: KoreCentralTime.RuntimeIntSecs
     public static string RuntimeSecs8Chars => RuntimeIntSecs.ToString("D8"); // 8 digits = 3+ years. D8 = padding with zeros.
 

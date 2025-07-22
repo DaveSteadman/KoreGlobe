@@ -45,11 +45,20 @@ public static partial class KoreMeshDataPrimitives
             {
                 pntIdL0 = mesh.AddVertex(leftCurrent, null, null, leftUVCurrent);
                 pntIdR0 = mesh.AddVertex(rightCurrent, null, null, rightUVCurrent);
+
+                // Add the starting vertical line, the rest of the loop will add sides, end and diagonal lines.
+                mesh.AddLine(pntIdL0, pntIdR0);
             }
 
             // Always add the "next" points for this iteration
             int pntIdL1 = mesh.AddVertex(leftNext, null, null, leftUVNext);
             int pntIdR1 = mesh.AddVertex(rightNext, null, null, rightUVNext);
+
+            // Add lines for each triangle
+            mesh.AddLine(pntIdL1, pntIdR1);
+            mesh.AddLine(pntIdL0, pntIdL1);
+            mesh.AddLine(pntIdR0, pntIdR1);
+            mesh.AddLine(pntIdL0, pntIdR0);
 
             // Create two triangles (two faces) for the current segment
             mesh.AddTriangle(pntIdL0, pntIdR0, pntIdR1);

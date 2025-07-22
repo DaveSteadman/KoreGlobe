@@ -1,9 +1,12 @@
-[gd_scene load_steps=11 format=3 uid="uid://ced7xhu6jah7w"]
+[gd_scene load_steps=18 format=3 uid="uid://ced7xhu6jah7w"]
 
 [ext_resource type="Script" uid="uid://374o2dbtf0tj" path="res://Code/GodotCommon/MainScene.cs" id="1_hpc76"]
 [ext_resource type="Script" uid="uid://v2mfrrw8pmol" path="res://Code/GodotCommon/KoreGodot2DDrawTest.cs" id="2_nhkr4"]
 [ext_resource type="Script" uid="uid://clnw1arvg2wlq" path="res://Code/GodotCommon/UserInput/KoreNodeMoverPlus.cs" id="2_tr2i4"]
 [ext_resource type="Texture2D" uid="uid://btpgdc0gdsy2w" path="res://icon.svg" id="3_7rqgy"]
+[ext_resource type="Script" uid="uid://cjla2igmtmekv" path="res://Code/GodotCommon/KoreSpinNode3D.cs" id="5_qxria"]
+[ext_resource type="Script" uid="uid://thnqysfpm7b8" path="res://Code/GodotCommon/KoreMoveNode3D.cs" id="5_y4jh7"]
+[ext_resource type="Texture2D" uid="uid://cuxp3fpx6qh2q" path="res://Resources/mars_viking_clrmosaic_global_1024.jpg" id="7_q68mp"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_hpc76"]
 
@@ -30,6 +33,16 @@ disable_receive_shadows = true
 
 [sub_resource type="SphereMesh" id="SphereMesh_7rqgy"]
 
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_q68mp"]
+
+[sub_resource type="TorusMesh" id="TorusMesh_y4jh7"]
+inner_radius = 0.4
+
+[sub_resource type="SphereMesh" id="SphereMesh_f140w"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0iob3"]
+albedo_texture = ExtResource("7_q68mp")
+
 [node name="MainScene" type="Node3D"]
 script = ExtResource("1_hpc76")
 
@@ -38,7 +51,7 @@ script = ExtResource("1_hpc76")
 [node name="Node2D" type="Node2D" parent="CanvasLayer"]
 script = ExtResource("2_nhkr4")
 
-[node name="Sprite2D" type="Sprite2D" parent="CanvasLayer"]
+[node name="SpriteNode" type="Sprite2D" parent="CanvasLayer/Node2D"]
 position = Vector2(146, 156)
 texture = ExtResource("3_7rqgy")
 
@@ -107,3 +120,31 @@ distance_fade_enabled = true
 omni_range = 20.0
 omni_attenuation = 0.1
 omni_shadow_mode = 0
+
+[node name="Node3D - Move" type="Node3D" parent="."]
+transform = Transform3D(0.99999994, 0, 0, 0, -0.57188827, 0.8203315, 0, -0.8203315, -0.57188827, 7.9378486, 0, -8.331102)
+script = ExtResource("5_y4jh7")
+StartPoint = Vector3(7, 0, -7.5)
+EndPoint = Vector3(-7.5, 0, -7.5)
+LoopMovement = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Node3D - Move"]
+mesh = SubResource("CapsuleMesh_q68mp")
+
+[node name="Node3D - Rotate" type="Node3D" parent="."]
+transform = Transform3D(-0.08891404, 0.8153771, 0.57206154, -0.5572077, 0.4353384, -0.70710677, -0.825599, -0.38162887, 0.4156267, 7.451681, 1.643348, -1.0297966)
+script = ExtResource("5_qxria")
+StartAngleXDegs = 1.6049999999959255
+StartAngleYDegs = 1.2149999999965075
+StartAngleZDegs = 0.680000000007567
+SpinRateXDegsPerSec = 17.42500000000291
+SpinRateYDegsPerSec = 6.440000000002328
+SpinRateZDegsPerSec = 3.665000000008149
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Node3D - Rotate"]
+mesh = SubResource("TorusMesh_y4jh7")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(-23.054424, 0, 3.85799, 0, 23.375, 0, -3.85799, 0, -23.054424, -45.503212, 0, 0)
+mesh = SubResource("SphereMesh_f140w")
+surface_material_override/0 = SubResource("StandardMaterial3D_0iob3")
