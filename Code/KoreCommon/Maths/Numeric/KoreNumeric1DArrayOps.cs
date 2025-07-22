@@ -57,6 +57,7 @@ public static partial class KoreNumeric1DArrayOps<T> where T : struct, INumber<T
     // construct a list of values that are evenly spaced between the two.
     // Note the range can be descending, so we don't assume min < max.
 
+    // Usage: KoreNumeric1DArray<double> = KoreNumeric1DArrayOps<double>.ListForRange(0.0, 10.0, 5);
     public static KoreNumeric1DArray<T> ListForRange(T valstart, T valend, int count)
     {
         // Check we have sufficient entries to create a range

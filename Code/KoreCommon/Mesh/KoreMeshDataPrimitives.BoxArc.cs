@@ -30,12 +30,24 @@ public static partial class KoreMeshDataPrimitives
         // This way we can later construct lines and triangles from known points.
         
         int numsteps = (int)(hozAngleDeltaDegs * 2); // 2 steps per degree
+
+
+        KoreNumeric1DArray<double> pointAngleList = KoreNumeric1DArrayOps<double>.ListForRange(hozStartAngleDegs, hozStartAngleDegs + hozAngleDeltaDegs, numsteps);
         
-        List<double> 
-        
+        List<KoreXYZPoint> pointInnerLowerList = new List<KoreXYZPoint>();
+
+
+        foreach (double pointAngle in pointAngleList)
+        {
+            KoreXYZPolarOffset polarVect = new KoreXYZPolarOffset() { AzDegs = pointAngle, ElDegs = -vertAngleDegs / 2, Range = innerRadius };
+            KoreXYZPoint listPoint = KoreXYZPoint.Zero.PlusPolarOffset(polarVect);
+            pointInnerLowerList.Add(listPoint);
+        }
         
 
-        mesh.MakeValid();
+        //List<double> pointHeightList = KoreNumeric1DArray.ListForRange(-vertAngleDegs, vertAngleDegs, numsteps);
+
+            mesh.MakeValid();
         return mesh;
     }
 
