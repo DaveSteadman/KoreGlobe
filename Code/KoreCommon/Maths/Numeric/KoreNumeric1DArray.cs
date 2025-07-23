@@ -58,6 +58,7 @@ public class KoreNumeric1DArray<T> : IEnumerable<T> where T : struct, INumber<T>
     // MARK: Constructors
     // --------------------------------------------------------------------------------------------
 
+
     public KoreNumeric1DArray(int newSize)
     {
         if (newSize < 1 || newSize > MaxArrayLength)

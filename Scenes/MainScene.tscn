@@ -106,7 +106,7 @@ skeleton = NodePath("../MeshInstance3D-OrbLight")
 surface_material_override/0 = SubResource("StandardMaterial3D_7rqgy")
 
 [node name="MeshInstance3D-OrbLight" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.055, 0.385, -2.477)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.855, 0.575, -1.447)
 material_override = SubResource("StandardMaterial3D_nhkr4")
 cast_shadow = 0
 gi_mode = 2
@@ -131,6 +131,7 @@ EndPoint = Vector3(-7.5, 0, -7.5)
 LoopMovement = true
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Node3D - Move"]
+gi_mode = 2
 mesh = SubResource("CapsuleMesh_q68mp")
 
 [node name="Node3D - Rotate" type="Node3D" parent="."]
@@ -144,6 +145,7 @@ SpinRateYDegsPerSec = 6.440000000002328
 SpinRateZDegsPerSec = 3.665000000008149
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Node3D - Rotate"]
+gi_mode = 2
 mesh = SubResource("TorusMesh_y4jh7")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]

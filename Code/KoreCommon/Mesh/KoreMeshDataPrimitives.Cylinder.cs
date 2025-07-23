@@ -52,13 +52,19 @@ public static partial class KoreMeshDataPrimitives
         // End caps
         if (endsClosed)
         {
-            // p1 cap
-            for (int i = 1; i < sides - 1; i++)
-                mesh.AddTriangle(p1, p1Circle[i], p1Circle[i + 1]);
+            // p1 cap (triangle fan from center p1)
+            for (int i = 0; i < sides; i++)
+            {
+                int next = (i + 1) % sides;
+                mesh.AddTriangle(p1, p1Circle[i], p1Circle[next]);
+            }
 
-            // p2 cap
-            for (int i = 1; i < sides - 1; i++)
-                mesh.AddTriangle(p2, p2Circle[i + 1], p2Circle[i]);
+            // p2 cap (triangle fan from center p2, reversed winding)
+            for (int i = 0; i < sides; i++)
+            {
+                int next = (i + 1) % sides;
+                mesh.AddTriangle(p2, p2Circle[next], p2Circle[i]);
+            }
         }
 
         // --- Add lines for wireframe ---
@@ -77,6 +83,8 @@ public static partial class KoreMeshDataPrimitives
             mesh.AddLine(p1Circle[i], p1Circle[next], lineColor, lineColor);
             mesh.AddLine(p2Circle[i], p2Circle[next], lineColor, lineColor);
         }
+
+        mesh.SetNormalsFromTriangles();
 
         return mesh;
     }

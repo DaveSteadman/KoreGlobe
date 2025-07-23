@@ -20,6 +20,8 @@ public partial class MainScene : Node3D
         AddTestMeshData_Sphere();
         AddTestMeshData_Ribbon();
         AddTestMeshData_BoxArc();
+        AddTestMeshData_Cylinder();
+        AddTestMeshData_Bezier();
     }
 
     public override void _Process(double delta)
@@ -236,6 +238,66 @@ public partial class MainScene : Node3D
         }
     }
 
+    // ---------------------------------------------------------------------------------------------
+    // MARK: CYLINDER
+    // ---------------------------------------------------------------------------------------------
 
+    public void AddTestMeshData_Cylinder()
+    {
+        // Function to add a test cylinder mesh
+        Node3D CylinderNode = new Node3D() { Name = "CylinderNode" };
+        AddChild(CylinderNode);
+        CylinderNode.Position = new Vector3(0, -1.6f, 0);
+
+        // Test Cylinder Mesh
+        {
+            // Cylinder(KoreXYZVector p1, KoreXYZVector p2, double p1radius, double p2radius, int sides, bool endsClosed)
+
+            KoreXYZVector p1 = new KoreXYZVector(-1, 3, 3);
+            KoreXYZVector p2 = new KoreXYZVector(2, 3, 3);
+
+            var cylinderMesh = KoreMeshDataPrimitives.Cylinder(p1, p2, 0.5, 1.5, 24, true);
+
+            KoreGodotLineMesh childMeshNode1 = new KoreGodotLineMesh();
+            childMeshNode1.UpdateMesh(cylinderMesh);
+
+            KoreGodotSurfaceMesh childSurfaceMeshNode1 = new KoreGodotSurfaceMesh();
+            childSurfaceMeshNode1.UpdateMesh(cylinderMesh);
+
+            CylinderNode.AddChild(childMeshNode1);
+            CylinderNode.AddChild(childSurfaceMeshNode1);
+        }
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // MARK: BEZIER
+    // ---------------------------------------------------------------------------------------------
+
+    public void AddTestMeshData_Bezier()
+    {
+        // Function to add a test Bezier mesh
+        Node3D BezierNode = new Node3D() { Name = "BezierNode" };
+        AddChild(BezierNode);
+        BezierNode.Position = new Vector3(3f, -3.6f, 3.0f);
+
+        // Test Bezier Mesh
+        {
+            var bezierMesh = KoreMeshDataPrimitives.Bezier3Line(
+                new KoreXYZVector(0, 0, 0),
+                new KoreXYZVector(1, 2, 0),
+                new KoreXYZVector(2, -1, 0),
+                new KoreColorRGB(255, 255, 0),
+                10);
+
+            KoreGodotLineMesh childMeshNode1 = new KoreGodotLineMesh();
+            childMeshNode1.UpdateMesh(bezierMesh);
+
+            // KoreGodotSurfaceMesh childSurfaceMeshNode1 = new KoreGodotSurfaceMesh();
+            // childSurfaceMeshNode1.UpdateMesh(bezierMesh);
+
+            BezierNode.AddChild(childMeshNode1);
+            // BezierNode.AddChild(childSurfaceMeshNode1);
+        }
+    }
 
 }
