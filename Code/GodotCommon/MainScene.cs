@@ -19,6 +19,7 @@ public partial class MainScene : Node3D
         AddTestMeshData_Pyramid();
         AddTestMeshData_Sphere();
         AddTestMeshData_Ribbon();
+        AddTestMeshData_BoxArc();
     }
 
     public override void _Process(double delta)
@@ -204,5 +205,37 @@ public partial class MainScene : Node3D
             RibbonNode.AddChild(childSurfaceMeshNode1);
         }
     }
+
+    // ---------------------------------------------------------------------------------------------
+    // MARK: BOX ARC
+    // ---------------------------------------------------------------------------------------------
+
+    public void AddTestMeshData_BoxArc()
+    {
+        // Function to add a test box arc mesh
+        Node3D BoxArcNode = new Node3D() { Name = "BoxArcNode" };
+        AddChild(BoxArcNode);
+        BoxArcNode.Position = new Vector3(0, 0, -3.6f);
+
+        // Test Box Arc Mesh
+        {
+            var boxArcMesh = KoreMeshDataPrimitives.BoxArc(
+                1.5f, 3.75f, // Inner and outer radius
+                13.0f, // Vertical angle in degrees
+                40.0f, 120.0f // Horizontal start and delta angles in degrees
+            );
+
+            KoreGodotLineMesh childMeshNode1 = new KoreGodotLineMesh();
+            childMeshNode1.UpdateMesh(boxArcMesh);
+
+            KoreGodotSurfaceMesh childSurfaceMeshNode1 = new KoreGodotSurfaceMesh();
+            childSurfaceMeshNode1.UpdateMesh(boxArcMesh);
+
+            BoxArcNode.AddChild(childMeshNode1);
+            BoxArcNode.AddChild(childSurfaceMeshNode1);
+        }
+    }
+
+
 
 }

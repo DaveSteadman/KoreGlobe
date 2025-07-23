@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Godot;
 
 #nullable enable
 
@@ -54,7 +55,11 @@ public partial class KoreMeshData
         // - - - - Copy lines - - - -
 
         foreach (var kvp in Lines)
-            newMesh.Lines[lineIdMap[kvp.Key]] = kvp.Value;
+        {
+            var originalLine = kvp.Value;
+            var newLine = new KoreMeshLine(vertexIdMap[originalLine.A], vertexIdMap[originalLine.B]);
+            newMesh.Lines[lineIdMap[kvp.Key]] = newLine;
+        }
 
         foreach (var kvp in LineColors)
             newMesh.LineColors[lineIdMap[kvp.Key]] = kvp.Value;
@@ -62,7 +67,11 @@ public partial class KoreMeshData
         // - - - - Copy triangles - - - -
 
         foreach (var kvp in Triangles)
-            newMesh.Triangles[triangleIdMap[kvp.Key]] = kvp.Value;
+        {
+            var originalTriangle = kvp.Value;
+            var newTriangle = new KoreMeshTriangle(vertexIdMap[originalTriangle.A], vertexIdMap[originalTriangle.B], vertexIdMap[originalTriangle.C]);
+            newMesh.Triangles[triangleIdMap[kvp.Key]] = newTriangle;
+        }
 
         foreach (var kvp in TriangleColors)
             newMesh.TriangleColors[triangleIdMap[kvp.Key]] = kvp.Value;
@@ -134,7 +143,11 @@ public partial class KoreMeshData
         // - - - - Copy lines - - - -
 
         foreach (var kvp in Lines)
-            newMesh.Lines[lineIdMap[kvp.Key]] = kvp.Value;
+        {
+            var originalLine = kvp.Value;
+            var newLine = new KoreMeshLine(vertexIdMap[originalLine.A], vertexIdMap[originalLine.B]);
+            newMesh.Lines[lineIdMap[kvp.Key]] = newLine;
+        }
 
         foreach (var kvp in LineColors)
             newMesh.LineColors[lineIdMap[kvp.Key]] = kvp.Value;
@@ -142,7 +155,11 @@ public partial class KoreMeshData
         // - - - - Copy triangles - - - -
 
         foreach (var kvp in Triangles)
-            newMesh.Triangles[triangleIdMap[kvp.Key]] = kvp.Value;
+        {
+            var originalTriangle = kvp.Value;
+            var newTriangle = new KoreMeshTriangle(vertexIdMap[originalTriangle.A], vertexIdMap[originalTriangle.B], vertexIdMap[originalTriangle.C]);
+            newMesh.Triangles[triangleIdMap[kvp.Key]] = newTriangle;
+        }
 
         foreach (var kvp in TriangleColors)
             newMesh.TriangleColors[triangleIdMap[kvp.Key]] = kvp.Value;
@@ -160,11 +177,14 @@ public partial class KoreMeshData
 
     // A Basic append takes the
 
+    // Usage:  newMesh = KoreMeshData.BasicAppendMesh(mesh1, mesh2);
     public static KoreMeshData BasicAppendMesh(KoreMeshData mesh1, KoreMeshData mesh2)
     {
         // Renumber both meshes down to contiguous lists
         KoreMeshData newMesh         = mesh1.RenumberIDs();
         KoreMeshData mesh2Renumbered = mesh2.RenumberIDs();
+        
+        mesh2Renumbered.ResetMaxIDs();
 
         // Renumber 2 off of 1
         KoreMeshData mesh2Offset = mesh2Renumbered.OffsetIDs(newMesh);

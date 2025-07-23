@@ -23,18 +23,19 @@ public static partial class KoreMeshDataIO
     // --------------------------------------------------------------------------------------------
 
     // Save KoreMeshData to JSON (triangles as 3 points, lines as native structure)
+    // Usage: string jsonStr = KoreMeshDataIO.ToJson(mesh, dense: true);
     public static string ToJson(KoreMeshData mesh, bool dense = false)
     {
         var obj = new
         {
-            vertices        = mesh.Vertices,
-            lines           = mesh.Lines,
-            triangles       = mesh.Triangles,
-            normals         = mesh.Normals,
-            uvs             = mesh.UVs,
-            vertexColors    = mesh.VertexColors,
-            lineColors      = mesh.LineColors,
-            triangleColors  = mesh.TriangleColors,
+            vertices = mesh.Vertices,
+            lines = mesh.Lines,
+            triangles = mesh.Triangles,
+            normals = mesh.Normals,
+            uvs = mesh.UVs,
+            vertexColors = mesh.VertexColors,
+            lineColors = mesh.LineColors,
+            triangleColors = mesh.TriangleColors,
         };
 
         var options = new JsonSerializerOptions

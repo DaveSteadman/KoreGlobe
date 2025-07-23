@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://ced7xhu6jah7w"]
+[gd_scene load_steps=20 format=3 uid="uid://ced7xhu6jah7w"]
 
 [ext_resource type="Script" uid="uid://374o2dbtf0tj" path="res://Code/GodotCommon/MainScene.cs" id="1_hpc76"]
 [ext_resource type="Script" uid="uid://v2mfrrw8pmol" path="res://Code/GodotCommon/KoreGodot2DDrawTest.cs" id="2_nhkr4"]
@@ -7,6 +7,8 @@
 [ext_resource type="Script" uid="uid://cjla2igmtmekv" path="res://Code/GodotCommon/KoreSpinNode3D.cs" id="5_qxria"]
 [ext_resource type="Script" uid="uid://thnqysfpm7b8" path="res://Code/GodotCommon/KoreMoveNode3D.cs" id="5_y4jh7"]
 [ext_resource type="Texture2D" uid="uid://bup7pyvbwofc8" path="res://Resources/AUsVQ.png" id="7_q68mp"]
+[ext_resource type="Script" uid="uid://dbj0avt5sv8m6" path="res://Code/GodotCommon/KoreOrbitNode3D.cs" id="8_f140w"]
+[ext_resource type="PackedScene" uid="uid://caqcuxag4x2ca" path="res://Resources/DumbArrow.blend" id="9_0iob3"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_hpc76"]
 
@@ -97,7 +99,7 @@ mesh = SubResource("PlaneMesh_hpc76")
 surface_material_override/0 = SubResource("StandardMaterial3D_tr2i4")
 
 [node name="MeshInstance3D-TestCube" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.7850225, -0.28801394, -2.916768)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, -0.5, -3)
 gi_mode = 2
 mesh = SubResource("BoxMesh_tr2i4")
 skeleton = NodePath("../MeshInstance3D-OrbLight")
@@ -148,3 +150,10 @@ mesh = SubResource("TorusMesh_y4jh7")
 transform = Transform3D(-23.054424, 0, 3.85799, 0, 23.375, 0, -3.85799, 0, -23.054424, -45.503212, 0, 0)
 mesh = SubResource("SphereMesh_f140w")
 surface_material_override/0 = SubResource("StandardMaterial3D_0iob3")
+
+[node name="Node3D - Orbit" type="Node3D" parent="."]
+script = ExtResource("8_f140w")
+AutoRotateToFaceCenter = true
+
+[node name="DumbArrow" parent="Node3D - Orbit" instance=ExtResource("9_0iob3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 19.093494)

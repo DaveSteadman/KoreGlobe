@@ -41,6 +41,13 @@ public partial class KoreOrbitNode3D : Node3D
 
     public override void _Ready()
     {
+        // Zero the transform of child nodes to ensure they start from the correct position
+        foreach (Node child in GetChildren())
+        {
+            if (child is Node3D childNode3D)
+                childNode3D.Transform = new Transform3D(Basis.Identity, Vector3.Zero);
+        }        
+        
         // Calculate the orbit plane vectors
         CalculateOrbitPlane();
         
@@ -124,7 +131,11 @@ public partial class KoreOrbitNode3D : Node3D
             }
             
             Basis lookBasis = Basis.LookingAt(toCenter, up);
-            Rotation = lookBasis.GetEuler();
+            
+            // Apply the rotation - this should affect child nodes
+            Transform3D currentTransform = Transform;
+            currentTransform.Basis = lookBasis;
+            Transform = currentTransform;
         }
     }
 
@@ -140,7 +151,11 @@ public partial class KoreOrbitNode3D : Node3D
             Vector3 up = OrbitAxis.Normalized();
             
             Basis lookBasis = Basis.LookingAt(tangentDirection, up);
-            Rotation = lookBasis.GetEuler();
+            
+            // Apply the rotation - this should affect child nodes
+            Transform3D currentTransform = Transform;
+            currentTransform.Basis = lookBasis;
+            Transform = currentTransform;
         }
     }
 
@@ -190,5 +205,19 @@ public partial class KoreOrbitNode3D : Node3D
     public float GetCurrentDistanceFromCenter()
     {
         return Position.DistanceTo(OrbitCenter);
+    }
+    
+    // Force update of child node transforms (call this if children aren't updating properly)
+    public void ForceChildTransformUpdate()
+    {
+        // Force a transform update on all child nodes
+        foreach (Node child in GetChildren())
+        {
+            if (child is Node3D childNode3D)
+            {
+                // Force the child to update its transform
+                childNode3D.Transform = childNode3D.Transform;
+            }
+        }
     }
 }
