@@ -2,6 +2,7 @@ using Godot;
 using System;
 
 using KoreCommon;
+using System.Collections.Generic;
 
 public partial class MainScene : Node3D
 {
@@ -259,11 +260,11 @@ public partial class MainScene : Node3D
             var cylinderMesh = KoreMeshDataPrimitives.Cylinder(p1, p2, 0.5, 1.5, 24, true);
 
         // Debug print the mesh to JSON
-        string jsonStr = KoreMeshDataIO.ToJson(cylinderMesh, dense: false);
-        //GD.Print("KoreGodotSurfaceMesh: UpdateMesh - Mesh Data: ", jsonStr);
+        // string jsonStr = KoreMeshDataIO.ToJson(cylinderMesh, dense: false);
+        // //GD.Print("KoreGodotSurfaceMesh: UpdateMesh - Mesh Data: ", jsonStr);
 
-        // dump the string out to a text file
-        System.IO.File.WriteAllText("DEBUG_cylinderMesh.txt", jsonStr);
+        // // dump the string out to a text file
+        // System.IO.File.WriteAllText("DEBUG_cylinderMesh.txt", jsonStr);
 
 
             KoreGodotLineMesh childMeshNode1 = new KoreGodotLineMesh();
@@ -292,16 +293,16 @@ public partial class MainScene : Node3D
         {
             var bezierMesh = KoreMeshDataPrimitives.Bezier3Line(
                 new KoreXYZVector(0, 0, 0),
-                new KoreXYZVector(1, 2, 0),
-                new KoreXYZVector(2, -1, 0),
+                new KoreXYZVector(1, 1, 0),
+                new KoreXYZVector(2, 0.5, 0),
                 new KoreColorRGB(255, 255, 255),
                 50);
 
             // Debug print the mesh to JSON to file
-            string jsonStr = KoreMeshDataIO.ToJson(bezierMesh, dense: false);
-            System.IO.File.WriteAllText("DEBUG_bezierMesh.txt", jsonStr);
+            // string jsonStr = KoreMeshDataIO.ToJson(bezierMesh, dense: false);
+            // System.IO.File.WriteAllText("DEBUG_bezierMesh.txt", jsonStr);
 
-            KoreGodotLineMesh childMeshNode1 = new KoreGodotLineMesh();
+            KoreGodotLineMesh childMeshNode1 = new KoreGodotLineMesh() { Name = "Bezier3LineMesh" };
             childMeshNode1.UpdateMesh(bezierMesh);
 
             // KoreGodotSurfaceMesh childSurfaceMeshNode1 = new KoreGodotSurfaceMesh();
@@ -309,6 +310,65 @@ public partial class MainScene : Node3D
 
             BezierNode.AddChild(childMeshNode1);
             // BezierNode.AddChild(childSurfaceMeshNode1);
+        }
+
+
+        // 4 point bezier
+        {
+            var bezierMesh = KoreMeshDataPrimitives.Bezier4Line(
+                new KoreXYZVector(0, 0, 0.1),
+                new KoreXYZVector(1, 1, 0.1),
+                new KoreXYZVector(2, 0.5, 0.1),
+                new KoreXYZVector(3, 1, 0.1),
+                new KoreColorRGB(255, 255, 255),
+                50);
+
+            KoreGodotLineMesh childMeshNode4 = new KoreGodotLineMesh() { Name = "Bezier4LineMesh" };
+            childMeshNode4.UpdateMesh(bezierMesh);
+
+            BezierNode.AddChild(childMeshNode4);
+
+        }
+
+        // Many-point Bezier
+        {
+            // Use sin/cos operations on XZ axis, with an ever-increaing Y, to create a rising spiral of points
+            double radius = 1.0;
+            double startingY = 1;
+            double yInc = 0.01;
+            double numPoints = 500;
+            int divisions = 50; // Number of segments to divide the Bezier curve into
+            double angleIncrement = KoreAngle.DegsToRads(5); // Angle increment for each point
+
+            List<KoreXYZPoint> controlPoints = new List<KoreXYZPoint>();
+
+            for (int i = 0; i < numPoints; i++)
+            {
+                double angle = i * angleIncrement;
+                double x = radius * Math.Cos(angle);
+                double z = radius * Math.Sin(angle);
+                double y = startingY + (i * yInc);
+
+                controlPoints.Add(new KoreXYZPoint(x, y, z));
+            }
+
+            // Create the Bezier mesh from the control points
+            List<KoreXYZPoint> points = KoreMeshDataPrimitives.PointsListFromBezier(controlPoints, divisions);
+
+            List<KoreXYZVector> vpoints = new List<KoreXYZVector>();
+            foreach (KoreXYZPoint point in points)
+            {
+                vpoints.Add(new KoreXYZVector(point.X, point.Y, point.Z));
+            }
+
+            KoreMeshData bezierMesh = new KoreMeshData();
+            bezierMesh.AddPolyLine(vpoints, KoreColorPalette.Colors["Orange"]);
+
+            KoreGodotLineMesh childMeshNode4 = new KoreGodotLineMesh() { Name = "BezierPolyLineMesh" };
+            childMeshNode4.UpdateMesh(bezierMesh);
+
+            BezierNode.AddChild(childMeshNode4);
+
         }
     }
 

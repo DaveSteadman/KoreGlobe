@@ -137,6 +137,26 @@ public partial class KoreMeshData
     }
 
     // --------------------------------------------------------------------------------------------
+
+    public void OffsetVertex(int vertexId, KoreXYZVector offset)
+    {
+        // We want to throw here, because we have a unique ID concept and random new additions break this
+        if (!Vertices.ContainsKey(vertexId))
+            throw new ArgumentOutOfRangeException(nameof(vertexId), "Vertex ID is not found.");
+
+        // Offset the vertex by the given offset vector
+        Vertices[vertexId] = Vertices[vertexId] + offset;
+    }
+    
+    public void OffsetAllVertices(KoreXYZVector offset)
+    {
+        foreach (var vertexId in Vertices.Keys)
+        {
+            OffsetVertex(vertexId, offset);
+        }
+    }
+
+    // --------------------------------------------------------------------------------------------
     // MARK: Normals
     // --------------------------------------------------------------------------------------------
 
@@ -230,14 +250,14 @@ public partial class KoreMeshData
     // MARK: Dotted Lines
     // --------------------------------------------------------------------------------------------
 
-    public int AddDottedLineByDistance(KoreXYZVector start, KoreXYZVector end, KoreColorRGB colLine, double dotSpacing)
+    public void AddDottedLineByDistance(KoreXYZVector start, KoreXYZVector end, KoreColorRGB colLine, double dotSpacing)
     {
         int p1 = AddVertex(start, null, colLine);
         int p2 = AddVertex(end, null, colLine);
-        return AddDottedLineByDistance(p1, p2, colLine, dotSpacing);
+        AddDottedLineByDistance(p1, p2, colLine, dotSpacing);
     }
 
-    public int AddDottedLineByDistance(int vertexIdA, int vertexIdB, KoreColorRGB colLine, double dotSpacing)
+    public void AddDottedLineByDistance(int vertexIdA, int vertexIdB, KoreColorRGB colLine, double dotSpacing)
     {
         // Calculate the distance between the two vertices
         KoreXYZPoint pntA = new KoreXYZPoint(Vertices[vertexIdA]);
@@ -274,9 +294,34 @@ public partial class KoreMeshData
             currDist += dotSpacing;
         }
 
-        // Return a dummy ID since we're not actually creating a single line
-        return -1; // or could return the ID of the last dot created
+        // Not returning a value since we're not creating a single returnable lineId
     }
+
+    // --------------------------------------------------------------------------------------------
+    // MARK: Poly Line
+    // --------------------------------------------------------------------------------------------
+
+    // Add a list of points and connect them all with lines.
+    public void AddPolyLine(List<KoreXYZVector> points, KoreColorRGB colLine)
+    {
+        if (points.Count < 2)
+            throw new ArgumentException("At least two points are required to create a polyline.");
+
+        // Add all the points and record the ids in a list
+        List<int> pointIds = new List<int>();
+        
+        foreach (KoreXYZVector pnt in points)
+        {
+            int id = AddVertex(pnt, null, colLine);
+            pointIds.Add(id);
+        }
+
+        for (int i = 0; i < pointIds.Count - 1; i++)
+        {
+            AddLine(pointIds[i], pointIds[i + 1], colLine);
+        }
+    }
+
 
     // --------------------------------------------------------------------------------------------
     // MARK: Line Colors

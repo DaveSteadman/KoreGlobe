@@ -10,6 +10,8 @@ namespace KoreCommon;
 
 public static partial class KoreMeshDataPrimitives
 {
+
+    // Usage: KoreMeshData mesh = KoreMeshDataPrimitives.BasicSphere(1.0f, new KoreColorRGB(1, 0, 0), 16);
     public static KoreMeshData BasicSphere(float radius, KoreColorRGB color, int numLatSegments)
     {
         int latSegments = numLatSegments;
@@ -51,7 +53,7 @@ public static partial class KoreMeshDataPrimitives
                 int current = lat * (lonSegments + 1) + lon;
                 int next = current + lonSegments + 1;
 
-                mesh.AddTriangle(indexMap[current], indexMap[next], indexMap[current + 1]);
+                mesh.AddTriangle(indexMap[current],     indexMap[next], indexMap[current + 1]);
                 mesh.AddTriangle(indexMap[current + 1], indexMap[next], indexMap[next + 1]);
             }
         }
@@ -73,7 +75,7 @@ public static partial class KoreMeshDataPrimitives
         {
             for (int lat = 0; lat < latSegments; lat++)
             {
-                int a = indexMap[lat * (lonSegments + 1) + lon];
+                int a = indexMap[lat       * (lonSegments + 1) + lon];
                 int b = indexMap[(lat + 1) * (lonSegments + 1) + lon];
                 mesh.AddLine(a, b, color, color);
             }
@@ -81,4 +83,17 @@ public static partial class KoreMeshDataPrimitives
 
         return mesh;
     }
+    
+    // --------------------------------------------------------------------------------------------
+    
+    // Creates a basic sphere mesh with a specified center, radius, and color
+    public static KoreMeshData BasicSphere(KoreXYZVector center, double radius, KoreColorRGB? color = null, int numLatSegments = 16)
+    {
+        KoreMeshData sphereMesh = BasicSphere((float)radius, color ?? KoreColorPalette.Colors["White"], numLatSegments);
+
+        sphereMesh.OffsetAllVertices(center);
+
+        return sphereMesh;
+    }
+    
 }
