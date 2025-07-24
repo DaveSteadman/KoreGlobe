@@ -23,6 +23,7 @@ public partial class MainScene : Node3D
         AddTestMeshData_BoxArc();
         AddTestMeshData_Cylinder();
         AddTestMeshData_Bezier();
+        AddTestMeshData_Hemisphere();
     }
 
     public override void _Process(double delta)
@@ -326,7 +327,6 @@ public partial class MainScene : Node3D
             childMeshNode4.UpdateMesh(bezierMesh);
 
             BezierNode.AddChild(childMeshNode4);
-
         }
 
         // Many-point Bezier
@@ -372,5 +372,35 @@ public partial class MainScene : Node3D
 
         }
     }
+
+    // ---------------------------------------------------------------------------------------------
+    // MARK: HEMISPHERE
+    // ---------------------------------------------------------------------------------------------
+
+    public void AddTestMeshData_Hemisphere()
+    {
+        // Function to add a test hemisphere mesh
+        Node3D HemisphereNode = new Node3D() { Name = "HemisphereNode" };
+        AddChild(HemisphereNode);
+        HemisphereNode.Position = new Vector3(0, -1.0f, 2.5f);
+
+        // Test Hemisphere Mesh
+        {
+            var hemisphereMesh = KoreMeshDataPrimitives.BasicHemisphere(2.5f, new KoreColorRGB(50, 100, 50, 150), 16);
+
+            hemisphereMesh.OffsetAllVertices(new KoreXYZVector(5, 0, 5));
+
+            KoreGodotLineMesh childMeshNode1 = new KoreGodotLineMesh();
+            childMeshNode1.UpdateMesh(hemisphereMesh);
+
+            KoreGodotSurfaceMesh childSurfaceMeshNode1 = new KoreGodotSurfaceMesh();
+            childSurfaceMeshNode1.UpdateMesh(hemisphereMesh);
+
+            HemisphereNode.AddChild(childMeshNode1);
+            HemisphereNode.AddChild(childSurfaceMeshNode1);
+        }
+    }
+
+
 
 }

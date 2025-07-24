@@ -16,15 +16,27 @@ public static partial class KoreMeshDataPrimitives
         int lonSegments = numLatSegments * 2;
 
         var mesh = new KoreMeshData();
-        var indexMap = new List<int>();
+        
+        // List of lists to store vertex IDs for each latitude ring
+        var latitudeRings = new List<List<int>>();
 
-        for (int lat = 0; lat <= latSegments; lat++)
+        // Create the top point (singular point at the hemisphere top)
+        var topVertex = new KoreXYZVector(0, radius, 0);
+        int topVertexId = mesh.AddVertex(topVertex, null, color);
+        
+        // Add the top point as the first "ring" (single point)
+        latitudeRings.Add(new List<int> { topVertexId });
+
+        // Generate latitude rings from top to bottom (excluding the very top which is the singular point)
+        for (int lat = 1; lat <= latSegments; lat++)
         {
             double a1 = (Math.PI / 2.0) * lat / latSegments; // 0 to PI/2
             double sin1 = Math.Sin(a1);
             double cos1 = Math.Cos(a1);
 
-            for (int lon = 0; lon <= lonSegments; lon++)
+            var currentRing = new List<int>();
+
+            for (int lon = 0; lon < lonSegments; lon++)
             {
                 double a2 = 2 * Math.PI * lon / lonSegments;
                 double sin2 = Math.Sin(a2);
@@ -35,48 +47,68 @@ public static partial class KoreMeshDataPrimitives
                 double z = radius * sin1 * sin2;
 
                 var vertex = new KoreXYZVector(x, y, z);
-                var normal = (radius != 0) ? vertex / radius : new KoreXYZVector(0, 1, 0);
-
-                int idx = mesh.AddVertex(vertex, normal, color);
-                indexMap.Add(idx);
+                int vertexId = mesh.AddVertex(vertex, null, color);
+                currentRing.Add(vertexId);
             }
+
+            latitudeRings.Add(currentRing);
         }
 
-        // Triangles
-        for (int lat = 0; lat < latSegments; lat++)
+        // Generate triangles between latitude rings
+        for (int lat = 0; lat < latitudeRings.Count - 1; lat++)
         {
-            for (int lon = 0; lon < lonSegments; lon++)
-            {
-                int current = lat * (lonSegments + 1) + lon;
-                int next = current + lonSegments + 1;
+            var upperRing = latitudeRings[lat];
+            var lowerRing = latitudeRings[lat + 1];
 
-                mesh.AddTriangle(indexMap[current], indexMap[next], indexMap[current + 1]);
-                mesh.AddTriangle(indexMap[current + 1], indexMap[next], indexMap[next + 1]);
+            if (lat == 0)
+            {
+                // Special case: connect top point to first ring (triangular fans)
+                for (int lon = 0; lon < lowerRing.Count; lon++)
+                {
+                    int nextLon = (lon + 1) % lowerRing.Count;
+                    mesh.AddTriangle(topVertexId, lowerRing[lon], lowerRing[nextLon]);
+                }
+            }
+            else
+            {
+                // Normal case: connect two rings with quads (2 triangles each)
+                for (int lon = 0; lon < upperRing.Count; lon++)
+                {
+                    int nextLon = (lon + 1) % upperRing.Count;
+                    
+                    // Two triangles forming a quad
+                    mesh.AddTriangle(upperRing[lon], lowerRing[nextLon], upperRing[nextLon]);
+                    mesh.AddTriangle(upperRing[lon], lowerRing[lon], lowerRing[nextLon]);
+                }
             }
         }
 
-        // Horizontal wireframe lines
-        for (int lat = 0; lat <= latSegments; lat++)
+        // Generate wireframe lines
+        // Horizontal lines (latitude circles)
+        for (int lat = 1; lat < latitudeRings.Count; lat++) // Skip top point
         {
-            int rowStart = lat * (lonSegments + 1);
-            for (int lon = 0; lon < lonSegments; lon++)
+            var ring = latitudeRings[lat];
+            for (int lon = 0; lon < ring.Count; lon++)
             {
-                int a = indexMap[rowStart + lon];
-                int b = indexMap[rowStart + lon + 1];
-                mesh.AddLine(a, b, color, color);
+                int nextLon = (lon + 1) % ring.Count;
+                mesh.AddLine(ring[lon], ring[nextLon], color, color);
             }
         }
 
-        // Vertical wireframe lines
-        for (int lon = 0; lon <= lonSegments; lon++)
+        // Vertical lines (longitude lines)
+        for (int lon = 0; lon < lonSegments; lon++)
         {
-            for (int lat = 0; lat < latSegments; lat++)
+            // Connect from top point down through all rings
+            mesh.AddLine(topVertexId, latitudeRings[1][lon], color, color);
+            
+            for (int lat = 1; lat < latitudeRings.Count - 1; lat++)
             {
-                int a = indexMap[lat * (lonSegments + 1) + lon];
-                int b = indexMap[(lat + 1) * (lonSegments + 1) + lon];
-                mesh.AddLine(a, b, color, color);
+                mesh.AddLine(latitudeRings[lat][lon], latitudeRings[lat + 1][lon], color, color);
             }
         }
+
+        // calculate the normals from the triangles.
+        mesh.SetNormalsFromTriangles();
 
         return mesh;
     }
