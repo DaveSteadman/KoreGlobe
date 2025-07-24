@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
+using Godot;
 
 namespace KoreCommon;
 
@@ -27,15 +28,20 @@ public static partial class KoreMeshDataPrimitives
 
         KoreNumeric1DArray<double> fractionList = KoreNumeric1DArrayOps<double>.ListForRange(0, 1, divisions);
 
+        // debug print the fractions list
+        string fractionsStr = string.Join(", ", fractionList);
+        GD.Print($"Fraction List: {fractionsStr}");
+
+
         List<int> pointIds = new List<int>();
 
         KoreMeshData newMesh = new KoreMeshData();
 
         foreach (double currVal in fractionList)
         {
-            double currX = KoreNumeric1DArrayOps<double>.CalculateBezierPoint(0.1, xValues);
-            double currY = KoreNumeric1DArrayOps<double>.CalculateBezierPoint(0.1, yValues);
-            double currZ = KoreNumeric1DArrayOps<double>.CalculateBezierPoint(0.1, zValues);
+            double currX = KoreNumeric1DArrayOps<double>.CalculateBezierPoint(currVal, xValues);
+            double currY = KoreNumeric1DArrayOps<double>.CalculateBezierPoint(currVal, yValues);
+            double currZ = KoreNumeric1DArrayOps<double>.CalculateBezierPoint(currVal, zValues);
 
             KoreXYZVector newPoint = new KoreXYZVector(currX, currY, currZ);
 
@@ -51,6 +57,12 @@ public static partial class KoreMeshDataPrimitives
             int endId = pointIds[i + 1];
             newMesh.AddLine(startId, endId, lineColor);
         }
+
+        KoreColorRGB debugCol = KoreColorPalette.Colors["Red"];
+
+        // Add dotted lines to debug the control points
+        newMesh.AddDottedLineByDistance(p1, p2, debugCol, 0.1);
+        newMesh.AddDottedLineByDistance(p2, p3, debugCol, 0.1);
 
         return newMesh;
     }

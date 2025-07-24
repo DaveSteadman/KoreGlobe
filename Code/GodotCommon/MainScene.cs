@@ -258,6 +258,14 @@ public partial class MainScene : Node3D
 
             var cylinderMesh = KoreMeshDataPrimitives.Cylinder(p1, p2, 0.5, 1.5, 24, true);
 
+        // Debug print the mesh to JSON
+        string jsonStr = KoreMeshDataIO.ToJson(cylinderMesh, dense: false);
+        //GD.Print("KoreGodotSurfaceMesh: UpdateMesh - Mesh Data: ", jsonStr);
+
+        // dump the string out to a text file
+        System.IO.File.WriteAllText("DEBUG_cylinderMesh.txt", jsonStr);
+
+
             KoreGodotLineMesh childMeshNode1 = new KoreGodotLineMesh();
             childMeshNode1.UpdateMesh(cylinderMesh);
 
@@ -278,7 +286,7 @@ public partial class MainScene : Node3D
         // Function to add a test Bezier mesh
         Node3D BezierNode = new Node3D() { Name = "BezierNode" };
         AddChild(BezierNode);
-        BezierNode.Position = new Vector3(3f, -3.6f, 3.0f);
+        BezierNode.Position = new Vector3(7f, 1f, 7f);
 
         // Test Bezier Mesh
         {
@@ -286,8 +294,12 @@ public partial class MainScene : Node3D
                 new KoreXYZVector(0, 0, 0),
                 new KoreXYZVector(1, 2, 0),
                 new KoreXYZVector(2, -1, 0),
-                new KoreColorRGB(255, 255, 0),
-                10);
+                new KoreColorRGB(255, 255, 255),
+                50);
+
+            // Debug print the mesh to JSON to file
+            string jsonStr = KoreMeshDataIO.ToJson(bezierMesh, dense: false);
+            System.IO.File.WriteAllText("DEBUG_bezierMesh.txt", jsonStr);
 
             KoreGodotLineMesh childMeshNode1 = new KoreGodotLineMesh();
             childMeshNode1.UpdateMesh(bezierMesh);

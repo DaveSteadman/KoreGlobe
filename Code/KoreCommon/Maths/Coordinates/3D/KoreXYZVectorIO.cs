@@ -9,29 +9,31 @@ public static class KoreXYZVectorIO
     // Usage: string str = KoreXYVectorIO.ToString(new KoreXYZVector(1.0, 2.0, 3.0));
     public static string ToString(KoreXYZVector vector)
     {
-        string xstr = vector.X.ToString("F7");
-        if (xstr.Contains("."))
-        {
-            xstr = xstr.TrimEnd('0');
-            if (xstr.EndsWith(".")) xstr = xstr.TrimEnd('.');
-        }
+        string formatStr = "0." + "0" + new string('#', 6);
 
-        string ystr = vector.Y.ToString("F7");
-        if (ystr.Contains("."))
-        {
-            ystr = ystr.TrimEnd('0');
-            if (ystr.EndsWith(".")) ystr = ystr.TrimEnd('.');
-        }
-
-        string zstr = vector.Z.ToString("F7");
-        if (zstr.Contains("."))
-        {
-            zstr = zstr.TrimEnd('0');
-            if (zstr.EndsWith(".")) zstr = zstr.TrimEnd('.');
-        }
+        string xstr = vector.X.ToString(formatStr);
+        string ystr = vector.Y.ToString(formatStr);
+        string zstr = vector.Z.ToString(formatStr);
 
         return $"X:{xstr}, Y:{ystr}, Z:{zstr}";
     }
+
+    // --------------------------------------------------------------------------------------------
+
+    public static string ToStringWithDP(KoreXYZVector vector, int decimalPlaces = 7)
+    {
+        int limitedDP = KoreNumericUtils.LimitToRange<int>(decimalPlaces, 1, 7);
+        string formatStr = "0." + "0" + new string('#', limitedDP - 1);
+
+        string xstr = vector.X.ToString(formatStr);
+        string ystr = vector.Y.ToString(formatStr);
+        string zstr = vector.Z.ToString(formatStr);
+
+        return $"X:{xstr}, Y:{ystr}, Z:{zstr}";
+    }
+
+    // --------------------------------------------------------------------------------------------
+
 
     // Usage: KoreXYZVector vector = KoreXYZVectorIO.FromString("X:1.0, Y:2.0, Z:3.0");
     public static KoreXYZVector FromString(string str)

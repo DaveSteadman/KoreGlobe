@@ -68,7 +68,6 @@ public partial class KoreMeshData
         this.TriangleColors = triangleColors;
     }
 
-
     // Copy constructor
     public KoreMeshData(KoreMeshData mesh)
     {
@@ -193,6 +192,14 @@ public partial class KoreMeshData
     // MARK: Lines
     // --------------------------------------------------------------------------------------------
 
+    public int AddLine(int vertexIdA, int vertexIdB, KoreColorRGB colLine)
+    {
+        int id = NextLineId++;
+        Lines[id] = new KoreMeshLine(vertexIdA, vertexIdB);
+        LineColors[id] = new KoreMeshLineColour(colLine, colLine);
+        return id;
+    }
+
     // Add a line and return its ID
     public int AddLine(int vertexIdA, int vertexIdB, KoreColorRGB? colStart = null, KoreColorRGB? colEnd = null)
     {
@@ -209,6 +216,9 @@ public partial class KoreMeshData
         return AddLine(line.A, line.B, colStart, colEnd);
     }
 
+
+    public int AddLine(KoreXYZVector start, KoreXYZVector end, KoreColorRGB colLine) => AddLine(start, end, colLine, colLine);
+    
     public int AddLine(KoreXYZVector start, KoreXYZVector end, KoreColorRGB colStart, KoreColorRGB colEnd)
     {
         int idxA = AddVertex(start, null, colStart);
@@ -217,9 +227,70 @@ public partial class KoreMeshData
     }
 
     // --------------------------------------------------------------------------------------------
+    // MARK: Dotted Lines
+    // --------------------------------------------------------------------------------------------
+
+    public int AddDottedLineByDistance(KoreXYZVector start, KoreXYZVector end, KoreColorRGB colLine, double dotSpacing)
+    {
+        int p1 = AddVertex(start, null, colLine);
+        int p2 = AddVertex(end, null, colLine);
+        return AddDottedLineByDistance(p1, p2, colLine, dotSpacing);
+    }
+
+    public int AddDottedLineByDistance(int vertexIdA, int vertexIdB, KoreColorRGB colLine, double dotSpacing)
+    {
+        // Calculate the distance between the two vertices
+        KoreXYZPoint pntA = new KoreXYZPoint(Vertices[vertexIdA]);
+        KoreXYZPoint pntB = new KoreXYZPoint(Vertices[vertexIdB]);
+
+        double distance = pntA.DistanceTo(pntB);
+
+        double currDist = 0.0;
+        double dotLength = dotSpacing * 0.5; // Each dot is half the spacing
+
+        while (currDist < distance)
+        {
+            // Calculate the start point of this dot
+            double tStart = currDist / distance;
+            KoreXYZPoint dotStart = new KoreXYZPoint(
+                pntA.X + (pntB.X - pntA.X) * tStart,
+                pntA.Y + (pntB.Y - pntA.Y) * tStart,
+                pntA.Z + (pntB.Z - pntA.Z) * tStart
+            );
+
+            // Calculate the end point of this dot
+            double dotEndDist = Math.Min(currDist + dotLength, distance);
+            double tEnd = dotEndDist / distance;
+            KoreXYZPoint dotEnd = new KoreXYZPoint(
+                pntA.X + (pntB.X - pntA.X) * tEnd,
+                pntA.Y + (pntB.Y - pntA.Y) * tEnd,
+                pntA.Z + (pntB.Z - pntA.Z) * tEnd
+            );
+
+            // Add the line segment (the dot)
+            AddLine(new KoreXYZVector(dotStart), new KoreXYZVector(dotEnd), colLine);
+
+            // Move to the next dot position (including the gap)
+            currDist += dotSpacing;
+        }
+
+        // Return a dummy ID since we're not actually creating a single line
+        return -1; // or could return the ID of the last dot created
+    }
+
+    // --------------------------------------------------------------------------------------------
     // MARK: Line Colors
     // --------------------------------------------------------------------------------------------
 
+    public void SetLineColor(int lineId, KoreColorRGB lineColor)
+    {
+        // We want to throw here, because we have a unique ID concept and random new additions break this
+        if (!Lines.ContainsKey(lineId))
+            throw new ArgumentOutOfRangeException(nameof(lineId), "Line ID is not found.");
+
+        LineColors[lineId] = new KoreMeshLineColour(lineColor, lineColor);
+    }
+    
     public void SetLineColor(int lineId, KoreColorRGB startColor, KoreColorRGB endColor)
     {
         if (!Lines.ContainsKey(lineId))

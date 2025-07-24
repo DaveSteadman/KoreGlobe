@@ -142,6 +142,8 @@ public static partial class KoreMeshDataIO
             string str = KoreXYZVectorIO.ToString(value);
             writer.WriteStringValue(str);
         }
+        
+        
 
         public static KoreXYZVector ReadVector3(JsonElement el)
         {
@@ -170,7 +172,7 @@ public static partial class KoreMeshDataIO
         }
         public override void Write(Utf8JsonWriter writer, KoreXYVector value, JsonSerializerOptions options)
         {
-            string str = KoreXYVectorIO.ToString(value);
+            string str = KoreXYVectorIO.ToStringWithDP(value, 4);
             writer.WriteStringValue(str);
         }
         public static KoreXYVector ReadVector2(JsonElement el)

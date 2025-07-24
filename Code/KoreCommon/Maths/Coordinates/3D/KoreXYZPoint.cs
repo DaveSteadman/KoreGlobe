@@ -48,6 +48,14 @@ public struct KoreXYZPoint
         this.Z = zm;
     }
 
+    // Convenience constructor to create a vector from a point
+    public KoreXYZPoint(KoreXYZVector vector)
+    {
+        this.X = vector.X;
+        this.Y = vector.Y;
+        this.Z = vector.Z;
+    }
+
     // Return a zero point as a default value
     // Example: KoreXYZPoint newPos = KoreXYZPoint.Zero();
     public static KoreXYZPoint Zero => new KoreXYZPoint(0, 0, 0);

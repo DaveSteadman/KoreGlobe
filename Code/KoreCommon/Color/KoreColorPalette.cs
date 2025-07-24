@@ -2,6 +2,9 @@ using System.Collections.Generic;
 
 namespace KoreCommon;
 
+
+// Usage: KoreColorRGB myCol = KoreColorPalette.Colors["Red"];
+
 public static class KoreColorPalette
 {
     public static readonly Dictionary<string, KoreColorRGB> Colors = new Dictionary<string, KoreColorRGB>

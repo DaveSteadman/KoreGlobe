@@ -6,27 +6,22 @@ using System.Collections.Generic;
 
 using Godot;
 
-public partial class KoreGodotSurfaceMesh : Node3D
+public partial class KoreGodotSurfaceMesh : MeshInstance3D
 {
-    private MeshInstance3D _meshInstance;
     private SurfaceTool _surfaceTool = new SurfaceTool();
     private bool _meshNeedsUpdate = false;
 
     // --------------------------------------------------------------------------------------------
-    // MARK: Node3D
+    // MARK: MeshInstance3D
     // --------------------------------------------------------------------------------------------
 
     public override void _Ready()
     {
-        // Create a MeshInstance3D to hold the generated line mesh
-        //_meshInstance = new MeshInstance3D();
-        AddChild(_meshInstance);
-
         // Initialize the SurfaceTool
         //_surfaceTool = new SurfaceTool();
 
-        // Apply the shared Vertex Color Material to the MeshInstance3D
-        // _meshInstance.MaterialOverride = GetSharedVertexColorMaterial();
+        // Apply the shared Vertex Color Material to this MeshInstance3D
+        // MaterialOverride = GetSharedVertexColorMaterial();
 
         // Debug Call: Create a cube with colored edges
         //CreateCube();
@@ -43,8 +38,7 @@ public partial class KoreGodotSurfaceMesh : Node3D
     public void UpdateMesh(KoreMeshData newMeshData)
     {
         _surfaceTool = new SurfaceTool();
-        _meshInstance = new MeshInstance3D();
-        
+
         _surfaceTool.Clear();
         _surfaceTool.Begin(Mesh.PrimitiveType.Triangles);
 
@@ -57,31 +51,31 @@ public partial class KoreGodotSurfaceMesh : Node3D
         {
             int vertexId = kvp.Key;
             KoreXYZVector vertex = kvp.Value;
-            
+
             // Convert to Godot format
             Vector3 godotPos = KoreConvPos.VecToV3(vertex);
-            
+
             // Set vertex color if available
             if (newMeshData.VertexColors.ContainsKey(vertexId))
             {
                 Color vertexColor = KoreConvColor.ToGodotColor(newMeshData.VertexColors[vertexId]);
                 _surfaceTool.SetColor(vertexColor);
             }
-            
+
             // Set normal if available
             if (newMeshData.Normals.ContainsKey(vertexId))
             {
                 Vector3 normal = KoreConvPos.VecToV3(newMeshData.Normals[vertexId]);
                 _surfaceTool.SetNormal(normal);
             }
-            
+
             // Set UV if available
             if (newMeshData.UVs.ContainsKey(vertexId))
             {
                 Vector2 uv = new Vector2((float)newMeshData.UVs[vertexId].X, (float)newMeshData.UVs[vertexId].Y);
                 _surfaceTool.SetUV(uv);
             }
-            
+
             _surfaceTool.AddVertex(godotPos);
             vertexIdToSurfaceIndex[vertexId] = surfaceVertexIndex++;
         }
@@ -109,7 +103,7 @@ public partial class KoreGodotSurfaceMesh : Node3D
         
         foreach (var vertexColor in newMeshData.VertexColors.Values)
         {
-            if (vertexColor.A < 255) // Check for transparency in byte values
+            if (vertexColor.HasTransparency) // Check for transparency in byte values
             {
                 hasTransparency = true;
                 break;
@@ -141,11 +135,11 @@ public partial class KoreGodotSurfaceMesh : Node3D
         //_surfaceTool.GenerateNormals();
         //mesh = _surfaceTool.Commit();
         
-        _meshInstance.Mesh = mesh;
-        _meshInstance.MaterialOverride = material;
+        Mesh = mesh;
+        MaterialOverride = material;
         
         // Enable shadow casting for surface meshes
-        _meshInstance.CastShadow = GeometryInstance3D.ShadowCastingSetting.On;
+        CastShadow = GeometryInstance3D.ShadowCastingSetting.On;
 
         _meshNeedsUpdate = false;
     }

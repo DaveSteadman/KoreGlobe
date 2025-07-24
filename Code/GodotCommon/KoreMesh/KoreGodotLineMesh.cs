@@ -5,27 +5,22 @@ using KoreCommon;
 
 using Godot;
 
-public partial class KoreGodotLineMesh : Node3D
+public partial class KoreGodotLineMesh : MeshInstance3D
 {
-    private MeshInstance3D _meshInstance;
     private SurfaceTool _surfaceTool;
     private bool _meshNeedsUpdate = false;
 
     // --------------------------------------------------------------------------------------------
-    // MARK: Node3D
+    // MARK: MeshInstance3D
     // --------------------------------------------------------------------------------------------
 
     public override void _Ready()
     {
-        // Create a MeshInstance3D to hold the generated line mesh
-        //_meshInstance = new MeshInstance3D();
-        AddChild(_meshInstance);
-
         // Initialize the SurfaceTool
         //_surfaceTool = new SurfaceTool();
 
-        // Apply the shared Vertex Color Material to the MeshInstance3D
-        // _meshInstance.MaterialOverride = GetSharedVertexColorMaterial();
+        // Apply an unlit material to make lines always bright and visible
+        // MaterialOverride = GetUnlitLineMaterial();
 
         // Debug Call: Create a cube with colored edges
         //CreateCube();
@@ -41,8 +36,7 @@ public partial class KoreGodotLineMesh : Node3D
 
     public void UpdateMesh(KoreMeshData newMeshData)
     {
-        _surfaceTool  = new SurfaceTool();
-        _meshInstance = new MeshInstance3D();
+        _surfaceTool = new SurfaceTool();
         
         _surfaceTool.Clear();
         _surfaceTool.Begin(Mesh.PrimitiveType.Lines);
@@ -85,14 +79,40 @@ public partial class KoreGodotLineMesh : Node3D
             _surfaceTool.AddVertex(godotPosB);
         }
 
-        // Commit the mesh and assign it to the MeshInstance3D
+        // Commit the mesh and assign it to this MeshInstance3D
         Mesh mesh = _surfaceTool.Commit();
-        _meshInstance.Mesh = mesh;
+        Mesh = mesh;
+        
+        // Apply unlit material to make lines always bright and visible
+        MaterialOverride = GetUnlitLineMaterial();
         
         // Disable shadow casting for line meshes (lines typically shouldn't cast shadows)
-        _meshInstance.CastShadow = GeometryInstance3D.ShadowCastingSetting.On;
+        CastShadow = GeometryInstance3D.ShadowCastingSetting.Off;
 
         _meshNeedsUpdate = false;
+    }
+
+    // --------------------------------------------------------------------------------------------
+    // MARK: Materials
+    // --------------------------------------------------------------------------------------------
+
+    private StandardMaterial3D GetUnlitLineMaterial()
+    {
+        var material = new StandardMaterial3D();
+        
+        // Make it unlit so lines are always bright
+        material.ShadingMode = BaseMaterial3D.ShadingModeEnum.Unshaded;
+        
+        // Enable vertex colors so line colors work
+        material.VertexColorUseAsAlbedo = true;
+        
+        // Optional: Add some brightness boost
+        material.AlbedoColor = new Color(1.2f, 1.2f, 1.2f, 1.0f); // Slightly brighter than normal
+        
+        // Disable depth testing if you want lines to always show on top (optional)
+        // material.NoDepthTest = true;
+        
+        return material;
     }
 
 }
