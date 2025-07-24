@@ -28,14 +28,14 @@ public static partial class KoreMeshDataIO
     {
         var obj = new
         {
-            vertices = mesh.Vertices,
-            lines = mesh.Lines,
-            triangles = mesh.Triangles,
-            normals = mesh.Normals,
-            uvs = mesh.UVs,
-            vertexColors = mesh.VertexColors,
-            lineColors = mesh.LineColors,
-            triangleColors = mesh.TriangleColors,
+            vertices        = mesh.Vertices,
+            lines           = mesh.Lines,
+            triangles       = mesh.Triangles,
+            normals         = mesh.Normals,
+            uvs             = mesh.UVs,
+            vertexColors    = mesh.VertexColors,
+            lineColors      = mesh.LineColors,
+            triangleColors  = mesh.TriangleColors,
         };
 
         var options = new JsonSerializerOptions
@@ -142,8 +142,6 @@ public static partial class KoreMeshDataIO
             string str = KoreXYZVectorIO.ToString(value);
             writer.WriteStringValue(str);
         }
-        
-        
 
         public static KoreXYZVector ReadVector3(JsonElement el)
         {

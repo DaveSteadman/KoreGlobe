@@ -259,13 +259,12 @@ public partial class MainScene : Node3D
 
             var cylinderMesh = KoreMeshDataPrimitives.Cylinder(p1, p2, 0.5, 1.5, 24, true);
 
-        // Debug print the mesh to JSON
-        // string jsonStr = KoreMeshDataIO.ToJson(cylinderMesh, dense: false);
-        // //GD.Print("KoreGodotSurfaceMesh: UpdateMesh - Mesh Data: ", jsonStr);
+            // Debug print the mesh to JSON
+            // string jsonStr = KoreMeshDataIO.ToJson(cylinderMesh, dense: false);
+            // //GD.Print("KoreGodotSurfaceMesh: UpdateMesh - Mesh Data: ", jsonStr);
 
-        // // dump the string out to a text file
-        // System.IO.File.WriteAllText("DEBUG_cylinderMesh.txt", jsonStr);
-
+            // // dump the string out to a text file
+            // System.IO.File.WriteAllText("DEBUG_cylinderMesh.txt", jsonStr);
 
             KoreGodotLineMesh childMeshNode1 = new KoreGodotLineMesh();
             childMeshNode1.UpdateMesh(cylinderMesh);
@@ -334,6 +333,7 @@ public partial class MainScene : Node3D
         {
             // Use sin/cos operations on XZ axis, with an ever-increaing Y, to create a rising spiral of points
             double radius = 1.0;
+            double radiusInc = 0.005;
             double startingY = 1;
             double yInc = 0.01;
             double numPoints = 500;
@@ -350,6 +350,7 @@ public partial class MainScene : Node3D
                 double y = startingY + (i * yInc);
 
                 controlPoints.Add(new KoreXYZPoint(x, y, z));
+                radius += radiusInc; // Increase the radius for the next point
             }
 
             // Create the Bezier mesh from the control points

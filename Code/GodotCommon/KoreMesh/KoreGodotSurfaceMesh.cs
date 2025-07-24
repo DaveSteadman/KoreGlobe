@@ -103,7 +103,7 @@ public partial class KoreGodotSurfaceMesh : MeshInstance3D
         
         foreach (var vertexColor in newMeshData.VertexColors.Values)
         {
-            if (vertexColor.HasTransparency) // Check for transparency in byte values
+            if (vertexColor.IsTransparent) // Check for transparency in byte values
             {
                 hasTransparency = true;
                 break;

@@ -49,35 +49,35 @@ public partial class KoreMeshData
 
     // Copy constructor
     public KoreMeshData(
-        Dictionary<int, KoreXYZVector> vertices,
-        Dictionary<int, KoreMeshLine> lines,
-        Dictionary<int, KoreMeshTriangle> triangles,
-        Dictionary<int, KoreXYZVector> normals,
-        Dictionary<int, KoreXYVector> uvs,
-        Dictionary<int, KoreColorRGB> vertexColors,
-        Dictionary<int, KoreMeshLineColour> lineColors,
+        Dictionary<int, KoreXYZVector>          vertices,
+        Dictionary<int, KoreMeshLine>           lines,
+        Dictionary<int, KoreMeshTriangle>       triangles,
+        Dictionary<int, KoreXYZVector>          normals,
+        Dictionary<int, KoreXYVector>           uvs,
+        Dictionary<int, KoreColorRGB>           vertexColors,
+        Dictionary<int, KoreMeshLineColour>     lineColors,
         Dictionary<int, KoreMeshTriangleColour> triangleColors)
     {
-        this.Vertices = vertices;
-        this.Lines = lines;
-        this.Triangles = triangles;
-        this.Normals = normals;
-        this.UVs = uvs;
-        this.VertexColors = vertexColors;
-        this.LineColors = lineColors;
+        this.Vertices       = vertices;
+        this.Lines          = lines;
+        this.Triangles      = triangles;
+        this.Normals        = normals;
+        this.UVs            = uvs;
+        this.VertexColors   = vertexColors;
+        this.LineColors     = lineColors;
         this.TriangleColors = triangleColors;
     }
 
     // Copy constructor
     public KoreMeshData(KoreMeshData mesh)
     {
-        this.Vertices = new Dictionary<int, KoreXYZVector>(mesh.Vertices);
-        this.Lines = new Dictionary<int, KoreMeshLine>(mesh.Lines);
-        this.Triangles = new Dictionary<int, KoreMeshTriangle>(mesh.Triangles);
-        this.Normals = new Dictionary<int, KoreXYZVector>(mesh.Normals);
-        this.UVs = new Dictionary<int, KoreXYVector>(mesh.UVs);
-        this.VertexColors = new Dictionary<int, KoreColorRGB>(mesh.VertexColors);
-        this.LineColors = new Dictionary<int, KoreMeshLineColour>(mesh.LineColors);
+        this.Vertices       = new Dictionary<int, KoreXYZVector>(mesh.Vertices);
+        this.Lines          = new Dictionary<int, KoreMeshLine>(mesh.Lines);
+        this.Triangles      = new Dictionary<int, KoreMeshTriangle>(mesh.Triangles);
+        this.Normals        = new Dictionary<int, KoreXYZVector>(mesh.Normals);
+        this.UVs            = new Dictionary<int, KoreXYVector>(mesh.UVs);
+        this.VertexColors   = new Dictionary<int, KoreColorRGB>(mesh.VertexColors);
+        this.LineColors     = new Dictionary<int, KoreMeshLineColour>(mesh.LineColors);
         this.TriangleColors = new Dictionary<int, KoreMeshTriangleColour>(mesh.TriangleColors);
     }
 
@@ -111,8 +111,8 @@ public partial class KoreMeshData
         Vertices[id] = vertex;
 
         if (normal.HasValue) Normals[id] = normal.Value;
-        if (color.HasValue) VertexColors[id] = color.Value;
-        if (uv.HasValue) UVs[id] = uv.Value;
+        if (color.HasValue)  VertexColors[id] = color.Value;
+        if (uv.HasValue)     UVs[id] = uv.Value;
 
         return id;
     }
@@ -131,9 +131,9 @@ public partial class KoreMeshData
     {
         Vertices[vertexId] = vertex;
 
-        if (normal.HasValue) Normals[vertexId] = normal.Value;
-        if (color.HasValue) VertexColors[vertexId] = color.Value;
-        if (uv.HasValue) UVs[vertexId] = uv.Value;
+        if (normal.HasValue) Normals[vertexId]      = normal.Value;
+        if (color.HasValue)  VertexColors[vertexId] = color.Value;
+        if (uv.HasValue)     UVs[vertexId]          = uv.Value;
     }
 
     // --------------------------------------------------------------------------------------------

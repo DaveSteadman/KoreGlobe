@@ -57,8 +57,6 @@ public struct KoreColorRGB
     public static readonly KoreColorRGB Zero = new KoreColorRGB(KoreColorIO.MinByte, KoreColorIO.MinByte, KoreColorIO.MinByte, KoreColorIO.MinByte);
     public static readonly KoreColorRGB White = new KoreColorRGB(KoreColorIO.MaxByte, KoreColorIO.MaxByte, KoreColorIO.MaxByte, KoreColorIO.MaxByte);
 
-    public readonly bool HasTransparency => (A < KoreColorIO.MaxByte);
-
     // --------------------------------------------------------------------------------------------
     // MARK: Changes
     // --------------------------------------------------------------------------------------------
