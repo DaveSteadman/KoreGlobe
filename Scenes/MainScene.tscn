@@ -73,7 +73,6 @@ top_level = true
 
 [node name="OmniLight3D-Green" type="OmniLight3D" parent="Lights"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.2500763, 1.8530807, 0.1592133)
-visible = false
 light_color = Color(0, 0.66888636, 0.19879529, 1)
 light_energy = 12.0
 shadow_enabled = true
@@ -83,7 +82,6 @@ omni_attenuation = 0.5
 
 [node name="OmniLight3D-Yellow" type="OmniLight3D" parent="Lights"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.693246, 19.314701, 4.1954365)
-visible = false
 light_color = Color(0.784544, 0.64490634, 0.06742191, 1)
 light_energy = 8.0
 shadow_enabled = true
@@ -93,7 +91,6 @@ omni_attenuation = 0.01
 
 [node name="OmniLight3D-Magenta" type="OmniLight3D" parent="Lights"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.298, 3.57, -7.054)
-visible = false
 light_color = Color(1, 0, 1, 1)
 light_energy = 8.0
 shadow_enabled = true

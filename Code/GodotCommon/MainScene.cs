@@ -31,9 +31,7 @@ public partial class MainScene : Node3D
         // This method is called every frame.
         // You can use 'delta' to make frame-rate independent calculations.
         // GD.Print("Processing frame with delta: " + delta);
-
     }
-
 
     // ---------------------------------------------------------------------------------------------
     // MARK: BOX
