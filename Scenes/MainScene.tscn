@@ -2,8 +2,8 @@
 
 [ext_resource type="Script" uid="uid://374o2dbtf0tj" path="res://Code/GodotCommon/MainScene.cs" id="1_hpc76"]
 [ext_resource type="Script" uid="uid://v2mfrrw8pmol" path="res://Code/GodotCommon/KoreGodot2DDrawTest.cs" id="2_nhkr4"]
-[ext_resource type="Script" uid="uid://clnw1arvg2wlq" path="res://Code/GodotCommon/UserInput/KoreNodeMoverPlus.cs" id="2_tr2i4"]
 [ext_resource type="Texture2D" uid="uid://btpgdc0gdsy2w" path="res://icon.svg" id="3_7rqgy"]
+[ext_resource type="Script" uid="uid://c2yeihvinnomw" path="res://Code/GodotCommon/UserInput/KoreNodeMoverPlus2.cs" id="4_4b75m"]
 [ext_resource type="Script" uid="uid://cjla2igmtmekv" path="res://Code/GodotCommon/KoreSpinNode3D.cs" id="5_qxria"]
 [ext_resource type="Script" uid="uid://thnqysfpm7b8" path="res://Code/GodotCommon/KoreMoveNode3D.cs" id="5_y4jh7"]
 [ext_resource type="Texture2D" uid="uid://bup7pyvbwofc8" path="res://Resources/AUsVQ.png" id="7_q68mp"]
@@ -62,7 +62,7 @@ texture = ExtResource("3_7rqgy")
 
 [node name="CameraMount" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5)
-script = ExtResource("2_tr2i4")
+script = ExtResource("4_4b75m")
 
 [node name="Camera3D" type="Camera3D" parent="CameraMount"]
 transform = Transform3D(1, -1.4901161e-08, 0, 1.4901161e-08, 1, 0, 2.9802322e-08, 0, 1, 0, 0, 0)
