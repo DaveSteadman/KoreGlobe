@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Godot;
 
 #nullable enable
 
@@ -22,8 +21,6 @@ public partial class KoreMeshData
         NextVertexId   = Vertices.Count  > 0 ? Vertices.Keys.Max()  + 1 : 0;
         NextLineId     = Lines.Count     > 0 ? Lines.Keys.Max()     + 1 : 0;
         NextTriangleId = Triangles.Count > 0 ? Triangles.Keys.Max() + 1 : 0;
-        
-        GD.Print($"ResetMaxIDs: NextVertexId={NextVertexId}, NextLineId={NextLineId}, NextTriangleId={NextTriangleId}");
     }
 
     // --------------------------------------------------------------------------------------------
@@ -64,9 +61,9 @@ public partial class KoreMeshData
     // --------------------------------------------------------------------------------------------
     // MARK: Bounding Box
     // --------------------------------------------------------------------------------------------
-  
+
     // Loop through the vertices, recording the max/min X, Y, Z values. Then return a KoreXYZBox
-    
+
     public KoreXYZBox GetBoundingBox()
     {
         if (Vertices.Count == 0)
