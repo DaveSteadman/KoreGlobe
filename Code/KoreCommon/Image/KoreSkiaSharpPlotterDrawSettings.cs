@@ -14,7 +14,7 @@ namespace KoreCommon.SkiaSharp;
 public class KoreSkiaSharpPlotterDrawSettings
 {
     public SKPaint Paint { get; } = new SKPaint(); // This is a cache of the last paint object created, so we can reuse it if the settings haven't changed
-    
+
     public float LineWidth
     {
         get { return Paint.StrokeWidth; }
@@ -41,6 +41,8 @@ public class KoreSkiaSharpPlotterDrawSettings
         ResetToDefaults();
     }
 
+    // Usage: KoreSkiaSharpPlotterDrawSettings settings = new KoreSkiaSharpPlotterDrawSettings();
+    //         settings.ResetToDefaults();
     public void ResetToDefaults()
     {
         try

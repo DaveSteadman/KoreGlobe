@@ -27,9 +27,12 @@ public static class KoreTestCenter
 
             KoreTestColor.RunTests(testLog);
 
-            KoreTestDatabase.RunTests(testLog);
-
             KoreTestStringDictionary.RunTests(testLog);
+
+            // Run tests that depend on external libraries: DB & SkiaSharp
+            KoreTestDatabase.RunTests(testLog);
+            KoreTestSkiaSharp.RunTests(testLog);
+
         }
         catch (Exception)
         {

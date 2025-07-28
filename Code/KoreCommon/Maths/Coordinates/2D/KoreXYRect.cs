@@ -4,6 +4,20 @@ using System;
 
 namespace KoreCommon;
 
+// enum to define rect positions
+public enum KoreXYRectPosition
+{
+    TopLeft,
+    TopRight,
+    BottomLeft,
+    BottomRight,
+    Center,
+    TopCenter,
+    BottomCenter,
+    LeftCenter,
+    RightCenter
+};
+
 public struct KoreXYRect
 {
     // Main attributes
@@ -90,6 +104,24 @@ public struct KoreXYRect
         // - 0 = top/left, 1 = bottom/right, 0.5 = midpoint
         // - Values beyond 0->1 are allowed, to go outside the rectangle
         return new KoreXYPoint(Left + (Width * xFraction), Top + (Height * yFraction));
+    }
+
+    public KoreXYPoint PointFromPosition(KoreXYRectPosition position)
+    {
+        // Get a point at a given position within the rectangle
+        return position switch
+        {
+            KoreXYRectPosition.TopLeft => TopLeft,
+            KoreXYRectPosition.TopRight => TopRight,
+            KoreXYRectPosition.BottomLeft => BottomLeft,
+            KoreXYRectPosition.BottomRight => BottomRight,
+            KoreXYRectPosition.Center => Center,
+            KoreXYRectPosition.TopCenter => TopCenter,
+            KoreXYRectPosition.BottomCenter => BottomCenter,
+            KoreXYRectPosition.LeftCenter => LeftCenter,
+            KoreXYRectPosition.RightCenter => RightCenter,
+            _ => throw new ArgumentOutOfRangeException(nameof(position), position, null)
+        };
     }
 
     // --------------------------------------------------------------------------------------------

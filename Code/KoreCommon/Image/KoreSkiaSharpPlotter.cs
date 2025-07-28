@@ -16,7 +16,7 @@ public partial class KoreSkiaSharpPlotter
     private SKCanvas canvas;
     public KoreSkiaSharpPlotterDrawSettings DrawSettings = new();
 
-    public SKPaint Paint = new();
+    //public SKPaint Paint = new();
 
     // --------------------------------------------------------------------------------------------
     // MARK: Constructors and initialization
@@ -27,10 +27,7 @@ public partial class KoreSkiaSharpPlotter
         this.canvasBitmap = new SKBitmap(canvasWidth, canvasHeight);
         this.canvas = new SKCanvas(canvasBitmap);
 
-        Paint.StrokeWidth = 1;
-        Paint.IsAntialias = true;
-        Paint.Color = SKColors.Black;
-        Paint.Style = SKPaintStyle.Stroke;
+        DrawSettings.ResetToDefaults();
 
         Clear(SKColors.White);
     }
@@ -249,7 +246,7 @@ public partial class KoreSkiaSharpPlotter
             Color = DrawSettings.Paint.Color,
             IsAntialias = true
         };
-        
+
         canvas.DrawText(text, position.X, position.Y, font, textPaint);
     }
 
@@ -266,66 +263,65 @@ public partial class KoreSkiaSharpPlotter
             Color = DrawSettings.Paint.Color,
             IsAntialias = true
         };
-        
-        // Measure text to center it
+
+        // Measure text to center it both horizontally and vertically
         var textWidth = font.MeasureText(text);
+
+        // Get font metrics to properly center vertically
+        var fontMetrics = font.Metrics;
+        var textHeight = fontMetrics.Descent - fontMetrics.Ascent;
+
+        // Calculate centered position
         var centeredX = centerPosition.X - (textWidth / 2);
-        
-        canvas.DrawText(text, centeredX, centerPosition.Y, font, textPaint);
+        var centeredY = centerPosition.Y - (textHeight / 2) - fontMetrics.Ascent;
+
+        canvas.DrawText(text, centeredX, centeredY, font, textPaint);
     }
 
-    // public void DrawTextWithBackground(string text, SKPoint position, float fontSize = 12, 
-    //     SKColor? backgroundColor = null, float padding = 4)
-    // {
-    //     using var font = new SKFont(SKTypeface.Default, fontSize);
-    //     using var textPaint = new SKPaint
-    //     {
-    //         Color = DrawSettings.Paint.Color,
-    //         IsAntialias = true
-    //     };
-        
-    //     // Measure text bounds
-    //     var textBounds = font.MeasureText(text, textPaint);
-        
-    //     // Draw background rectangle
-    //     if (backgroundColor.HasValue)
-    //     {
-    //         var bgRect = new SKRect(
-    //             position.X - padding,
-    //             position.Y - textBounds.Height - padding,
-    //             position.X + textBounds.Width + padding,
-    //             position.Y + padding
-    //         );
-            
-    //         using var bgPaint = new SKPaint
-    //         {
-    //             Color = backgroundColor.Value,
-    //             Style = SKPaintStyle.Fill
-    //         };
-            
-    //         canvas.DrawRect(bgRect, bgPaint);
-    //     }
-        
-    //     // Draw text
-    //     canvas.DrawText(text, position.X, position.Y, font, textPaint);
-    // }
+    // --------------------------------------------------------------------------------------------
 
-    // // Get text bounds for layout calculations
-    // public SKRect MeasureText(string text, float fontSize = 12)
-    // {
-    //     using var font = new SKFont(SKTypeface.Default, fontSize);
-    //     using var paint = new SKPaint();
-        
-    //     return font.MeasureText(text, paint);
-    // }
+    public void DrawTextAtPosition(string text, KoreXYPoint pos, KoreXYRectPosition anchorPos, int fontSize = 12)
+    {
+        using var font = new SKFont(SKTypeface.Default, fontSize);
+        using var textPaint = new SKPaint
+        {
+            Color = DrawSettings.Paint.Color,
+            IsAntialias = true
+        };
 
-    // // Get text width only (more efficient for simple layout)
-    // public float MeasureTextWidth(string text, float fontSize = 12)
-    // {
-    //     using var font = new SKFont(SKTypeface.Default, fontSize);
-    //     return font.MeasureText(text);
-    // }
-    
+        var fontMetrics = font.Metrics;
+
+        // Measure text dimensions
+        float textWidth = font.MeasureText(text);
+        float textHeight = fontMetrics.Descent - fontMetrics.Ascent;
+
+        // Calculate anchor point positions relative to the text bounds
+        // Note: SkiaSharp draws text from the baseline, so we need to account for that
+        float leftX = (float)pos.X;
+        float centerX = (float)pos.X - textWidth / 2f;
+        float rightX = (float)pos.X - textWidth;
+
+        float topY = (float)pos.Y - fontMetrics.Ascent;  // Top of text
+        float centerY = (float)pos.Y - (textHeight / 2f) - fontMetrics.Ascent;  // Center of text
+        float bottomY = (float)pos.Y - fontMetrics.Descent;  // Bottom of text
+
+        SKPoint drawPosition = anchorPos switch
+        {
+            KoreXYRectPosition.TopLeft      => new SKPoint(leftX, topY),
+            KoreXYRectPosition.TopCenter    => new SKPoint(centerX, topY),
+            KoreXYRectPosition.TopRight     => new SKPoint(rightX, topY),
+            KoreXYRectPosition.LeftCenter   => new SKPoint(leftX, centerY),
+            KoreXYRectPosition.Center       => new SKPoint(centerX, centerY),
+            KoreXYRectPosition.RightCenter  => new SKPoint(rightX, centerY),
+            KoreXYRectPosition.BottomLeft   => new SKPoint(leftX, bottomY),
+            KoreXYRectPosition.BottomCenter => new SKPoint(centerX, bottomY),
+            KoreXYRectPosition.BottomRight  => new SKPoint(rightX, bottomY),
+            _ => throw new ArgumentOutOfRangeException(nameof(anchorPos), anchorPos, null)
+        };
+
+        canvas.DrawText(text, drawPosition.X, drawPosition.Y, font, textPaint);
+    }
+
     // --------------------------------------------------------------------------------------------
     // MARK: Save
     // --------------------------------------------------------------------------------------------

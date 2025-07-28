@@ -94,6 +94,27 @@ public class KoreXYPolyLine
         return new KoreXYPolyLine(newPoints);
     }
 
+    // --------------------------------------------------------------------------------------------
+    // MARK: Utilities
+    // --------------------------------------------------------------------------------------------
 
+    public KoreXYRect AABB()
+    {
+        if (Points.Count == 0) return KoreXYRect.Zero;
 
+        double minX = Points[0].X;
+        double maxX = Points[0].X;
+        double minY = Points[0].Y;
+        double maxY = Points[0].Y;
+
+        foreach (var point in Points)
+        {
+            if (point.X < minX) minX = point.X;
+            if (point.X > maxX) maxX = point.X;
+            if (point.Y < minY) minY = point.Y;
+            if (point.Y > maxY) maxY = point.Y;
+        }
+
+        return new KoreXYRect(minX, minY, maxX, maxY);
+    }
 }

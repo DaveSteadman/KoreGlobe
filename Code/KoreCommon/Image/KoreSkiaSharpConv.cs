@@ -54,6 +54,12 @@ public static class KoreSkiaSharpConv
         return new SKRect(0, 0, size.Width, size.Height);
     }
 
+    public static SKRect ToSKRect(this KoreXYRect rect)
+    {
+        return new SKRect(
+            (float)rect.Left, (float)rect.Top, (float)rect.Right, (float)rect.Bottom);
+    }
+
     public static SKRect ToSKRect(float x, float y, float width, float height)
     {
         return new SKRect(x, y, x + width, y + height);

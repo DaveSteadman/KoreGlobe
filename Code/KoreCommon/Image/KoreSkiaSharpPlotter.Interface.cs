@@ -11,63 +11,46 @@ namespace KoreCommon.SkiaSharp;
 public partial class KoreSkiaSharpPlotter
 {
     // --------------------------------------------------------------------------------------------
-    // MARK: Extension Methods - Drawing with Kore Types
+    // MARK: Point
     // --------------------------------------------------------------------------------------------
 
-    public void DrawPoint(KoreXYPoint point, int crossSize = 3)
-    {
-        DrawPointAsCross(KoreSkiaSharpConv.ToSKPoint(point), crossSize);
-    }
+    public void DrawPoint(KoreXYPoint point, int crossSize = 3) => DrawPointAsCross(KoreSkiaSharpConv.ToSKPoint(point), crossSize);
+    public void DrawPoint(KoreXYVector vector, int crossSize = 3) => DrawPointAsCross(KoreSkiaSharpConv.ToSKPoint(vector), crossSize);
 
-    public void DrawPoint(KoreXYVector vector, int crossSize = 3)
-    {
-        DrawPointAsCross(KoreSkiaSharpConv.ToSKPoint(vector), crossSize);
-    }
+    // --------------------------------------------------------------------------------------------
 
-    public void DrawPoint(KoreXYZPoint point, int crossSize = 3)
-    {
-        DrawPointAsCross(KoreSkiaSharpConv.ToSKPoint(point), crossSize);
-    }
+    public void DrawPointAsCross(KoreXYPoint point, int crossSize = 3) => DrawPointAsCross(KoreSkiaSharpConv.ToSKPoint(point), crossSize);
+    public void DrawPointAsCross(KoreXYVector vector, int crossSize = 3) => DrawPointAsCross(KoreSkiaSharpConv.ToSKPoint(vector), crossSize);
 
-    public void DrawPoint(KoreXYZVector vector, int crossSize = 3)
-    {
-        DrawPointAsCross(KoreSkiaSharpConv.ToSKPoint(vector), crossSize);
-    }
+    // --------------------------------------------------------------------------------------------
 
-    public void DrawLine(KoreXYPoint p1, KoreXYPoint p2)
-    {
-        DrawLine(KoreSkiaSharpConv.ToSKPoint(p1), KoreSkiaSharpConv.ToSKPoint(p2));
-    }
+    public void DrawPointAsCircle(KoreXYPoint p, int circleRadius = 3) => DrawPointAsCircle(KoreSkiaSharpConv.ToSKPoint(p), circleRadius);
 
-    public void DrawLine(KoreXYVector v1, KoreXYVector v2)
-    {
-        DrawLine(KoreSkiaSharpConv.ToSKPoint(v1), KoreSkiaSharpConv.ToSKPoint(v2));
-    }
+    // --------------------------------------------------------------------------------------------
+    // MARK: Line
+    // --------------------------------------------------------------------------------------------
 
-    public void DrawLine(KoreXYZPoint p1, KoreXYZPoint p2)
-    {
-        DrawLine(KoreSkiaSharpConv.ToSKPoint(p1), KoreSkiaSharpConv.ToSKPoint(p2));
-    }
+    public void DrawLine(KoreXYPoint p1, KoreXYPoint p2) => DrawLine(KoreSkiaSharpConv.ToSKPoint(p1), KoreSkiaSharpConv.ToSKPoint(p2));
+    public void DrawLine(KoreXYVector v1, KoreXYVector v2) => DrawLine(KoreSkiaSharpConv.ToSKPoint(v1), KoreSkiaSharpConv.ToSKPoint(v2));
 
-    public void DrawLine(KoreXYZVector v1, KoreXYZVector v2)
-    {
-        DrawLine(
-            KoreSkiaSharpConv.ToSKPoint(v1),
-            KoreSkiaSharpConv.ToSKPoint(v2));
-    }
+    // --------------------------------------------------------------------------------------------
+    // MARK: Triangle
+    // --------------------------------------------------------------------------------------------
 
-    public void DrawTriangle(KoreXYPoint p1, KoreXYPoint p2, KoreXYPoint p3)
-    {
-        DrawTriangle(KoreSkiaSharpConv.ToSKPoint(p1), KoreSkiaSharpConv.ToSKPoint(p2), KoreSkiaSharpConv.ToSKPoint(p3));
-    }
+    public void DrawTriangle(KoreXYPoint p1, KoreXYPoint p2, KoreXYPoint p3) => DrawTriangle(KoreSkiaSharpConv.ToSKPoint(p1), KoreSkiaSharpConv.ToSKPoint(p2), KoreSkiaSharpConv.ToSKPoint(p3));
 
-    public void DrawTriangle(KoreXYZPoint p1, KoreXYZPoint p2, KoreXYZPoint p3)
+    // --------------------------------------------------------------------------------------------
+    // MARK: Rect
+    // --------------------------------------------------------------------------------------------
+
+    public void DrawRect(KoreXYRect rect, SKPaint fillPaint)
     {
-        DrawTriangle(KoreSkiaSharpConv.ToSKPoint(p1), KoreSkiaSharpConv.ToSKPoint(p2), KoreSkiaSharpConv.ToSKPoint(p3));
+        SKRect skRect = KoreSkiaSharpConv.ToSKRect(rect);
+        DrawRect(skRect, fillPaint);
     }
 
     // --------------------------------------------------------------------------------------------
-    // MARK: Color Settings with Kore Types
+    // MARK: Color
     // --------------------------------------------------------------------------------------------
 
     public void SetColor(KoreColorRGB color)
@@ -79,6 +62,13 @@ public partial class KoreSkiaSharpPlotter
     {
         DrawSettings.Color = KoreSkiaSharpConv.ToSKColor(color, alpha);
     }
+
+    // --------------------------------------------------------------------------------------------
+    // MARK: Text
+    // --------------------------------------------------------------------------------------------
+
+    public void DrawText(string text, KoreXYPoint pos, int fontSize = 12)             => DrawText(text, KoreSkiaSharpConv.ToSKPoint(pos), fontSize);
+    public void DrawTextCentered(string text, KoreXYPoint pos, float fontSize = 12) => DrawTextCentered(text, KoreSkiaSharpConv.ToSKPoint(pos), fontSize);
 
     // --------------------------------------------------------------------------------------------
     // MARK: Mesh Data Drawing
@@ -139,21 +129,6 @@ public partial class KoreSkiaSharpPlotter
     // --------------------------------------------------------------------------------------------
     // MARK: Path Drawing (for Bezier curves)
     // --------------------------------------------------------------------------------------------
-
-    public void DrawPath(List<KoreXYZPoint> pathPoints, KoreColorRGB? lineColor = null)
-    {
-        if (pathPoints.Count < 2) return;
-
-        if (lineColor.HasValue)
-        {
-            DrawSettings.Color = KoreSkiaSharpConv.ToSKColor(lineColor.Value);
-        }
-
-        for (int i = 0; i < pathPoints.Count - 1; i++)
-        {
-            DrawLine(KoreSkiaSharpConv.ToSKPoint(pathPoints[i]), KoreSkiaSharpConv.ToSKPoint(pathPoints[i + 1]));
-        }
-    }
 
     public void DrawPath(List<KoreXYPoint> pathPoints, KoreColorRGB? lineColor = null)
     {

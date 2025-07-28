@@ -16,7 +16,7 @@ public struct KoreXYTriangle
     public KoreXYLine LineCA => new KoreXYLine(C, A);
 
     // -------------------------------------------------------------------------------
-    // MARK: Angle Properties
+    // MARK: Angle
     // -------------------------------------------------------------------------------
 
     // Internal angle at the corner formed by AB -> BC
@@ -43,7 +43,7 @@ public struct KoreXYTriangle
     public static KoreXYTriangle Zero { get => new KoreXYTriangle(new KoreXYPoint(0, 0), new KoreXYPoint(0, 0), new KoreXYPoint(0, 0)); }
 
     // --------------------------------------------------------------------------------------------
-    // MARK: Triangle Properties
+    // MARK: Properties
     // --------------------------------------------------------------------------------------------
 
     // Returns the centroid (center point) of the triangle.
@@ -67,7 +67,7 @@ public struct KoreXYTriangle
     }
 
     // --------------------------------------------------------------------------------------------
-    // MARK: Triangle Utilities
+    // MARK: Utilities
     // --------------------------------------------------------------------------------------------
 
     // Returns true if the given point lies inside the triangle (or on its edge).

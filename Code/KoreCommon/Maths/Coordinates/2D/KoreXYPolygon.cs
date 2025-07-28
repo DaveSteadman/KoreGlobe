@@ -57,4 +57,28 @@ public struct KoreXYPolygon
         }
         return new KoreXYPolygon(newVertices);
     }
+
+    // --------------------------------------------------------------------------------------------
+    // MARK: Utilities
+    // --------------------------------------------------------------------------------------------
+
+    public KoreXYRect AABB()
+    {
+        if (Vertices.Count == 0) return KoreXYRect.Zero;
+
+        double minX = Vertices[0].X;
+        double maxX = Vertices[0].X;
+        double minY = Vertices[0].Y;
+        double maxY = Vertices[0].Y;
+
+        foreach (var vertex in Vertices)
+        {
+            if (vertex.X < minX) minX = vertex.X;
+            if (vertex.X > maxX) maxX = vertex.X;
+            if (vertex.Y < minY) minY = vertex.Y;
+            if (vertex.Y > maxY) maxY = vertex.Y;
+        }
+
+        return new KoreXYRect(minX, minY, maxX, maxY);
+    }
 }
