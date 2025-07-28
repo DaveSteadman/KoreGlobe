@@ -1,4 +1,10 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+
 using Godot;
+using KoreCommon;
+
 
 public static class KoreGodotMaterialFactory
 {
@@ -7,6 +13,7 @@ public static class KoreGodotMaterialFactory
     // --------------------------------------------------------------------------------------------
 
     // Function to create a simple colored material
+    // Usage: KoreGodotMaterialFactory.SimpleColoredMaterial(Color.Red);
     public static StandardMaterial3D SimpleColoredMaterial(Color color)
     {
         StandardMaterial3D material = new StandardMaterial3D();
@@ -18,17 +25,18 @@ public static class KoreGodotMaterialFactory
 
     // Function to create a standard colored material (opaque with proper lighting)
     // This is the basic material that casts shadows properly
+    // Usage: KoreGodotMaterialFactory.StandardColoredMaterial(new Color(0.8f, 0.2f, 0.2f));
     public static StandardMaterial3D StandardColoredMaterial(Color color)
     {
         StandardMaterial3D material = new StandardMaterial3D();
         material.AlbedoColor = color;
         material.Roughness = 0.7f;
         material.Metallic = 0.0f;
-        
+
         // Settings to help with smooth shading
-        material.ShadingMode = BaseMaterial3D.ShadingModeEnum.PerPixel;
+        material.ShadingMode  = BaseMaterial3D.ShadingModeEnum.PerPixel;
         material.SpecularMode = BaseMaterial3D.SpecularModeEnum.SchlickGgx;
-        
+
         return material;
     }
 
@@ -86,11 +94,11 @@ void fragment() {
         material.VertexColorUseAsAlbedo = true; // Use vertex colors as the albedo
         material.Roughness = 0.7f;
         material.Metallic = 0.0f;
-        
+
         // Settings to help with smooth shading
         material.ShadingMode = BaseMaterial3D.ShadingModeEnum.PerPixel;
         material.SpecularMode = BaseMaterial3D.SpecularModeEnum.SchlickGgx;
-        
+
         return material;
     }
 
@@ -108,20 +116,35 @@ void fragment() {
         material.Metallic = 0.0f;
         material.NoDepthTest = false; // Keep depth testing for proper sorting
         material.CullMode = BaseMaterial3D.CullModeEnum.Back; // Standard back-face culling
-        
+
         // Settings to help with smooth shading
         material.ShadingMode = BaseMaterial3D.ShadingModeEnum.PerPixel;
         material.SpecularMode = BaseMaterial3D.SpecularModeEnum.SchlickGgx;
-        
+
         return material;
     }
 
     // --------------------------------------------------------------------------------------------
-    // MARK: Legacy shader-based materials (kept for compatibility)
+    // MARK: Image
     // --------------------------------------------------------------------------------------------
+
+    // Create a material from a texture2D 
+    // Usage: KoreGodotMaterialFactory.Texture2DMaterial(myTexture);
+    public static StandardMaterial3D Texture2DMaterial(Texture2D texture)
+    {
+        StandardMaterial3D material = new StandardMaterial3D();
+        material.AlbedoTexture = texture;
+        material.Roughness = 0.7f;
+        material.Metallic = 0.0f;
+
+        // Settings to help with smooth shading
+        material.ShadingMode = BaseMaterial3D.ShadingModeEnum.PerPixel;
+        material.SpecularMode = BaseMaterial3D.SpecularModeEnum.SchlickGgx;
+
+        return material;
+    }
+
+
+
 }
-
-
-
-
-
+    

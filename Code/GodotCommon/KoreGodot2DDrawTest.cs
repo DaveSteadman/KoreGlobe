@@ -6,6 +6,8 @@ using KoreCommon;
 using KoreCommon.SkiaSharp;
 using SkiaSharp;
 
+#nullable enable
+
 public partial class KoreGodot2DDrawTest : Node2D
 {
     public List<Vector3> _testPoints = new List<Vector3>();
@@ -83,7 +85,9 @@ public partial class KoreGodot2DDrawTest : Node2D
         // texture.CreateFromImage(image);
 
         // // Set the texture to the sprite node if it exists
-        // if (SpriteNode != null)
+        if (SpriteNode == null)
+            return;
+            
         // {
         //     SpriteNode.Texture = texture;
         // }
@@ -109,7 +113,7 @@ public partial class KoreGodot2DDrawTest : Node2D
         // dispose of the image and plotter
         plotter.Dispose();
         //image.Dispose();
-        
+
         // Convert the image to a texture
         ImageTexture texture = ImageTexture.CreateFromImage(image);
 

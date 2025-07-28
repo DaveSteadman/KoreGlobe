@@ -41,6 +41,8 @@ public class KoreStringDictionary
 
     public bool Has(string key) => _data.ContainsKey(key);
     public bool Remove(string key) => _data.Remove(key);
+    public void Clear() => _data.Clear();
+    public int Count => _data.Count;
 
     // --------------------------------------------------------------------------------------------
 

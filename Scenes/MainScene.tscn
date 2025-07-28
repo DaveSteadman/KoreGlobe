@@ -1,15 +1,16 @@
-[gd_scene load_steps=22 format=3 uid="uid://ced7xhu6jah7w"]
+[gd_scene load_steps=25 format=3 uid="uid://ced7xhu6jah7w"]
 
 [ext_resource type="Script" uid="uid://374o2dbtf0tj" path="res://Code/GodotCommon/MainScene.cs" id="1_hpc76"]
 [ext_resource type="Script" uid="uid://v2mfrrw8pmol" path="res://Code/GodotCommon/KoreGodot2DDrawTest.cs" id="2_nhkr4"]
 [ext_resource type="Texture2D" uid="uid://btpgdc0gdsy2w" path="res://icon.svg" id="3_7rqgy"]
 [ext_resource type="Script" uid="uid://c2yeihvinnomw" path="res://Code/GodotCommon/UserInput/KoreNodeMoverPlus2.cs" id="4_4b75m"]
-[ext_resource type="Script" uid="uid://cjla2igmtmekv" path="res://Code/GodotCommon/KoreSpinNode3D.cs" id="5_qxria"]
-[ext_resource type="Script" uid="uid://thnqysfpm7b8" path="res://Code/GodotCommon/KoreMoveNode3D.cs" id="5_y4jh7"]
+[ext_resource type="Script" uid="uid://dpja4yagks5ee" path="res://Code/GodotCommon/MoveNode/KoreMoveNode3D.cs" id="5_4b75m"]
+[ext_resource type="Script" uid="uid://cj15d45iisbx5" path="res://Code/GodotCommon/MoveNode/KoreOrbitNode3D.cs" id="6_8ju71"]
 [ext_resource type="Texture2D" uid="uid://bup7pyvbwofc8" path="res://Resources/AUsVQ.png" id="7_q68mp"]
-[ext_resource type="Script" uid="uid://dbj0avt5sv8m6" path="res://Code/GodotCommon/KoreOrbitNode3D.cs" id="8_f140w"]
+[ext_resource type="Script" uid="uid://cyp8p4j7hdquw" path="res://Code/GodotCommon/MoveNode/KoreSpinNode3D.cs" id="8_xb4mg"]
 [ext_resource type="PackedScene" uid="uid://caqcuxag4x2ca" path="res://Resources/DumbArrow.blend" id="9_0iob3"]
-[ext_resource type="Script" uid="uid://lc83bvu4ytya" path="res://Code/GodotCommon/KoreMoveBezierNode3D.cs" id="9_4b75m"]
+[ext_resource type="Script" uid="uid://7yuuduftm4w0" path="res://Code/GodotCommon/MoveNode/KoreMoveBezierNode3D.cs" id="9_6t1o7"]
+[ext_resource type="Script" uid="uid://d0ux0xtt0rlss" path="res://Code/GodotApp/KoreAppRoot.cs" id="11_6t1o7"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nhkr4"]
 metallic = 1.0
@@ -48,6 +49,11 @@ roughness = 0.65
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0iob3"]
 albedo_texture = ExtResource("7_q68mp")
 
+[sub_resource type="SphereMesh" id="SphereMesh_xb4mg"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6t1o7"]
+albedo_color = Color(0.1660338, 0.35183018, 0.20913365, 1)
+
 [node name="MainScene" type="Node3D"]
 script = ExtResource("1_hpc76")
 
@@ -73,6 +79,7 @@ top_level = true
 
 [node name="OmniLight3D-Green" type="OmniLight3D" parent="Lights"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.2500763, 1.8530807, 0.1592133)
+visible = false
 light_color = Color(0, 0.66888636, 0.19879529, 1)
 light_energy = 12.0
 shadow_enabled = true
@@ -91,6 +98,7 @@ omni_attenuation = 0.01
 
 [node name="OmniLight3D-Magenta" type="OmniLight3D" parent="Lights"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.298, 3.57, -7.054)
+visible = false
 light_color = Color(1, 0, 1, 1)
 light_energy = 8.0
 shadow_enabled = true
@@ -123,9 +131,9 @@ top_level = true
 
 [node name="Node3D - Move" type="Node3D" parent="Movers"]
 transform = Transform3D(0.99999994, 0, 0, 0, -0.57188827, 0.8203315, 0, -0.8203315, -0.57188827, 7.9378486, 0, -8.331102)
-script = ExtResource("5_y4jh7")
-StartPoint = Vector3(7, 0, -7.5)
-EndPoint = Vector3(-7.5, 0, -7.5)
+script = ExtResource("5_4b75m")
+StartPoint = Vector3(5, 0, -9)
+EndPoint = Vector3(-5, 0, -9)
 LoopMovement = true
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Movers/Node3D - Move"]
@@ -133,7 +141,7 @@ gi_mode = 2
 mesh = SubResource("CapsuleMesh_q68mp")
 
 [node name="Node3D - Orbit" type="Node3D" parent="Movers"]
-script = ExtResource("8_f140w")
+script = ExtResource("6_8ju71")
 AutoRotateToFaceCenter = true
 
 [node name="DumbArrow" parent="Movers/Node3D - Orbit" instance=ExtResource("9_0iob3")]
@@ -141,21 +149,20 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 19.093494)
 
 [node name="Node3D - Rotate" type="Node3D" parent="Movers"]
 transform = Transform3D(-0.08891404, 0.8153771, 0.57206154, -0.5572077, 0.4353384, -0.70710677, -0.825599, -0.38162887, 0.4156267, 7.451681, 1.643348, -1.0297966)
-script = ExtResource("5_qxria")
-StartAngleXDegs = 1.6049999999959257
-StartAngleYDegs = 1.2149999999965075
-StartAngleZDegs = 0.680000000007567
-SpinRateXDegsPerSec = 17.42500000000291
-SpinRateYDegsPerSec = 6.440000000002328
-SpinRateZDegsPerSec = 3.665000000008149
+script = ExtResource("8_xb4mg")
+StartAngleXDegs = 2.650000000008731
+StartAngleYDegs = 15.790000000008147
+StartAngleZDegs = 11.820000000006983
+SpinRateXDegsPerSec = 18.79000000000815
+SpinRateYDegsPerSec = 20.404999999998836
+SpinRateZDegsPerSec = 28.135000000009313
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Movers/Node3D - Rotate"]
 gi_mode = 2
 mesh = SubResource("TorusMesh_y4jh7")
 
 [node name="Node3D - Bezier" type="Node3D" parent="Movers"]
-script = ExtResource("9_4b75m")
-LoopPath = true
+script = ExtResource("9_6t1o7")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Movers/Node3D - Bezier"]
 mesh = SubResource("SphereMesh_8ju71")
@@ -177,3 +184,12 @@ transform = Transform3D(-23.054424, 0, 3.85799, 0, 23.375, 0, -3.85799, 0, -23.0
 visible = false
 mesh = SubResource("SphereMesh_f140w")
 surface_material_override/0 = SubResource("StandardMaterial3D_0iob3")
+
+[node name="Node" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 1, 0)
+top_level = true
+script = ExtResource("11_6t1o7")
+
+[node name="DebugSphere" type="MeshInstance3D" parent="Node"]
+mesh = SubResource("SphereMesh_xb4mg")
+surface_material_override/0 = SubResource("StandardMaterial3D_6t1o7")

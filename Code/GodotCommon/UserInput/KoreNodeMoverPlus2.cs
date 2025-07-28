@@ -1,7 +1,7 @@
 // KoreNodeMoverPlus2: Enhanced version with improved mouse behavior
 // - Keyboard controls same as KoreNodeMover
-// - Right mouse button drag: rotation (default) or movement (with shift)
-// - Shift key can be pressed/released mid-drag to switch modes dynamically
+// - Right mouse button drag: rotation (default) or movement (with shift or middle mouse)
+// - Shift key or middle mouse button can be pressed/released mid-drag to switch modes dynamically
 // - Mouse wheel for zoom (forward/backward)
 // - Mouse cursor always visible and position unaffected
 
@@ -22,6 +22,7 @@ public partial class KoreNodeMoverPlus2 : Node3D
     public float MouseMovementSensitivity = 0.01f; // Units per pixel for movement
     
     private bool _isRightMouseDown = false;
+    private bool _isMiddleMouseDown = false;
     private Vector2 _lastMousePosition = Vector2.Zero;
 
     // --------------------------------------------------------------------------------------------
@@ -73,6 +74,12 @@ public partial class KoreNodeMoverPlus2 : Node3D
                 }
             }
             
+            // Middle mouse button (wheel click) behavior - track as movement modifier
+            if (mouseButton.ButtonIndex == MouseButton.Middle)
+            {
+                _isMiddleMouseDown = mouseButton.Pressed;
+            }
+            
             // Handle mouse wheel for zoom (forward/backward movement)
             if (mouseButton.ButtonIndex == MouseButton.WheelUp)
             {
@@ -94,12 +101,13 @@ public partial class KoreNodeMoverPlus2 : Node3D
             {
                 Vector2 mouseDelta = mouseMotion.Relative;
                 
-                // Dynamically check shift key state to determine mode
+                // Dynamically check shift key state and middle mouse button to determine mode
                 bool shiftPressed = Input.IsKeyPressed(Key.Shift);
+                bool movementMode = shiftPressed || _isMiddleMouseDown;
                 
-                if (shiftPressed)
+                if (movementMode)
                 {
-                    // Shift + Right mouse drag for movement (like WASD)
+                    // Shift + Right mouse drag OR Middle + Right mouse drag for movement (like WASD)
                     // Convert mouse movement to world movement
                     // Horizontal mouse movement = left/right (X axis)
                     // Vertical mouse movement = up/down (Y axis)
@@ -180,6 +188,7 @@ public partial class KoreNodeMoverPlus2 : Node3D
     public void StopMouseInteraction()
     {
         _isRightMouseDown = false;
+        _isMiddleMouseDown = false;
     }
     
     // Call this to reset rotation (useful for debugging)
@@ -194,12 +203,19 @@ public partial class KoreNodeMoverPlus2 : Node3D
         return _isRightMouseDown;
     }
     
+    // Check if middle mouse button is currently pressed
+    public bool IsMiddleMousePressed()
+    {
+        return _isMiddleMouseDown;
+    }
+    
     // Get current mouse operation mode
     public string GetMouseMode()
     {
         if (!_isRightMouseDown) return "None";
         
         bool shiftPressed = Input.IsKeyPressed(Key.Shift);
-        return shiftPressed ? "Moving" : "Rotating";
+        bool movementMode = shiftPressed || _isMiddleMouseDown;
+        return movementMode ? "Moving" : "Rotating";
     }
 }

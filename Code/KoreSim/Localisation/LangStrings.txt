@@ -1,0 +1,52 @@
+# Language strings for UI basics
+
+English, Ok, OK
+English, Cancel, Cancel
+English, Yes, Yes
+English, No, No
+English, Load, Load
+English, Save, Save
+English, Exit, Exit
+English, Hello, Hello
+English, Help, Help
+
+German, Ok, OK
+German, Cancel, Abbrechen
+German, Yes, Ja
+German, No, Nein
+German, Load, Laden
+German, Save, Speichern
+German, Exit, Beenden
+German, Hello, Hallo
+German, Help, Hilfe
+
+French, Ok, OK
+French, Cancel, Annuler
+French, Yes, Oui
+French, No, Non
+French, Load, Charger
+French, Save, Enregistrer
+French, Exit, Quitter
+French, Hello, Bonjour
+French, Help, Aide
+
+Italian, Ok, OK
+Italian, Cancel, Annulla
+Italian, Yes, Sì
+Italian, No, No
+Italian, Load, Carica
+Italian, Save, Salva
+Italian, Exit, Esci
+Italian, Hello, Ciao
+Italian, Help, Aiuto
+
+Spanish, Ok, OK
+Spanish, Cancel, Cancelar
+Spanish, Yes, Sí
+Spanish, No, No
+Spanish, Load, Cargar
+Spanish, Save, Guardar
+Spanish, Exit, Salir
+Spanish, Hello, Hola
+Spanish, Help, Ayuda
+

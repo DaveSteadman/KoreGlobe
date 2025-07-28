@@ -33,6 +33,10 @@ public struct KoreXYPoint
     {
         get { return new KoreXYPoint(0, 0); }
     }
+    public static KoreXYPoint One
+    {
+        get { return new KoreXYPoint(1, 1); }
+    }
 
     public override string ToString()
     {

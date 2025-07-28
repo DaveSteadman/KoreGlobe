@@ -24,6 +24,8 @@ public static class KoreCentralTime
     public static string TimeOfDayHHMMSSUTC => DateTime.UtcNow.ToString("HHmmss");
     public static string DateYYYYMMDDUTC => DateTime.UtcNow.ToString("yyyyMMdd");
     public static string TimestampUTC => $"{DateYYYYMMDDUTC}-{TimeOfDayHHMMSSUTC}";
+    
+    public static string RuntimeStartTimestampUTC => $"{DateYYYYMMDDUTC}-{TimeOfDayHHMMSSUTC}"; // KoreCentralTime.RuntimeStartTimestampUTC
 
     // Local Time and Date
     public static string TimeOfDayHHMMSSLocal => DateTime.Now.ToString("HHmmss");

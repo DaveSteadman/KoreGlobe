@@ -36,11 +36,13 @@ public static class KoreStringDictionaryOps
     // MARK: Int
     // --------------------------------------------------------------------------------------------
 
+    // Usage: KoreStringDictionaryOps.WriteInt(dict, "myKey", 42);
     public static void WriteInt(KoreStringDictionary dict, string key, int value)
     {
         dict.Set(key, value.ToString(CultureInfo.InvariantCulture));
     }
 
+    // Usage: int myValue = KoreStringDictionaryOps.ReadInt(dict, "myKey");
     public static int ReadInt(KoreStringDictionary dict, string key, int fallback = -1)
     {
         var raw = dict.Get(key);

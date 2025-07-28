@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 
 namespace KoreCommon;
 
+#nullable enable
+
 // Namespace encapulating the network comms classes and functionality.
 // - The rest of the application should be able to deal solely with messages.
 

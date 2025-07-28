@@ -15,6 +15,10 @@ public class KoreLatestHolder<T> where T : notnull
         _latestValue = initialValue;
     }
 
+    public KoreLatestHolder()
+    {
+    }
+
     public T LatestValue
     {
         get
