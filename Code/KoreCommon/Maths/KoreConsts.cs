@@ -13,13 +13,9 @@ public static class KoreConsts
 
     // Basic Conversion Consts
 
-    public const double RadsToDegsMultiplier = 180 / Math.PI;
-    public const double DegsToRadsMultiplier = Math.PI / 180;
-
-    // DEPRICATED - Use better named "small" over "min"
-    public const double ArbitraryMinDouble = 0.00001;  // Used to check for values too close to 0.
-    public const float ArbitraryMinFloat = 0.00001f; // Used to check for values too close to 0.
+    public const double RadsToDegsMultiplier = 180 / Math.PI; // KoreConsts.RadsToDegsMultiplier
+    public const double DegsToRadsMultiplier = Math.PI / 180; // KoreConsts.DegsToRadsMultiplier
 
     public const double ArbitrarySmallDouble = 0.0000001; // Used to check for values too close to 0.
-    public const float ArbitrarySmallFloat = 0.00001f; // Used to check for values too close to 0.
+    public const float  ArbitrarySmallFloat  = 0.00001f; // Used to check for values too close to 0.
 }

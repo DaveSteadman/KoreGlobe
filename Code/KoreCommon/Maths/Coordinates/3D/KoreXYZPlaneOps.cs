@@ -34,10 +34,10 @@ public static class KoreXYZPlaneOps
     //     double dotProduct = KoreXYZVector.DotProduct(planeNormal, lineDir);
 
     //     // Check if the line is parallel to the plane
-    //     if (Math.Abs(dotProduct) < KoreConsts.ArbitraryMinDouble)
+    //     if (Math.Abs(dotProduct) < KoreConsts.ArbitrarySmallDouble)
     //     {
     //         // Special case handling: Check if the line lies in the plane
-    //         if (Math.Abs(KoreXYZVector.DotProduct(planeNormal, plane.PntOrigin.VectorTo(line.P1))) < KoreConsts.ArbitraryMinDouble)
+    //         if (Math.Abs(KoreXYZVector.DotProduct(planeNormal, plane.PntOrigin.VectorTo(line.P1))) < KoreConsts.ArbitrarySmallDouble)
     //         {
     //             // The line lies in the plane
     //             return line.P1; // or any point on the line

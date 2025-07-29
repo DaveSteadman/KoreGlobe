@@ -77,7 +77,7 @@ public class KoreRouteLegSimpleTurn : IKoreRouteLeg
     // Turn length, calculated as 2PiR * TurnFraction
     public double TurnLengthM() => (2 * Math.PI * TurnRadiusM()) * TurnFraction();
 
-    public double TurnDurationSecs() => (SpeedMps < KoreConsts.ArbitraryMinDouble) ? 0 : TurnLengthM() / SpeedMps;
+    public double TurnDurationSecs() => (SpeedMps < KoreConsts.ArbitrarySmallDouble) ? 0 : TurnLengthM() / SpeedMps;
 
 
     public override double GetDurationS() => TurnDurationSecs();

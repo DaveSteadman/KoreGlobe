@@ -127,7 +127,7 @@ public static class KoreXYZPointOps
         // Calculate the angle between the two points
         double angle = AngleBetweenRads(a, b);
 
-        if (Math.Abs(angle) < KoreConsts.ArbitraryMinDouble)
+        if (Math.Abs(angle) < KoreConsts.ArbitrarySmallDouble)
             return a;  // The points are colinear
 
         // Compute the Slerp
@@ -242,7 +242,7 @@ public static class KoreXYZPointOps
 
     // --------------------------------------------------------------------------------------------
 
-    public static bool EqualsWithinTolerance(KoreXYZPoint a, KoreXYZPoint b, double tolerance = KoreConsts.ArbitraryMinDouble)
+    public static bool EqualsWithinTolerance(KoreXYZPoint a, KoreXYZPoint b, double tolerance = KoreConsts.ArbitrarySmallDouble)
     {
         return KoreValueUtils.EqualsWithinTolerance(a.X, b.X, tolerance)
             && KoreValueUtils.EqualsWithinTolerance(a.Y, b.Y, tolerance)

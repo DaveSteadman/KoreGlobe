@@ -25,60 +25,60 @@ public partial class KoreZeroNodeMapTile : Node3D
 
     private async Task BackgroundTileCreation(KoreMapTileCode tileCode)
     {
-        // GD.Print($"Starting Create: {tileCode}");
+        GD.Print($"Starting Create: {tileCode}");
         try
         {
             // Starting: Set the flags that will be used later to determine activity around the tile while we construct it.
             ConstructionComplete = false;
-            ActiveVisibility     = false;
+            ActiveVisibility = false;
 
-            // Pause the thread, being a good citizen with lots of tasks around.
-            await Task.Yield();
+            // // Pause the thread, being a good citizen with lots of tasks around.
+            // await Task.Yield();
 
-            // ----------------------------
-            // File IO and Tile center
+            // // ----------------------------
+            // // File IO and Tile center
 
-            // Setup some basic elements of the tile ahead of the main elevation and image loading.
-            Filepaths = new KoreMapTileFilepaths(TileCode); // Figure out the file paths for the tile
+            // // Setup some basic elements of the tile ahead of the main elevation and image loading.
+            // Filepaths = new KoreMapTileFilepaths(TileCode); // Figure out the file paths for the tile
 
             // Setup the tile center shortcuts
-            RwTileLLBox     = KoreMapTileCode.LLBoxForCode(TileCode);
+            RwTileLLBox = KoreMapTileCode.LLBoxForCode(TileCode);
             RwTileCenterLLA = new KoreLLAPoint(RwTileLLBox.CenterPoint);
             RwTileCenterXYZ = RwTileCenterLLA.ToXYZ();
 
-            // Pause the thread, being a good citizen with lots of tasks around.
-            await Task.Yield();
+            // // Pause the thread, being a good citizen with lots of tasks around.
+            // await Task.Yield();
 
             // ----------------------------
             // Default Materials
 
             // Default everything, in case we fall through the logic, the objects are not null
-            UVBox        = new KoreUVBoxDropEdgeTile(KoreUVBoxDropEdgeTile.UVTopLeft, KoreUVBoxDropEdgeTile.UVBottomRight);
+            UVBox = new KoreUVBoxDropEdgeTile(KoreUVBoxDropEdgeTile.UVTopLeft, KoreUVBoxDropEdgeTile.UVBottomRight);
             TileMaterial = KoreGodotMaterialFactory.SimpleColoredMaterial(new Color(0.5f, 0.5f, 0f, 1f));
-            TileEleData  = new KoreFloat2DArray(10, 10);
+            TileEleData = new KoreFloat2DArray(10, 10);
 
-            // Pause the thread, being a good citizen with lots of tasks around.
-            await Task.Yield();
+            // // Pause the thread, being a good citizen with lots of tasks around.
+            // await Task.Yield();
 
-            // ----------------------------
-            // Image
+            // // ----------------------------
+            // // Image
 
-            // Source the tile image
-            SourceTileImage();
+            // // Source the tile image
+            // SourceTileImage();
 
-            // Pause the thread, being a good citizen with lots of tasks around.
-            await Task.Yield();
+            // // Pause the thread, being a good citizen with lots of tasks around.
+            // await Task.Yield();
 
-            // ----------------------------
-            // Elevation
+            // // ----------------------------
+            // // Elevation
 
-            if (Filepaths.EleArrFileExists)
-            {
-                LoadTileEleArr();
-            }
+            // if (Filepaths.EleArrFileExists)
+            // {
+            //     LoadTileEleArr();
+            // }
 
-            // Pause the thread, being a good citizen with lots of tasks around.
-            await Task.Yield();
+            // // Pause the thread, being a good citizen with lots of tasks around.
+            // await Task.Yield();
 
             CreateMeshPoints();
 
@@ -90,7 +90,8 @@ public partial class KoreZeroNodeMapTile : Node3D
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
 
-        // GD.Print($"Ending Create: {tileCode}");
+        GD.Print($"Ending Create: {tileCode}");
+        BackgroundConstructionComplete = true;
     }
 
     // --------------------------------------------------------------------------------------------
@@ -107,28 +108,11 @@ public partial class KoreZeroNodeMapTile : Node3D
         switch (ConstructionStage)
         {
             case 0:
-                if (GrabbedActionCounter())
-                {
-                    CreateMeshTileSurface();
+                //if (GrabbedActionCounter())
+                //{
+                    CreateMeshTileSurfacePoints();
                     ConstructionStage = 1;
-                }
-                break;
-
-            case 1:
-                if (GrabbedActionCounter())
-                {
-                    CreateMeshWireFrame();
-                    ConstructionStage = 2;
-                }
-                break;
-
-            case 2:
-                if (GrabbedActionCounter())
-                {
-                    // Create the label
-                    LabelTile(TileCode);
-                    ConstructionStage = 3;
-                }
+                //}
                 break;
 
             default:

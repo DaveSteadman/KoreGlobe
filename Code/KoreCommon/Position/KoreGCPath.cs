@@ -38,7 +38,7 @@ public class KoreGCPath
     public KoreXYZPoint PositionAtFractionOfRoute(double fraction)
     {
         // Handle edge cases
-        if (RefAngleRads < KoreConsts.ArbitraryMinDouble)
+        if (RefAngleRads < KoreConsts.ArbitrarySmallDouble)
             return StartPos;
 
         // Spherical Linear Interpolation (SLERP)

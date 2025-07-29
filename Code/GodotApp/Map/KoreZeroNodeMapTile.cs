@@ -12,7 +12,7 @@ using KoreSim;
 
 // ------------------------------------------------------------------------------------------------
 
-public struct KoreZeroTileVisibilityStats
+public class KoreZeroTileVisibilityStats
 {
     public float distanceToHorizonM;
     public float distanceToTileCenterM;
@@ -21,9 +21,9 @@ public struct KoreZeroTileVisibilityStats
     public KoreZeroTileVisibilityStats()
     {
         // Default the stats to large values of tiles that would not be displayed
-        distanceToHorizonM = 1000000.0f;
+        distanceToHorizonM    = 1000000.0f;
         distanceToTileCenterM = 1000000.0f;
-        distanceFraction = 1.0f;
+        distanceFraction      = 1.0f;
     }
 }
 
@@ -46,26 +46,26 @@ public partial class KoreZeroNodeMapTile : Node3D
     public List<KoreZeroNodeMapTile> ChildTiles = new List<KoreZeroNodeMapTile>();
 
     // File paths used in creating the tile - setup early in creat process
-    private KoreMapTileFilepaths  Filepaths;
+    private KoreMapTileFilepaths Filepaths;
 
     // Real world elevation data, defining the tile's geometry
     public KoreNumeric2DArray<float> TileEleData  = new KoreNumeric2DArray<float>();
-    private Vector3[,]     v3Data;
-    private Vector3[,]     v3DataBottom;
+    private KoreXYZVector[,] v3Data;
+    private KoreXYZVector[,] v3DataBottom;
 
     // UV Box - Child accessible values
-    public KoreNumericRange<float>  UVx   = KoreNumericRange<float>.ZeroToOne;
-    public KoreNumericRange<float>  UVy   = KoreNumericRange<float>.ZeroToOne;
-    public KoreUVBoxDropEdgeTile    UVBox = KoreUVBoxDropEdgeTile.FullImage();
+    public KoreNumericRange<float> UVx   = KoreNumericRange<float>.ZeroToOne;
+    public KoreNumericRange<float> UVy   = KoreNumericRange<float>.ZeroToOne;
+    public KoreUVBoxDropEdgeTile   UVBox = KoreUVBoxDropEdgeTile.FullImage();
 
     // Materials and Meshes
-    private ArrayMesh            TileMeshData;
-    private Color                WireColor;
-    public  StandardMaterial3D?  TileMaterial = null;
-    private Vector3              TileLabelOffset;
-    private Vector3              TileLabelOffsetN;
-    private Vector3              TileLabelOffsetBelow;
-    public  bool                 TileOwnsTexture = false;
+    private ArrayMesh           TileMeshData;
+    private Color               WireColor;
+    public  StandardMaterial3D? TileMaterial = null;
+    private Vector3             TileLabelOffset;
+    private Vector3             TileLabelOffsetN;
+    private Vector3             TileLabelOffsetBelow;
+    public  bool                TileOwnsTexture = false;
 
     // Godot Game Engine objects
     // private MeshInstance3D MeshInstance  = new();
@@ -74,11 +74,11 @@ public partial class KoreZeroNodeMapTile : Node3D
     private KoreMeshData TileMesh = new();
     
     private Label3D TileCodeLabel;
-    private List<Node3D>   GEElements = new List<Node3D>();
+    private List<Node3D> GEElements = new List<Node3D>();
 
     // Internal timings - list to add some randomness to the update process
     public  KoreRandomLoopList RandomLoopList = new KoreRandomLoopList(10, 0.4f, 0.41f);
-    private float             UIUpdateTimer  = 0.0f;
+    private float              UIUpdateTimer  = 0.0f;
 
     // Construction Flags
     private bool ChildTileDataAvailable         = false;
@@ -90,15 +90,15 @@ public partial class KoreZeroNodeMapTile : Node3D
     public bool IsDone => ConstructionComplete;
 
     // Running State Flags - Updated based on visibility rules and child tiles.
-    public bool ActiveVisibility              = false;
-    public bool ChildrenSetVisible            = false; // flag to more check intended child visibility state
-    public bool VisibleState                  = false;
-    public bool ChildrenVisibleState          = false;
-    public bool ChildrenActiveState           = false;
+    public bool ActiveVisibility      = false;
+    public bool ChildrenSetVisible    = false; // flag to more check intended child visibility state
+    public bool VisibleState          = false;
+    public bool ChildrenVisibleState  = false;
+    public bool ChildrenActiveState   = false;
 
     // private bool ChildConstructionComplete    = false;
 
-    private KoreLatestHolder<KoreZeroTileVisibilityStats> TileVisibilityStats = new();
+    private KoreLatestHolder<KoreZeroTileVisibilityStats> TileVisibilityStats = new KoreLatestHolder<KoreZeroTileVisibilityStats>( new KoreZeroTileVisibilityStats() );
 
     // --------------------------------------------------------------------------------------------
 
@@ -133,7 +133,7 @@ public partial class KoreZeroNodeMapTile : Node3D
 
         // Fire off the fully background task of creating/loading the tile elements asap.
         Task.Run(() => BackgroundTileCreation(tileCode));
-        Task.Run(() => DetermineChildTileAvailability(tileCode));
+        //Task.Run(() => DetermineChildTileAvailability(tileCode));
     }
 
     // --------------------------------------------------------------------------------------------
@@ -143,6 +143,8 @@ public partial class KoreZeroNodeMapTile : Node3D
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
+        GD.Print($"Tile Ready: {TileCode}");
+        
         TileVisibilityStats.LatestValue = new KoreZeroTileVisibilityStats();
         Task.Run(() => BackgroundProcessing());
     }
@@ -152,6 +154,8 @@ public partial class KoreZeroNodeMapTile : Node3D
     // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(double delta)
     {
+        GD.Print($"Tile Process: {TileCode} - Stage: {ConstructionStage} // {ConstructionComplete} {BackgroundConstructionComplete}");
+
         // If we are still building the tile, progress that
         if (!ConstructionComplete)
         {
@@ -159,6 +163,7 @@ public partial class KoreZeroNodeMapTile : Node3D
             // the final construction steps in stages.
             if (BackgroundConstructionComplete)
             {
+                GD.Print($"Tile: {TileCode} - Construction Stage: {ConstructionStage}");
                 MainThreadFinalizeCreation();
                 return;
             }

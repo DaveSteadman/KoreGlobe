@@ -23,7 +23,7 @@ public abstract class IKoreRouteLeg
     public KoreAttitudeDelta EndAttitudeDelta { get; protected set; } = KoreAttitudeDelta.Zero;
 
     // Speed in m/s
-    public double SpeedMps { get; set; } = KoreConsts.ArbitraryMinDouble;
+    public double SpeedMps { get; set; } = KoreConsts.ArbitrarySmallDouble;
 
     // ---------------------------------------------------------------------
     // MARK: Distances

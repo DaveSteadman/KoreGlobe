@@ -12,7 +12,7 @@ public static partial class KoreValueUtils
 
     public static double Modulo(double value, double rangesize)
     {
-        if (Math.Abs(rangesize) < KoreConsts.ArbitraryMinDouble)
+        if (Math.Abs(rangesize) < KoreConsts.ArbitrarySmallDouble)
             throw new ArgumentException("rangeSize too small", nameof(rangesize));
 
         double wrappedvalue = value - rangesize * Math.Floor(value / rangesize);
@@ -134,8 +134,8 @@ public static partial class KoreValueUtils
         double outdiff = outrangemax - outrangemin;
 
         // check in range and out range are not too small to function
-        if (Math.Abs(indiff) < KoreConsts.ArbitraryMinDouble) throw new ArgumentException("ScaleVal input range too small", nameof(indiff));
-        if (Math.Abs(outdiff) < KoreConsts.ArbitraryMinDouble) throw new ArgumentException("ScaleVal output range too small", nameof(outdiff));
+        if (Math.Abs(indiff) < KoreConsts.ArbitrarySmallDouble) throw new ArgumentException("ScaleVal input range too small", nameof(indiff));
+        if (Math.Abs(outdiff) < KoreConsts.ArbitrarySmallDouble) throw new ArgumentException("ScaleVal output range too small", nameof(outdiff));
 
         double diffratio = outdiff / indiff;
 
@@ -170,13 +170,13 @@ public static partial class KoreValueUtils
 
     // Usage: KoreValueUtils.EqualsWithinTolerance(val, val2, 0.3);
 
-    public static bool EqualsWithinTolerance(double val, double matchval, double tolerance = KoreConsts.ArbitraryMinDouble)
+    public static bool EqualsWithinTolerance(double val, double matchval, double tolerance = KoreConsts.ArbitrarySmallDouble)
     {
         return Math.Abs(val - matchval) <= tolerance;
     }
 
     // Usage: KoreValueUtils.IsZero(val)
-    public static bool IsZero(double val, double tolerance = KoreConsts.ArbitraryMinDouble)
+    public static bool IsZero(double val, double tolerance = KoreConsts.ArbitrarySmallDouble)
     {
         return EqualsWithinTolerance(val, 0, tolerance);
     }

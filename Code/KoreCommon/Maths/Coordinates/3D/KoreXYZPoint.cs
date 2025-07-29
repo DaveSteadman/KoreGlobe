@@ -22,7 +22,7 @@ public struct KoreXYZPoint
         set
         {
             double currMag = Magnitude; // store, avoid caclulating twice
-            if (currMag < KoreConsts.ArbitraryMinDouble) // if too close to a div0
+            if (currMag < KoreConsts.ArbitrarySmallDouble) // if too close to a div0
             {
                 X = value; Y = 0; Z = 0;
             }
@@ -74,7 +74,7 @@ public struct KoreXYZPoint
     public KoreXYZPoint Normalize()
     {
         double mag = Magnitude;
-        if (mag < KoreConsts.ArbitraryMinDouble)
+        if (mag < KoreConsts.ArbitrarySmallDouble)
             return new KoreXYZPoint(1, 0, 0);
         else
             return new KoreXYZPoint(X / mag, Y / mag, Z / mag);

@@ -4,36 +4,27 @@
 
 namespace KoreCommon;
 
+using System;
+using System.Threading;
 
-public class KoreLatestHolder<T> where T : notnull
+public class KoreLatestHolder<T> where T : class
 {
     private T _latestValue;
-    private readonly object _lock = new object();
 
     public KoreLatestHolder(T initialValue)
     {
-        _latestValue = initialValue;
+        _latestValue = initialValue ?? throw new ArgumentNullException(nameof(initialValue));
     }
 
     public KoreLatestHolder()
     {
+        throw new InvalidOperationException("Default constructor is not supported without an initial value.");
     }
 
     public T LatestValue
     {
-        get
-        {
-            lock (_lock)
-            {
-                return _latestValue;
-            }
-        }
-        set
-        {
-            lock (_lock)
-            {
-                _latestValue = value;
-            }
-        }
+        get => Interlocked.CompareExchange(ref _latestValue, null, null);
+        set => Interlocked.Exchange(ref _latestValue, value);
     }
 }
+

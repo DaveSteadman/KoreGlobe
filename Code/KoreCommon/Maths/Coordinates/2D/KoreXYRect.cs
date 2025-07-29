@@ -2,6 +2,8 @@ using System;
 
 // Class defining a simple 2D rectangle, with no rotation
 
+// NOTE: Code is vertically aligned readability. Do not refactor this away.
+
 namespace KoreCommon;
 
 // enum to define rect positions
@@ -25,27 +27,27 @@ public struct KoreXYRect
     public KoreXYPoint BottomRight { get; }
 
     // Derived attributes
-    public double Width => BottomRight.X - TopLeft.X;
+    public double Width  => BottomRight.X - TopLeft.X;
     public double Height => BottomRight.Y - TopLeft.Y;
-    public double Left => TopLeft.X;
-    public double Right => BottomRight.X;
-    public double Top => TopLeft.Y;
+    public double Left   => TopLeft.X;
+    public double Right  => BottomRight.X;
+    public double Top    => TopLeft.Y;
     public double Bottom => BottomRight.Y;
-    public double Area => Width * Height;
+    public double Area   => Width * Height;
 
-    public KoreXYPoint TopRight => new KoreXYPoint(Right, Top);
-    public KoreXYPoint BottomLeft => new KoreXYPoint(Left, Bottom);
+    public KoreXYPoint TopRight     => new KoreXYPoint(Right, Top);
+    public KoreXYPoint BottomLeft   => new KoreXYPoint(Left, Bottom);
 
-    public KoreXYPoint Center => new KoreXYPoint((Left + Right) / 2, (Top + Bottom) / 2);
-    public KoreXYPoint TopCenter => new KoreXYPoint((Left + Right) / 2, Top);
+    public KoreXYPoint Center       => new KoreXYPoint((Left + Right) / 2, (Top + Bottom) / 2);
+    public KoreXYPoint TopCenter    => new KoreXYPoint((Left + Right) / 2, Top);
     public KoreXYPoint BottomCenter => new KoreXYPoint((Left + Right) / 2, Bottom);
-    public KoreXYPoint LeftCenter => new KoreXYPoint(Left, (Top + Bottom) / 2);
-    public KoreXYPoint RightCenter => new KoreXYPoint(Right, (Top + Bottom) / 2);
+    public KoreXYPoint LeftCenter   => new KoreXYPoint(Left, (Top + Bottom) / 2);
+    public KoreXYPoint RightCenter  => new KoreXYPoint(Right, (Top + Bottom) / 2);
 
-    public KoreXYLine TopLine => new KoreXYLine(TopLeft, TopRight);
-    public KoreXYLine BottomLine => new KoreXYLine(BottomLeft, BottomRight);
-    public KoreXYLine LeftLine => new KoreXYLine(TopLeft, BottomLeft);
-    public KoreXYLine RightLine => new KoreXYLine(TopRight, BottomRight);
+    public KoreXYLine TopLine       => new KoreXYLine(TopLeft, TopRight);
+    public KoreXYLine BottomLine    => new KoreXYLine(BottomLeft, BottomRight);
+    public KoreXYLine LeftLine      => new KoreXYLine(TopLeft, BottomLeft);
+    public KoreXYLine RightLine     => new KoreXYLine(TopRight, BottomRight);
 
     public static KoreXYRect Zero => new KoreXYRect(0, 0, 0, 0);
 
@@ -78,7 +80,7 @@ public struct KoreXYRect
     public KoreXYRect Offset(KoreXYVector xyOffset)
     {
         KoreXYPoint newTL = TopLeft.Offset(xyOffset);
-        KoreXYPoint newBR = BottomLeft.Offset(xyOffset);
+        KoreXYPoint newBR = BottomRight.Offset(xyOffset);
         return new KoreXYRect(newTL, newBR);
     }
 
@@ -111,15 +113,15 @@ public struct KoreXYRect
         // Get a point at a given position within the rectangle
         return position switch
         {
-            KoreXYRectPosition.TopLeft => TopLeft,
-            KoreXYRectPosition.TopRight => TopRight,
-            KoreXYRectPosition.BottomLeft => BottomLeft,
-            KoreXYRectPosition.BottomRight => BottomRight,
-            KoreXYRectPosition.Center => Center,
-            KoreXYRectPosition.TopCenter => TopCenter,
+            KoreXYRectPosition.TopLeft      => TopLeft,
+            KoreXYRectPosition.TopRight     => TopRight,
+            KoreXYRectPosition.BottomLeft   => BottomLeft,
+            KoreXYRectPosition.BottomRight  => BottomRight,
+            KoreXYRectPosition.Center       => Center,
+            KoreXYRectPosition.TopCenter    => TopCenter,
             KoreXYRectPosition.BottomCenter => BottomCenter,
-            KoreXYRectPosition.LeftCenter => LeftCenter,
-            KoreXYRectPosition.RightCenter => RightCenter,
+            KoreXYRectPosition.LeftCenter   => LeftCenter,
+            KoreXYRectPosition.RightCenter  => RightCenter,
             _ => throw new ArgumentOutOfRangeException(nameof(position), position, null)
         };
     }
@@ -130,14 +132,15 @@ public struct KoreXYRect
 
     public bool Contains(KoreXYPoint xy)
     {
-        return xy.X >= Left && xy.X <= Right && xy.Y >= Top && xy.Y <= Bottom;
+        return xy.X >= Left && xy.X <= Right && 
+               xy.Y >= Top  && xy.Y <= Bottom;
     }
 
     public bool Intersects(KoreXYRect other)
     {
-        return !(other.Left > Right ||
-                 other.Right < Left ||
-                 other.Top > Bottom ||
+        return !(other.Left   > Right  ||
+                 other.Right  < Left   ||
+                 other.Top    > Bottom ||
                  other.Bottom < Top);
     }
 

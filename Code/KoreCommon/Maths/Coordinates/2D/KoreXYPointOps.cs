@@ -96,7 +96,7 @@ public static class KoreXYPointOps
 
     // --------------------------------------------------------------------------------------------
 
-    public static bool EqualsWithinTolerance(KoreXYPoint a, KoreXYPoint b, double tolerance = KoreConsts.ArbitraryMinDouble)
+    public static bool EqualsWithinTolerance(KoreXYPoint a, KoreXYPoint b, double tolerance = KoreConsts.ArbitrarySmallDouble)
     {
         return KoreValueUtils.EqualsWithinTolerance(a.X, b.X, tolerance)
             && KoreValueUtils.EqualsWithinTolerance(a.Y, b.Y, tolerance);

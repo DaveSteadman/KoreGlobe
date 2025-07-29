@@ -88,7 +88,7 @@ public class KoreRouteLegLine : IKoreRouteLeg
     public override double GetDurationS()
     {
         double dist = GetCalculatedDistanceM();
-        return (SpeedMps < KoreConsts.ArbitraryMinDouble) ? 0 : dist / SpeedMps;
+        return (SpeedMps < KoreConsts.ArbitrarySmallDouble) ? 0 : dist / SpeedMps;
     }
 
     public override KoreLLAPoint PositionAtLegTime(double legtimeS)

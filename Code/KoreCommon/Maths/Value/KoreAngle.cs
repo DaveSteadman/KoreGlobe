@@ -17,12 +17,12 @@ public enum AngleBehavior  { Clamp, Wrap}
 
 public class KoreAngle
 {
-    public const double Deg2Rad = Math.PI / 180.0;
-    public const double Rad2Deg = 180.0 / Math.PI;
+    // public const double Deg2Rad = Math.PI / 180.0;
+    // public const double Rad2Deg = 180.0 / Math.PI;
 
     // KoreAngle.RadsToDegs() // KoreAngle.DegsToRads()
-    public static double RadsToDegs(double rad) { return rad * (180.0 / Math.PI); }
-    public static double DegsToRads(double deg) { return deg * (Math.PI / 180.0); }
+    public static double RadsToDegs(double rad) { return rad * KoreConsts.RadsToDegsMultiplier; }
+    public static double DegsToRads(double deg) { return deg * KoreConsts.DegsToRadsMultiplier; }
 
     // Genuine attributes
     public double Radians { get; private set; }

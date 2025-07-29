@@ -167,14 +167,14 @@ public partial class KoreMeshData
         foreach (var kvp in Normals)
         {
             int normalId = kvp.Key;
-            //KoreXYZVector normal   = kvp.Value;
-
+            
+            // If we don't have a matching vertex ID, remove the normal
             if (!Vertices.ContainsKey(normalId))
-            {
                 Normals.Remove(normalId);
-            }
         }
     }
+
+    // --------------------------------------------------------------------------------------------
 
     // Functions to fill out the population of the lists based on a vertex ID.
 
@@ -196,6 +196,32 @@ public partial class KoreMeshData
         }
     }
 
+    // --------------------------------------------------------------------------------------------
+
+    public KoreXYZVector NormalForTriangle(int triangleId)
+    {
+        if (!Triangles.ContainsKey(triangleId))
+            return KoreXYZVector.Zero;
+
+        KoreMeshTriangle triangle = Triangles[triangleId];
+        KoreXYZVector a = Vertices[triangle.A];
+        KoreXYZVector b = Vertices[triangle.B];
+        KoreXYZVector c = Vertices[triangle.C];
+
+        // Calculate the face normal using cross product
+        KoreXYZVector ab = b - a;  // Vector from A to B
+        KoreXYZVector ac = c - a;  // Vector from A to C
+        KoreXYZVector faceNormal = KoreXYZVector.CrossProduct(ab, ac).Normalize();
+
+        // Normalize and invert the face normal (matching AddIsolatedTriangle behavior)
+        faceNormal = faceNormal.Normalize();
+        faceNormal = faceNormal.Invert();
+
+        return faceNormal;
+    }
+
+    // --------------------------------------------------------------------------------------------
+
     // Create a normal for a vertex based on the first triangle that contains that vertex
     public void SetNormalFromFirstTriangle(int vertexId)
     {
@@ -212,26 +238,7 @@ public partial class KoreMeshData
             // Check if this triangle contains our vertex
             if (triangle.A == vertexId || triangle.B == vertexId || triangle.C == vertexId)
             {
-                // Get the three vertices of this triangle
-                if (!Vertices.ContainsKey(triangle.A) ||
-                    !Vertices.ContainsKey(triangle.B) ||
-                    !Vertices.ContainsKey(triangle.C))
-                    continue; // Skip broken triangles
-
-                KoreXYZVector a = Vertices[triangle.A];
-                KoreXYZVector b = Vertices[triangle.B];
-                KoreXYZVector c = Vertices[triangle.C];
-
-                // Calculate the face normal using cross product (same as AddIsolatedTriangle)
-                KoreXYZVector ab = b - a;  // Vector from A to B
-                KoreXYZVector ac = c - a;  // Vector from A to C
-
-                // Cross product gives us the face normal (right-hand rule)
-                KoreXYZVector faceNormal = KoreXYZVector.CrossProduct(ab, ac);
-
-                // Normalize and invert the face normal (matching AddIsolatedTriangle behavior)
-                faceNormal = faceNormal.Normalize();
-                faceNormal = faceNormal.Invert();
+                KoreXYZVector faceNormal = NormalForTriangle(triangleId);
 
                 // Set the normal for this vertex
                 Normals[vertexId] = faceNormal;
@@ -240,18 +247,31 @@ public partial class KoreMeshData
         }
     }
 
-    public void SetNormalsFromTriangles(List<int> vertexIds) => vertexIds.ForEach(SetNormalFromFirstTriangle);
+    // --------------------------------------------------------------------------------------------
 
     // Set normals for all vertices based on the first triangle that contains each vertex
     // Usage: mesh.SetNormalsFromTriangles();
     public void SetNormalsFromTriangles()
     {
-        // Loop through the triangles in the mesh and set normals for each vertex
-        foreach (var triangle in Triangles.Values)
+        // Create a dictionary of all the vertex IDs, and the lowest number of triangle ID they appear in
+        // We can then iterate through the list once, creating the normals more efficiently.
+        var vertexTriangleMap = new Dictionary<int, int>();
+        foreach (var kvp in Triangles)
         {
-            SetNormalFromFirstTriangle(triangle.A);
-            SetNormalFromFirstTriangle(triangle.B);
-            SetNormalFromFirstTriangle(triangle.C);
+            int triangleId = kvp.Key;
+            KoreMeshTriangle triangle = kvp.Value;
+
+            if (!vertexTriangleMap.ContainsKey(triangle.A)) vertexTriangleMap[triangle.A] = triangleId;
+            if (!vertexTriangleMap.ContainsKey(triangle.B)) vertexTriangleMap[triangle.B] = triangleId;
+            if (!vertexTriangleMap.ContainsKey(triangle.C)) vertexTriangleMap[triangle.C] = triangleId;
+        }
+
+        // Now loop through the vertexTriangleMap and set normals for each vertex
+        foreach (var kvp in vertexTriangleMap)
+        {
+            int vertexId = kvp.Key;
+            int triangleId = kvp.Value;
+            Normals[vertexId] = NormalForTriangle(triangleId);
         }
     }
 

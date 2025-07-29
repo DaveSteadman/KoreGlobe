@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 using Godot;
 using KoreCommon;
 using KoreSim;
+
+#nullable enable
 
 // Class to take ownership of the complexity in creating ZeroNode map tiles.
 public partial class KoreZeroNodeMapManager : Node3D
@@ -16,12 +19,12 @@ public partial class KoreZeroNodeMapManager : Node3D
     public static string MapRootPath = "";
 
     // Map load ref position
-    public static KoreLLAPoint LoadRefLLA = new () { LatDegs = 41, LonDegs = 6, AltMslM = 0 };
+    public static KoreLLAPoint LoadRefLLA = new() { LatDegs = 41, LonDegs = 6, AltMslM = 0 };
     public static KoreXYZPoint LoadRefXYZ => LoadRefLLA.ToXYZ();
-    public static float        DistanceToHorizonM = 0;
+    public static float DistanceToHorizonM = 0;
 
     // Tile Action counter - Sets up a number of tile creation actions to be performed per _Process call.
-    public KoreActionCounter ActionCounter = new (10);
+    public KoreActionCounter ActionCounter = new(10);
 
     // lvl0 tile list
     private List<KoreZeroNodeMapTile> Lvl0Tiles = new List<KoreZeroNodeMapTile>();
@@ -36,13 +39,23 @@ public partial class KoreZeroNodeMapManager : Node3D
 
         // Read the debug flag from config
         var config = KoreGodotFactory.Instance.Config;
-        
+
         if (config == null)
         {
             GD.PrintErr("KoreZeroNodeMapManager: Config is null, cannot read settings.");
             return;
         }
+
+        GD.Print($"KoreZeroNodeMapManager: Constructor");
+
+        // Create and debug draw a lvl0 tile
+        KoreMapTileCode lvl0TileCode = new KoreMapTileCode("BF");
+        KoreZeroNodeMapTile lvl0Tile = new KoreZeroNodeMapTile(lvl0TileCode);
         
+        AddChild(lvl0Tile);
+        Lvl0Tiles.Add(lvl0Tile);
+
+
         CurrMaxMapLvl = 0;
         if (config.Has("MaxMapLvl"))
             CurrMaxMapLvl = KoreStringDictionaryOps.ReadInt(config, "MaxMapLvl");
@@ -129,7 +142,7 @@ public partial class KoreZeroNodeMapManager : Node3D
 
         foreach (KoreZeroNodeMapTile currTile in Lvl0Tiles)
         {
-            if (currTile.IsPointInTile(llPoint) )
+            if (currTile.IsPointInTile(llPoint))
             {
                 ele = currTile.GetElevation(llPoint);
                 break;
@@ -160,7 +173,7 @@ public partial class KoreZeroNodeMapManager : Node3D
         CurrMaxMapLvl = KoreValueUtils.Clamp(maxMapLvl, 0, KoreMapTileCode.MaxMapLvl);
 
         // Save the max map level to config
-        
+
         var config = KoreGodotFactory.Instance.Config;
         config.Set("MaxMapLvl", CurrMaxMapLvl);
     }

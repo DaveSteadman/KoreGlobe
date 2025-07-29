@@ -21,20 +21,26 @@ public struct KoreUVBox
         BottomRight = bottomRight;
     }
 
-    public readonly KoreNumericRange<double> UVRangeX { get { return new KoreNumericRange<double>(TopLeft.X, BottomRight.X); } }
-    public readonly KoreNumericRange<double> UVRangeY { get { return new KoreNumericRange<double>(TopLeft.Y, BottomRight.Y); } }
-
-    // --------------------------------------------------------------------------------------------
+    public KoreUVBox(double topLeftX, double topLeftY, double bottomRightX, double bottomRightY)
+    {
+        TopLeft     = new KoreXYPoint(topLeftX, topLeftY);
+        BottomRight = new KoreXYPoint(bottomRightX, bottomRightY);
+    }
 
     public static KoreUVBox Zero { get { return new KoreUVBox(KoreXYPoint.Zero, KoreXYPoint.Zero); } }
     public static KoreUVBox Full { get { return new KoreUVBox(KoreXYPoint.Zero, KoreXYPoint.One); } }
 
     // --------------------------------------------------------------------------------------------
 
+    public readonly KoreNumericRange<double> UVRangeX { get { return new KoreNumericRange<double>(TopLeft.X, BottomRight.X); } }
+    public readonly KoreNumericRange<double> UVRangeY { get { return new KoreNumericRange<double>(TopLeft.Y, BottomRight.Y); } }
+
+    // --------------------------------------------------------------------------------------------
+
     // Get the UV coordinates within the box based on XY fractions
     // xFraction and yFraction should be in the range [0, 1]
 
-    public KoreXYPoint GetUV(double xFraction, double yFraction)
+    public KoreXYVector GetUV(double xFraction, double yFraction)
     {
         // Clamp the fractions to the range [0, 1] to ensure valid interpolation
         xFraction = KoreValueUtils.ClampD(xFraction, 0.0f, 1.0f);
@@ -44,7 +50,27 @@ public struct KoreUVBox
         double u = KoreValueUtils.Interpolate(TopLeft.X, BottomRight.X, xFraction);
         double v = KoreValueUtils.Interpolate(TopLeft.Y, BottomRight.Y, yFraction);
 
-        return new KoreXYPoint(u, v);
+        return new KoreXYVector(u, v);
+    }
+
+    // --------------------------------------------------------------------------------------------
+
+    // Get a 2D grid of UV coordinates based on the dimensions of a destination point grid
+    // Quick UV generation method.
+    // Usage: KoreXYPoint[,] uvGrid = uvBox.GetUVGrid(10, 10);
+    public KoreXYVector[,] GetUVGrid(int horizSize, int vertSize)
+    {
+        var uvGrid = new KoreXYVector[horizSize, vertSize];
+
+        for (int x = 0; x < horizSize; x++)
+        {
+            for (int y = 0; y < vertSize; y++)
+            {
+                uvGrid[x, y] = GetUV((double)x / (horizSize - 1), (double)y / (vertSize - 1));
+            }
+        }
+
+        return uvGrid;
     }
 
     // --------------------------------------------------------------------------------------------

@@ -23,7 +23,7 @@ public struct KoreXYZVector
         set
         {
             double currMag = Magnitude; // store, avoid caclulating twice
-            if (currMag < KoreConsts.ArbitraryMinDouble) // if too close to a div0
+            if (currMag < KoreConsts.ArbitrarySmallDouble) // if too close to a div0
             {
                 X = value; Y = 0; Z = 0;
             }
@@ -78,7 +78,7 @@ public struct KoreXYZVector
     public KoreXYZVector Normalize()
     {
         double mag = Magnitude;
-        if (mag < KoreConsts.ArbitraryMinDouble)
+        if (mag < KoreConsts.ArbitrarySmallDouble)
             return new KoreXYZVector(1, 0, 0);
         else
             return new KoreXYZVector(X / mag, Y / mag, Z / mag);
@@ -86,9 +86,9 @@ public struct KoreXYZVector
 
     public bool IsZero()
     {
-        return Math.Abs(X) < KoreConsts.ArbitraryMinDouble &&
-               Math.Abs(Y) < KoreConsts.ArbitraryMinDouble &&
-               Math.Abs(Z) < KoreConsts.ArbitraryMinDouble;
+        return Math.Abs(X) < KoreConsts.ArbitrarySmallDouble &&
+               Math.Abs(Y) < KoreConsts.ArbitrarySmallDouble &&
+               Math.Abs(Z) < KoreConsts.ArbitrarySmallDouble;
     }
 
     // --------------------------------------------------------------------------------------------
