@@ -1,0 +1,46 @@
+[gd_scene load_steps=3 format=3 uid="uid://chcp6g834ox5t"]
+
+[ext_resource type="Script" uid="uid://bdcjqmbkbcw18" path="res://Code/GodotCommon/Util/KoreSplashScreen.cs" id="1_lus2m"]
+[ext_resource type="Texture2D" uid="uid://bwo42y8gf2686" path="res://Resources/made-with-godot-logox500.png" id="2_lus2m"]
+
+[node name="SplashScreen" type="CanvasLayer"]
+script = ExtResource("1_lus2m")
+
+[node name="VisualRoot" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ColorRect" type="ColorRect" parent="VisualRoot"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+color = Color(0.11858138, 0.11858138, 0.11858138, 1)
+metadata/_edit_use_anchors_ = true
+
+[node name="TextureRect" type="TextureRect" parent="VisualRoot"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -103.0
+offset_right = 200.0
+offset_bottom = 103.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("2_lus2m")

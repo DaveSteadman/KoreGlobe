@@ -13,6 +13,11 @@ public partial class MainScene : Node3D
 
     public override void _Ready()
     {
+        // Load and run the splash screen
+        PackedScene splashScene = GD.Load<PackedScene>("res://Scenes/SplashScreen.tscn");
+        Node splash = splashScene.Instantiate();
+        AddChild(splash);
+        
         // This method is called when the node is added to the scene.
         GD.Print("MainScene is ready!");
 

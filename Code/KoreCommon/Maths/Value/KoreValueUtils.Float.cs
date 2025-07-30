@@ -82,6 +82,7 @@ public static partial class KoreValueUtils
 
     // --------------------------------------------------------------------------------------------
 
+    // Usage: float myVal = KoreValueUtils.ScaleVal(inval, inrangemin, inrangemax, outrangemin, outrangemax)
     public static float ScaleVal(float inval, float inrangemin, float inrangemax, float outrangemin, float outrangemax)
     {
         // Check in the input value is in range
