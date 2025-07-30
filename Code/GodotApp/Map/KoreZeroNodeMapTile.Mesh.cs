@@ -184,19 +184,19 @@ public partial class KoreZeroNodeMapTile : Node3D
         // MeshInstance.MaterialOverride = TileMaterial;
 
 
+        GodotMeshPrimitives.AddChildDebugSphere(this, 0.1f, new KoreColorRGB(50, 150, 50));
+        // {
+        //     var cubeMesh1 = KoreMeshDataPrimitives.BasicSphere(0.1f, new KoreColorRGB(50, 50, 50), 12);
 
-        {
-            var cubeMesh1 = KoreMeshDataPrimitives.BasicSphere(0.1f, new KoreColorRGB(50, 50, 50), 12);
+        //     KoreGodotLineMesh childMeshNode1 = new KoreGodotLineMesh();
+        //     childMeshNode1.UpdateMesh(cubeMesh1);
 
-            KoreGodotLineMesh childMeshNode1 = new KoreGodotLineMesh();
-            childMeshNode1.UpdateMesh(cubeMesh1);
+        //     KoreGodotSurfaceMesh childSurfaceMeshNode1 = new KoreGodotSurfaceMesh();
+        //     childSurfaceMeshNode1.UpdateMesh(cubeMesh1);
 
-            KoreGodotSurfaceMesh childSurfaceMeshNode1 = new KoreGodotSurfaceMesh();
-            childSurfaceMeshNode1.UpdateMesh(cubeMesh1);
-
-            AddChild(childMeshNode1);
-            AddChild(childSurfaceMeshNode1);
-        }
+        //     AddChild(childMeshNode1);
+        //     AddChild(childSurfaceMeshNode1);
+        // }
 
 
         // AddChild(MeshInstance);
