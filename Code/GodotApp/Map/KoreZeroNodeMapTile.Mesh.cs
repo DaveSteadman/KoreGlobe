@@ -58,14 +58,14 @@ public partial class KoreZeroNodeMapTile : Node3D
                 double ele = TileEleData[ix, jy];
 
                 // Determine the tile position in the RW world, and then as an offset from the tile centre
-                KoreLLAPoint rwLLAPointPos = new KoreLLAPoint() { LatRads = latRads, LonRads = lonRads, RadiusM = ele };
+                KoreLLAPoint rwLLAPointPos = new KoreLLAPoint() { LatRads = latRads, LonRads = lonRads, AltMslM = ele };
                 KoreXYZPoint rwXYZPointPos = rwLLAPointPos.ToXYZ();
                 KoreXYZVector rwXYZCenterOffset = rwXYZZeroLonCenter.XYZTo(rwXYZPointPos);
 
-                //rwXYZCenterOffset = rwXYZCenterOffset.Scale(KoreZeroOffset.RwToGeDistanceMultiplier);
+                rwXYZCenterOffset = rwXYZCenterOffset.Scale(KoreZeroOffset.RwToGeDistanceMultiplier);
 
                 // Convert the Real-World position to the Game Engine position.
-                v3Data[ix, jy] = new KoreXYZVector(rwXYZPointPos);
+                v3Data[ix, jy] = rwXYZCenterOffset;  // new KoreXYZVector(rwXYZPointPos);
 
                 // if (limitX || limitY) // Only do the edges, we don't use the middle.
                 // {
@@ -155,61 +155,9 @@ public partial class KoreZeroNodeMapTile : Node3D
         AddChild(surfaceMesh);
         surfaceMesh.Name = "SurfaceMesh";
 
-        // var cubeMesh = KoreMeshDataPrimitives.BasicCubeIsolatedTriangles(1.0f, new KoreColorRGB(255, 0, 0));
-
-
-        //var tileMesh = KoreMeshDataPrimitives.DropEdgeTile
-
-        // KoreMeshDataPrimitives.AddTile(v3Data, UVx, UVy, false);
-        // KoreMeshDataPrimitives.AddBoxEdges(v3Data, v3DataBottom, UVx, UVy, false);
-
-        // KoreBinaryDataManager loadDB = new KoreBinaryDataManager("TileGeometry2.db");
-        // string tilecodestr = TileCode.ToString();
-
-        // if (!loadDB.DataExists(tilecodestr))
-        // {
-        //     byte[] data = KoreMeshDataIO.MeshDataToBytes2(meshBuilder.meshData);
-        //     loadDB.Add(tilecodestr, data);
-        // }
-        // else
-        // // {
-        // //     byte[] data = loadDB.Get(tilecodestr);
-        // //     meshBuilder.meshData = KoreMeshDataIO.BytesToMeshData2(data);
-        // // }
-
-        // // Build the mesh data and add it to the node
-        // MeshInstance = new MeshInstance3D() { Name = "tileMesh" };
-        // MeshInstance.Mesh = meshBuilder.BuildWithUV("Surface");
-        // //MeshInstance.MaterialOverride = KoreMaterialFactory.SimpleColoredMaterial(new Color(1.0f, 0.0f, 1.0f, 1.0f));
-        // MeshInstance.MaterialOverride = TileMaterial;
 
 
         GodotMeshPrimitives.AddChildDebugSphere(this, 0.1f, new KoreColorRGB(50, 150, 50));
-        // {
-        //     var cubeMesh1 = KoreMeshDataPrimitives.BasicSphere(0.1f, new KoreColorRGB(50, 50, 50), 12);
-
-        //     KoreGodotLineMesh childMeshNode1 = new KoreGodotLineMesh();
-        //     childMeshNode1.UpdateMesh(cubeMesh1);
-
-        //     KoreGodotSurfaceMesh childSurfaceMeshNode1 = new KoreGodotSurfaceMesh();
-        //     childSurfaceMeshNode1.UpdateMesh(cubeMesh1);
-
-        //     AddChild(childMeshNode1);
-        //     AddChild(childSurfaceMeshNode1);
-        // }
-
-
-        // AddChild(MeshInstance);
-
-        // MeshInstance.Rotation = new Vector3(0, rotAz, 0);
-
-        // // Set the visibility false, later functions will assign the correct visibility rules.
-        // MeshInstance.Visible = false;
-
-
-        // //AddChild(MeshInstance);
-
-        // GEElements.Add(MeshInstance);
 
     }
 

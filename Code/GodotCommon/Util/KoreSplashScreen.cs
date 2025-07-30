@@ -8,6 +8,7 @@ using System;
 public partial class KoreSplashScreen : CanvasLayer
 {
     Control? _visualRoot;
+    
     public override void _Ready()
     {
         _visualRoot = GetNode<Control>("VisualRoot");
@@ -16,29 +17,19 @@ public partial class KoreSplashScreen : CanvasLayer
             GD.PrintErr("KoreSplashScreen: VisualRoot node not found.");
             return;
         }
-
-        // _visualRoot.AnchorLeft = -0.5f;
-        // _visualRoot.AnchorTop = 0.5f;
-        // _visualRoot.AnchorRight = 0.5f;
-        // _visualRoot.AnchorBottom = 0.5f;
-
-        // _visualRoot.OffsetLeft = -_visualRoot.Size.X / 2f;
-        // _visualRoot.OffsetTop = -_visualRoot.Size.Y / 2f;
-        // _visualRoot.OffsetRight = _visualRoot.Size.X / 2f;
-        // _visualRoot.OffsetBottom = _visualRoot.Size.Y / 2f;
     }
 
-    public override void _PhysicsProcess(double delta)
+    public override void _Process(double delta)
     {
-        const float startTime = 0.8f;
-        const float animDuration = 0.4f;
+        const float startTime = 1.3f;
+        const float animDuration = 0.6f;
         const float endTime = startTime + animDuration;
 
         if (KoreCentralTime.RuntimeSecs > startTime)
         {
             float animPos = KoreCentralTime.RuntimeSecs - startTime;
             float animAlpha = KoreValueUtils.ScaleVal(animPos, 0, animDuration, 1, 0);
-            float animScale = KoreValueUtils.ScaleVal(animPos, 0, animDuration, 1, 3);
+            float animScale = KoreValueUtils.ScaleVal(animPos, 0, animDuration, 1, 8);
 
             if (_visualRoot != null)
             {
@@ -49,8 +40,6 @@ public partial class KoreSplashScreen : CanvasLayer
                 Vector2 size = _visualRoot.Size;
                 Vector2 screenCenter = GetViewport().GetVisibleRect().Size / 2f;
                 _visualRoot.Position = screenCenter - (size * _visualRoot.Scale / 2f);
-
-
             }
         }
 
