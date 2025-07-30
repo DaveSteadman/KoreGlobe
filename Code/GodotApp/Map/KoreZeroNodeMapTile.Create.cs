@@ -35,8 +35,8 @@ public partial class KoreZeroNodeMapTile : Node3D
             // // Pause the thread, being a good citizen with lots of tasks around.
             // await Task.Yield();
 
-            // // ----------------------------
-            // // File IO and Tile center
+            // ----------------------------
+            // File IO and Tile center
 
             // // Setup some basic elements of the tile ahead of the main elevation and image loading.
             // Filepaths = new KoreMapTileFilepaths(TileCode); // Figure out the file paths for the tile
@@ -46,7 +46,7 @@ public partial class KoreZeroNodeMapTile : Node3D
             RwTileCenterLLA = new KoreLLAPoint(RwTileLLBox.CenterPoint);
             RwTileCenterXYZ = RwTileCenterLLA.ToXYZ();
 
-            // // Pause the thread, being a good citizen with lots of tasks around.
+            // Pause the thread, being a good citizen with lots of tasks around.
             // await Task.Yield();
 
             // ----------------------------
@@ -55,7 +55,8 @@ public partial class KoreZeroNodeMapTile : Node3D
             // Default everything, in case we fall through the logic, the objects are not null
             UVBox = new KoreUVBoxDropEdgeTile(KoreUVBoxDropEdgeTile.UVTopLeft, KoreUVBoxDropEdgeTile.UVBottomRight);
             TileMaterial = KoreGodotMaterialFactory.SimpleColoredMaterial(new Color(0.5f, 0.5f, 0f, 1f));
-            TileEleData = new KoreFloat2DArray(10, 10);
+            TileEleData = new KoreFloat2DArray(50, 50);
+            TileEleData.SetAllNoise(2.0f, 2.01f);
 
             // // Pause the thread, being a good citizen with lots of tasks around.
             // await Task.Yield();

@@ -181,6 +181,21 @@ public partial class KoreNumeric2DArray<T> where T : struct, INumber<T>
         for (int y = 0; y < Height; y++)
             Data[col, y] = value;
     }
+    
+    public void SetAllNoise(T minVal, T maxVal)
+    {
+        Random random = new Random();
+        for (int y = 0; y < Height; y++)
+        {
+            for (int x = 0; x < Width; x++)
+            {
+                T val = KoreNumericUtils.RandomInRange<T>(minVal, maxVal);
+                Data[x, y] = val;
+            }
+        }
+
+        Populated = true;
+    }
 
     // --------------------------------------------------------------------------------------------
     // MARK: Flip

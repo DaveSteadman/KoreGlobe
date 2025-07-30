@@ -58,14 +58,14 @@ public partial class KoreZeroNodeMapTile : Node3D
                 double ele = TileEleData[ix, jy];
 
                 // Determine the tile position in the RW world, and then as an offset from the tile centre
-                KoreLLAPoint rwLLAPointPos = new KoreLLAPoint() { LatRads = latRads, LonRads = lonRads, AltMslM = ele };
+                KoreLLAPoint rwLLAPointPos = new KoreLLAPoint() { LatRads = latRads, LonRads = lonRads, RadiusM = ele };
                 KoreXYZPoint rwXYZPointPos = rwLLAPointPos.ToXYZ();
                 KoreXYZVector rwXYZCenterOffset = rwXYZZeroLonCenter.XYZTo(rwXYZPointPos);
 
-                rwXYZCenterOffset = rwXYZCenterOffset.Scale(KoreZeroOffset.RwToGeDistanceMultiplier);
+                //rwXYZCenterOffset = rwXYZCenterOffset.Scale(KoreZeroOffset.RwToGeDistanceMultiplier);
 
                 // Convert the Real-World position to the Game Engine position.
-                v3Data[ix, jy] = rwXYZCenterOffset;
+                v3Data[ix, jy] = new KoreXYZVector(rwXYZPointPos);
 
                 // if (limitX || limitY) // Only do the edges, we don't use the middle.
                 // {
@@ -136,8 +136,24 @@ public partial class KoreZeroNodeMapTile : Node3D
 
         KoreUVBox uvBox = new KoreUVBox(0, 0, 1, 1);
 
-        // meshData = KoreMeshDataPrimitives.Surface(v3Data, uvBox);
+        meshData = KoreMeshDataPrimitives.Surface(v3Data, uvBox);
 
+        KoreGodotLineMesh surfaceLineMesh = new KoreGodotLineMesh();
+        surfaceLineMesh.UpdateMesh(meshData);
+        AddChild(surfaceLineMesh);
+        
+        surfaceLineMesh.Name = "SurfaceLineMesh";
+
+
+        // debug print the JSON of the mesh
+        // string meshJson = KoreMeshDataIO.ToJson(meshData, dense: false);
+        // GD.Print("Mesh JSON: " + meshJson);
+
+
+        KoreGodotSurfaceMesh surfaceMesh = new KoreGodotSurfaceMesh();
+        surfaceMesh.UpdateMesh(meshData);
+        AddChild(surfaceMesh);
+        surfaceMesh.Name = "SurfaceMesh";
 
         // var cubeMesh = KoreMeshDataPrimitives.BasicCubeIsolatedTriangles(1.0f, new KoreColorRGB(255, 0, 0));
 
@@ -170,7 +186,7 @@ public partial class KoreZeroNodeMapTile : Node3D
 
 
         {
-            var cubeMesh1 = KoreMeshDataPrimitives.BasicCube(0.5f, new KoreColorRGB(255, 0, 0));
+            var cubeMesh1 = KoreMeshDataPrimitives.BasicSphere(0.1f, new KoreColorRGB(50, 50, 50), 12);
 
             KoreGodotLineMesh childMeshNode1 = new KoreGodotLineMesh();
             childMeshNode1.UpdateMesh(cubeMesh1);
