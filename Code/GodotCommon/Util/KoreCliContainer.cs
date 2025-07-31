@@ -56,59 +56,63 @@ public partial class KoreCliContainer : MarginContainer
     // MARK: Input 
     // --------------------------------------------------------------------------------------------
 
-    // public override void _Input(InputEvent @event)
-    // {
-    //     if (@event is InputEventKey keyEvent && keyEvent.Pressed)
-    //     {
-    //         GD.Print($"KoreCliContainer: _Input Key pressed: {keyEvent.Keycode} (Ctrl: {keyEvent.CtrlPressed}, Shift: {keyEvent.ShiftPressed})");
-    //         //GetViewport().SetInputAsHandled();
-    //     }
-    //     base._Input(@event);
-    // }
+    public override void _Input(InputEvent @event)
+    {
+        if (@event is InputEventKey keyEvent && keyEvent.Pressed)
+        {
+            GD.Print($"KoreCliContainer: _Input Key pressed: {keyEvent.Keycode} (Ctrl: {keyEvent.CtrlPressed}, Shift: {keyEvent.ShiftPressed})");
+            //GetViewport().SetInputAsHandled();
+            
+            AcceptEvent(); // Mark this event as handled
+        }
+        base._Input(@event);
+    }
 
-    // public override void _GuiInput(InputEvent @event)
-    // {
-    //     if (@event is InputEventKey keyEvent && keyEvent.Pressed)
-    //     {
-    //         // Only intercept input when LineEdit has focus
-    //         // if (CommandEntryEdit.HasFocus())
-    //         // {
+    public override void _GuiInput(InputEvent @event)
+    {
+        if (@event is InputEventKey keyEvent && keyEvent.Pressed)
+        {
+            // Only intercept input when LineEdit has focus
+            // if (CommandEntryEdit.HasFocus())
+            // {
 
-    //         // Print keystroke for debugging
-    //         GD.Print($"KoreCliContainer: _GuiInput Key pressed: {keyEvent.Keycode} (Ctrl: {keyEvent.CtrlPressed}, Shift: {keyEvent.ShiftPressed})");
+            // Print keystroke for debugging
+            GD.Print($"KoreCliContainer: _GuiInput Key pressed: {keyEvent.Keycode} (Ctrl: {keyEvent.CtrlPressed}, Shift: {keyEvent.ShiftPressed})");
 
-    //         // Handle history navigation with arrow keys (or Ctrl+Up/Down)
-    //         if (keyEvent.Keycode == Key.Up || (keyEvent.CtrlPressed && keyEvent.Keycode == Key.Up))
-    //         {
-    //             NavigateHistoryBackward();
-    //             GetViewport().SetInputAsHandled();
-    //             return;
-    //         }
-    //         else if (keyEvent.Keycode == Key.Down || (keyEvent.CtrlPressed && keyEvent.Keycode == Key.Down))
-    //         {
-    //             NavigateHistoryForward();
-    //             GetViewport().SetInputAsHandled();
-    //             return;
-    //         }
+            // Handle history navigation with arrow keys (or Ctrl+Up/Down)
+            if (keyEvent.Keycode == Key.Up || (keyEvent.CtrlPressed && keyEvent.Keycode == Key.Up))
+            {
+                NavigateHistoryBackward();
+                GetViewport().SetInputAsHandled();
+                return;
+            }
+            else if (keyEvent.Keycode == Key.Down || (keyEvent.CtrlPressed && keyEvent.Keycode == Key.Down))
+            {
+                NavigateHistoryForward();
+                GetViewport().SetInputAsHandled();
+                return;
+            }
 
-    //         // ✅ Consume ALL keyboard events to prevent propagation to other scenes
-    //         GetViewport().SetInputAsHandled();
-    //         // }
-    //     }
+            // ✅ Consume ALL keyboard events to prevent propagation to other scenes
+            //GetViewport().SetInputAsHandled();
+            AcceptEvent(); // Mark this event as handled
+            // }
+        }
 
-    //     //base._GuiInput(@event); // Let normal GUI input proceed
-    // }
+        //base._GuiInput(@event); // Let normal GUI input proceed
+    }
 
-    // // Unhandled input processing
-    // public override void _UnhandledInput(InputEvent @event)
-    // {
-    //     // Additional safety net: consume any unhandled key input when CLI has focus
-    //     if (@event is InputEventKey keyEvent && keyEvent.Pressed)
-    //     {
-    //         GD.Print($"KoreCliContainer: _UnhandledInput: {keyEvent.Keycode}");
-    //         GetViewport().SetInputAsHandled();
-    //     }
-    // }
+    // Unhandled input processing
+    public override void _UnhandledInput(InputEvent @event)
+    {
+        // Additional safety net: consume any unhandled key input when CLI has focus
+        if (@event is InputEventKey keyEvent && keyEvent.Pressed)
+        {
+            GD.Print($"KoreCliContainer: _UnhandledInput: {keyEvent.Keycode}");
+            //GetViewport().SetInputAsHandled();
+            AcceptEvent(); // Mark this event as handled
+        }
+    }
 
     // --------------------------------------------------------------------------------------------
     // MARK: Actions
