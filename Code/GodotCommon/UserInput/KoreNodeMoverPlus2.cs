@@ -74,10 +74,18 @@ public partial class KoreNodeMoverPlus2 : Node3D
                 }
             }
             
-            // Middle mouse button (wheel click) behavior - track as movement modifier
+            // Middle mouse button (wheel click) behavior - track as movement modifier and standalone translation
             if (mouseButton.ButtonIndex == MouseButton.Middle)
             {
-                _isMiddleMouseDown = mouseButton.Pressed;
+                if (mouseButton.Pressed)
+                {
+                    _lastMousePosition = mouseButton.Position;
+                    _isMiddleMouseDown = true;
+                }
+                else
+                {
+                    _isMiddleMouseDown = false;
+                }
             }
             
             // Handle mouse wheel for zoom (forward/backward movement)
@@ -96,51 +104,35 @@ public partial class KoreNodeMoverPlus2 : Node3D
         // Handle mouse motion
         if (@event is InputEventMouseMotion mouseMotion)
         {
-            // Only process mouse motion if right mouse button is held down
-            if (_isRightMouseDown)
+            // Process mouse motion for either right mouse button or middle mouse button
+            if (_isRightMouseDown || _isMiddleMouseDown)
             {
                 Vector2 mouseDelta = mouseMotion.Relative;
                 
-                // Dynamically check shift key state and middle mouse button to determine mode
-                bool shiftPressed = Input.IsKeyPressed(Key.Shift);
-                bool movementMode = shiftPressed || _isMiddleMouseDown;
+                // Determine the mode based on which buttons are pressed
+                bool isRightMouseOnly = _isRightMouseDown && !_isMiddleMouseDown;
+                bool isMiddleMouseInvolved = _isMiddleMouseDown;
                 
-                if (movementMode)
+                if (isRightMouseOnly)
                 {
-                    // Shift + Right mouse drag OR Middle + Right mouse drag for movement (like WASD)
-                    // Convert mouse movement to world movement
-                    // Horizontal mouse movement = left/right (X axis)
-                    // Vertical mouse movement = up/down (Y axis)
-                    Vector3 mouseMovement = new Vector3(
-                        -mouseDelta.X * MouseMovementSensitivity,  // Left/Right
-                        mouseDelta.Y * MouseMovementSensitivity,   // Up/Down
-                        0f                                         // No Z movement from mouse
-                    );
+                    // Right mouse only - check shift key to determine mode
+                    bool shiftPressed = Input.IsKeyPressed(Key.Shift);
                     
-                    // Convert to world space and apply
-                    Vector3 worldMovement = GlobalTransform.Basis * mouseMovement;
-                    Position += worldMovement;
+                    if (shiftPressed)
+                    {
+                        // Shift + Right mouse drag for movement
+                        ApplyMouseMovement(mouseDelta);
+                    }
+                    else
+                    {
+                        // Right mouse drag for rotation
+                        ApplyMouseRotation(mouseDelta);
+                    }
                 }
-                else
+                else if (isMiddleMouseInvolved)
                 {
-                    // Right mouse drag for rotation
-                    // Apply mouse rotation
-                    // Horizontal mouse movement rotates around Y axis (yaw)
-                    // Vertical mouse movement rotates around X axis (pitch)
-                    Vector3 mouseRotation = new Vector3(
-                        mouseDelta.Y * MouseSensitivity, // Pitch (up/down)
-                        mouseDelta.X * MouseSensitivity, // Yaw (left/right)
-                        0f
-                    );
-                    
-                    Rotation += mouseRotation;
-                    
-                    // Clamp pitch to avoid flipping
-                    Rotation = new Vector3(
-                        Mathf.Clamp(Rotation.X, -Mathf.Pi/2 + 0.1f, Mathf.Pi/2 - 0.1f),
-                        Rotation.Y,
-                        Rotation.Z
-                    );
+                    // Middle mouse (alone or with right mouse) always means movement
+                    ApplyMouseMovement(mouseDelta);
                 }
             }
         }
@@ -181,6 +173,47 @@ public partial class KoreNodeMoverPlus2 : Node3D
     }
 
     // --------------------------------------------------------------------------------------------
+    // MARK: Mouse Helper Methods
+    // --------------------------------------------------------------------------------------------
+    
+    private void ApplyMouseMovement(Vector2 mouseDelta)
+    {
+        // Convert mouse movement to world movement
+        // Horizontal mouse movement = left/right (X axis)
+        // Vertical mouse movement = up/down (Y axis)
+        Vector3 mouseMovement = new Vector3(
+            -mouseDelta.X * MouseMovementSensitivity,  // Left/Right
+            mouseDelta.Y * MouseMovementSensitivity,   // Up/Down
+            0f                                         // No Z movement from mouse
+        );
+        
+        // Convert to world space and apply
+        Vector3 worldMovement = GlobalTransform.Basis * mouseMovement;
+        Position += worldMovement;
+    }
+    
+    private void ApplyMouseRotation(Vector2 mouseDelta)
+    {
+        // Apply mouse rotation
+        // Horizontal mouse movement rotates around Y axis (yaw)
+        // Vertical mouse movement rotates around X axis (pitch)
+        Vector3 mouseRotation = new Vector3(
+            mouseDelta.Y * MouseSensitivity, // Pitch (up/down)
+            mouseDelta.X * MouseSensitivity, // Yaw (left/right)
+            0f
+        );
+        
+        Rotation += mouseRotation;
+        
+        // Clamp pitch to avoid flipping
+        Rotation = new Vector3(
+            Mathf.Clamp(Rotation.X, -Mathf.Pi/2 + 0.1f, Mathf.Pi/2 - 0.1f),
+            Rotation.Y,
+            Rotation.Z
+        );
+    }
+
+    // --------------------------------------------------------------------------------------------
     // MARK: Utility Methods
     // --------------------------------------------------------------------------------------------
     
@@ -200,7 +233,7 @@ public partial class KoreNodeMoverPlus2 : Node3D
     // Check if currently performing mouse operations (useful for other systems)
     public bool IsMouseActive()
     {
-        return _isRightMouseDown;
+        return _isRightMouseDown || _isMiddleMouseDown;
     }
     
     // Check if middle mouse button is currently pressed
@@ -212,10 +245,19 @@ public partial class KoreNodeMoverPlus2 : Node3D
     // Get current mouse operation mode
     public string GetMouseMode()
     {
-        if (!_isRightMouseDown) return "None";
+        if (!_isRightMouseDown && !_isMiddleMouseDown) return "None";
         
-        bool shiftPressed = Input.IsKeyPressed(Key.Shift);
-        bool movementMode = shiftPressed || _isMiddleMouseDown;
-        return movementMode ? "Moving" : "Rotating";
+        if (_isMiddleMouseDown)
+        {
+            return "Moving"; // Middle mouse always means movement
+        }
+        
+        if (_isRightMouseDown)
+        {
+            bool shiftPressed = Input.IsKeyPressed(Key.Shift);
+            return shiftPressed ? "Moving" : "Rotating";
+        }
+        
+        return "None";
     }
 }

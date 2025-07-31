@@ -1,0 +1,18 @@
+[gd_scene load_steps=2 format=3 uid="uid://jvojhc1rtps7"]
+
+[ext_resource type="Script" uid="uid://cbpmjpfek3exh" path="res://Code/GodotCommon/Util/KoreGodotAppRoot.cs" id="1_kvlpo"]
+
+[node name="Root" type="Node"]
+script = ExtResource("1_kvlpo")
+
+[node name="RootUI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Root2D" type="Node2D" parent="."]
+
+[node name="Root3D" type="Node3D" parent="."]

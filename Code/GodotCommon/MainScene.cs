@@ -4,8 +4,12 @@ using System;
 using KoreCommon;
 using System.Collections.Generic;
 
+#nullable enable
+
 public partial class MainScene : Node3D
 {
+    // MainScene.UIMount
+    public static Control? UIMount = null;
 
     // ---------------------------------------------------------------------------------------------
     // MARK: Node3D
@@ -13,11 +17,23 @@ public partial class MainScene : Node3D
 
     public override void _Ready()
     {
-        // Load and run the splash screen
-        PackedScene splashScene = GD.Load<PackedScene>("res://Scenes/SplashScreen.tscn");
-        Node splash = splashScene.Instantiate();
-        AddChild(splash);
-        
+        // // Find the place to mount other UI elements - to be at the top of the tree
+        // UIMount = GetNodeOrNull<Control>("UIMount");
+        // if (UIMount == null) GD.PrintErr("MainScene: UIMount node not found.");
+
+        // if (UIMount != null)
+        // {
+        //     // Load the UI Top scene first (so it appears underneath)
+        //     PackedScene uiTopScene = GD.Load<PackedScene>("res://Scenes/UITop.tscn");
+        //     Node uiTop = uiTopScene.Instantiate();
+        //     AddChild(uiTop);
+
+        //     // Load and run the splash screen (so it appears on top)
+        //     PackedScene splashScene = GD.Load<PackedScene>("res://Scenes/SplashScreen.tscn");
+        //     Node splash = splashScene.Instantiate();
+        //     AddChild(splash);
+        // }
+
         // This method is called when the node is added to the scene.
         GD.Print("MainScene is ready!");
 

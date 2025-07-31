@@ -1,11 +1,16 @@
 [gd_scene load_steps=2 format=3 uid="uid://xha740xhgc01"]
 
-[ext_resource type="Script" uid="uid://dtyy0k74nvdln" path="res://Code/GodotCommon/Util/KoreUICliWindow.cs" id="1_y4vr3"]
+[ext_resource type="Script" uid="uid://ccbjrtv31jmkf" path="res://Code/GodotCommon/Util/UiCommandLineWindow.cs" id="1_2bkf7"]
 
 [node name="CLIWindow" type="Window"]
+gui_embed_subwindows = true
+sdf_oversize = 3
+sdf_scale = 2
 oversampling_override = 1.0
+title = "CLI"
+initial_position = 2
 size = Vector2i(1000, 800)
-script = ExtResource("1_y4vr3")
+script = ExtResource("1_2bkf7")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 anchors_preset = 15
@@ -30,3 +35,5 @@ vertical_alignment = 2
 [node name="CommandEntryEdit" type="LineEdit" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 8
+keep_editing_on_text_submit = true
+backspace_deletes_composite_character_enabled = true

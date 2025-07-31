@@ -9,6 +9,10 @@ public partial class KoreSplashScreen : CanvasLayer
 {
     Control? _visualRoot;
     
+    // --------------------------------------------------------------------------------------------
+    // MARK: Node Functions
+    // --------------------------------------------------------------------------------------------
+    
     public override void _Ready()
     {
         _visualRoot = GetNode<Control>("VisualRoot");
@@ -18,6 +22,8 @@ public partial class KoreSplashScreen : CanvasLayer
             return;
         }
     }
+
+    // --------------------------------------------------------------------------------------------
 
     public override void _Process(double delta)
     {

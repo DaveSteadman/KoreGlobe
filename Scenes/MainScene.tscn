@@ -194,3 +194,5 @@ script = ExtResource("11_6t1o7")
 [node name="DebugSphere" type="MeshInstance3D" parent="Node"]
 mesh = SubResource("SphereMesh_xb4mg")
 surface_material_override/0 = SubResource("StandardMaterial3D_6t1o7")
+
+[node name="Node2" type="Node" parent="."]
