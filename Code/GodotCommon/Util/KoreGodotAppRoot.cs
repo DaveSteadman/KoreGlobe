@@ -31,6 +31,7 @@ public partial class KoreGodotAppRoot : Node
 
         // Load the main scene into the Root3D node
         var mainScene = GD.Load<PackedScene>("res://Scenes/MainScene.tscn");
+        //var mainScene = GD.Load<PackedScene>("res://Scenes/3DSandbox.tscn");
         if (mainScene == null)
         {
             GD.PrintErr("KoreAppRoot: Failed to load MainScene.");

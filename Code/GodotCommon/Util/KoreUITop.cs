@@ -40,6 +40,7 @@ public partial class KoreUITop : Control
         GD.Print("KoreUITop: CLI Button Pressed");
 
         // Load the CLI window scene and display it
+        //var cliWindowScene = GD.Load<PackedScene>("res://Scenes/UITest.tscn");
         var cliWindowScene = GD.Load<PackedScene>("res://Scenes/UICommandLineWindow.tscn");
         if (cliWindowScene == null)
         {
@@ -49,13 +50,14 @@ public partial class KoreUITop : Control
 
         // Instance the CLI window scene
         var cliWindow = cliWindowScene.Instantiate<Window>();
+        //var cliWindow = cliWindowScene.Instantiate<Control>();
         if (cliWindow == null)
         {
             GD.PrintErr("KoreUITop: Failed to instantiate KoreUICliWindow.");
             return;
         }
 
-        cliWindow.SetExclusive(true);
+        //.Window.SetExclusive(true);
 
 
         AddChild(cliWindow);

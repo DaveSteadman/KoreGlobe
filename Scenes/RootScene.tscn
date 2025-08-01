@@ -6,6 +6,7 @@
 script = ExtResource("1_kvlpo")
 
 [node name="RootUI" type="Control" parent="."]
+top_level = true
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -14,5 +15,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Root2D" type="Node2D" parent="."]
+top_level = true
 
 [node name="Root3D" type="Node3D" parent="."]
+top_level = true

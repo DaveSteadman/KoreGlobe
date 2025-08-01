@@ -6,6 +6,7 @@
 // - Mouse cursor always visible and position unaffected
 
 using Godot;
+using System.Collections.Generic;
 
 public partial class KoreNodeMoverPlus2 : Node3D
 {
@@ -24,6 +25,9 @@ public partial class KoreNodeMoverPlus2 : Node3D
     private bool _isRightMouseDown = false;
     private bool _isMiddleMouseDown = false;
     private Vector2 _lastMousePosition = Vector2.Zero;
+
+    // Event-based key tracking (replaces global Input singleton polling)
+    private HashSet<Key> _currentKeys = new HashSet<Key>();
 
     // --------------------------------------------------------------------------------------------
     // MARK: Node3D 
@@ -55,6 +59,19 @@ public partial class KoreNodeMoverPlus2 : Node3D
     {
         if (!IsEnabled)
             return;
+
+        // Handle keyboard events for focus-aware input
+        if (@event is InputEventKey keyEvent)
+        {
+            if (keyEvent.Pressed)
+            {
+                _currentKeys.Add(keyEvent.Keycode);
+            }
+            else
+            {
+                _currentKeys.Remove(keyEvent.Keycode);
+            }
+        }
 
         // Handle mouse button press/release
         if (@event is InputEventMouseButton mouseButton)
@@ -116,7 +133,7 @@ public partial class KoreNodeMoverPlus2 : Node3D
                 if (isRightMouseOnly)
                 {
                     // Right mouse only - check shift key to determine mode
-                    bool shiftPressed = Input.IsKeyPressed(Key.Shift);
+                    bool shiftPressed = _currentKeys.Contains(Key.Shift);
                     
                     if (shiftPressed)
                     {
@@ -143,32 +160,33 @@ public partial class KoreNodeMoverPlus2 : Node3D
         CamDirection = Vector3.Zero;
         CamRotation  = Vector3.Zero;
 
-        bool shift = Input.IsKeyPressed(Key.Shift);
-        bool alt   = Input.IsKeyPressed(Key.Alt);
+        // Use event-based key tracking instead of global Input singleton
+        bool shift = _currentKeys.Contains(Key.Shift);
+        bool alt   = _currentKeys.Contains(Key.Alt);
 
         if (alt)
         {
             // Alt + WASD for rotation
-            CamRotation.X = Input.IsKeyPressed(Key.W) ? +1f :
-                            Input.IsKeyPressed(Key.S) ? -1f : 0f;
+            CamRotation.X = _currentKeys.Contains(Key.W) ? +1f :
+                            _currentKeys.Contains(Key.S) ? -1f : 0f;
 
-            CamRotation.Y = Input.IsKeyPressed(Key.A) ? +1f :
-                            Input.IsKeyPressed(Key.D) ? -1f : 0f;
+            CamRotation.Y = _currentKeys.Contains(Key.A) ? +1f :
+                            _currentKeys.Contains(Key.D) ? -1f : 0f;
         }
         else if (shift)
         {
             // Shift + WASD for forward/backward movement
-            CamDirection.Z = Input.IsKeyPressed(Key.W) ? -1f :
-                            Input.IsKeyPressed(Key.S) ? +1f : 0f;
+            CamDirection.Z = _currentKeys.Contains(Key.W) ? -1f :
+                            _currentKeys.Contains(Key.S) ? +1f : 0f;
         }
         else
         {
             // Regular WASD for up/down and left/right movement
-            CamDirection.Y = Input.IsKeyPressed(Key.W) ? +1f :
-                            Input.IsKeyPressed(Key.S) ? -1f : 0f;
+            CamDirection.Y = _currentKeys.Contains(Key.W) ? +1f :
+                            _currentKeys.Contains(Key.S) ? -1f : 0f;
 
-            CamDirection.X = Input.IsKeyPressed(Key.A) ? -1f :
-                            Input.IsKeyPressed(Key.D) ? +1f : 0f;
+            CamDirection.X = _currentKeys.Contains(Key.A) ? -1f :
+                            _currentKeys.Contains(Key.D) ? +1f : 0f;
         }
     }
 
@@ -224,6 +242,14 @@ public partial class KoreNodeMoverPlus2 : Node3D
         _isMiddleMouseDown = false;
     }
     
+    // Clear all keyboard state (useful when losing focus)
+    public void ClearKeyboardState()
+    {
+        _currentKeys.Clear();
+        CamDirection = Vector3.Zero;
+        CamRotation = Vector3.Zero;
+    }
+    
     // Call this to reset rotation (useful for debugging)
     public void ResetRotation()
     {
@@ -254,7 +280,7 @@ public partial class KoreNodeMoverPlus2 : Node3D
         
         if (_isRightMouseDown)
         {
-            bool shiftPressed = Input.IsKeyPressed(Key.Shift);
+            bool shiftPressed = _currentKeys.Contains(Key.Shift);
             return shiftPressed ? "Moving" : "Rotating";
         }
         

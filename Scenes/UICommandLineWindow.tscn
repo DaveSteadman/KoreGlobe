@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://xha740xhgc01"]
 
-[ext_resource type="Script" uid="uid://ccbjrtv31jmkf" path="res://Code/GodotCommon/Util/UiCommandLineWindow.cs" id="1_2bkf7"]
+[ext_resource type="Script" uid="uid://ccbjrtv31jmkf" path="res://Code/GodotCommon/Util/KoreUICLIWindow.cs" id="1_2bkf7"]
 
 [node name="CLIWindow" type="Window"]
 gui_embed_subwindows = true
