@@ -19,14 +19,14 @@ public class KoreSimFactory
 
     // --------------------------------------------------------------------------------------------
 
-    public KoreConsole ConsoleInterface { get; private set; }
-    public KoreEntityManager EntityManager { get; private set; }
-    public KoreNetworkHub NetworkHub { get; private set; }
-    public KoreSimTime SimClock { get; private set; }
-    public KoreModelRun ModelRun { get; private set; }
-    public KoreMessageManager MessageManager { get; private set; }
-    public KoreElevationManager EleManager { get; private set; }
-    public KoreEventRegister EventRegister { get; private set; }
+    public KoreConsole          ConsoleInterface { get; private set; }
+    public KoreEntityManager    EntityManager    { get; private set; }
+    public KoreNetworkHub       NetworkHub       { get; private set; }
+    public KoreSimTime          SimClock         { get; private set; }
+    public KoreModelRun         ModelRun         { get; private set; }
+    public KoreMessageManager   MessageManager   { get; private set; }
+    public KoreElevationManager EleManager       { get; private set; }
+    public KoreEventRegister    EventRegister    { get; private set; }
 
     // Usage: KoreStringDictionary kc = KoreSimFactory.Instance.KoreConfig;
     //        //        kc.SetParam("Key", "Value");
@@ -76,13 +76,13 @@ public class KoreSimFactory
         KoreCentralLog.AddEntry("Creating KoreSimFactory objects");
 
         ConsoleInterface = new KoreConsole();
-        EntityManager = new KoreEntityManager();
-        NetworkHub = new KoreNetworkHub();
-        SimClock = new KoreSimTime();
-        ModelRun = new KoreModelRun();
-        MessageManager = new KoreMessageManager();
-        EleManager = new KoreElevationManager();
-        EventRegister = new KoreEventRegister();
+        EntityManager    = new KoreEntityManager();
+        NetworkHub       = new KoreNetworkHub();
+        SimClock         = new KoreSimTime();
+        ModelRun         = new KoreModelRun();
+        MessageManager   = new KoreMessageManager();
+        EleManager       = new KoreElevationManager();
+        EventRegister    = new KoreEventRegister();
 
         // Link the objects
         //ConsoleInterface.KoreEventDriver = KoreEventDriver;

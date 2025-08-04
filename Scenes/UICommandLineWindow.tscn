@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://xha740xhgc01"]
 
-[ext_resource type="Script" uid="uid://ccbjrtv31jmkf" path="res://Code/GodotCommon/Util/KoreUICLIWindow.cs" id="1_2bkf7"]
+[ext_resource type="Script" uid="uid://ckeo1bacw4hlq" path="res://Code/GodotCommon/Util/KoreUICLIWindow.cs" id="1_2bkf7"]
 
 [node name="CLIWindow" type="Window"]
 gui_embed_subwindows = true
@@ -27,10 +27,14 @@ theme_override_constants/margin_bottom = 5
 layout_mode = 2
 theme_override_constants/separation = 5
 
-[node name="CommandResponseLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+[node name="CommandResponseTextEdit" type="TextEdit" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
-vertical_alignment = 2
+editable = false
+scroll_smooth = true
+minimap_draw = true
+draw_tabs = true
+draw_spaces = true
 
 [node name="CommandEntryEdit" type="LineEdit" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2

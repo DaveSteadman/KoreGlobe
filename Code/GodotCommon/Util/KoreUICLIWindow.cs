@@ -2,19 +2,25 @@ using System;
 using System.Collections.Generic;
 
 using Godot;
+using KoreSim;
+using KoreCommon;
 
 #nullable enable
 
 public partial class KoreUICLIWindow : Window
 {
     // Controls
-    private Label? CommandResponseLabel;
+    private TextEdit? CommandResponseTextEdit;
     private LineEdit? CommandEntryEdit;
 
     // Command history
     private List<string> CommandHistory = new();
     private const int invalidIndex = -1;
     private int historyIndex = invalidIndex;
+
+    // 1Hz processing, to slow down _Process
+    private float CurrTimer = 0.0f;
+    private float TimerInterval = 1.0f; // 1 second interval
 
     // --------------------------------------------------------------------------------------------
     // MARK: Node Functions
@@ -23,11 +29,11 @@ public partial class KoreUICLIWindow : Window
     public override void _Ready()
     {
         // Fetch child nodes - from some place in the hierarchy below this Window
-        CommandResponseLabel = (Label)FindChild("CommandResponseLabel");
+        CommandResponseTextEdit = (TextEdit)FindChild("CommandResponseTextEdit");
         CommandEntryEdit = (LineEdit)FindChild("CommandEntryEdit");
 
-        // Validate child nodes 
-        if (CommandResponseLabel == null) { GD.PrintErr("CommandResponseLabel not found"); return; }
+        // Validate child nodes
+        if (CommandResponseTextEdit == null) { GD.PrintErr("CommandResponseTextEdit not found"); return; }
         if (CommandEntryEdit == null) { GD.PrintErr("CommandEntryEdit not found"); return; }
 
         // LineEdit actions - Commented out as currently call from _Input
@@ -35,6 +41,27 @@ public partial class KoreUICLIWindow : Window
 
         // Link up the X button to close the window
         Connect("close_requested", new Callable(this, nameof(OnCloseRequested)));
+    }
+
+    // --------------------------------------------------------------------------------------------
+
+    public override void _Process(double delta)
+    {
+        // 1Hz
+        if (CurrTimer < KoreCentralTime.RuntimeSecs)
+        {
+            CurrTimer += TimerInterval;
+
+            // Check the command line for new output
+            if (KoreSimFactory.Instance.ConsoleInterface.HasOutput())
+            {
+                string output = KoreSimFactory.Instance.ConsoleInterface.GetOutput();
+                CommandResponseTextEdit!.Text += "\n" + output;
+
+                // scroll the TextEdit to the bottom
+                CommandResponseTextEdit.ScrollVertical = CommandResponseTextEdit.GetLineCount() - 1;
+            }
+        }
     }
 
     // --------------------------------------------------------------------------------------------
@@ -60,12 +87,12 @@ public partial class KoreUICLIWindow : Window
                 NavigateHistoryForward();
                 return;
             }
-            
+
             // if ENTER is pressed, submit the command
             if (keyEvent.Keycode == Key.Enter)
             {
                 string txt = CommandEntryEdit!.Text;
-                
+
                 // Simulate text submission
                 OnCommandSubmitted(txt);
                 CommandEntryEdit!.Text = ""; // Clear input after submission
@@ -94,7 +121,10 @@ public partial class KoreUICLIWindow : Window
     private void OnCommandSubmitted(string text)
     {
         GD.Print("Command submitted: " + text);
-        CommandResponseLabel!.Text += "\nResponse: " + text;
+        CommandResponseTextEdit!.Text += "\nResponse: " + text;
+
+        // scroll the TextEdit to the bottom
+        CommandResponseTextEdit.ScrollVertical = CommandResponseTextEdit.GetLineCount() - 1;
 
         // Add to history if not empty input
         if (!string.IsNullOrWhiteSpace(text))
@@ -107,10 +137,19 @@ public partial class KoreUICLIWindow : Window
         // Clear the command entry for the next input
         CommandEntryEdit!.Text = "";
         historyIndex = invalidIndex;
-    
+
         // Keep history size capped
         if (CommandHistory.Count > 100)
             CommandHistory.RemoveRange(0, CommandHistory.Count - 100);
+
+        // Call the CLI to process the new command
+        if (KoreSimFactory.Instance.ConsoleInterface == null)
+        {
+            GD.PrintErr("KoreUICLIWindow: ConsoleInterface is null, cannot add input.");
+            return;
+        }
+        else
+            KoreSimFactory.Instance.ConsoleInterface.AddInput(text);
     }
 
     // --------------------------------------------------------------------------------------------

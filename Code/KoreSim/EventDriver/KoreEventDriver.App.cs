@@ -23,6 +23,16 @@ public static partial class KoreEventDriver
     }
 
     // ---------------------------------------------------------------------------------------------
+    // MARK: Config
+    // ---------------------------------------------------------------------------------------------
+
+    public static string ConfigReport()
+    {
+        // Get the config report from the KoreCentralConfig
+        return KoreSimFactory.Instance.KoreConfig.Report();
+    }
+
+    // ---------------------------------------------------------------------------------------------
     // MARK: Sidebar view settings
     // ---------------------------------------------------------------------------------------------
 
