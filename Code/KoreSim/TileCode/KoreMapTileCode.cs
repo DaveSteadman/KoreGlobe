@@ -303,6 +303,24 @@ public class KoreMapTileCode
     }
 
     // --------------------------------------------------------------------------------------------
+
+    // Utility function to create all the lvl0 codes
+    // Usage: List<KoreMapTileCode> lvl0Codes = KoreMapTileCode.Lvl0Codes();
+    public static List<KoreMapTileCode> Lvl0Codes()
+    {
+        List<KoreMapTileCode> lvl0Codes = new List<KoreMapTileCode>();
+
+        // loop through the lat and long ranges, adding each tilecode to the list
+        for (int latId = 0; latId < NumTilesVertPerLvl[0]; latId++)
+        {
+            for (int lonId = 0; lonId < NumTilesHorizPerLvl[0]; lonId++)
+                lvl0Codes.Add(new KoreMapTileCode(lonId, latId));
+        }
+
+        return lvl0Codes;
+    }
+
+    // --------------------------------------------------------------------------------------------
     // MARK: String outputs
     // --------------------------------------------------------------------------------------------
 
@@ -320,7 +338,6 @@ public class KoreMapTileCode
     }
 
     // KoreMapTileCode.CodeForIndex(0, 0) => "AA"
-
     public static string CodeForIndex(int y, int x)
     {
         return $"{LetterLookup[y]}{LetterLookup[x]}";

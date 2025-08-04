@@ -22,7 +22,7 @@ public static class KoreTerrainImageFileOps
     // - Above 70 degrees latitude, the tile image size is reduced to 512x512 pixels.
     // - Above 80 degrees latitude, the tile image size is reduced to 256x256 pixels.
     // - Above 85 degrees latitude, the tile image size is reduced to 128x128 pixels.
-    public static void AdjustTileImageSize(KoreMapTileCode tileCode)
+    public static void AdjustTileImageSize(KoreMapTileCode tileCode, bool executeResize = false)
     {
         // Find all the filenames
         KoreMapTileFilepaths filepaths = new KoreMapTileFilepaths(tileCode);
@@ -45,8 +45,24 @@ public static class KoreTerrainImageFileOps
             // Resize the image
             var resizedImage = KoreSkiaSharpBitmapOps.ResizeImage(tileImage, newSize, newSize);
 
-            // Save the resized image back to the file
-            KoreSkiaSharpBitmapOps.SaveBitmapAsWebp(resizedImage, filepaths.WebpFilepath);
+            // Is the resize necessary?
+            bool matchWidth = KoreValueUtils.IsEqual(resizedImage.Width, tileImage.Width);
+            bool matchHeight = KoreValueUtils.IsEqual(resizedImage.Height, tileImage.Height);
+
+            if (!(matchWidth && matchHeight))
+            {
+                // Debug print the action
+                KoreCentralLog.AddEntry($"AdjustTileImageSize: Resizing tile {tileCode} from {tileImage.Width}x{tileImage.Height} to {newSize}x{newSize}");
+
+                // Save the resized image back to the file
+                if (executeResize)
+                    KoreSkiaSharpBitmapOps.SaveBitmapAsWebp(resizedImage, filepaths.WebpFilepath);
+            }
+            else
+            {
+                // Debug print that no resize was needed
+                KoreCentralLog.AddEntry($"AdjustTileImageSize: No resize needed for tile {tileCode} ({tileImage.Width}x{tileImage.Height})");
+            }
         }
     }
 

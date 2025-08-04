@@ -77,8 +77,6 @@ public partial class KoreZeroNodeMapManager : Node3D
             KoreGodotFactory.Instance.Config.Set("MapRootPath", MapRootPath);
             
         KoreSimFactory.Instance.SaveConfig(KoreSimFactory.ConfigPath);
-            
-        
     }
 
     // --------------------------------------------------------------------------------------------

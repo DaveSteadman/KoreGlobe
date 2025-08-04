@@ -33,13 +33,13 @@ public partial class KoreZeroNodeMapTile : Node3D
             ActiveVisibility = false;
 
             // // Pause the thread, being a good citizen with lots of tasks around.
-            // await Task.Yield();
+            await Task.Yield();
 
             // ----------------------------
             // File IO and Tile center
 
             // // Setup some basic elements of the tile ahead of the main elevation and image loading.
-            // Filepaths = new KoreMapTileFilepaths(TileCode); // Figure out the file paths for the tile
+            Filepaths = new KoreMapTileFilepaths(TileCode); // Figure out the file paths for the tile
 
             // Setup the tile center shortcuts
             RwTileLLBox = KoreMapTileCode.LLBoxForCode(TileCode);
@@ -47,7 +47,7 @@ public partial class KoreZeroNodeMapTile : Node3D
             RwTileCenterXYZ = RwTileCenterLLA.ToXYZ();
 
             // Pause the thread, being a good citizen with lots of tasks around.
-            // await Task.Yield();
+            await Task.Yield();
 
             // ----------------------------
             // Default Materials
@@ -56,10 +56,10 @@ public partial class KoreZeroNodeMapTile : Node3D
             UVBox = new KoreUVBoxDropEdgeTile(KoreUVBoxDropEdgeTile.UVTopLeft, KoreUVBoxDropEdgeTile.UVBottomRight);
             TileMaterial = KoreGodotMaterialFactory.SimpleColoredMaterial(new Color(0.5f, 0.5f, 0f, 1f));
             TileEleData = new KoreFloat2DArray(20, 20);
-            TileEleData.SetAllNoise(2.0f, 2.01f);
+            TileEleData.SetAllNoise(2.0f, (float)(KoreWorldConsts.EarthRadiusM / 100.0));
 
             // // Pause the thread, being a good citizen with lots of tasks around.
-            // await Task.Yield();
+            await Task.Yield();
 
             // // ----------------------------
             // // Image
@@ -73,6 +73,9 @@ public partial class KoreZeroNodeMapTile : Node3D
             // // ----------------------------
             // // Elevation
 
+            // Report the filepaths we would aspire to load
+            KoreCentralLog.AddEntry($"KoreZeroNodeMapTile: {tileCode} // Ele Filepath: {Filepaths.EleArrFilepath} // Exists: {Filepaths.EleArrFileExists}");
+
             // if (Filepaths.EleArrFileExists)
             // {
             //     LoadTileEleArr();
@@ -83,6 +86,7 @@ public partial class KoreZeroNodeMapTile : Node3D
 
             CreateMeshPoints();
 
+            GD.Print($"Ending Create: {tileCode}");
             BackgroundConstructionComplete = true;
         }
         catch (Exception ex)
@@ -91,8 +95,7 @@ public partial class KoreZeroNodeMapTile : Node3D
             KoreCentralLog.AddEntry($"An error occurred: {ex.Message}");
         }
 
-        GD.Print($"Ending Create: {tileCode}");
-        BackgroundConstructionComplete = true;
+        //BackgroundConstructionComplete = true;
     }
 
     // --------------------------------------------------------------------------------------------

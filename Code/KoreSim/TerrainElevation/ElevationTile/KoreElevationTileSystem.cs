@@ -75,7 +75,7 @@ public class KoreElevationTileSystem
     // MARK: Static Utils
     // --------------------------------------------------------------------------------------------
 
-    public static KoreElevationTile CreateTile(KoreElevationPatchSystem elePrepSystem, KoreMapTileCode tileCode)
+    public static KoreElevationTile CreateTile(KoreElevationPatchSystem elePatchSystem, KoreMapTileCode tileCode)
     {
         // Setup the tile defining values
         KoreLLBox llBox = tileCode.LLBox;
@@ -83,7 +83,7 @@ public class KoreElevationTileSystem
         int tileResLon = KoreElevationUtils.LonResForLat(tileResLat, llBox.CenterPoint.LatDegs);
 
         // Big operation: get the 2D array of elevations, which itself may require interpolation across nested arrays.
-        KoreFloat2DArray eleData = PrepTileData(elePrepSystem, llBox, tileResLat, tileResLon);
+        KoreFloat2DArray eleData = PrepTileData(elePatchSystem, llBox, tileResLat, tileResLon);
 
         // Create the new tile and add it to the collection
         KoreElevationTile newTile = new()
@@ -96,7 +96,7 @@ public class KoreElevationTileSystem
         return newTile;
     }
 
-    public static KoreFloat2DArray PrepTileData(KoreElevationPatchSystem elePrepSystem, KoreLLBox llBox, int latRes, int lonRes)
+    public static KoreFloat2DArray PrepTileData(KoreElevationPatchSystem elePatchSystem, KoreLLBox llBox, int latRes, int lonRes)
     {
         // Create lists of all the lats and lons we would iterate across
         KoreNumeric1DArray<float> loopLats = KoreNumeric1DArrayOps<float>.ListForRange((float)llBox.MinLatDegs, (float)llBox.MaxLatDegs, latRes);
@@ -122,7 +122,7 @@ public class KoreElevationTileSystem
 
                 // Lookup the best value to this position and put it in our returned array
                 // [X, Y]
-                retEle[lonIdx, latIdx] = elePrepSystem.ElevationAtPos(currPos);
+                retEle[lonIdx, latIdx] = elePatchSystem.ElevationAtPos(currPos);
             }
         }
 

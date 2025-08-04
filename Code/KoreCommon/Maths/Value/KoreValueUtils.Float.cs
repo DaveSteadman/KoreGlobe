@@ -127,5 +127,8 @@ public static partial class KoreValueUtils
         return Math.Abs(val - matchval) <= tolerance;
     }
 
+    // more shorthand comparisons
+    // Usage: KoreValueUtils.IsEqual(val, matchval, tolerance)
+    public static bool IsEqual(float val, float matchval, float tolerance = KoreConsts.ArbitrarySmallFloat) => EqualsWithinTolerance(val, matchval, tolerance);
 
 }

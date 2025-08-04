@@ -23,7 +23,7 @@ namespace KoreSim;
 public class KoreElevationManager
 {
     // Consume general Arc ASCII grid files and output elevations for a lat/lon.
-    private KoreElevationPatchSystem ElePrep = new();
+    private KoreElevationPatchSystem ElePatchSystem = new();
 
     // Hold map tiles for use in display. Load/save tiles for caching work.
     private KoreElevationTileSystem EleTiles = new();
@@ -37,7 +37,7 @@ public class KoreElevationManager
 
     public void LoadArcASCIIGridFile(string filename, KoreLLBox llBox)
     {
-        KoreElevationPatch? newTile = ElePrep.LoadPatchFromArcASCIIFile(filename, llBox);
+        KoreElevationPatch? newTile = ElePatchSystem.LoadPatchFromArcASCIIFile(filename, llBox);
 
         if (newTile == null)
             KoreCentralLog.AddEntry($"Failed to load Arc ASCII Grid: {filename} // {llBox}");
@@ -58,7 +58,7 @@ public class KoreElevationManager
             return;
         }
 
-        KoreElevationPatch newPatch = ElePrep.CreateNewPatch(llBox, latNumPoints, lonNumPoints);
+        KoreElevationPatch newPatch = ElePatchSystem.CreateNewPatch(llBox, latNumPoints, lonNumPoints);
 
         // Write the patch to string and then to file
         KoreElevationPatchIO.WriteToTextFileIncrementally(newPatch, filePath);
@@ -85,7 +85,7 @@ public class KoreElevationManager
         KoreElevationPatch? newPatch = KoreElevationPatchIO.ReadFromTextFile(filePath);
         if (newPatch != null)
         {
-            ElePrep.AddPatch(newPatch!);
+            ElePatchSystem.AddPatch(newPatch!);
         }
         else
         {
@@ -97,13 +97,13 @@ public class KoreElevationManager
     public void AddPatch(KoreElevationPatch patch)
     {
         // Add the patch to the system, which will sort it by resolution.
-        ElePrep.AddPatch(patch);
+        ElePatchSystem.AddPatch(patch);
     }
 
     public float GetPatchElevationAtPos(KoreLLPoint pos)
     {
         // Get the elevation at a position, using the patch system.
-        return ElePrep.ElevationAtPos(pos);
+        return ElePatchSystem.ElevationAtPos(pos);
     }
 
     // --------------------------------------------------------------------------------------------
@@ -119,7 +119,7 @@ public class KoreElevationManager
             //await semaphore.WaitAsync(); // Wait for an available slot
             try
             {
-                KoreElevationTile newTile = KoreElevationTileSystem.CreateTile(ElePrep, tileCode);
+                KoreElevationTile newTile = KoreElevationTileSystem.CreateTile(ElePatchSystem, tileCode);
 
                 // If the tile contains no valuable data, don't save it. (will need to deal with below-sea-level data at some point in the future).
                 float maxVal = newTile.ElevationData.MaxVal();
@@ -151,10 +151,7 @@ public class KoreElevationManager
             {
                 KoreCentralLog.AddEntry($"{ex.Message}");
             }
-            // finally
-            // {
-            //     semaphore.Release(); // Release the slot
-            // }
+
         });
     }
 
@@ -253,7 +250,7 @@ public class KoreElevationManager
 
     public string Report()
     {
-        string prepReport = ElePrep.Report();
+        string prepReport = ElePatchSystem.Report();
         string tileReport = EleTiles.Report();
 
         return $"Elevation Patch Report\n{prepReport}\n{tileReport}";
@@ -261,7 +258,7 @@ public class KoreElevationManager
 
     public float ElevationAtPos(KoreLLPoint pos)
     {
-        return ElePrep.ElevationAtPos(pos);
+        return ElePatchSystem.ElevationAtPos(pos);
         //return 0f; // KoreLLPoint.Zero;
     }
 
