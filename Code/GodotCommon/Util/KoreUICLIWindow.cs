@@ -9,6 +9,10 @@ using KoreCommon;
 
 public partial class KoreUICLIWindow : Window
 {
+    // A "Close Me" state to indicate the window should be closed. This is done so the parent can control associated 
+    // states, such as the launching button and the window reference, more easily.
+    public bool ToClose { get; private set; } = false;
+    
     // Controls
     private TextEdit? CommandResponseTextEdit;
     private LineEdit? CommandEntryEdit;
@@ -20,7 +24,7 @@ public partial class KoreUICLIWindow : Window
 
     // 1Hz processing, to slow down _Process
     private float CurrTimer = 0.0f;
-    private float TimerInterval = 1.0f; // 1 second interval
+    private float TimerInterval = 1.0f; // interval to poll for CLI output
 
     // --------------------------------------------------------------------------------------------
     // MARK: Node Functions
@@ -47,10 +51,10 @@ public partial class KoreUICLIWindow : Window
 
     public override void _Process(double delta)
     {
-        // 1Hz
+        // poll for new CLI output
         if (CurrTimer < KoreCentralTime.RuntimeSecs)
         {
-            CurrTimer += TimerInterval;
+            CurrTimer += TimerInterval; // reset the timer when it expires
 
             // Check the command line for new output
             if (KoreSimFactory.Instance.ConsoleInterface.HasOutput())
@@ -93,12 +97,12 @@ public partial class KoreUICLIWindow : Window
             {
                 string txt = CommandEntryEdit!.Text;
 
-                // Simulate text submission
-                OnCommandSubmitted(txt);
+                // Check the string basic validity, then submit as next command
+                if (!string.IsNullOrEmpty(txt))
+                    OnCommandSubmitted(txt);
+
                 CommandEntryEdit!.Text = ""; // Clear input after submission
                 historyIndex = invalidIndex; // Reset history index
-                //GetViewport().SetInputAsHandled();
-                return;
             }
         }
     }
@@ -111,7 +115,11 @@ public partial class KoreUICLIWindow : Window
     {
         GD.Print("KoreUICLIWindow: Close requested");
         // Optionally, you can save state or perform cleanup here
-        QueueFree(); // Close the window
+        
+        // Emit signal before closing
+        ToClose = true;
+        
+        // QueueFree(); // Close the window
     }
 
     // --------------------------------------------------------------------------------------------
@@ -164,6 +172,11 @@ public partial class KoreUICLIWindow : Window
             historyIndex--;
 
         CommandEntryEdit!.Text = CommandHistory[historyIndex];
+
+        // Set the cursor position to the end of the text
+        CallDeferred(nameof(SetCaretToEnd));
+
+        GD.Print($"KoreUICLIWindow: Navigated history backward to index {historyIndex}, text: {CommandEntryEdit.Text}, column: {CommandEntryEdit.CaretColumn}");
     }
 
     // --------------------------------------------------------------------------------------------
@@ -176,6 +189,9 @@ public partial class KoreUICLIWindow : Window
         {
             historyIndex++;
             CommandEntryEdit!.Text = CommandHistory[historyIndex];
+
+            // Set the cursor position to the end of the text
+            CallDeferred(nameof(SetCaretToEnd));
         }
         else
         {
@@ -184,5 +200,12 @@ public partial class KoreUICLIWindow : Window
         }
     }
 
+    // --------------------------------------------------------------------------------------------
+
+    // We put the "move cursor to end" call into its own deferred method, so it can be processed correctly.
+    private void SetCaretToEnd()
+    {
+        CommandEntryEdit!.CaretColumn = CommandEntryEdit.Text.Length;
+    }
 
 }

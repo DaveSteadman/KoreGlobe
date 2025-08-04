@@ -17,6 +17,8 @@ public class KoreSimFactory
 
     private static readonly object lockObject = new object();
 
+    public static readonly string ConfigPath = "AppConfig.json";
+
     // --------------------------------------------------------------------------------------------
 
     public KoreConsole          ConsoleInterface { get; private set; }
@@ -98,6 +100,8 @@ public class KoreSimFactory
         //     KoreCentralLog.UpdatePath(logPath);
 
 
+        LoadConfig("AppConfig.json");
+
         ConsoleInterface.Start();
         MessageManager.Start();
 
@@ -148,10 +152,16 @@ public class KoreSimFactory
 
         // Read teh content (dictionary is cleared as an init step)
         KoreConfig.ImportJson(configFileContent);
+        
+        // Log how many items were loaded
+        KoreCentralLog.AddEntry($"Config loaded with {KoreConfig.Count} items"); // Assuming Count property exists
+
     }
 
     // --------------------------------------------------------------------------------------------
 
+    // Save the config:
+    // Usage: KoreSimFactory.Instance.SaveConfig(KoreSimFactory.ConfigPath);
     public void SaveConfig(string configFilePath)
     {
         try

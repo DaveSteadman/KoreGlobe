@@ -4,9 +4,13 @@ using Godot;
 
 #nullable enable
 
+// KoreUITop: The top-level UI node, controlling the management of the UI Frame presented to the user, and the spawning of
+// various windows/controls within it.
+
 public partial class KoreUITop : Control
-{
+{   
     private Button? CliButton = null;
+    private KoreUICLIWindow? CliWindow = null;
 
     // ---------------------------------------------------------------------------------------------
     // MARK: Node Functions
@@ -19,6 +23,11 @@ public partial class KoreUITop : Control
         AttachControls();
     }
 
+    public override void _Process(double delta)
+    {
+        UpdateCLIStates();
+    }
+
     // ----------------------------------------------------------------------------------------------
     // MARK: Setup
     // ----------------------------------------------------------------------------------------------
@@ -29,6 +38,31 @@ public partial class KoreUITop : Control
         if (CliButton == null) GD.PrintErr("KoreUITop: CliButton node not found.");
 
         CliButton?.Connect("pressed", new Callable(this, "OnCliButtonPressed"));
+
+    }
+
+    // ----------------------------------------------------------------------------------------------
+
+    private void UpdateCLIStates()
+    {
+        if (CliWindow != null)
+        {
+            // Disable the CLI button if the CLI window is open
+            CliButton!.Disabled = true;
+
+            // If the window is valid and has it "Close Me" state set, clear it away and reset the states
+            if (CliWindow != null && CliWindow.ToClose)
+            {
+                CliWindow.QueueFree(); // Clean up the CLI window
+                CliWindow = null!; // Reset the reference
+                CliButton.Disabled = false; // Enable if the CLI window is closed
+            }
+        }
+        else
+        {
+            CliButton!.Disabled = false; // Enable if no CLI window is open
+        }
+
     }
 
     // ----------------------------------------------------------------------------------------------
@@ -49,23 +83,13 @@ public partial class KoreUITop : Control
         }
 
         // Instance the CLI window scene
-        var cliWindow = cliWindowScene.Instantiate<Window>();
-        //var cliWindow = cliWindowScene.Instantiate<Control>();
-        if (cliWindow == null)
+        CliWindow = cliWindowScene.Instantiate<KoreUICLIWindow>();
+        if (CliWindow == null)
         {
             GD.PrintErr("KoreUITop: Failed to instantiate KoreUICliWindow.");
             return;
         }
-
-        //.Window.SetExclusive(true);
-
-
-        AddChild(cliWindow);
-        // if (MainScene.UIMount != null)
-        // {
-        //     // Add the CLI window to the scene
-        //     MainScene.UIMount.
-        // }
+        AddChild(CliWindow);
     }
 
     private void OnCloseRequested()

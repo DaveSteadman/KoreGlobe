@@ -81,6 +81,8 @@ public class KoreConsole
         // General app control commands
         commandHandlers.Add(new KoreCommandVersion());
         commandHandlers.Add(new KoreCommandExit());
+        commandHandlers.Add(new KoreCommandConfigReport());
+        commandHandlers.Add(new KoreCommandConfigSet());
 
         // Sim control
         commandHandlers.Add(new KoreCommandSimClock());
