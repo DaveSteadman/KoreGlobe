@@ -63,12 +63,14 @@ public partial class KoreZeroNodeMapTile : Node3D
 
             // // ----------------------------
             // // Image
+            // Report the state of the image filepaths
+            KoreCentralLog.AddEntry($"KoreZeroNodeMapTile: {tileCode} // Image Filepath: {Filepaths.WebpFilepath} // Exists: {Filepaths.WebpFileExists}");
 
-            // // Source the tile image
-            // SourceTileImage();
+            // Source the tile image
+            SourceTileImage();
 
-            // // Pause the thread, being a good citizen with lots of tasks around.
-            // await Task.Yield();
+            // Pause the thread, being a good citizen with lots of tasks around.
+            await Task.Yield();
 
             // // ----------------------------
             // // Elevation
@@ -76,10 +78,10 @@ public partial class KoreZeroNodeMapTile : Node3D
             // Report the filepaths we would aspire to load
             KoreCentralLog.AddEntry($"KoreZeroNodeMapTile: {tileCode} // Ele Filepath: {Filepaths.EleArrFilepath} // Exists: {Filepaths.EleArrFileExists}");
 
-            // if (Filepaths.EleArrFileExists)
-            // {
-            //     LoadTileEleArr();
-            // }
+            if (Filepaths.EleArrFileExists)
+            {
+                LoadTileEleArr();
+            }
 
             // // Pause the thread, being a good citizen with lots of tasks around.
             // await Task.Yield();

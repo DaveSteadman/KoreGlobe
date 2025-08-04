@@ -141,7 +141,7 @@ public partial class KoreZeroNodeMapTile : Node3D
         KoreGodotLineMesh surfaceLineMesh = new KoreGodotLineMesh();
         surfaceLineMesh.UpdateMesh(meshData);
         AddChild(surfaceLineMesh);
-        
+
         surfaceLineMesh.Name = "SurfaceLineMesh";
 
 
@@ -155,6 +155,8 @@ public partial class KoreZeroNodeMapTile : Node3D
         AddChild(surfaceMesh);
         surfaceMesh.Name = "SurfaceMesh";
 
+        // Apply the mesh material
+        surfaceMesh.MaterialOverride = TileMaterial;
 
 
         GodotMeshPrimitives.AddChildDebugSphere(this, 0.1f, new KoreColorRGB(50, 150, 50));
@@ -171,9 +173,9 @@ public partial class KoreZeroNodeMapTile : Node3D
 
     public void CreateMeshTileSurfacePoints()
     {
-        
+
         GD.Print("CreateMeshTileSurfacePoints: Creating mesh points for tile: " + TileCode);
-        
+
         // Create the mesh points from the elevation data
         CreateMeshPoints();
 
