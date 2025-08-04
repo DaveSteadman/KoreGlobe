@@ -187,6 +187,7 @@ public class KoreConsole
                 continue;
 
             // Go through each of the registered command handlers looking for a match
+            bool commandMatchFound = false;
             foreach (var currCmd in commandHandlers)
             {
                 if (currCmd.Matches(inputParts))
@@ -194,9 +195,12 @@ public class KoreConsole
                     // Pass remaining parts as parameters to the command
                     string responseStr = currCmd.Execute(inputParts.Skip(currCmd.SignatureCount).ToList());
                     OutputQueue.AddString(responseStr);
+                    commandMatchFound = true;
                     break; // leave the current command loop - move back out to the next input line
                 }
             }
+            if (!commandMatchFound)
+                OutputQueue.AddString($"Command Not Found.");
         }
     }
 

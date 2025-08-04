@@ -88,7 +88,7 @@ public partial class KoreZeroNodeMapTile : Node3D
         catch (Exception ex)
         {
             // Handle exceptions
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            KoreCentralLog.AddEntry($"An error occurred: {ex.Message}");
         }
 
         GD.Print($"Ending Create: {tileCode}");

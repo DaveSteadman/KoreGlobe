@@ -67,13 +67,29 @@ public class KoreElevationManager
 
     public void LoadPatchFile(string filePath)
     {
+        if (!File.Exists(filePath))
+        {
+            KoreCentralLog.AddEntry($"Patch file not found: {filePath}");
+            return;
+        }
+        
         // Read all the text content into a string
         string content = File.ReadAllText(filePath);
+
+        if (string.IsNullOrEmpty(content))
+        {
+            KoreCentralLog.AddEntry($"Patch file content not loaded: {filePath}");
+            return;
+        }
 
         KoreElevationPatch? newPatch = KoreElevationPatchIO.ReadFromTextFile(filePath);
         if (newPatch != null)
         {
             ElePrep.AddPatch(newPatch!);
+        }
+        else
+        {
+            KoreCentralLog.AddEntry($"Failed to load patch file: {filePath}");
         }
 
     }

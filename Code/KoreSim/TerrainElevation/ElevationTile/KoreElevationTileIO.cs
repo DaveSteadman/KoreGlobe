@@ -202,7 +202,7 @@ public static class KoreElevationTileIO
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error writing to binary file: {ex.Message}");
+            KoreCentralLog.AddEntry($"Error writing to binary file: {ex.Message}");
         }
     }
 
@@ -242,7 +242,7 @@ public static class KoreElevationTileIO
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error reading from binary file: {ex.Message}");
+            KoreCentralLog.AddEntry($"Error reading from binary file: {ex.Message}");
             return null;
         }
     }

@@ -23,7 +23,7 @@ public static class KoreTestStringDictionary
 
         // Export to JSON
         string serializedJson = original.ExportJson(indented: false);
-        Console.WriteLine($"Serialized JSON: {serializedJson}");
+        KoreCentralLog.AddEntry($"Serialized JSON: {serializedJson}");
 
 
         // Import from JSON

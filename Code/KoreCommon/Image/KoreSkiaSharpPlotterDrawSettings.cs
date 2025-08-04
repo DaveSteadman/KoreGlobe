@@ -57,7 +57,7 @@ public class KoreSkiaSharpPlotterDrawSettings
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error setting default paint settings: {ex.Message}");
+            KoreCentralLog.AddEntry($"Error setting default paint settings: {ex.Message}");
         }
     }
 

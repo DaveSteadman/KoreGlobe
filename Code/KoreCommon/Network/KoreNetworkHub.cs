@@ -202,7 +202,7 @@ public class KoreNetworkHub
 
         if (!messageSent)
         {
-            Console.WriteLine("SEND FAIL:" + connName + " // " + msgData);
+            KoreCentralLog.AddEntry("SEND FAIL:" + connName + " // " + msgData);
         }
     }
 
@@ -282,7 +282,7 @@ public class KoreNetworkHub
 
                     if (currConnTcp != null && !currConnTcp.connected)
                     {
-                        Console.WriteLine("Watchdog starting: " + currConnTcp.connectionDetailsString());
+                        KoreCentralLog.AddEntry("Watchdog starting: " + currConnTcp.connectionDetailsString());
                         currConnTcp.startConnection();
                     }
                 }

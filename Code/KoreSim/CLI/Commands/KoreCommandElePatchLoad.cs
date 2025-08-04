@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -25,43 +26,49 @@ public class KoreCommandElePatchLoad : KoreCommand
 
     public override string Execute(List<string> parameters)
     {
-        if (parameters.Count != 1)
-            return "KoreCommandElePatchLoad -> parameter count mismatch";
-
-
         StringBuilder sb = new StringBuilder();
-
-        string inPatchFilepath = parameters[0];
-
-        sb.AppendLine($"Elevation Prep:");
-        sb.AppendLine($"- inEleFilename: {inPatchFilepath}");
-
-        bool validOperation = true;
-
-        // -------------------------------------------------
-
-        // Convert and validate the inputs
-        if (!System.IO.File.Exists(inPatchFilepath))
+        
+        try
         {
-            sb.AppendLine($"File not found: {inPatchFilepath}");
-            validOperation = false;
+            if (parameters.Count != 1)
+                return "KoreCommandElePatchLoad -> parameter count mismatch";
+
+            string inPatchFilepath = parameters[0];
+            sb.AppendLine($"Elevation Prep:");
+            sb.AppendLine($"- inEleFilename: {inPatchFilepath}");
+
+            bool validOperation = true;
+
+            // -------------------------------------------------
+
+            // Convert and validate the inputs
+            if (!System.IO.File.Exists(inPatchFilepath))
+            {
+                sb.AppendLine($"File not found: {inPatchFilepath}");
+                validOperation = false;
+            }
+
+            // -------------------------------------------------
+
+            if (validOperation)
+            {
+                sb.AppendLine($"Valid operation: Progressing...");
+
+                KoreSimFactory.Instance.EleManager.LoadPatchFile(inPatchFilepath);
+            }
+
+            // -------------------------------------------------
+
+            sb.AppendLine($"Elevation System Report:");
+            sb.AppendLine(KoreSimFactory.Instance.EleManager.Report());
+
+            return sb.ToString();
         }
-
-        // -------------------------------------------------
-
-        if (validOperation)
+        catch (Exception ex)
         {
-            sb.AppendLine($"Valid operation: Progressing...");
-
-            KoreSimFactory.Instance.EleManager.LoadPatchFile(inPatchFilepath);
+            sb.AppendLine($"KoreCommandElePatchLoad.Execute -> Exception: {ex.Message}");
+            return sb.ToString();
         }
-
-        // -------------------------------------------------
-
-        //sb.AppendLine($"Elevation System Report:");
-        //sb.AppendLine(KoreSimFactory.Instance.EleSystem.Report());
-
-        return sb.ToString();
 
     }
 }

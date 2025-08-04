@@ -36,7 +36,7 @@ public static class KoreElevationPatchIO
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error writing to text file: {ex.Message}");
+            KoreCentralLog.AddEntry($"Error writing to text file: {ex.Message}");
         }
     }
 
@@ -49,7 +49,7 @@ public static class KoreElevationPatchIO
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error reading from text file: {ex.Message}");
+            KoreCentralLog.AddEntry($"Error reading from text file: {ex.Message}");
             return null;
         }
     }
@@ -93,11 +93,20 @@ public static class KoreElevationPatchIO
             string[] lines = content.Split('\n', StringSplitOptions.RemoveEmptyEntries);
 
             // Read bounding box
-            string[] l1parts = lines[0].Split(':');
-            if (l1parts.Length != 2) return null;
-            string[] l1values = l1parts[1].Split(',', StringSplitOptions.RemoveEmptyEntries);
-            if (l1values.Length != 4) return null;
+            string[] l1parts = lines[0].Split(':'); // Split on the ":" to remove the row title
+            if (l1parts.Length != 2) 
+            {
+                KoreCentralLog.AddEntry("Invalid bounding box format in elevation patch string.");
+                return null;
+            }
+            string[] l1values = l1parts[1].Split(',', StringSplitOptions.RemoveEmptyEntries); // split on "," to get the 4 BBox values
+            if (l1values.Length != 4) 
+            {
+                KoreCentralLog.AddEntry("Invalid bounding box values in elevation patch string.");
+                return null;
+            }
 
+            // Parse the bounding box values out of the strings
             double minLatDegs = double.Parse(l1values[0]);
             double minLonDegs = double.Parse(l1values[1]);
             double maxLatDegs = double.Parse(l1values[2]);
@@ -112,21 +121,46 @@ public static class KoreElevationPatchIO
             };
 
             // Read resolution
-            string[] l2parts = lines[1].Split(':');
-            if (l2parts.Length != 2) return null;
-            string[] l2values = l2parts[1].Split(',', StringSplitOptions.RemoveEmptyEntries);
-            if (l2values.Length != 2) return null;
+            string[] l2parts = lines[1].Split(':'); // Split the ":" to remove the title
+            if (l2parts.Length != 2) 
+            {
+                KoreCentralLog.AddEntry("Invalid resolution format in elevation patch string.");
+                return null;
+            }
+            string[] l2values = l2parts[1].Split(',', StringSplitOptions.RemoveEmptyEntries); // split to get the lat and long point counts
+            if (l2values.Length != 2) 
+            {
+                KoreCentralLog.AddEntry("Invalid resolution values in elevation patch string.");
+                return null;
+            }
 
             int horizRes = int.Parse(l2values[0]);
-            int vertRes = int.Parse(l2values[1]);
+            int vertRes  = int.Parse(l2values[1]);
 
             // Read elevation data
-            int numRows = lines.Length - 2;
+            int numActualDataRows = lines.Length - 2;
             KoreFloat2DArray elevData = new KoreFloat2DArray(horizRes, vertRes);
 
-            for (int i = 0; i < numRows; i++)
+            // Check we have enough rows to traverse: numActualDataRows + 2 is the number of data rows plus the header
+            if (vertRes != numActualDataRows)
+            {
+                KoreCentralLog.AddEntry($"Invalid number of elevation data rows in elevation patch string: {numActualDataRows} vs {vertRes}");
+                return null;
+            }   
+
+            for (int i = 0; i < vertRes; i++)
             {
                 string[] values = lines[i + 2].Split(',', StringSplitOptions.RemoveEmptyEntries);
+
+                //KoreCentralLog.AddEntry($"Line: {i} // {i + 2} of {numActualDataRows} // Values: {values.Length} vs {horizRes}");
+
+                // Check we have the right number of values in each row
+                if (values.Length != horizRes)
+                {
+                    KoreCentralLog.AddEntry($"Invalid number of elevation values in row {i + 2} of elevation patch string: {values.Length} vs {horizRes}");
+                    return null;
+                }
+                
                 KoreNumeric1DArray<float> row = new KoreNumeric1DArray<float>(values.Length);
                 for (int j = 0; j < values.Length; j++)
                 {
@@ -139,6 +173,7 @@ public static class KoreElevationPatchIO
         }
         catch (Exception)
         {
+            KoreCentralLog.AddEntry("Error parsing elevation patch string.");
             return null; // Return null in case of any errors during parsing.
         }
     }
@@ -295,7 +330,7 @@ public static class KoreElevationPatchIO
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error writing to binary file: {ex.Message}");
+            KoreCentralLog.AddEntry($"Error writing to binary file: {ex.Message}");
         }
     }
 
@@ -335,7 +370,7 @@ public static class KoreElevationPatchIO
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error reading from binary file: {ex.Message}");
+            KoreCentralLog.AddEntry($"Error reading from binary file: {ex.Message}");
             return null;
         }
     }
