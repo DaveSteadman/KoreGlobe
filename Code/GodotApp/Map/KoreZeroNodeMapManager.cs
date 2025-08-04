@@ -38,9 +38,7 @@ public partial class KoreZeroNodeMapManager : Node3D
         ///ZeroNode = zeroNode;
 
         // Read the debug flag from config
-        var config = KoreGodotFactory.Instance.Config;
-
-        if (config == null)
+        if (KoreGodotFactory.Instance.Config == null)
         {
             GD.PrintErr("KoreZeroNodeMapManager: Config is null, cannot read settings.");
             return;
@@ -49,20 +47,38 @@ public partial class KoreZeroNodeMapManager : Node3D
         GD.Print($"KoreZeroNodeMapManager: Constructor");
 
         // Create and debug draw a lvl0 tile
-        KoreMapTileCode lvl0TileCode = new KoreMapTileCode("BF");
-        KoreZeroNodeMapTile lvl0Tile = new KoreZeroNodeMapTile(lvl0TileCode);
-        
-        AddChild(lvl0Tile);
-        Lvl0Tiles.Add(lvl0Tile);
+        Lvl0Tiles.Add(new KoreZeroNodeMapTile(new KoreMapTileCode("BF")));
+        Lvl0Tiles.Add(new KoreZeroNodeMapTile(new KoreMapTileCode("AG")));
+        Lvl0Tiles.Add(new KoreZeroNodeMapTile(new KoreMapTileCode("BG")));
+        Lvl0Tiles.Add(new KoreZeroNodeMapTile(new KoreMapTileCode("CG")));
+        Lvl0Tiles.Add(new KoreZeroNodeMapTile(new KoreMapTileCode("BH")));
+
+        // Loop through the tiles and rotate them onto their center longitude
+        foreach (KoreZeroNodeMapTile tile in Lvl0Tiles)
+        {
+            AddChild(tile);
+            double lon = tile.TileCode.LLBox.CenterPoint.LonRads;
+            tile.Rotation = new Vector3(0, (float)lon, 0);
+        }
 
 
-        CurrMaxMapLvl = 0;
-        if (config.Has("MaxMapLvl"))
-            CurrMaxMapLvl = KoreStringDictionaryOps.ReadInt(config, "MaxMapLvl");
+        //CreateLvl0Tiles();
+
+            CurrMaxMapLvl = 0;
+        if (KoreGodotFactory.Instance.Config.Has("MaxMapLvl"))
+            CurrMaxMapLvl = KoreStringDictionaryOps.ReadInt(KoreGodotFactory.Instance.Config, "MaxMapLvl");
+        else
+            KoreStringDictionaryOps.WriteInt(KoreGodotFactory.Instance.Config, "MaxMapLvl", 0);
 
         MapRootPath = "";
-        if (config.Has("MapRootPath"))
-            MapRootPath = config.Get("MapRootPath");
+        if (KoreGodotFactory.Instance.Config.Has("MapRootPath"))
+            MapRootPath = KoreGodotFactory.Instance.Config.Get("MapRootPath");
+        else
+            KoreGodotFactory.Instance.Config.Set("MapRootPath", MapRootPath);
+            
+        KoreSimFactory.Instance.SaveConfig(KoreSimFactory.ConfigPath);
+            
+        
     }
 
     // --------------------------------------------------------------------------------------------

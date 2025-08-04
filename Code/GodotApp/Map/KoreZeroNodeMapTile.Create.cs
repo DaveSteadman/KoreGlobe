@@ -55,7 +55,7 @@ public partial class KoreZeroNodeMapTile : Node3D
             // Default everything, in case we fall through the logic, the objects are not null
             UVBox = new KoreUVBoxDropEdgeTile(KoreUVBoxDropEdgeTile.UVTopLeft, KoreUVBoxDropEdgeTile.UVBottomRight);
             TileMaterial = KoreGodotMaterialFactory.SimpleColoredMaterial(new Color(0.5f, 0.5f, 0f, 1f));
-            TileEleData = new KoreFloat2DArray(50, 50);
+            TileEleData = new KoreFloat2DArray(20, 20);
             TileEleData.SetAllNoise(2.0f, 2.01f);
 
             // // Pause the thread, being a good citizen with lots of tasks around.
@@ -118,6 +118,8 @@ public partial class KoreZeroNodeMapTile : Node3D
 
             default:
                 ConstructionComplete = true;
+
+                KoreCentralLog.AddEntry($"DONE KoreZeroNodeMapTile: {TileCode}");
 
                 LocateTile();
 

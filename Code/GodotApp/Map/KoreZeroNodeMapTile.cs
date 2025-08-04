@@ -131,6 +131,8 @@ public partial class KoreZeroNodeMapTile : Node3D
         TileCode    = tileCode;
         Name        = tileCode.ToString();
 
+        KoreCentralLog.AddEntry($"Creating KoreZeroNodeMapTile: {TileCode}");
+
         // Fire off the fully background task of creating/loading the tile elements asap.
         Task.Run(() => BackgroundTileCreation(tileCode));
         //Task.Run(() => DetermineChildTileAvailability(tileCode));
