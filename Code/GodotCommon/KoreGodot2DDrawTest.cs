@@ -17,7 +17,6 @@ public partial class KoreGodot2DDrawTest : Node2D
 
 
 
-
     public override void _Ready()
     {
         // This method is called when the node is added to the scene.
@@ -49,9 +48,7 @@ public partial class KoreGodot2DDrawTest : Node2D
         BoxValid = success;
 
         CreateNewImage();
-
     }
-
 
     public override void _Draw()
     {
@@ -65,7 +62,6 @@ public partial class KoreGodot2DDrawTest : Node2D
                 Vector2 center = BoundingBox.Position + BoundingBox.Size / 2;
                 SpriteNode.Position = center;
             }
-
         }
     }
 

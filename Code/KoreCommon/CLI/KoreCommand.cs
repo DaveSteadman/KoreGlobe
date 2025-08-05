@@ -5,6 +5,8 @@ using System.Collections.Generic;
 // around that, and then a main execute command. Child classes may also need to access additional resouces in order
 // to perform their tasks, these will be added to their specific constructor when they are added to the command list.
 
+namespace KoreCommon;
+
 public abstract class KoreCommand
 {
     protected List<string> Signature { get; set; } = new List<string>();

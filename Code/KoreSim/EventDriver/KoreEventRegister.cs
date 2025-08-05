@@ -27,7 +27,7 @@ public class KoreEventRegister
 
     public const string EventEntityCreated = "EntityCreated"; // KoreEventRegister.EventEntityCreated
     public const string EventEntityDeleted = "EntityDeleted"; // KoreEventRegister.EventEntityDeleted
-    public const string EventEntityMoving = "EntityMoving"; // KoreEventRegister.EventEntityMoving
+    public const string EventEntityMoving  = "EntityMoving"; // KoreEventRegister.EventEntityMoving
     public const string EventEntityStopped = "EntityStopped"; // KoreEventRegister.EventEntityStopped
 
     public const string EventEntityElementCreated = "EntityElementCreated"; // KoreEventRegister.EventEntityElementCreated

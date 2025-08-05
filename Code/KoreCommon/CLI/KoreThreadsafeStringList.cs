@@ -6,7 +6,7 @@ using System.Collections.Concurrent;
 
 // KoreThreadsafeStringList: A thread-safe queue to hold console input strings.
 
-namespace KoreSim;
+namespace KoreCommon;
 
 public class KoreThreadsafeStringList
 {

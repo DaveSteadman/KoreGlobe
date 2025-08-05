@@ -114,8 +114,8 @@ public partial class KoreZeroNodeMapTile : Node3D
             while (liveTile)
             {
 
-                UpdateTileCorners();
-                UnprojectTileCorners();
+                // UpdateTileCorners();
+                // UnprojectTileCorners();
 
 
                 
@@ -243,33 +243,33 @@ public partial class KoreZeroNodeMapTile : Node3D
     // MARK: Unproject Tile
     // --------------------------------------------------------------------------------------------
 
-    private void UpdateTileCorners()
-    {
-        // Clear the current corner list
-        TileCornerList.Clear();
+    // private void UpdateTileCorners()
+    // {
+    //     // Clear the current corner list
+    //     TileCornerList.Clear();
 
-        // Get the LL positions of the tile corners
-        List<KoreLLPoint> llCorners = TileCode.LLBox.CornersList();
+    //     // Get the LL positions of the tile corners
+    //     List<KoreLLPoint> llCorners = TileCode.LLBox.CornersList();
 
-        // Get the GE positions of the tile corners
-        foreach (KoreLLPoint llPoint in llCorners)
-        {
-            KoreLLAPoint llaPoint = new KoreLLAPoint(llPoint);
-            Vector3 pos = KoreZeroOffset.GeZeroPointOffset(llaPoint);
-            TileCornerList.Add(pos);
-        }
-    }
+    //     // Get the GE positions of the tile corners
+    //     foreach (KoreLLPoint llPoint in llCorners)
+    //     {
+    //         KoreLLAPoint llaPoint = new KoreLLAPoint(llPoint);
+    //         Vector3 pos = KoreZeroOffset.GeZeroPointOffset(llaPoint);
+    //         TileCornerList.Add(pos);
+    //     }
+    // }
 
-    private void UnprojectTileCorners()
-    {
-        var (success, screenRect) = KoreUnprojectManager.UnprojectPointList(TileCornerList);
+    // private void UnprojectTileCorners()
+    // {
+    //     var (success, screenRect) = KoreUnprojectManager.UnprojectPointList(TileCornerList);
 
-        if (success)
-        {
-            ValidScreenRect = true;
-            TileScreenRect = screenRect;
-        }
-    }
+    //     if (success)
+    //     {
+    //         ValidScreenRect = true;
+    //         TileScreenRect = screenRect;
+    //     }
+    // }
 
     // --------------------------------------------------------------------------------------------
     // MARK: Create Subtile Nodes

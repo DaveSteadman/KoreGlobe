@@ -6,7 +6,6 @@ using System;
 
 namespace KoreCommon;
 
-
 public struct KoreRandomLoopList
 {
     private readonly float[] _randomList;
@@ -32,3 +31,4 @@ public struct KoreRandomLoopList
         return result;
     }
 }
+

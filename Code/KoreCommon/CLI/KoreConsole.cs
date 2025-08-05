@@ -5,9 +5,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Linq;
 
-using KoreCommon;
-
-namespace KoreSim;
+namespace KoreCommon;
 
 #nullable enable
 
@@ -23,7 +21,7 @@ public class KoreConsole
     private readonly List<KoreCommand> commandHandlers = new List<KoreCommand>();
 
     // Two lists to hold input and output strings for the console.
-    private KoreThreadsafeStringList InputQueue = new KoreThreadsafeStringList();
+    private KoreThreadsafeStringList InputQueue  = new KoreThreadsafeStringList();
     private KoreThreadsafeStringList OutputQueue = new KoreThreadsafeStringList();
 
     // Event to set on new input, to unblock the console thread to process new commands.
@@ -73,86 +71,29 @@ public class KoreConsole
     // MARK: InitializeCommands
     // ---------------------------------------------------------------------------------------------
 
+    public void AddCommandHandler(KoreCommand command)
+    {
+        if (commandHandlers.Any(c => c.SignatureString == command.SignatureString))
+        {
+            KoreCentralLog.AddEntry($"Command {command.SignatureString} already exists.");
+            return;
+        }
+        commandHandlers.Add(command);
+        KoreCentralLog.AddEntry($"Command {command.SignatureString} added.");
+    }
+
+
     private void InitializeCommands()
     {
         // Register commands and their handlers here
         KoreCentralLog.AddEntry("KoreConsole: Initializing commands...");
 
         // General app control commands
-        commandHandlers.Add(new KoreCommandVersion());
-        commandHandlers.Add(new KoreCommandExit());
-        commandHandlers.Add(new KoreCommandConfigReport());
-        commandHandlers.Add(new KoreCommandConfigSet());
+        AddCommandHandler(new KoreCliCmdFileRename());
 
-        // Sim control
-        commandHandlers.Add(new KoreCommandSimClock());
-        commandHandlers.Add(new KoreCommandSimStart());
-        commandHandlers.Add(new KoreCommandSimStop());
-        commandHandlers.Add(new KoreCommandSimReset());
-        commandHandlers.Add(new KoreCommandSimPause());
-        commandHandlers.Add(new KoreCommandSimResume());
-
-        // Network
-        commandHandlers.Add(new KoreCommandNetworkReport());
-        commandHandlers.Add(new KoreCommandNetworkInjectIncoming());
-        commandHandlers.Add(new KoreCommandNetworkEndConnection());
-
-        //commandHandlers.Add(new KoreCommandModelJsonRead());
-        //commandHandlers.Add(new KoreCommandModelJsonWrite());
-
-        // Entity control
-        commandHandlers.Add(new KoreCommandEntityTestScenario());
-        commandHandlers.Add(new KoreCommandEntityAdd());
-        commandHandlers.Add(new KoreCommandEntityDelete());
-        commandHandlers.Add(new KoreCommandEntityDeleteAll());
-
-        // Entity details
-        commandHandlers.Add(new KoreCommandEntityPosition());
-        commandHandlers.Add(new KoreCommandEntityCourse());
-        commandHandlers.Add(new KoreCommandEntityCourseDelta());
-
-        // Entity Report
-        commandHandlers.Add(new KoreCommandEntityReportElem());
-        commandHandlers.Add(new KoreCommandEntityReportPos());
-
-        // Element Control
-        //commandHandlers.Add(new KoreCommandEntityDeleteAllEmitters());
-
-        // MapServer
-        commandHandlers.Add(new KoreCommandElePrep());
-        commandHandlers.Add(new KoreCommandEleLoadArc());
-        commandHandlers.Add(new KoreCommandEleSaveTile());
-        commandHandlers.Add(new KoreCommandEleSaveTileSet());
-        commandHandlers.Add(new KoreCommandEleLoadTile());
-        commandHandlers.Add(new KoreCommandEleForPos());
-        commandHandlers.Add(new KoreCommandEleReport());
-        commandHandlers.Add(new KoreCommandElePatchLoad());
-        commandHandlers.Add(new KoreCommandElePatchSave());
-
-        // Tile Images
-        commandHandlers.Add(new KoreCommandSatCollate());
-        commandHandlers.Add(new KoreCommandSatDivide());
-        commandHandlers.Add(new KoreCommandSatDivideTo());
-
-
-
-
-        // commandHandlers.Add("help", CmdHelp);
-        // commandHandlers.Add("version", CmdVersion);
-        // commandHandlers.Add("#", CmdComment);
-        // commandHandlers.Add("runfile", CmdRunFile);
-
-        // // MapUtils
-        // commandHandlers.Add("tilecode", CmdTileCode);
-
-        // // Map handlers
-        // commandHandlers.Add("setroot", CmdSetRoot);
-        // commandHandlers.Add("getroot", CmdGetRoot);
-        // commandHandlers.Add("create", CmdCreate);
-
-        // // Networking
-        // commandHandlers.Add("network", CmdNetwork);
     }
+
+
 
     private void ConsoleLoop()
     {

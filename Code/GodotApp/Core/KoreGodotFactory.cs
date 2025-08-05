@@ -23,7 +23,6 @@ public class KoreGodotFactory
 
     public KoreStringDictionary Config { get; private set; } = new KoreStringDictionary();
 
-
     //public KoreGodotEntityManager GodotEntityManager { get; private set; }
     public KoreZeroNodeMapManager? ZeroNodeMapManager { get; private set; }
     //public GloTextureLoader       TextureLoader      { get; private set; }

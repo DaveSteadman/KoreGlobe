@@ -100,10 +100,10 @@ public partial class KoreZeroNodeMapTile : Node3D
 
     private KoreLatestHolder<KoreZeroTileVisibilityStats> TileVisibilityStats = new KoreLatestHolder<KoreZeroTileVisibilityStats>( new KoreZeroTileVisibilityStats() );
 
-    private List<Vector3> TileCornerList = new List<Vector3>();
-    private bool ValidScreenRect = false;
-    private Rect2 TileScreenRect = new Rect2();
-    private KoreGodot2DBox? TileScreenBBox = null;
+    // private List<Vector3> TileCornerList = new List<Vector3>();
+    // private bool ValidScreenRect = false;
+    // private Rect2 TileScreenRect = new Rect2();
+    // private KoreGodot2DBox? TileScreenBBox = null;
 
 
     // --------------------------------------------------------------------------------------------
@@ -191,32 +191,32 @@ public partial class KoreZeroNodeMapTile : Node3D
                 UpdateVisbilityRules();
             }
             
-            if (KoreAppRoot.Instance != null)
-            {
-                CanvasLayer? bboxLayer = KoreAppRoot.GetBBoxCanvasLayer();
+            // if (KoreAppRoot.Instance != null)
+            // {
+            //     CanvasLayer? bboxLayer = KoreAppRoot.GetBBoxCanvasLayer();
 
-                if (bboxLayer != null)
-                {
-                    if (TileScreenBBox == null)
-                    {
-                        TileScreenBBox = new KoreGodot2DBox();
-                        bboxLayer.AddChild(TileScreenBBox);
+            //     if (bboxLayer != null)
+            //     {
+            //         if (TileScreenBBox == null)
+            //         {
+            //             TileScreenBBox = new KoreGodot2DBox();
+            //             bboxLayer.AddChild(TileScreenBBox);
 
-                        TileScreenBBox.ScreenRect = TileScreenRect;
-                        TileScreenBBox.IsValid = false;
-                        TileScreenBBox.LineColor = new Color(1, 0, 0, 1); // Red color
-                        TileScreenBBox.LineWidth = 2.0f;
-                        TileScreenBBox.Filled = false;
-                        TileScreenBBox.InvalidateDeferred();
-                    }
+            //             TileScreenBBox.ScreenRect = TileScreenRect;
+            //             TileScreenBBox.IsValid = false;
+            //             TileScreenBBox.LineColor = new Color(1, 0, 0, 1); // Red color
+            //             TileScreenBBox.LineWidth = 2.0f;
+            //             TileScreenBBox.Filled = false;
+            //             TileScreenBBox.InvalidateDeferred();
+            //         }
 
-                    if (ValidScreenRect)
-                    {
-                        TileScreenBBox.ScreenRect = TileScreenRect;
-                        TileScreenBBox.IsValid = true;
-                    }
-                }
-            }
+            //         if (ValidScreenRect)
+            //         {
+            //             TileScreenBBox.ScreenRect = TileScreenRect;
+            //             TileScreenBBox.IsValid = true;
+            //         }
+            //     }
+            // }
             
         }
     }

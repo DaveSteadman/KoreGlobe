@@ -21,12 +21,15 @@ public class KoreSimFactory
 
     // --------------------------------------------------------------------------------------------
 
+    // Outside EventDriver
     public KoreConsole          ConsoleInterface { get; private set; }
-    public KoreEntityManager    EntityManager    { get; private set; }
     public KoreNetworkHub       NetworkHub       { get; private set; }
+    public KoreMessageManager   MessageManager   { get; private set; }
+
+    // Inside EventDriver
+    public KoreEntityManager    EntityManager    { get; private set; }
     public KoreSimTime          SimClock         { get; private set; }
     public KoreModelRun         ModelRun         { get; private set; }
-    public KoreMessageManager   MessageManager   { get; private set; }
     public KoreElevationManager EleManager       { get; private set; }
     public KoreEventRegister    EventRegister    { get; private set; }
 
@@ -102,7 +105,9 @@ public class KoreSimFactory
 
         LoadConfig("AppConfig.json");
 
+        KoreSimCommands.RegisterCommands(ConsoleInterface);
         ConsoleInterface.Start();
+        
         MessageManager.Start();
 
         KoreCentralLog.AddEntry("KoreSimFactory Construction - Done");

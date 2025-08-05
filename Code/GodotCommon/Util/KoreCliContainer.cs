@@ -179,9 +179,7 @@
 //     {
 //         GD.Print("KoreCliContainer: LineEdit lost focus");
 //         // Optionally clear history index when focus is lost
-
 //     }
-
 
 
 

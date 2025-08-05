@@ -6,11 +6,18 @@ using System.IO;
 
 namespace KoreCommon;
 
+// Usage: 
+// - KoreLangStrings.Instance.LoadFile("path/to/languagefile.txt");
+// - List<string> languages = KoreLangStrings.Instance.GetAvailableLanguages();
+// - KoreLangStrings.Instance.SetActiveLanguage("English");
+// - string greeting = KoreLangStrings.Instance.Get("greeting");
+
 public class KoreLangStrings
 {
     private static KoreLangStrings _instance = null!;
     private static readonly object _lock = new();
 
+    // A dictionary of languages, containing dictionaries of value lookups.
     private Dictionary<string, Dictionary<string, string>> _languageMap = new(StringComparer.OrdinalIgnoreCase);
 
     private string _activeLanguage = "English";
@@ -19,13 +26,28 @@ public class KoreLangStrings
     private static readonly string UndefinedEntry = "Undefined";
 
     // --------------------------------------------------------------------------------------------
-    // MARK: Constructor
+    // MARK: Private Constructor
     // --------------------------------------------------------------------------------------------
 
     private KoreLangStrings(string filename)
     {
         LoadFile(filename);
     }
+
+    public static void Initialize(string filename)
+    {
+        lock (_lock)
+        {
+            if (_instance != null)
+                throw new InvalidOperationException("KoreLangStrings has already been initialized.");
+
+            _instance = new KoreLangStrings(filename);
+        }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    // MARK: Public accessor
+    // --------------------------------------------------------------------------------------------
 
     public static KoreLangStrings Instance
     {
@@ -43,17 +65,6 @@ public class KoreLangStrings
         }
     }
 
-    public static void Initialize(string filename)
-    {
-        lock (_lock)
-        {
-            if (_instance != null)
-                throw new InvalidOperationException("KoreLangStrings has already been initialized.");
-
-            _instance = new KoreLangStrings(filename);
-        }
-    }
-
     public static bool IsInitialized
     {
         get
@@ -66,26 +77,40 @@ public class KoreLangStrings
     // MARK: Load & Set
     // --------------------------------------------------------------------------------------------
 
-    public void LoadFile(string filename)
+    // Clear data is a separate action, so we can potentially load from multiple files.
+
+    public void ClearData()
     {
         lock (_lock)
         {
             _languageMap.Clear();
+        }
+    }
+
+    public void LoadFile(string filename)
+    {
+        lock (_lock)
+        {
             foreach (var line in File.ReadAllLines(filename))
             {
-                // Allow for empty lines and comments
+                // Allow for empty lines and comments - ignore them
                 if (string.IsNullOrWhiteSpace(line) || line.StartsWith("#")) continue;
 
-                var parts = line.Split(',', 3); // language, key, value
-                if (parts.Length < 3) continue;
+                // language, key, value - split by commas
+                // - Obviously we can't have any commas within the strings
+                // - Values may contain spaces, only leading/trailing spaces are trimmed. 
+                var parts = line.Split(',', 3);
+                if (parts.Length != 3) continue;
 
                 string lang = parts[0].Trim();
                 string key = parts[1].Trim();
                 string val = parts[2].Trim();
 
+                // Add the language if we don't have it
                 if (!_languageMap.ContainsKey(lang))
                     _languageMap[lang] = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
+                // Add the key-value pair to the language dictionary
                 _languageMap[lang][key] = val;
             }
         }
