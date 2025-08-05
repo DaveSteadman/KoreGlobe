@@ -28,6 +28,9 @@ public partial class KoreZeroNodeMapManager : Node3D
 
     // lvl0 tile list
     private List<KoreZeroNodeMapTile> Lvl0Tiles = new List<KoreZeroNodeMapTile>();
+    
+    private float currTimer = 0;
+    private float currTimerIncrement = 1.0f; // 1sec
 
     // --------------------------------------------------------------------------------------------
     // MARK: Constructor
@@ -64,7 +67,7 @@ public partial class KoreZeroNodeMapManager : Node3D
 
         //CreateLvl0Tiles();
 
-            CurrMaxMapLvl = 0;
+        CurrMaxMapLvl = 0;
         if (KoreGodotFactory.Instance.Config.Has("MaxMapLvl"))
             CurrMaxMapLvl = KoreStringDictionaryOps.ReadInt(KoreGodotFactory.Instance.Config, "MaxMapLvl");
         else
@@ -75,7 +78,7 @@ public partial class KoreZeroNodeMapManager : Node3D
             MapRootPath = KoreGodotFactory.Instance.Config.Get("MapRootPath");
         else
             KoreGodotFactory.Instance.Config.Set("MapRootPath", MapRootPath);
-            
+
         KoreSimFactory.Instance.SaveConfig(KoreSimFactory.ConfigPath);
     }
 
@@ -95,6 +98,18 @@ public partial class KoreZeroNodeMapManager : Node3D
     public override void _Process(double delta)
     {
         ActionCounter.Refresh(5); // Tile create actions per update cycle (frame)
+
+        // If we have a timer, increment it
+        if (currTimer < KoreCentralTime.RuntimeSecs)
+        {
+            currTimer = KoreCentralTime.RuntimeSecs + currTimerIncrement;
+
+            // Get the latest camera and viewport
+            Viewport viewport = GetViewport();
+            Camera3D? camera = GetViewport().GetCamera3D();
+            if (camera != null)
+                KoreUnprojectManager.UpdateState(camera, viewport);
+        }
     }
 
     // --------------------------------------------------------------------------------------------

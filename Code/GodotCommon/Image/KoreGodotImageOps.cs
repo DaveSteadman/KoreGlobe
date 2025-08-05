@@ -83,6 +83,40 @@ public static class KoreGodotImageOps
         return material;
     }
 
+
+    // Usage: KoreGodotImageOps.LoadMaterial2("res://materials/my_material.tres");
+    public static StandardMaterial3D? LoadMaterial2(string filePath)
+    {
+        // Create the texture
+        var texture = LoadTexture(filePath);
+        if (texture == null)
+        {
+            KoreCentralLog.AddEntry($"LoadMaterial2: Failed to load texture: {filePath}");
+            return null;
+        }
+
+        // Create a material that responds to lighting
+        var material = new StandardMaterial3D
+        {
+            AlbedoTexture = texture,
+            ShadingMode = StandardMaterial3D.ShadingModeEnum.PerPixel, // Default lighting mode
+            Metallic = 0.0f,        // Non-metallic for most textures
+            Roughness = 0.8f,       // Slightly rough surface (0.0 = mirror, 1.0 = completely rough)
+            //Specular = 0.5f,        // Moderate specular reflection
+            
+            // Enable back face culling for better performance
+            CullMode = StandardMaterial3D.CullModeEnum.Back,
+            
+            // Ensure the material can receive shadows
+            //FlagsDoNotReceiveShadows = false,
+            
+            // Optional: Add some ambient light contribution
+            // Remove this line if you want pure lighting-based shading
+            // Emission = new Color(0.05f, 0.05f, 0.05f) // Very slight self-illumination
+        };
+
+        return material;
+    }
 }
 
 

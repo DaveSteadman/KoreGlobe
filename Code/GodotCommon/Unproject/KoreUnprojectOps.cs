@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 using Godot;
 
+// KoreUnprojectOps: Static class of functions performing the actual unproject calls.
+
 public static class KoreUnprojectOps
 {
     public static bool IsPointInFrontOfCameraPlane(Vector3 gePosition, Camera3D camera)
@@ -20,6 +22,7 @@ public static class KoreUnprojectOps
 
     // --------------------------------------------------------------------------------------------
 
+    // Usage: var (screenPos, success) = KoreUnprojectOps.UnprojectPoint(pos, cam, viewport);
     public static (Vector2 position, bool success) UnprojectPoint(Vector3 worldPosition, Camera3D camera, Viewport viewport)
     {
         // Convert to camera-local space to determine visibility
@@ -51,7 +54,7 @@ public static class KoreUnprojectOps
         // Quick validation and early return if wrong inputs
         if (gePointsList == null || gePointsList.Count < 2)
             return (new Rect2(), false);
-        
+
         List<Vector2> successfulUnprojectedPoints = new List<Vector2>();
         foreach (var point in gePointsList)
         {
@@ -63,10 +66,10 @@ public static class KoreUnprojectOps
         // If we have enough points to make a box
         if (successfulUnprojectedPoints.Count >= 2)
         {
-            
+
             // print out the first point for debugging
             //GD.Print($"First unprojected point: {successfulUnprojectedPoints[0]}");
-            
+
             float minX = successfulUnprojectedPoints[0].X, maxX = successfulUnprojectedPoints[0].X;
             float minY = successfulUnprojectedPoints[0].Y, maxY = successfulUnprojectedPoints[0].Y;
 

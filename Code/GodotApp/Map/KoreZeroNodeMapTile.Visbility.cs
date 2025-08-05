@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+//using System.Numerics;
 using System.Threading.Tasks;
 
 using Godot;
@@ -110,8 +111,14 @@ public partial class KoreZeroNodeMapTile : Node3D
         try
         {
             bool liveTile = true;
-            while(liveTile)
+            while (liveTile)
             {
+
+                UpdateTileCorners();
+                UnprojectTileCorners();
+
+
+                
                 // GloZeroTileVisibilityStats newStats = new GloZeroTileVisibilityStats();
 
                 // if ((ActiveVisibility) && (ConstructionComplete))
@@ -230,6 +237,38 @@ public partial class KoreZeroNodeMapTile : Node3D
         //     // Not active state - hide tile.
         //     SetVisibility(false);
         // }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    // MARK: Unproject Tile
+    // --------------------------------------------------------------------------------------------
+
+    private void UpdateTileCorners()
+    {
+        // Clear the current corner list
+        TileCornerList.Clear();
+
+        // Get the LL positions of the tile corners
+        List<KoreLLPoint> llCorners = TileCode.LLBox.CornersList();
+
+        // Get the GE positions of the tile corners
+        foreach (KoreLLPoint llPoint in llCorners)
+        {
+            KoreLLAPoint llaPoint = new KoreLLAPoint(llPoint);
+            Vector3 pos = KoreZeroOffset.GeZeroPointOffset(llaPoint);
+            TileCornerList.Add(pos);
+        }
+    }
+
+    private void UnprojectTileCorners()
+    {
+        var (success, screenRect) = KoreUnprojectManager.UnprojectPointList(TileCornerList);
+
+        if (success)
+        {
+            ValidScreenRect = true;
+            TileScreenRect = screenRect;
+        }
     }
 
     // --------------------------------------------------------------------------------------------

@@ -17,5 +17,7 @@ grow_vertical = 2
 [node name="Root2D" type="Node2D" parent="."]
 top_level = true
 
+[node name="BBoxCanvas" type="CanvasLayer" parent="Root2D"]
+
 [node name="Root3D" type="Node3D" parent="."]
 top_level = true

@@ -100,6 +100,8 @@ public static class KoreZeroOffset
         return new Vector3((float)x, (float)y, (float)z);
     }
 
+    public static Vector3 GeZeroPointOffset(KoreLLAPoint rwLLA) => GeZeroPointOffset(rwLLA.ToXYZ());
+
     // ---------------------------------------------------------------------------------------------
 
     // Usage: KoreZeroOffset.GeZeroPoint()

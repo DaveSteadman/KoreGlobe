@@ -100,11 +100,17 @@ public partial class KoreZeroNodeMapTile : Node3D
 
     private KoreLatestHolder<KoreZeroTileVisibilityStats> TileVisibilityStats = new KoreLatestHolder<KoreZeroTileVisibilityStats>( new KoreZeroTileVisibilityStats() );
 
+    private List<Vector3> TileCornerList = new List<Vector3>();
+    private bool ValidScreenRect = false;
+    private Rect2 TileScreenRect = new Rect2();
+    private KoreGodot2DBox? TileScreenBBox = null;
+
+
     // --------------------------------------------------------------------------------------------
 
     // Internal constants - distances controlling tile visbility
 
-    public static readonly int[]   TileSizePointsPerLvl    = [ 40,    40,     40,     40,      40,         40 ];
+    public static readonly int[] TileSizePointsPerLvl = [40, 40, 40, 40, 40, 40];
     public static readonly float[] LabelSizePerLvl         = [ 0.70f, 0.10f,  0.030f, 0.0040f, 0.00065f,   0.000060f ];
     public static readonly int[] dpPerLvl = { 0, 0, 0, 1, 2, 3};
 
@@ -184,8 +190,37 @@ public partial class KoreZeroNodeMapTile : Node3D
                 UIUpdateTimer = KoreCentralTime.RuntimeSecs + RandomLoopList.GetNext();
                 UpdateVisbilityRules();
             }
+            
+            if (KoreAppRoot.Instance != null)
+            {
+                CanvasLayer? bboxLayer = KoreAppRoot.GetBBoxCanvasLayer();
+
+                if (bboxLayer != null)
+                {
+                    if (TileScreenBBox == null)
+                    {
+                        TileScreenBBox = new KoreGodot2DBox();
+                        bboxLayer.AddChild(TileScreenBBox);
+
+                        TileScreenBBox.ScreenRect = TileScreenRect;
+                        TileScreenBBox.IsValid = false;
+                        TileScreenBBox.LineColor = new Color(1, 0, 0, 1); // Red color
+                        TileScreenBBox.LineWidth = 2.0f;
+                        TileScreenBBox.Filled = false;
+                        TileScreenBBox.InvalidateDeferred();
+                    }
+
+                    if (ValidScreenRect)
+                    {
+                        TileScreenBBox.ScreenRect = TileScreenRect;
+                        TileScreenBBox.IsValid = true;
+                    }
+                }
+            }
+            
         }
     }
+
     // --------------------------------------------------------------------------------------------
 
     public override void _ExitTree()

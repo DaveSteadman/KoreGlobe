@@ -165,7 +165,7 @@ public partial class KoreZeroNodeMapTile : Node3D
         // Load the image if we have it, or take the parent file if it exists, or leave the image blank.
         if (Filepaths.WebpFileExists)
         {
-            TileMaterial = KoreGodotImageOps.LoadMaterial(Filepaths.WebpFilepath);
+            TileMaterial = KoreGodotImageOps.LoadMaterial2(Filepaths.WebpFilepath);
             UVBox        = KoreUVBoxDropEdgeTile.FullImage();
             TileOwnsTexture = true; // We own the texture, so we can delete it when done.
         }
@@ -175,7 +175,7 @@ public partial class KoreZeroNodeMapTile : Node3D
             KoreWebpConverter.CompressPNGtoWEBP(Filepaths.ImageFilepath, Filepaths.WebpFilepath);
 
             // repeat the Webp import process
-            TileMaterial = KoreGodotImageOps.LoadMaterial(Filepaths.WebpFilepath);
+            TileMaterial = KoreGodotImageOps.LoadMaterial2(Filepaths.WebpFilepath);
             UVBox        = KoreUVBoxDropEdgeTile.FullImage();
             TileOwnsTexture = true; // We own the texture, so we can delete it when done.
         }
