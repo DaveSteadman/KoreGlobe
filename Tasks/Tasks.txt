@@ -1,0 +1,8 @@
+Tasks:
+- Get the zero node working
+    - Set an LLA
+    = Get the map tiles connected to it
+
+- Create a worldpos node with heading, use for everything.
+    - Moves with the zero node.
+

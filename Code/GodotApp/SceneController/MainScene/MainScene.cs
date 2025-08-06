@@ -52,7 +52,10 @@ public partial class MainScene : Node3D
         // AddTestMeshData_Cylinder();
         // AddTestMeshData_Bezier();
         // AddTestMeshData_Hemisphere();
-        AddTestMeshData_MapManager();
+        // AddTestMeshData_MapManager();
+
+        KoreGodotMainSceneFactory.SetupNodes(this);
+        KoreGodotMainSceneFactory.AddDebugNodes();
     }
 
     public override void _Process(double delta)
@@ -442,12 +445,8 @@ public partial class MainScene : Node3D
 
     public void AddTestMeshData_MapManager()
     {
-        KoreGodotMainSceneFactory.SetupNodes(this);
 
-        GodotMeshPrimitives.AddChildDebugSphere(
-            KoreGodotMainSceneFactory.MapManagerNode,
-            0.5f,
-            KoreColorPalette.Colors["DarkBlue"]);
+
 
         // // Function to add a test MapManager mesh
         // KoreZeroNodeMapManager MapManagerNode = new KoreZeroNodeMapManager() { Name = "MapManagerNode" };
