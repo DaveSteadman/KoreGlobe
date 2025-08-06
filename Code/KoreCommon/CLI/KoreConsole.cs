@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 using System.Linq;
 
 namespace KoreCommon;
+using KoreCommon.UnitTest;
 
 #nullable enable
 
@@ -238,6 +239,19 @@ public class KoreConsole
                     }
                     return true;
                 }
+            case "unittest":
+                {
+                    // Run unit tests
+                    OutputQueue.AddString("Running unit tests...");
+                    
+                    KoreTestLog testLog = KoreTestCenter.RunCoreTests();
+                    OutputQueue.AddString(testLog.FullReport());
+                    OutputQueue.AddString("==================================================================");
+                    OutputQueue.AddString(testLog.OneLineReport());
+                    OutputQueue.AddString("==================================================================");
+                    return true;
+                }
+                
 
             default:
                 return false;

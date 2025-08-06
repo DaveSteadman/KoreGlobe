@@ -76,7 +76,7 @@ public class KoreColorRange
             {
                 // Find the fraction between the two values, then lerp the colours
                 float fraction = (value - colorRangeList[i].value) / (colorRangeList[i + 1].value - colorRangeList[i].value);
-                return KoreColorRGB.Lerp(colorRangeList[i].color, colorRangeList[i + 1].color, fraction);
+                return KoreColorOps.Lerp(colorRangeList[i].color, colorRangeList[i + 1].color, fraction);
             }
         }
 

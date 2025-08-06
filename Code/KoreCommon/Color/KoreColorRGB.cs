@@ -57,26 +57,4 @@ public struct KoreColorRGB
     public static readonly KoreColorRGB Zero = new KoreColorRGB(KoreColorIO.MinByte, KoreColorIO.MinByte, KoreColorIO.MinByte, KoreColorIO.MinByte);
     public static readonly KoreColorRGB White = new KoreColorRGB(KoreColorIO.MaxByte, KoreColorIO.MaxByte, KoreColorIO.MaxByte, KoreColorIO.MaxByte);
 
-    // --------------------------------------------------------------------------------------------
-    // MARK: Changes
-    // --------------------------------------------------------------------------------------------
-
-    // Usage: KoreColorRGB.Lerp(col1, col2, t)
-    // 0 = col1, 1 = col2, 0.5 = halfway between col1 and col2
-
-    public static KoreColorRGB Lerp(KoreColorRGB col1, KoreColorRGB col2, float col2fraction)
-    {
-        if (col2fraction < 0.0f) col2fraction = 0.0f;
-        if (col2fraction > 1.0f) col2fraction = 1.0f;
-
-        float newRf = col1.Rf + (col2.Rf - col1.Rf) * col2fraction;
-        float newGf = col1.Gf + (col2.Gf - col1.Gf) * col2fraction;
-        float newBf = col1.Bf + (col2.Bf - col1.Bf) * col2fraction;
-        float newAf = col1.Af + (col2.Af - col1.Af) * col2fraction;
-
-        return new KoreColorRGB(newRf, newGf, newBf, newAf);
-    }
-
-
-
 }

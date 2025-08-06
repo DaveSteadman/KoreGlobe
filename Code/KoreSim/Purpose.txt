@@ -1,0 +1,8 @@
+
+KoreSim:
+- Exists to define the data and modelling of platforms, with their routes, radars and other elements.
+
+Requirements:
+- Everything passes through the EventDriver, a layer to define an external interface to the modelling.
+- Common across multiple platforms.
+

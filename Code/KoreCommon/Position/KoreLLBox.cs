@@ -66,6 +66,9 @@ public struct KoreLLBox
         set { MaxLonDegs = MinLonDegs + value; }
     }
 
+    public double WidthDegs => DeltaLonDegs;
+    public double HeightDegs => DeltaLatDegs;
+
     // --------------------------------------------------------------------------------------------
 
     public double HalfDeltaLonRads => DeltaLonRads / 2.0;

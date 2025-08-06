@@ -5,6 +5,8 @@ using System.Collections.Generic;
 
 namespace KoreCommon;
 
+#nullable enable
+
 public class KoreCliCmdFileRename : KoreCommand
 {
     public KoreCliCmdFileRename()
@@ -17,7 +19,7 @@ public class KoreCliCmdFileRename : KoreCommand
 
     public override string Execute(List<string> parameters)
     {
-        if (parameters.Count < 2 || parameters.Count > 3) 
+        if (parameters.Count < 2 || parameters.Count > 3)
             return $"KoreCliCmdFileRename: Invalid parameter count. Usage: {HelpString}";
 
         string oldPath = parameters[0];

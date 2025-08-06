@@ -98,7 +98,7 @@ public partial class KoreZeroNodeMapTile : Node3D
 
     // private bool ChildConstructionComplete    = false;
 
-    private KoreLatestHolder<KoreZeroTileVisibilityStats> TileVisibilityStats = new KoreLatestHolder<KoreZeroTileVisibilityStats>( new KoreZeroTileVisibilityStats() );
+    private KoreLatestHolderClass<KoreZeroTileVisibilityStats> TileVisibilityStats = new KoreLatestHolderClass<KoreZeroTileVisibilityStats>( new KoreZeroTileVisibilityStats() );
 
     // private List<Vector3> TileCornerList = new List<Vector3>();
     // private bool ValidScreenRect = false;

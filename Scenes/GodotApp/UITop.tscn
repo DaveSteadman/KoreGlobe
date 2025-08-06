@@ -1,0 +1,53 @@
+[gd_scene load_steps=3 format=3 uid="uid://cvnlpk0a74la0"]
+
+[ext_resource type="Script" uid="uid://b6sjq33bhdn3m" path="res://Code/GodotApp/SceneController/UITop/KoreUITop.cs" id="1_lqaa4"]
+[ext_resource type="Script" uid="uid://b5wtnd7y14cpo" path="res://Code/GodotApp/SceneController/RootScene/KoreAppVersionLabel.cs" id="2_h4igh"]
+
+[node name="UiTop" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_lqaa4")
+
+[node name="UITopFrame" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HeaderMarginFrame" type="MarginContainer" parent="UITopFrame"]
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="CLIButton" type="Button" parent="UITopFrame/HeaderMarginFrame"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+size_flags_horizontal = 0
+focus_mode = 0
+text = "CLI"
+
+[node name="BodyMarginFrame" type="HBoxContainer" parent="UITopFrame"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="FooterMarginFrame" type="MarginContainer" parent="UITopFrame"]
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="Label" type="Label" parent="UITopFrame/FooterMarginFrame"]
+layout_mode = 2
+size_flags_horizontal = 8
+script = ExtResource("2_h4igh")

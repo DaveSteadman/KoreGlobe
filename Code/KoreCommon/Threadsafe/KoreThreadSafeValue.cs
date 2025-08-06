@@ -5,7 +5,7 @@ using System;
 namespace KoreCommon;
 
 
-public class KoreThreadSafeValue<T> where T : class?
+public class KoreThreadSafeValue<T>
 {
     private T? _value; // Mark the field as nullable
     private readonly object _lock = new();

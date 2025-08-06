@@ -4,6 +4,8 @@ using KoreCommon;
 namespace KoreCommon.UnitTest;
 
 
+// Usage: KoreTestLog testLog = KoreTestCenter.RunCoreTests();
+
 public static class KoreTestCenter
 {
     public static KoreTestLog RunCoreTests()

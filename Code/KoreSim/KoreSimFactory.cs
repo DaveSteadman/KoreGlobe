@@ -37,7 +37,6 @@ public class KoreSimFactory
     //        //        kc.SetParam("Key", "Value");
     public KoreStringDictionary KoreConfig { get; private set; } = new KoreStringDictionary();
 
-
     // --------------------------------------------------------------------------------------------
 
     // Instance control, with a lock, hidden constructor, and a singleton instance.
@@ -81,28 +80,17 @@ public class KoreSimFactory
         KoreCentralLog.AddEntry("Creating KoreSimFactory objects");
 
         ConsoleInterface = new KoreConsole();
-        EntityManager    = new KoreEntityManager();
         NetworkHub       = new KoreNetworkHub();
+        MessageManager   = new KoreMessageManager();
+
+        EventRegister    = new KoreEventRegister();
+        EntityManager    = new KoreEntityManager();
         SimClock         = new KoreSimTime();
         ModelRun         = new KoreModelRun();
-        MessageManager   = new KoreMessageManager();
         EleManager       = new KoreElevationManager();
-        EventRegister    = new KoreEventRegister();
-
-        // Link the objects
-        //ConsoleInterface.KoreEventDriver = KoreEventDriver;
-        //KoreEventDriver.ConsoleInterface = ConsoleInterface;
-
-        // CallStart();
-
-        // KoreCentralLog.LoggingActive = false;
-
-        // // Read the logfile path from the config and update the centralised logger with it.
-        // string logPath = KoreCentralConfig.Instance.GetParam<string>("LogPath");
-        // if (!String.IsNullOrWhiteSpace(logPath))
-        //     KoreCentralLog.UpdatePath(logPath);
 
 
+        // Read the logfile path from the config and update the centralised logger with it.
         LoadConfig("AppConfig.json");
 
         KoreSimCommands.RegisterCommands(ConsoleInterface);
@@ -113,6 +101,21 @@ public class KoreSimFactory
         KoreCentralLog.AddEntry("KoreSimFactory Construction - Done");
 
         // KoreTestCenter.RunAdHocTests();
+    }
+
+
+    // --------------------------------------------------------------------------------------------
+
+    // Call to trigger constuctor 
+    // This will trigger the constructor to run, if it hasn't already.
+   
+    
+    // Usage: KoreSimFactory.TriggerInstance();
+
+    public static void TriggerInstance()
+    {
+        // This will trigger the constructor to run, if it hasn't already.
+        var _ = Instance;
     }
 
     // --------------------------------------------------------------------------------------------
@@ -157,7 +160,7 @@ public class KoreSimFactory
 
         // Read teh content (dictionary is cleared as an init step)
         KoreConfig.ImportJson(configFileContent);
-        
+
         // Log how many items were loaded
         KoreCentralLog.AddEntry($"Config loaded with {KoreConfig.Count} items"); // Assuming Count property exists
 

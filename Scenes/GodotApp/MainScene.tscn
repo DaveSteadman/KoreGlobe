@@ -1,0 +1,202 @@
+[gd_scene load_steps=26 format=3 uid="uid://ced7xhu6jah7w"]
+
+[ext_resource type="Script" uid="uid://374o2dbtf0tj" path="res://Code/GodotApp/SceneController/MainScene/MainScene.cs" id="1_hpc76"]
+[ext_resource type="Script" uid="uid://v2mfrrw8pmol" path="res://Code/GodotCommon/KoreGodot2DDrawTest.cs" id="2_nhkr4"]
+[ext_resource type="Texture2D" uid="uid://btpgdc0gdsy2w" path="res://icon.svg" id="3_7rqgy"]
+[ext_resource type="Script" uid="uid://clnw1arvg2wlq" path="res://Code/GodotCommon/UserInput/KoreNodeMoverPlus.cs" id="4_4b75m"]
+[ext_resource type="Script" uid="uid://dpja4yagks5ee" path="res://Code/GodotCommon/MoveNode/KoreMoveNode3D.cs" id="5_4b75m"]
+[ext_resource type="Script" uid="uid://cj15d45iisbx5" path="res://Code/GodotCommon/MoveNode/KoreOrbitNode3D.cs" id="6_8ju71"]
+[ext_resource type="Texture2D" uid="uid://bup7pyvbwofc8" path="res://Resources/AUsVQ.png" id="7_q68mp"]
+[ext_resource type="Script" uid="uid://cyp8p4j7hdquw" path="res://Code/GodotCommon/MoveNode/KoreSpinNode3D.cs" id="8_xb4mg"]
+[ext_resource type="PackedScene" uid="uid://caqcuxag4x2ca" path="res://Resources/DumbArrow.blend" id="9_0iob3"]
+[ext_resource type="Script" uid="uid://7yuuduftm4w0" path="res://Code/GodotCommon/MoveNode/KoreMoveBezierNode3D.cs" id="9_6t1o7"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nhkr4"]
+albedo_color = Color(0.9554706, 0.67794746, 0.24282244, 1)
+metallic = 1.0
+emission_enabled = true
+emission = Color(0.96163017, 0.7181323, 0.326913, 1)
+emission_energy_multiplier = 21.55
+emission_on_uv2 = true
+rim_enabled = true
+subsurf_scatter_strength = 0.68
+disable_receive_shadows = true
+
+[sub_resource type="SphereMesh" id="SphereMesh_7rqgy"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_q68mp"]
+
+[sub_resource type="TorusMesh" id="TorusMesh_y4jh7"]
+inner_radius = 0.4
+
+[sub_resource type="SphereMesh" id="SphereMesh_8ju71"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_hpc76"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tr2i4"]
+albedo_color = Color(0.0031137874, 0.0078549795, 0.010090075, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_tr2i4"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7rqgy"]
+vertex_color_use_as_albedo = true
+metallic = 0.51
+metallic_specular = 0.55
+roughness = 0.65
+
+[sub_resource type="SphereMesh" id="SphereMesh_f140w"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0iob3"]
+albedo_texture = ExtResource("7_q68mp")
+
+[sub_resource type="Sky" id="Sky_8ju71"]
+
+[sub_resource type="Environment" id="Environment_8ju71"]
+sky = SubResource("Sky_8ju71")
+ambient_light_source = 2
+ambient_light_color = Color(0.7152497, 0.84563386, 0.87174547, 1)
+reflected_light_source = 2
+
+[sub_resource type="CameraAttributesPhysical" id="CameraAttributesPhysical_xb4mg"]
+frustum_far = 400000.0
+
+[sub_resource type="Compositor" id="Compositor_6t1o7"]
+
+[node name="MainScene" type="Node3D"]
+script = ExtResource("1_hpc76")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+visible = false
+
+[node name="Node2D" type="Node2D" parent="CanvasLayer"]
+script = ExtResource("2_nhkr4")
+
+[node name="SpriteNode" type="Sprite2D" parent="CanvasLayer/Node2D"]
+position = Vector2(146, 156)
+texture = ExtResource("3_7rqgy")
+
+[node name="CameraMount" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5)
+script = ExtResource("4_4b75m")
+
+[node name="Camera3D" type="Camera3D" parent="CameraMount"]
+transform = Transform3D(1, -1.4901161e-08, 0, 1.4901161e-08, 1, 0, 2.9802322e-08, 0, 1, 0, 0, 0)
+fov = 50.0
+
+[node name="Lights" type="Node3D" parent="."]
+top_level = true
+
+[node name="OmniLight3D-Green" type="OmniLight3D" parent="Lights"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.2500763, 1.8530807, 0.1592133)
+light_color = Color(0, 0.66888636, 0.19879529, 1)
+light_energy = 12.0
+shadow_enabled = true
+shadow_blur = 5.0
+omni_range = 50.0
+omni_attenuation = 0.5
+
+[node name="OmniLight3D-Yellow" type="OmniLight3D" parent="Lights"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.693246, 19.314701, 4.1954365)
+light_color = Color(0.784544, 0.64490634, 0.06742191, 1)
+light_energy = 8.0
+shadow_enabled = true
+shadow_blur = 5.0
+omni_range = 50.0
+omni_attenuation = 0.01
+
+[node name="OmniLight3D-Magenta" type="OmniLight3D" parent="Lights"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.298, 3.57, -7.054)
+light_color = Color(1, 0, 1, 1)
+light_energy = 8.0
+shadow_enabled = true
+shadow_blur = 5.0
+omni_range = 200.0
+omni_attenuation = 0.2
+omni_shadow_mode = 0
+
+[node name="MeshInstance3D-OrbLight" type="MeshInstance3D" parent="Lights"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.17, 5.125, 6.508)
+material_override = SubResource("StandardMaterial3D_nhkr4")
+cast_shadow = 0
+gi_mode = 2
+mesh = SubResource("SphereMesh_7rqgy")
+skeleton = NodePath("../..")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="Lights/MeshInstance3D-OrbLight"]
+light_color = Color(0, 0.61914825, 0.6124426, 1)
+light_energy = 16.0
+light_size = 0.3
+light_specular = 0.3
+shadow_enabled = true
+distance_fade_enabled = true
+omni_range = 20.0
+omni_attenuation = 0.1
+omni_shadow_mode = 0
+
+[node name="Movers" type="Node3D" parent="."]
+top_level = true
+visible = false
+
+[node name="Node3D - Move" type="Node3D" parent="Movers"]
+transform = Transform3D(0.99999994, 0, 0, 0, -0.57188827, 0.8203315, 0, -0.8203315, -0.57188827, 7.9378486, 0, -8.331102)
+script = ExtResource("5_4b75m")
+StartPoint = Vector3(5, 0, -9)
+EndPoint = Vector3(-5, 0, -9)
+LoopMovement = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Movers/Node3D - Move"]
+gi_mode = 2
+mesh = SubResource("CapsuleMesh_q68mp")
+
+[node name="Node3D - Orbit" type="Node3D" parent="Movers"]
+script = ExtResource("6_8ju71")
+AutoRotateToFaceCenter = true
+
+[node name="DumbArrow" parent="Movers/Node3D - Orbit" instance=ExtResource("9_0iob3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 19.093494)
+
+[node name="Node3D - Rotate" type="Node3D" parent="Movers"]
+transform = Transform3D(-0.08891404, 0.8153771, 0.57206154, -0.5572077, 0.4353384, -0.70710677, -0.825599, -0.38162887, 0.4156267, 7.451681, 1.643348, -1.0297966)
+script = ExtResource("8_xb4mg")
+StartAngleXDegs = 2.650000000008731
+StartAngleYDegs = 15.790000000008147
+StartAngleZDegs = 11.820000000006983
+SpinRateXDegsPerSec = 18.79000000000815
+SpinRateYDegsPerSec = 20.404999999998836
+SpinRateZDegsPerSec = 28.135000000009313
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Movers/Node3D - Rotate"]
+gi_mode = 2
+mesh = SubResource("TorusMesh_y4jh7")
+
+[node name="Node3D - Bezier" type="Node3D" parent="Movers"]
+script = ExtResource("9_6t1o7")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Movers/Node3D - Bezier"]
+mesh = SubResource("SphereMesh_8ju71")
+
+[node name="MeshInstance3D-Plane" type="MeshInstance3D" parent="."]
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, -1.001, 0)
+mesh = SubResource("PlaneMesh_hpc76")
+surface_material_override/0 = SubResource("StandardMaterial3D_tr2i4")
+
+[node name="MeshInstance3D-TestCube" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, -0.5, -3)
+visible = false
+gi_mode = 2
+mesh = SubResource("BoxMesh_tr2i4")
+skeleton = NodePath("../Lights/MeshInstance3D-OrbLight")
+surface_material_override/0 = SubResource("StandardMaterial3D_7rqgy")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(-23.054424, 0, 3.85799, 0, 23.375, 0, -3.85799, 0, -23.054424, -45.503212, 0, 0)
+visible = false
+mesh = SubResource("SphereMesh_f140w")
+surface_material_override/0 = SubResource("StandardMaterial3D_0iob3")
+
+[node name="Node2" type="Node" parent="."]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_8ju71")
+camera_attributes = SubResource("CameraAttributesPhysical_xb4mg")
+compositor = SubResource("Compositor_6t1o7")

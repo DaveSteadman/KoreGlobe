@@ -13,8 +13,8 @@ using KoreCommon;
 
 public static class KoreUnprojectManager
 {
-    private static KoreLatestHolder<Camera3D> latestCamera = new KoreLatestHolder<Camera3D>();
-    private static KoreLatestHolder<Viewport> latestViewport = new KoreLatestHolder<Viewport>();
+    private static KoreLatestHolderClass<Camera3D> latestCamera = new KoreLatestHolderClass<Camera3D>();
+    private static KoreLatestHolderClass<Viewport> latestViewport = new KoreLatestHolderClass<Viewport>();
 
     // --------------------------------------------------------------------------------------------
 

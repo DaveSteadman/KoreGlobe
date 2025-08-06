@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace KoreCommon;
 
 
-// Usage: KoreColorRGB myCol = KoreColorPalette.Colors["Red"];
+// Usage: KoreColorRGB myCol = KoreColorPalette.Colors["DarkYellow"];
 
 public static class KoreColorPalette
 {

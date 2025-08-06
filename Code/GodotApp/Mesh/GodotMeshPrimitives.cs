@@ -10,7 +10,7 @@ public static class GodotMeshPrimitives
 {
 
     // Add a debug sphere to any Node3D.
-    // Usage: GodotMeshPrimitives.AddChildDebugSphere(parentNode, 1.0f, new KoreColorRGB(255, 0, 0));
+    // Usage: GodotMeshPrimitives.AddChildDebugSphere(parentNode, 1.0f, KoreColorPalette.Colors["DarkYellow"]);
     public static void AddChildDebugSphere(Node3D parentNode, float radius, KoreColorRGB color)
     {
         // create the basic mesh data

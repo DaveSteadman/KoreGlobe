@@ -83,7 +83,23 @@ public partial class KoreZeroNodeMapTile : Node3D
     // MARK: LL Checks
     // --------------------------------------------------------------------------------------------
 
-    public bool IsPointInTile(KoreLLPoint ll)   => RwTileLLBox.Contains(ll);
+    public bool IsPointInTile(KoreLLPoint ll) => RwTileLLBox.Contains(ll);
     public bool IsPointInTile(KoreLLAPoint lla) => RwTileLLBox.Contains(new KoreLLPoint() { LatDegs = lla.LatDegs, LonDegs = lla.LonDegs });
+
+    // --------------------------------------------------------------------------------------------
+    // MARK: Tile Size
+    // --------------------------------------------------------------------------------------------
+
+    public double TileHeightKms()
+    {
+        // get the tile height in degrees
+        double tileHeightDegs = TileCode.LLBox.HeightDegs;
+
+        // convert the degrees to a distance, using 2PiR on the earth radius
+        double worldCircumferenceKms = 2 * Math.PI * KoreWorldConsts.EarthRadiusKm;
+        double tileHeightKms = (tileHeightDegs / 360.0) * worldCircumferenceKms;
+
+        return tileHeightKms;
+    }
 
 }

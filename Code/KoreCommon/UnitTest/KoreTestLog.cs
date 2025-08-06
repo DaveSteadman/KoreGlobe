@@ -33,7 +33,7 @@ public class KoreTestLog
     private List<KoreTestLogEntry> ResultList = new List<KoreTestLogEntry>();
 
     // --------------------------------------------------------------------------------------------
-    // Add test results
+    // MARK: Add result
     // --------------------------------------------------------------------------------------------
 
     public void AddResult(string name, bool result, string comment = "")
@@ -72,7 +72,7 @@ public class KoreTestLog
     }
 
     // --------------------------------------------------------------------------------------------
-    // Report generation
+    // MARK: Reports
     // --------------------------------------------------------------------------------------------
 
     public bool OverallPass()

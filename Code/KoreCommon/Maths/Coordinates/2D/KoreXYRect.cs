@@ -144,4 +144,12 @@ public struct KoreXYRect
                  other.Bottom < Top);
     }
 
+    // --------------------------------------------------------------------------------------------
+    // MARK: Misc
+    // --------------------------------------------------------------------------------------------
+
+    public override string ToString()
+    {
+        return $"KoreXYRect(TopLeft: {TopLeft}, BottomRight: {BottomRight})";
+    }
 }
