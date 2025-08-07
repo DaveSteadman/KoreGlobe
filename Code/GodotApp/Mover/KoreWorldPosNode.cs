@@ -25,11 +25,11 @@ public partial class KoreWorldPosNode : Node3D
     // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(double delta)
     {
-        if (KoreZeroOffset.IsPosChangeCycle)
+        if (KoreZeroOffset.IsPosChangeCycle || PosMoved)
         {
             UpdateOffsetPosition();
         }
-                    
+
         // if (Timer1Hz < GloCentralTime.RuntimeSecs)
         // {
         //     Timer1Hz = GloCentralTime.RuntimeSecs + 1.0f;
@@ -65,6 +65,7 @@ public partial class KoreWorldPosNode : Node3D
     public void SetPos(KoreLLAPoint newLLA)
     {
         CurrLLA = newLLA;
+        PosMoved = true;
     }
 
     public void UpdateOffsetPosition()
@@ -77,13 +78,19 @@ public partial class KoreWorldPosNode : Node3D
         transform.Origin = newPos;
         GlobalTransform  = transform;
 
+        // Clear the moved flag
+        PosMoved = false;
     }
 
     // --------------------------------------------------------------------------------------------
     // MARK: Create
     // --------------------------------------------------------------------------------------------
 
-
+    public void CreateDebugMarker(float radius = 0.1f)
+    {
+        // Add a debug marker to the ZeroNode.
+        GodotMeshPrimitives.AddChildDebugSphere(this, radius, KoreColorPalette.Colors["LightCyan"]);
+    }
 }
 
 

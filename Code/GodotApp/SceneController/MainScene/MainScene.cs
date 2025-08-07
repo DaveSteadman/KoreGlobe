@@ -60,6 +60,21 @@ public partial class MainScene : Node3D
         KoreLLAPoint myPoint = KorePositionLibrary.GetLLAPos("Hamburg");
         KoreZeroOffset.SetLLA(myPoint); // Set the zero point to London
 
+        List<KoreWorldPosNode> worldPosNodes = new List<KoreWorldPosNode>();
+
+        // loop through all the named positions in KorePositionLibrary, getting the name and LLA
+        foreach (var kvp in KorePositionLibrary.Positions)
+        {
+            // split the kvp into city name and lla
+            string cityName = kvp.Key;
+            KoreLLPoint cityLLPos = kvp.Value;
+
+            KoreWorldPosNode node = new KoreWorldPosNode() { Name = cityName };
+            node.SetPos(new KoreLLAPoint(cityLLPos));
+            node.CreateDebugMarker(0.03f);
+            worldPosNodes.Add(node);
+            KoreGodotMainSceneFactory.ZeroNode?.AddChild(node);
+        }
     }
 
     public override void _Process(double delta)

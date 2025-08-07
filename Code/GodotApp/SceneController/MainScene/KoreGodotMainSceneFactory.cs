@@ -17,7 +17,7 @@ public static class KoreGodotMainSceneFactory
 {
     public static Node3D?                 MainSceneRootNode { get; private set; } = null;
     public static KoreZeroNodeMapManager? MapManagerNode    { get; private set; } = null;
-    public static KoreZeroNode?           ZeroNode          { get; private set; } = null;
+    public static KoreZeroNode?           ZeroNode          { get; private set; } = null; // KoreGodotMainSceneFactory.ZeroNode
 
     // KoreGodotMainSceneFactory.ViewSize.LatestValue = new KoreXYRect(0, 0, 800, 600);
     // KoreXYRect currViewSize = KoreGodotMainSceneFactory.ViewSize.LatestValue();
@@ -44,11 +44,11 @@ public static class KoreGodotMainSceneFactory
         // Map manager hangs off of the ZeroNode, with its own position or 0,0,0.
         // Child tile nodes hang off of the manager and control their own zeronode offset.
         MapManagerNode = new KoreZeroNodeMapManager(ZeroNode);
-        ZeroNode.AddChild(MapManagerNode);
+        KoreGodotMainSceneFactory.ZeroNode?.AddChild(MapManagerNode);
 
         KoreSimFactory.TriggerInstance();
         KoreAppCommands.RegisterCommands(KoreSimFactory.Instance.ConsoleInterface);
-        
+
     }
 
     public static void AddDebugNodes()
