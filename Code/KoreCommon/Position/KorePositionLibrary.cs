@@ -35,6 +35,8 @@ public static class KorePositionLibrary
         { "Southampton",   new KoreLLPoint() {LatDegs = 50.9097, LonDegs = -1.4044} },
         { "Leicester",     new KoreLLPoint() {LatDegs = 52.6369, LonDegs = -1.1398} },
         { "Coventry",      new KoreLLPoint() {LatDegs = 52.4084, LonDegs = -1.5100} },
+        { "York",          new KoreLLPoint() {LatDegs = 53.9590, LonDegs = -1.0815} },
+        { "Aberdeen",      new KoreLLPoint() {LatDegs = 57.1497, LonDegs = -2.0943} },
 
         // Ireland
         { "Dublin",        new KoreLLPoint() {LatDegs = 53.3498, LonDegs = -6.2603} }, 
@@ -76,6 +78,9 @@ public static class KorePositionLibrary
         { "Valencia",      new KoreLLPoint() {LatDegs = 39.4699, LonDegs = -0.3763} },
         { "Seville",       new KoreLLPoint() {LatDegs = 37.3891, LonDegs = -5.9845} },
         { "Bilbao",        new KoreLLPoint() {LatDegs = 43.2627, LonDegs = -2.9253} },
+        { "Palma",         new KoreLLPoint() {LatDegs = 39.5696, LonDegs = 2.6502} },
+        { "Malaga",        new KoreLLPoint() {LatDegs = 36.7213, LonDegs = -4.4214} },
+        { "Granada",       new KoreLLPoint() {LatDegs = 37.1773, LonDegs = -3.5986} },
         
         // Portugal
         { "Lisbon",        new KoreLLPoint() {LatDegs = 38.7223, LonDegs = -9.1393} },  
@@ -130,6 +135,8 @@ public static class KorePositionLibrary
 
         // Belgium
         { "Brussels",      new KoreLLPoint() {LatDegs = 50.8503, LonDegs = 4.3517} },
+        { "Antwerp",       new KoreLLPoint() {LatDegs = 51.2211, LonDegs = 4.4213} }, 
+        { "Ghent",         new KoreLLPoint() {LatDegs = 51.0543, LonDegs = 3.7174} },
         
         // Austria
         { "Vienna",        new KoreLLPoint() {LatDegs = 48.2082, LonDegs = 16.3738} },
@@ -165,15 +172,16 @@ public static class KorePositionLibrary
         // Slovakia
         { "Bratislava",    new KoreLLPoint() {LatDegs = 48.1486, LonDegs = 17.1077} },
         
+        // Albania
+        { "Tirana",        new KoreLLPoint() {LatDegs = 41.3275, LonDegs = 19.8189} },
+        
+        // Kosovo
+        { "Pristina",      new KoreLLPoint() {LatDegs = 42.6629, LonDegs = 21.1655} },
+        
         // Baltic States
         { "Tallinn",       new KoreLLPoint() {LatDegs = 59.4370, LonDegs = 24.7536} },  // Estonia
         { "Riga",          new KoreLLPoint() {LatDegs = 56.9496, LonDegs = 24.1052} },  // Latvia
         { "Vilnius",       new KoreLLPoint() {LatDegs = 54.6872, LonDegs = 25.2797} },  // Lithuania
-
-        // Russia
-        { "Moscow",          new KoreLLPoint() {LatDegs = 55.7558, LonDegs = 37.6176} },
-        { "SaintPetersburg", new KoreLLPoint() {LatDegs = 59.9343, LonDegs = 30.3351} },
-        { "Sochi",           new KoreLLPoint() {LatDegs = 43.5853, LonDegs = 39.7203} },
 
         // Ukraine
         { "Kyiv",            new KoreLLPoint() {LatDegs = 50.4501, LonDegs = 30.5234} },
@@ -181,7 +189,15 @@ public static class KorePositionLibrary
         { "Lviv",            new KoreLLPoint() {LatDegs = 49.8397, LonDegs = 24.0297} },
         { "Kharkiv",         new KoreLLPoint() {LatDegs = 49.9935, LonDegs = 36.2304} },
         { "Dnipro",          new KoreLLPoint() {LatDegs = 48.4647, LonDegs = 35.0462} },
-        
+
+        // Russia
+        { "Moscow",          new KoreLLPoint() {LatDegs = 55.7558, LonDegs = 37.6176} },
+        { "SaintPetersburg", new KoreLLPoint() {LatDegs = 59.9343, LonDegs = 30.3351} },
+        { "Sochi",           new KoreLLPoint() {LatDegs = 43.5853, LonDegs = 39.7203} },
+
+        // Belarus
+        { "Minsk",           new KoreLLPoint() {LatDegs = 53.9045, LonDegs = 27.5590} },
+
         // Microstates
         { "Monaco",          new KoreLLPoint() {LatDegs = 43.7384, LonDegs = 7.4246} },
         { "SanMarino",       new KoreLLPoint() {LatDegs = 43.9333, LonDegs = 12.4667} },
@@ -259,6 +275,8 @@ public static class KorePositionLibrary
         { "Dubai",         new KoreLLPoint() {LatDegs = 25.2048, LonDegs = 55.2708} },
         { "Muscat",        new KoreLLPoint() {LatDegs = 23.5859, LonDegs = 58.4059} },
         { "Sanaa",         new KoreLLPoint() {LatDegs = 15.3694, LonDegs = 44.1910} },
+        { "Baku",          new KoreLLPoint() {LatDegs = 40.4093, LonDegs = 49.8671} },
+        { "Tbilisi",       new KoreLLPoint() {LatDegs = 41.7151, LonDegs = 44.8271} },
         
         // Central Asia
         { "Tashkent",      new KoreLLPoint() {LatDegs = 41.2995, LonDegs = 69.2401} },
@@ -266,11 +284,11 @@ public static class KorePositionLibrary
         { "Bishkek",       new KoreLLPoint() {LatDegs = 42.8746, LonDegs = 74.5698} },
         { "Dushanbe",      new KoreLLPoint() {LatDegs = 38.5598, LonDegs = 68.7870} },
         { "Ashgabat",      new KoreLLPoint() {LatDegs = 37.9601, LonDegs = 58.3261} },
-
+        
         // ----------------------------------------------------------------------------------------
         // MARK: Africa 
         // ----------------------------------------------------------------------------------------
-        
+
         // North Africa
         { "Cairo",         new KoreLLPoint() {LatDegs = 30.0444, LonDegs = 31.2357} },
         { "Alexandria",    new KoreLLPoint() {LatDegs = 31.2001, LonDegs = 29.9187} },

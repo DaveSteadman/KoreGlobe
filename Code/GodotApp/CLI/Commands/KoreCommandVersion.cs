@@ -4,8 +4,6 @@ using System.Collections.Generic;
 
 using KoreCommon;
 
-namespace KoreSim;
-
 
 public class KoreCommandVersion : KoreCommand
 {
@@ -16,11 +14,7 @@ public class KoreCommandVersion : KoreCommand
 
     public override string Execute(List<string> parameters)
     {
-        // KoreCentralLog.AddEntry("KoreCommandVersion.Execute: " + KoreGlobals.VersionString);
-        // return KoreGlobals.VersionString;
-
-        return "Version";
-
+        return KoreGlobals.VersionString;
     }
 
 }

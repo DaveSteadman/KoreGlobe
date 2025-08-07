@@ -50,18 +50,31 @@ public partial class KoreZeroNodeMapManager : Node3D
         GD.Print($"KoreZeroNodeMapManager: Constructor");
 
         // Create and debug draw a lvl0 tile
-        Lvl0Tiles.Add(new KoreZeroNodeMapTile(new KoreMapTileCode("BF")));
-        Lvl0Tiles.Add(new KoreZeroNodeMapTile(new KoreMapTileCode("AG")));
-        Lvl0Tiles.Add(new KoreZeroNodeMapTile(new KoreMapTileCode("BG")));
-        Lvl0Tiles.Add(new KoreZeroNodeMapTile(new KoreMapTileCode("CG")));
-        Lvl0Tiles.Add(new KoreZeroNodeMapTile(new KoreMapTileCode("BH")));
+        // Lvl0Tiles.Add(new KoreZeroNodeMapTile(new KoreMapTileCode("BF")));
+        // Lvl0Tiles.Add(new KoreZeroNodeMapTile(new KoreMapTileCode("AG")));
+        // Lvl0Tiles.Add(new KoreZeroNodeMapTile(new KoreMapTileCode("BG")));
+        // Lvl0Tiles.Add(new KoreZeroNodeMapTile(new KoreMapTileCode("CG")));
+        // Lvl0Tiles.Add(new KoreZeroNodeMapTile(new KoreMapTileCode("BH")));
+        
+        
+        List<KoreMapTileCode> lvl0CodesList = KoreMapTileCode.Lvl0Codes();
+        foreach (KoreMapTileCode lvl0Code in lvl0CodesList)
+        {
+            KoreZeroNodeMapTile tile = new KoreZeroNodeMapTile(lvl0Code);
+            Lvl0Tiles.Add(tile);
+        }
+
 
         // Loop through the tiles and rotate them onto their center longitude
+       // int i = 0;
         foreach (KoreZeroNodeMapTile tile in Lvl0Tiles)
         {
+            //i++;
             AddChild(tile);
             double lon = tile.TileCode.LLBox.CenterPoint.LonRads;
             tile.Rotation = new Vector3(0, (float)lon, 0);
+
+            //if (i > 20) break;
         }
 
 

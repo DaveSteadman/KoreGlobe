@@ -14,6 +14,9 @@ public static class KoreAppCommands
         KoreCentralLog.AddEntry("KoreConsole: Initializing APP commands...");
 
         // General app control commands
+        console.AddCommandHandler(new KoreCommandVersion());
+
+        // Zero Node
         console.AddCommandHandler(new KoreCliCmdZeroPosSet());
     }
 }

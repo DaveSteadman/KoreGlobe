@@ -14,7 +14,6 @@ public static class KoreSimCommands
         KoreCentralLog.AddEntry("KoreConsole: Initializing commands...");
 
         // General app control commands
-        console.AddCommandHandler(new KoreCommandVersion());
         console.AddCommandHandler(new KoreCommandExit());
         console.AddCommandHandler(new KoreCommandConfigReport());
         console.AddCommandHandler(new KoreCommandConfigSet());

@@ -57,7 +57,7 @@ public partial class MainScene : Node3D
         KoreGodotMainSceneFactory.SetupNodes(this);
         KoreGodotMainSceneFactory.AddDebugNodes();
 
-        KoreLLAPoint myPoint = KorePositionLibrary.GetLLAPos("London");
+        KoreLLAPoint myPoint = KorePositionLibrary.GetLLAPos("Hamburg");
         KoreZeroOffset.SetLLA(myPoint); // Set the zero point to London
 
     }

@@ -2,5 +2,5 @@
 public class KoreGlobals
 {
     // KoreGlobals.VersionString
-    public static readonly string VersionString = "v0.1 (0005 - 2024/08/27)";
+    public static readonly string VersionString = "[ Date: 2025-08-07 // Build: #0002 // Version: 0.1 ]";
 }

@@ -37,7 +37,7 @@ public static class KoreZeroOffset
     // public static KoreXYZPoint RwZeroPointXYZ = new KoreXYZPoint(0, 0, 0);
 
     // Game engine earth radius and conversion around it.
-    public static double GeEarthRadius = 5; // Earth radius in Game Engine units
+    public static double GeEarthRadius = 10; // Earth radius in Game Engine units
     public static double RwToGeDistanceMultiplier = GeEarthRadius / KoreWorldConsts.EarthRadiusM;
     public static double GeToRwDistanceMultiplier = 1 / RwToGeDistanceMultiplier;
 

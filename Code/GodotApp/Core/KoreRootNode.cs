@@ -1,170 +1,170 @@
-using Godot;
-using System;
-using System.IO;
-using System.Collections.Generic;
+// using Godot;
+// using System;
+// using System.IO;
+// using System.Collections.Generic;
 
-using KoreCommon;
-using KoreSim;
+// using KoreCommon;
+// using KoreSim;
 
-public partial class KoreRootNode : Node3D
-{
-    Node3D PlaformBaseNode;
-    Node3D ModelResourceNode;
+// public partial class KoreRootNode : Node3D
+// {
+//     Node3D PlaformBaseNode;
+//     Node3D ModelResourceNode;
 
-    // TestZeroOffset.WorldCamNode.CamNode
+//     // TestZeroOffset.WorldCamNode.CamNode
 
-    // public static GloCameraMoverWorld WorldCamNode;
+//     // public static GloCameraMoverWorld WorldCamNode;
 
-    private float MarkerSize = 0.2f;
-    private bool WithWire = true;
+//     private float MarkerSize = 0.2f;
+//     private bool WithWire = true;
 
-    private float AnimAzDegs = 0f;
-    private float AnimElDegs = 0f;
-    private float AnimAzDelta = 1.55f;
-    private float AnimElDelta = 1.05f;
+//     private float AnimAzDegs = 0f;
+//     private float AnimElDegs = 0f;
+//     private float AnimAzDelta = 1.55f;
+//     private float AnimElDelta = 1.05f;
 
-    private float UIPollTimer = 0.0f;
-    private float UIPollTimer2 = 0.0f;
-    private float PollTimerTrailNode = 0.0f;
+//     private float UIPollTimer = 0.0f;
+//     private float UIPollTimer2 = 0.0f;
+//     private float PollTimerTrailNode = 0.0f;
 
-    //private GloLLAPoint    PlatformPos;
-    //private GloCourse      PlatformCourse;
-    //private GloCourseDelta PlatformCourseDelta;
+//     //private GloLLAPoint    PlatformPos;
+//     //private GloCourse      PlatformCourse;
+//     //private GloCourseDelta PlatformCourseDelta;
 
-    private float Timer5Sec = 0.0f;
-    private bool OneShot = false;
+//     private float Timer5Sec = 0.0f;
+//     private bool OneShot = false;
 
-    private bool OneShot_5Seconds = false;
-
-
-    //private float TimerContrail = 0.0f;
-
-    // private GloCyclicIdGenerator IdGen = new GloCyclicIdGenerator(250);
-    // private string randomString = GloRandomStringGenerator.GenerateRandomString(5);
-
-    // --------------------------------------------------------------------------------------------
-    // MARK: Node _Ready and _Process
-    // --------------------------------------------------------------------------------------------
-
-    // Called when the node enters the scene tree for the first time.
-    public override void _Ready()
-    {
-        KoreCentralLog.AddEntry($"TestZeroOffset: _Ready // {KoreGlobals.VersionString}");
-        GD.Print($"=== TestZeroOffset: _Ready // {KoreGlobals.VersionString} ===================================== ");
-
-        // Setup the factory that holds a centralised reference to key objects
-        KoreGodotFactory.Instance.CreateObjects(this);
-
-        // Default the zero point.
-        // KoreZeroNode.SetZeroNodePosition(45, 0);
-
-        // Debug report the world consts
-        KoreZeroOffset.ReportConsts();
+//     private bool OneShot_5Seconds = false;
 
 
-        // Read the manually included sets of assets
-        bool loadModels = true;
-        if (loadModels)
-        {
-            try
-            {
-                KoreCentralLog.AddEntry("ModelImport // Stage 1: Load JSON files");
-                string jsonMilitary = KoreGodotFilesystemOps.ReadStringFromFile("res://Resources/Assets/MilitaryVehicles/Inventory.json");
-                string jsonCivilian = KoreGodotFilesystemOps.ReadStringFromFile("res://Resources/Assets/CivilianVehicles/Inventory.json");
-                string jsonPlaceholders = KoreGodotFilesystemOps.ReadStringFromFile("res://Resources/Assets/PlaceholderModels/Inventory.json");
-                // KoreGodotFactory.Instance.ModelLibrary.LoadJSONConfigFile(jsonMilitary);
-                // KoreGodotFactory.Instance.ModelLibrary.LoadJSONConfigFile(jsonCivilian);
-                // KoreGodotFactory.Instance.ModelLibrary.LoadJSONConfigFile(jsonPlaceholders);
+//     //private float TimerContrail = 0.0f;
 
-                // KoreCentralLog.AddEntry("ModelImport // Stage 2: Load Models");
-                // KoreGodotFactory.Instance.ModelLibrary.LoadModelToCache();
-                // KoreCentralLog.AddEntry("ModelImport // Done");
+//     // private GloCyclicIdGenerator IdGen = new GloCyclicIdGenerator(250);
+//     // private string randomString = GloRandomStringGenerator.GenerateRandomString(5);
 
-            }
-            catch (Exception ex)
-            {
-                KoreCentralLog.AddEntry("ModelImport // EXCEPTION: {ex.Message}");
-            }
-        }
+//     // --------------------------------------------------------------------------------------------
+//     // MARK: Node _Ready and _Process
+//     // --------------------------------------------------------------------------------------------
 
-        // bool DLCTesting = true;
+//     // Called when the node enters the scene tree for the first time.
+//     public override void _Ready()
+//     {
+//         KoreCentralLog.AddEntry($"TestZeroOffset: _Ready // {KoreGlobals.VersionString}");
+//         GD.Print($"=== TestZeroOffset: _Ready // {KoreGlobals.VersionString} ===================================== ");
 
-        // if (DLCTesting)
-        // {
-        //     //GloDlcOperations.CreateDlc();
+//         // Setup the factory that holds a centralised reference to key objects
+//         KoreGodotFactory.Instance.CreateObjects(this);
 
-        //     List<string> dlcList = GloDlcOperations.ListLoadableDlcPaths();
+//         // Default the zero point.
+//         // KoreZeroNode.SetZeroNodePosition(45, 0);
 
-        //     foreach (string dlc in dlcList)
-        //         GloDlcOperations.LoadDlc(dlc);
-
-        //     KoreCentralLog.AddEntry( GloDlcOperations.DlcReport() );
-
-        //     // Find the JSON files in each DLC and report on them
-        //     List<string> dlcTitlesList = GloDlcOperations.ListLoadedDlcTitles();
-        //     foreach (string currDlcTitle in dlcTitlesList)
-        //     {
-        //         string invJson = GloDlcOperations.InventoryJsonForDLCTitle(currDlcTitle);
-        //         KoreCentralLog.AddEntry($"DLC: {currDlcTitle} JSON: {invJson}");
-        //     }
-
-        //     string invJson2 = GloDlcOperations.InventoryJsonForDLCTitle("PlaceholderModels");
-        //     KoreGodotFactory.Instance.ModelLibrary.LoadJSONConfigFile(invJson2);
-
-        //     string invJson3 = GloDlcOperations.InventoryJsonForDLCTitle("MilitaryVehicles");
-        //     KoreGodotFactory.Instance.ModelLibrary.LoadJSONConfigFile(invJson3);
-
-        //     KoreCentralLog.AddEntry( KoreGodotFactory.Instance.ModelLibrary.ReportContent() );
-        // }
-    }
+//         // Debug report the world consts
+//         KoreZeroOffset.ReportConsts();
 
 
-    // Called every frame. 'delta' is the elapsed time since the previous frame.
-    public override void _Process(double delta)
-    {
-        if (!OneShot)
-        {
-            OneShot = true;
-            GD.Print("OneShot: _Process");
-            KoreCentralLog.AddEntry("OneShot: _Process");
+//         // Read the manually included sets of assets
+//         bool loadModels = true;
+//         if (loadModels)
+//         {
+//             try
+//             {
+//                 KoreCentralLog.AddEntry("ModelImport // Stage 1: Load JSON files");
+//                 string jsonMilitary = KoreGodotFilesystemOps.ReadStringFromFile("res://Resources/Assets/MilitaryVehicles/Inventory.json");
+//                 string jsonCivilian = KoreGodotFilesystemOps.ReadStringFromFile("res://Resources/Assets/CivilianVehicles/Inventory.json");
+//                 string jsonPlaceholders = KoreGodotFilesystemOps.ReadStringFromFile("res://Resources/Assets/PlaceholderModels/Inventory.json");
+//                 // KoreGodotFactory.Instance.ModelLibrary.LoadJSONConfigFile(jsonMilitary);
+//                 // KoreGodotFactory.Instance.ModelLibrary.LoadJSONConfigFile(jsonCivilian);
+//                 // KoreGodotFactory.Instance.ModelLibrary.LoadJSONConfigFile(jsonPlaceholders);
 
-        }
+//                 // KoreCentralLog.AddEntry("ModelImport // Stage 2: Load Models");
+//                 // KoreGodotFactory.Instance.ModelLibrary.LoadModelToCache();
+//                 // KoreCentralLog.AddEntry("ModelImport // Done");
 
-        if (!OneShot_5Seconds)
-        {
-            if (KoreCentralTime.RuntimeIntSecs > 5)
-            {
-                OneShot_5Seconds = true;
-                KoreCentralLog.AddEntry("OneShot_5Seconds: _Process");
-                GD.Print("OneShot_5Seconds: _Process");
+//             }
+//             catch (Exception ex)
+//             {
+//                 KoreCentralLog.AddEntry("ModelImport // EXCEPTION: {ex.Message}");
+//             }
+//         }
 
-                // KoreGodotFactory.Instance.ModelLibrary.CheckModelLoad();
-                //var packedScene = GD.Load<PackedScene>("res://Scenes/TreeView.tscn");
-                var packedScene = GD.Load<PackedScene>("res://Scenes/ui_top.tscn");
+//         // bool DLCTesting = true;
 
-                // Instance it (turn PackedScene into a live node)
-                Control newNode = packedScene.Instantiate<Control>();
+//         // if (DLCTesting)
+//         // {
+//         //     //GloDlcOperations.CreateDlc();
 
-                // Add it to the current node (or wherever you want)
-                AddChild(newNode);
+//         //     List<string> dlcList = GloDlcOperations.ListLoadableDlcPaths();
 
-            }
-        }
+//         //     foreach (string dlc in dlcList)
+//         //         GloDlcOperations.LoadDlc(dlc);
 
-        // trigger every 5 seconds
-        if (KoreCentralTime.RuntimeIntSecs > Timer5Sec)
-        {
-            Timer5Sec = KoreCentralTime.RuntimeIntSecs + 5;
+//         //     KoreCentralLog.AddEntry( GloDlcOperations.DlcReport() );
 
-            // Randomize the zero point in each run so we don't bake-in assumptions.
-            // double randomLat = 50;  //GloValueUtils.RandomInRange(45, 60);
-            // double randomLon = -2;  //GloValueUtils.RandomInRange(-8, -0);
+//         //     // Find the JSON files in each DLC and report on them
+//         //     List<string> dlcTitlesList = GloDlcOperations.ListLoadedDlcTitles();
+//         //     foreach (string currDlcTitle in dlcTitlesList)
+//         //     {
+//         //         string invJson = GloDlcOperations.InventoryJsonForDLCTitle(currDlcTitle);
+//         //         KoreCentralLog.AddEntry($"DLC: {currDlcTitle} JSON: {invJson}");
+//         //     }
 
-            // GloZeroNode.SetZeroNodePosition(randomLat, randomLon);
+//         //     string invJson2 = GloDlcOperations.InventoryJsonForDLCTitle("PlaceholderModels");
+//         //     KoreGodotFactory.Instance.ModelLibrary.LoadJSONConfigFile(invJson2);
 
-            // KoreGodotFactory.Instance.ModelLibrary.CheckModelLoad();
+//         //     string invJson3 = GloDlcOperations.InventoryJsonForDLCTitle("MilitaryVehicles");
+//         //     KoreGodotFactory.Instance.ModelLibrary.LoadJSONConfigFile(invJson3);
+
+//         //     KoreCentralLog.AddEntry( KoreGodotFactory.Instance.ModelLibrary.ReportContent() );
+//         // }
+//     }
 
 
-        }
-    }
-}
+//     // Called every frame. 'delta' is the elapsed time since the previous frame.
+//     public override void _Process(double delta)
+//     {
+//         if (!OneShot)
+//         {
+//             OneShot = true;
+//             GD.Print("OneShot: _Process");
+//             KoreCentralLog.AddEntry("OneShot: _Process");
+
+//         }
+
+//         if (!OneShot_5Seconds)
+//         {
+//             if (KoreCentralTime.RuntimeIntSecs > 5)
+//             {
+//                 OneShot_5Seconds = true;
+//                 KoreCentralLog.AddEntry("OneShot_5Seconds: _Process");
+//                 GD.Print("OneShot_5Seconds: _Process");
+
+//                 // KoreGodotFactory.Instance.ModelLibrary.CheckModelLoad();
+//                 //var packedScene = GD.Load<PackedScene>("res://Scenes/TreeView.tscn");
+//                 var packedScene = GD.Load<PackedScene>("res://Scenes/ui_top.tscn");
+
+//                 // Instance it (turn PackedScene into a live node)
+//                 Control newNode = packedScene.Instantiate<Control>();
+
+//                 // Add it to the current node (or wherever you want)
+//                 AddChild(newNode);
+
+//             }
+//         }
+
+//         // trigger every 5 seconds
+//         if (KoreCentralTime.RuntimeIntSecs > Timer5Sec)
+//         {
+//             Timer5Sec = KoreCentralTime.RuntimeIntSecs + 5;
+
+//             // Randomize the zero point in each run so we don't bake-in assumptions.
+//             // double randomLat = 50;  //GloValueUtils.RandomInRange(45, 60);
+//             // double randomLon = -2;  //GloValueUtils.RandomInRange(-8, -0);
+
+//             // GloZeroNode.SetZeroNodePosition(randomLat, randomLon);
+
+//             // KoreGodotFactory.Instance.ModelLibrary.CheckModelLoad();
+
+
+//         }
+//     }
+// }

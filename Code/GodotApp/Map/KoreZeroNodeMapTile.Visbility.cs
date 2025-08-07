@@ -118,7 +118,7 @@ public partial class KoreZeroNodeMapTile : Node3D
                 // UnprojectTileCorners();
 
 
-                
+
                 // GloZeroTileVisibilityStats newStats = new GloZeroTileVisibilityStats();
 
                 // if ((ActiveVisibility) && (ConstructionComplete))
@@ -130,12 +130,13 @@ public partial class KoreZeroNodeMapTile : Node3D
                 // }
 
                 // // Yield and delay for the next cycle
-                // await Task.Yield();
-                // await Task.Delay(200); // 200ms = 0.2s
+                await Task.Yield();
+                await Task.Delay(200); // 200ms = 0.2s
 
                 // // Check if 'this' object is still valid
                 // if (this == null)
                 //     liveTile = false;
+                
             }
         }
         catch (Exception e)
