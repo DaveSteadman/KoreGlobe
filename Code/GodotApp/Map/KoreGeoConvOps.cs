@@ -3,7 +3,7 @@ using Godot;
 using KoreCommon;
 using KoreSim;
 
-// KoreGeoConvOperations: Functions for converting between real-world values and the Godot GameEngine presentation.
+// KoreGeoConvOps: Functions for converting between real-world values and the Godot GameEngine presentation.
 // - Real world is in mainly SI units, with other accessor operations. The Godot World in is units of kilometers, to best suit the full world presentation.
 // - The Godot axis system does not match the ECEF orientatino of teh Z axis, so this will see inverting.
 
@@ -27,16 +27,22 @@ public struct KoreEntityV3
     public Vector3 VecNorth;
 }
 
-public static class KoreGeoConvOperations
+public static class KoreGeoConvOps
 {
     // --------------------------------------------------------------------------------------------
     // MARK: Distance Scaling
     // --------------------------------------------------------------------------------------------
 
+    // Define a reasonable "Up Distance" (Real World Meters) that still works when scales to the GE ranges.
+    public static double UpDistRwM       = 2 * KoreZeroOffset.GeToRwDistanceMultiplier;
+    public static double AheadDistGeM    = 2 * KoreZeroOffset.GeToRwDistanceMultiplier;
+
     private static double RwEarthRadiusM = KoreWorldConsts.EarthRadiusM; // Earth radius in meters
     private static double GeEarthRadius  = KoreZeroOffset.GeEarthRadius; // Earth radius in Game Engine units
 
     private static double ScaleMetersPerDisplayUnit = RwEarthRadiusM / GeEarthRadius;
+
+    // --------------------------------------------------------------------------------------------
 
     // routine to take a model elevation in meters, and ouput a scaled elevation in km, in propoortion
     // to the current presentation range KoreZeroOffset.GeEarthRadius.
@@ -51,7 +57,7 @@ public static class KoreGeoConvOperations
     // MARK: Bare Position - No Zero offsets
     // --------------------------------------------------------------------------------------------
 
-    // KoreGeoConvOperations.RwToGeStruct(pos);
+    // KoreGeoConvOps.RwToGeStruct(pos);
     public static Vector3 RwToGe(double radiusM, double latDegs, double lonDegs)
     {
         // Scale the radius
@@ -61,7 +67,7 @@ public static class KoreGeoConvOperations
         KoreLLAPoint llap = new KoreLLAPoint() { LatDegs = latDegs, LonDegs = lonDegs, RadiusM = radiusM };
         KoreXYZPoint p = llap.ToXYZ();
 
-        // Create a new vecotr3, with teh Z axis inverted as Godot needs.
+        // Create a new vector3, with the Z axis inverted as Godot needs.
         return new Vector3((float)p.X, (float)p.Y, (float)-p.Z);
     }
 
@@ -77,7 +83,7 @@ public static class KoreGeoConvOperations
     // 2 - We apply the real world earth centre offset (still all in XYZ)
     // 3 - We convert the XYZ into an LLA.
 
-    // KoreGeoConvOperations.GeToRw(pos);
+    // KoreGeoConvOps.GeToRw(pos);
     public static KoreLLAPoint GeToRw(Vector3 gePos)
     {
         // 1 - Scale the position back to real world
@@ -89,7 +95,7 @@ public static class KoreGeoConvOperations
         KoreXYZPoint rwOffset = new KoreXYZPoint(rwX, rwY, rwZ);
 
         // 2 - Apply the real world earth centre offset
-        KoreXYZPoint rwEarthCentrePos = KoreZeroOffset.RwZeroPointXYZ + rwOffset;
+        KoreXYZPoint rwEarthCentrePos = KoreZeroOffset.AppliedZeroPosXYZ + rwOffset;
 
         // 3 - Convert the XYZ into an LLA
         KoreLLAPoint llap = KoreLLAPoint.FromXYZ(rwEarthCentrePos);
@@ -101,7 +107,7 @@ public static class KoreGeoConvOperations
     // MARK: Bare Position - WITH Zero offsets
     // --------------------------------------------------------------------------------------------
 
-    // Usage: Vector3 v3Pos = KoreGeoConvOperations.RwToOffsetGe(pos);
+    // Usage: Vector3 v3Pos = KoreGeoConvOps.RwToOffsetGe(pos);
     public static Vector3 RwToOffsetGe(KoreLLAPoint pos)
     {
         //pos.RadiusM = ScaleElevation(pos.RadiusM);
@@ -119,11 +125,11 @@ public static class KoreGeoConvOperations
     // MARK: Position with Orientation
     // --------------------------------------------------------------------------------------------
 
-    // Usage: KorePosV3 posV3 = KoreGeoConvOperations.RwToGeStruct(Pos);
+    // Usage: KorePosV3 posV3 = KoreGeoConvOps.RwToGeStruct(Pos);
     public static KorePosV3 RwToGeStruct(KoreLLAPoint pos)
     {
         // Define the position and associated up direction for the label
-        KoreLLAPoint posAbove = new () { LatDegs = pos.LatDegs,     LonDegs = pos.LonDegs, AltMslM = pos.AltMslM + KoreZeroOffset.UpDistRwM};
+        KoreLLAPoint posAbove = new () { LatDegs = pos.LatDegs,     LonDegs = pos.LonDegs, AltMslM = pos.AltMslM + UpDistRwM};
         KoreLLAPoint posNorth = new () { LatDegs = pos.LatDegs + 1, LonDegs = pos.LonDegs, AltMslM = pos.AltMslM};
 
         // Define the aobsolye positions
@@ -149,16 +155,16 @@ public static class KoreGeoConvOperations
     // MARK: Position with Course and Orientation
     // --------------------------------------------------------------------------------------------
 
-    // Usage: KoreEntityV3 platformV3 = KoreGeoConvOperations.RealWorldToStruct(PlatformPos, PlatformCourse);
+    // Usage: KoreEntityV3 platformV3 = KoreGeoConvOps.RealWorldToStruct(PlatformPos, PlatformCourse);
 
     public static KoreEntityV3 RwToGeStruct(KoreLLAPoint pos, KoreCourse course)
     {
         // Define the position and associated up direction for the label
-        KoreLLAPoint posAbove = new KoreLLAPoint() { LatDegs = pos.LatDegs,     LonDegs = pos.LonDegs, AltMslM = pos.AltMslM + KoreZeroOffset.UpDistRwM};
+        KoreLLAPoint posAbove = new KoreLLAPoint() { LatDegs = pos.LatDegs,     LonDegs = pos.LonDegs, AltMslM = pos.AltMslM + UpDistRwM};
         KoreLLAPoint posNorth = new KoreLLAPoint() { LatDegs = pos.LatDegs + 1, LonDegs = pos.LonDegs, AltMslM = pos.AltMslM};
 
         // get the offset and ensure we have sufficient magnitude
-        KoreRangeBearing aheadCourse = new() { RangeM = KoreZeroOffset.AheadDistGeM, BearingDegs = course.HeadingDegs };
+        KoreRangeBearing aheadCourse = new() { RangeM = AheadDistGeM, BearingDegs = course.HeadingDegs };
         KoreLLAPoint posAhead = pos.PlusRangeBearing(aheadCourse);
 
         // Define the absolute positions
@@ -212,11 +218,11 @@ public static class KoreGeoConvOperations
         Vector3 v3Pos = KoreZeroOffset.GeZeroPointOffset(pos.ToXYZ());
 
         // Define the position and associated up direction for the label
-        KoreLLAPoint posAbove = new() { LatDegs = pos.LatDegs, LonDegs = pos.LonDegs, AltMslM = pos.AltMslM + KoreZeroOffset.UpDistRwM};
+        KoreLLAPoint posAbove = new() { LatDegs = pos.LatDegs, LonDegs = pos.LonDegs, AltMslM = pos.AltMslM + UpDistRwM};
         Vector3 v3PosAbove   = KoreZeroOffset.GeZeroPointOffset(posAbove.ToXYZ());
 
         // get the offset and ensure we have sufficient magnitude
-        KoreRangeBearing aheadCourse = new() { RangeM = KoreZeroOffset.AheadDistGeM, BearingDegs = HeadingDegs };
+        KoreRangeBearing aheadCourse = new() { RangeM = AheadDistGeM, BearingDegs = HeadingDegs };
         KoreLLAPoint posAhead = pos.PlusRangeBearing(aheadCourse);
         Vector3 v3PosAhead = KoreZeroOffset.GeZeroPointOffset(posAhead.ToXYZ());
 
@@ -291,13 +297,13 @@ public static class KoreGeoConvOperations
 
     // --------------------------------------------------------------------------------------------
 
-    // Usage: KoreEntityV3 platformV3 = KoreGeoConvOperations.RwToGeStruct(currPos, futurePos);
+    // Usage: KoreEntityV3 platformV3 = KoreGeoConvOps.RwToGeStruct(currPos, futurePos);
 
     public static KoreEntityV3 RwToGeStruct(KoreLLAPoint frompos, KoreLLAPoint topos)
     {
         // Define the position and associated up direction for the label
         KoreLLAPoint posAbove = frompos;
-        posAbove.AltMslM += KoreZeroOffset.UpDistRwM;
+        posAbove.AltMslM += UpDistRwM;
 
         // Define the position and associated up direction for the label
         KoreLLAPoint posNorth = frompos;

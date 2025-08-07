@@ -92,6 +92,9 @@ public partial class KoreZeroNodeMapManager : Node3D
         // Initialise the Manager node itself
         Name = "ZeroNodeMapManager";
         //CreateLvl0Tiles();
+
+        GodotMeshPrimitives.AddChildDebugSphere(this, 0.1f, KoreColorPalette.Colors["DarkBlue"]);
+
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.

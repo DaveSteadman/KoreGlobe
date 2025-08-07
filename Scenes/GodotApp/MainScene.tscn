@@ -177,6 +177,7 @@ mesh = SubResource("SphereMesh_8ju71")
 
 [node name="MeshInstance3D-Plane" type="MeshInstance3D" parent="."]
 transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, -1.001, 0)
+visible = false
 mesh = SubResource("PlaneMesh_hpc76")
 surface_material_override/0 = SubResource("StandardMaterial3D_tr2i4")
 

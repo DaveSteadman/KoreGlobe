@@ -56,6 +56,10 @@ public partial class MainScene : Node3D
 
         KoreGodotMainSceneFactory.SetupNodes(this);
         KoreGodotMainSceneFactory.AddDebugNodes();
+
+        KoreLLAPoint myPoint = KorePositionLibrary.GetLLAPos("London");
+        KoreZeroOffset.SetLLA(myPoint); // Set the zero point to London
+
     }
 
     public override void _Process(double delta)

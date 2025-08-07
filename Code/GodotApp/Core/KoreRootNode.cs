@@ -56,7 +56,7 @@ public partial class KoreRootNode : Node3D
         KoreGodotFactory.Instance.CreateObjects(this);
 
         // Default the zero point.
-        KoreZeroNode.SetZeroNodePosition(45, 0);
+        // KoreZeroNode.SetZeroNodePosition(45, 0);
 
         // Debug report the world consts
         KoreZeroOffset.ReportConsts();

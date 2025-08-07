@@ -80,7 +80,7 @@ public partial class KoreZeroNodeWorldPos : Node3D
     //         return;
     //     }
 
-    //      KoreEntityV3 entityVecs =  KoreGeoConvOperations.RwToGeStruct(( KoreLLAPoint)pos, ( KoreCourse)course);
+    //      KoreEntityV3 entityVecs =  KoreGeoConvOps.RwToGeStruct(( KoreLLAPoint)pos, ( KoreCourse)course);
 
     //     //GD.Print($"Name: {EntityName} PosLLA:{pos} Ahead:{entityVecs.PosAhead} up:{entityVecs.VecUp}");
 

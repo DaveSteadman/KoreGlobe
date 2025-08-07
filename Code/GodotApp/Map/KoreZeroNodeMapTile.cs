@@ -180,9 +180,11 @@ public partial class KoreZeroNodeMapTile : Node3D
         {
             // If the tile is fully created, and we're in a cycle where the aero offset has moved, update the tile position.
             // Note that tile orientation is never changed, this is setup during the tile creation.
-            if (KoreZeroNode.ZeroNodeUpdateCycle)
+            if (KoreZeroOffset.IsPosChangeCycle)
+            {
                 LocateTile();
-
+            }
+            
             // Slow the tile visibility processing down to a manageable pace
             if (UIUpdateTimer < KoreCentralTime.RuntimeSecs)
             {
@@ -307,8 +309,11 @@ public partial class KoreZeroNodeMapTile : Node3D
 
     private void LocateTile()
     {
+        
+        GD.Print($"Locating Tile: {TileCode} - {RwTileCenterLLA}");
+        
         // Set the local position from the parent object
-        Vector3 newPos = KoreGeoConvOperations.RwToOffsetGe(RwTileCenterLLA);
+        Vector3 newPos = KoreGeoConvOps.RwToOffsetGe(RwTileCenterLLA);
 
         // Set the local position from the parent object
         var transform    = GlobalTransform;
