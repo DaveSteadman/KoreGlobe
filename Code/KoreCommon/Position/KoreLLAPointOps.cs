@@ -20,7 +20,7 @@ public static class KoreLLAPointOps
 
         double latDegs = fromPoint.LatDegs + (toPoint.LatDegs - fromPoint.LatDegs) * fraction;
         double lonDegs = fromPoint.LonDegs + (toPoint.LonDegs - fromPoint.LonDegs) * fraction;
-        double alt     = fromPoint.AltMslM + (toPoint.AltMslM - fromPoint.AltMslM) * fraction;
+        double alt = fromPoint.AltMslM + (toPoint.AltMslM - fromPoint.AltMslM) * fraction;
 
         return new KoreLLAPoint() { LatDegs = latDegs, LonDegs = lonDegs, AltMslM = alt };
     }
@@ -96,7 +96,7 @@ public static class KoreLLAPointOps
     public static KoreLLAPoint StraightLineInterpolation(KoreLLAPoint fromPoint, KoreLLAPoint toPoint, double fraction)
     {
         KoreXYZPoint fromXYZ = fromPoint.ToXYZ();
-        KoreXYZPoint toXYZ   = toPoint.ToXYZ();
+        KoreXYZPoint toXYZ = toPoint.ToXYZ();
         KoreXYZPoint interpXYZ = KoreXYZPointOps.Lerp(fromXYZ, toXYZ, fraction);
 
         return KoreLLAPoint.FromXYZ(interpXYZ);
@@ -134,4 +134,81 @@ public static class KoreLLAPointOps
 
         return new KoreLLAPoint() { LatDegs = newLatDegs, LonDegs = newLonDegs, AltMslM = newAlt };
     }
+
+    // --------------------------------------------------------------------------------------------
+    // MARK: Pos + Aim
+    // --------------------------------------------------------------------------------------------
+
+    public enum MoveDirection { Forward, Backward, Left, Right, Up, Down }
+
+    // Move the LLA point in the specified direction, with UP being the normal to the surface at the current LLA for a spherical earth.
+    
+    public static KoreLLAPoint MoveWithAim(KoreLLAPoint currentPos, KoreAzEl aim, MoveDirection direction, double distanceM)
+    {
+        // --- Local frame at currentPos (spherical Earth, matches ToXYZ basis) ---
+        double lat = currentPos.LatRads;
+        double lon = currentPos.LonRads;
+
+        // Up  (surface normal, unit)
+        KoreXYZVector up    = new KoreXYZVector(Math.Cos(lat) * Math.Cos(lon),
+                                                Math.Sin(lat),
+                                                Math.Cos(lat) * Math.Sin(lon)).Normalize();
+
+        // East (unit)
+        KoreXYZVector east  = new KoreXYZVector(-Math.Sin(lon),
+                                                0.0,
+                                                Math.Cos(lon)); // already unit
+
+        // North (unit)
+        KoreXYZVector north = new KoreXYZVector(-Math.Sin(lat) * Math.Cos(lon),
+                                                Math.Cos(lat),
+                                                -Math.Sin(lat) * Math.Sin(lon)).Normalize();
+
+        // Yaw-only forward on tangent plane
+        double yaw          = aim.AzRads;
+        KoreXYZVector fFlat = (north * Math.Cos(yaw)) + (east * Math.Sin(yaw));
+        fFlat               = fFlat.Normalize();
+
+        // Full forward with pitch (elevation relative to horizon)
+        double pitch        = aim.ElRads;
+        KoreXYZVector fwd   = (fFlat * Math.Cos(pitch)) + (up * Math.Sin(pitch));
+        fwd                 = fwd.Normalize();
+
+        // Right (strafe) = fFlat × Up
+        KoreXYZVector right = KoreXYZVector.CrossProduct(fFlat, up).Normalize();
+
+        // Choose movement direction
+        KoreXYZVector dir   = direction switch
+        {
+            MoveDirection.Forward  =>  fwd,
+            MoveDirection.Backward =>  fwd.Invert(),
+            MoveDirection.Left     =>  right.Invert(),
+            MoveDirection.Right    =>  right,
+            MoveDirection.Up       =>  up,
+            MoveDirection.Down     =>  up.Invert(),
+            _                      =>  KoreXYZVector.Zero
+        };
+
+        // Step in XYZ
+        KoreXYZPoint  currPt = currentPos.ToXYZ();
+        KoreXYZVector curr   = new KoreXYZVector(currPt);
+        KoreXYZVector step   = dir * distanceM;
+        KoreXYZVector moved  = curr + step;
+
+        // Keep radius for strafes (and F/B when pitch ≈ 0) so you stay on the same altitude
+        bool keepRadius =
+            direction == MoveDirection.Left  ||
+            direction == MoveDirection.Right ||
+            ((direction == MoveDirection.Forward || direction == MoveDirection.Backward) && Math.Abs(pitch) < 1e-6);
+
+        if (keepRadius)
+            moved.Magnitude = currentPos.RadiusM;   // project back to original radius
+
+        // Convert back to LLA
+        KoreXYZPoint  newPt  = new KoreXYZPoint(moved.X, moved.Y, moved.Z);
+        return KoreLLAPoint.FromXYZ(newPt);
+    }
+
+    
+
 }

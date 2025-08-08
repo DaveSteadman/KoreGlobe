@@ -29,33 +29,6 @@ public partial class KoreWorldPosNode : Node3D
         {
             UpdateOffsetPosition();
         }
-
-        // if (Timer1Hz < GloCentralTime.RuntimeSecs)
-        // {
-        //     Timer1Hz = GloCentralTime.RuntimeSecs + 1.0f;
-
-        //     UpdateRwPosition();
-        //     ApplySmoothAttitude();
-
-        // if (ChaseCam.IsCurrent())
-        // {
-        //     // Get the Camera Polar Offset - flip the azimuth so we create the LLA correctly.
-        //     GloAzElRange camPO = ChaseCam.RwCamOffset;
-
-        //     // Get the platform heading and add the camera offset to get the chase cam LLA
-        //     //GloLLAPoint? pos    = GloAppFactory.Instance.EventDriver.GetPlatformPosition(EntityName);
-        //     GloCourse? course = GloAppFactory.Instance.EventDriver.PlatformCurrCourse(EntityName);
-
-        //     if (course != null)
-        //         camPO.AzDegs += course?.HeadingDegs ?? 0.0;
-
-        //     GloLLAPoint chaseCamLLA  = CurrentPosition.PlusPolarOffset(camPO);
-
-        //     KoreZeroNodeMapManager.SetLoadRefLLA(chaseCamLLA);
-
-        //     string strCamLLA = chaseCamLLA.ToString();
-        //     GD.Print($"Camera LLA: Lat:{chaseCamLLA.LatDegs:F6} Lon:{chaseCamLLA.LonDegs:F6} Alt:{chaseCamLLA.AltMslM:F2}");
-        // }
     }
 
     // --------------------------------------------------------------------------------------------
