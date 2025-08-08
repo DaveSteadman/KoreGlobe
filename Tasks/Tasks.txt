@@ -1,8 +1,13 @@
 Tasks:
 
-- Get the whole Lvl0 tiles loaded
-- get the worldcam re-instated
-    - Have a root world mover class everything can build off of
-    
-- Add a debug marker / label for all of the cities?
+- Fine tune the camera movement:
+    - Slow down at lower altitudes
+    - Don't intersect terrain
+    - maybe a better forwards control
 
+- Background task:
+    - Determine distance to tile
+    - determine vertical and horizontal angles the tile presents, and thus an estimated area.
+    - determine an angle to the tile based from the camera position and direction.
+    
+    - Create a score of draw priority and resolution.

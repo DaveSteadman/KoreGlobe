@@ -20,8 +20,8 @@ public static class KoreZeroOffset
     public static bool ZeroPosChangePending = false; // KoreZeroOffset.ZeroPosChangePending
 
     // APPLIED values
-    private static KoreLLAPoint AppliedZeroPosLLA = KoreLLAPoint.Zero;
-    public  static KoreXYZPoint AppliedZeroPosXYZ = KoreXYZPoint.Zero;
+    public static KoreLLAPoint AppliedZeroPosLLA = KoreLLAPoint.Zero;
+    public static KoreXYZPoint AppliedZeroPosXYZ = KoreXYZPoint.Zero;
 
 
     public static bool IsPosChangeCycle = false; // KoreZeroOffset.IsPosChangeCycle

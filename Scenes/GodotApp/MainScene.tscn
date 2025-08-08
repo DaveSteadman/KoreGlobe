@@ -1,9 +1,8 @@
-[gd_scene load_steps=26 format=3 uid="uid://ced7xhu6jah7w"]
+[gd_scene load_steps=25 format=3 uid="uid://ced7xhu6jah7w"]
 
 [ext_resource type="Script" uid="uid://374o2dbtf0tj" path="res://Code/GodotApp/SceneController/MainScene/MainScene.cs" id="1_hpc76"]
 [ext_resource type="Script" uid="uid://v2mfrrw8pmol" path="res://Code/GodotCommon/KoreGodot2DDrawTest.cs" id="2_nhkr4"]
 [ext_resource type="Texture2D" uid="uid://btpgdc0gdsy2w" path="res://icon.svg" id="3_7rqgy"]
-[ext_resource type="Script" uid="uid://dnm0k4ouq5leb" path="res://Code/GodotApp/Mover/KoreWorldMoverNode.cs" id="4_gayab"]
 [ext_resource type="Script" uid="uid://dpja4yagks5ee" path="res://Code/GodotCommon/MoveNode/KoreMoveNode3D.cs" id="5_4b75m"]
 [ext_resource type="Script" uid="uid://cj15d45iisbx5" path="res://Code/GodotCommon/MoveNode/KoreOrbitNode3D.cs" id="6_8ju71"]
 [ext_resource type="Texture2D" uid="uid://bup7pyvbwofc8" path="res://Resources/AUsVQ.png" id="7_q68mp"]
@@ -74,14 +73,6 @@ script = ExtResource("2_nhkr4")
 [node name="SpriteNode" type="Sprite2D" parent="CanvasLayer/Node2D"]
 position = Vector2(146, 156)
 texture = ExtResource("3_7rqgy")
-
-[node name="CameraMount" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5)
-script = ExtResource("4_gayab")
-
-[node name="Camera3D" type="Camera3D" parent="CameraMount"]
-transform = Transform3D(1, -1.4901161e-08, 0, 1.4901161e-08, 1, 0, 2.9802322e-08, 0, 1, 0, 0, 0)
-fov = 50.0
 
 [node name="Lights" type="Node3D" parent="."]
 top_level = true

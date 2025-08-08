@@ -15,6 +15,9 @@ public partial class MainScene : Node3D
     private float UITimer = 0.0f;
     private float UITimerInterval = 0.1f; // 100ms
 
+    private float UISlowTimer = 0.0f;
+    private float UISlowTimerInterval = 2.5f; 
+
     // ---------------------------------------------------------------------------------------------
     // MARK: Node3D
     // ---------------------------------------------------------------------------------------------
@@ -75,6 +78,11 @@ public partial class MainScene : Node3D
             worldPosNodes.Add(node);
             KoreGodotMainSceneFactory.ZeroNode?.AddChild(node);
         }
+
+
+        // Add the camera mount and camera
+        KoreGodotMainSceneFactory.AddWorldCamera();
+
     }
 
     public override void _Process(double delta)
@@ -89,6 +97,21 @@ public partial class MainScene : Node3D
 
             // Update the current viewport size
             UpdateCurrentViewportSize();
+        }
+
+        if (UISlowTimer < KoreCentralTime.RuntimeSecs)
+        {
+            UISlowTimer = KoreCentralTime.RuntimeSecs + UISlowTimerInterval;
+
+            // move the zero point a fraction of the way to the camera LLA
+            KoreLLAPoint cameraLLA = KoreGodotMainSceneFactory.WorldCameraMount?.CurrLLA ?? KoreLLAPoint.Zero;
+            KoreLLAPoint zeroPosLLA = KoreZeroOffset.AppliedZeroPosLLA;
+            
+            // Lerp 10% of the way to the camera position, but fix the alt at 0
+            KoreLLAPoint newZeroPos = KoreLLAPointOps.GreatCircleInterpolation(zeroPosLLA, cameraLLA, 0.1);
+            newZeroPos.AltMslM = 0;
+
+            KoreZeroOffset.SetLLA(newZeroPos);
         }
     }
 

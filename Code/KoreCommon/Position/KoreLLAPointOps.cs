@@ -104,6 +104,7 @@ public static class KoreLLAPointOps
 
     // --------------------------------------------------------------------------------------------
 
+    // Usage: KoreLLAPoint result = KoreLLAPointOps.GreatCircleInterpolation(pointA, pointB, 0.5);
     public static KoreLLAPoint GreatCircleInterpolation(KoreLLAPoint fromPoint, KoreLLAPoint toPoint, double fraction)
     {
         // Convert latitude and longitude from degrees to radians
