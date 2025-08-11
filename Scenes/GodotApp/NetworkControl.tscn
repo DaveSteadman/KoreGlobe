@@ -1,0 +1,122 @@
+[gd_scene load_steps=3 format=3 uid="uid://ctnkhk3x3djpq"]
+
+[ext_resource type="Script" uid="uid://pg0lpl8q806o" path="res://Code/GodotApp/SceneController/NetworkSettings/KoreNetworkSettingsWindow.cs" id="1_th0bm"]
+[ext_resource type="Theme" uid="uid://bpi0wron7m0gq" path="res://Themes/Buttons/BlueButton.tres" id="1_v2jqt"]
+
+[node name="Control" type="Window"]
+oversampling_override = 1.0
+title = "Network Settings"
+initial_position = 2
+size = Vector2i(700, 440)
+script = ExtResource("1_th0bm")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+anchors_preset = -1
+anchor_right = 1.0
+offset_bottom = 355.0
+grow_horizontal = 2
+size_flags_vertical = 0
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_constants/separation = 5
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="TCPServerAddressLabel" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer2"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "TCP Server Address:"
+horizontal_alignment = 2
+
+[node name="TCPServerAddressEdit" type="LineEdit" parent="MarginContainer/VBoxContainer/HBoxContainer2"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+placeholder_text = "123.456.789.123"
+
+[node name="TCPServerPortLabel" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer2"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+text = "Port:"
+horizontal_alignment = 2
+
+[node name="TCPServerPortEdit" type="LineEdit" parent="MarginContainer/VBoxContainer/HBoxContainer2"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+placeholder_text = "99999"
+
+[node name="ServerConnectButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer2"]
+custom_minimum_size = Vector2(120, 50)
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("1_v2jqt")
+text = "Connect"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="TCPClientAddressLabel" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "TCP Client Address:"
+horizontal_alignment = 2
+
+[node name="TCPClientAddressEdit" type="LineEdit" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+placeholder_text = "123.456.789.123"
+
+[node name="TCPClientPortLabel" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+text = "Port:"
+horizontal_alignment = 2
+
+[node name="TCPClientPortEdit" type="LineEdit" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+placeholder_text = "99999"
+
+[node name="ClientConnectButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(120, 50)
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("1_v2jqt")
+text = "Connect"
+
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="TextEdit" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 200)
+layout_mode = 2
+placeholder_text = "Network Status"
+editable = false
+
+[node name="HSeparator3" type="HSeparator" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="MaintainConnectionsCheckBox" type="CheckBox" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Maintain Connections"
+
+[node name="HSeparator2" type="HSeparator" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_direction = 3
+layout_mode = 2
+
+[node name="CloseButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer3"]
+custom_minimum_size = Vector2(120, 50)
+layout_mode = 2
+focus_mode = 0
+text = "Close"

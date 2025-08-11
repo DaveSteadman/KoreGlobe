@@ -1,8 +1,15 @@
 
-Tasks:
-======
-- Create a record of visibility/child tile control metrics, updated in background as used in
-  _process to trigger the creation of new tiles.
+
+Immeditate Task:
+================
+
+- Draw the tile edges
+
+
+Short Term Todo List:
+=====================
+
+- Create a record of visibility/child tile control metrics, updated in background as used in _process to trigger the creation of new tiles.
 
 - Fine tune the camera movement:
     - Slow down at lower altitudes
@@ -14,6 +21,58 @@ Tasks:
     - determine vertical and horizontal angles the tile presents, and thus an estimated area.
     - determine an angle to the tile based from the camera position and direction.
     
-    - Create a score of draw priority and resolution.
+    - Create a distance-resolution score of draw priority and resolution, that we can judge against. ie (anything above 50, add the child tiles or next LOD)
+`
 
-- Draw the tile edges
+- At least add and display a child 
+    - Make sure the core mechanics of it are working okay
+
+
+
+Tasks:
+======
+
+3D Models:
+    - Get the loading running again
+        - Improve the scaling, maybe in a loader scene with rulers etc.
+        - Load dummy elements to check for awkward presentatino cases.
+
+Networking:
+    - Get a dummy program from KoreSim injecting JSON messages
+    - Network config window
+
+- Display entities
+    - New scene/window to show loaded entities and basic movement attributes.
+
+Bugs:
+=====
+
+Tile Longitude:
+- Something wrong with the longitude calculations of a tile.
+
+
+
+Future Ideas:
+=============
+- OSM Data: 
+    - https://github.com/OsmSharp/core
+
+
+
+Comparable Apps/Frameworks:
+===========================
+- Google Maps
+
+- Google Earth
+
+- KDE Marble
+    https://marble.kde.org/
+
+- Caesium
+
+
+
+
+
+
+

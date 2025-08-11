@@ -18,7 +18,7 @@ public static class KoreGodotMainSceneFactory
     public static Node3D?                 MainSceneRootNode { get; private set; } = null;
     public static KoreZeroNodeMapManager? MapManagerNode    { get; private set; } = null;
     public static KoreZeroNode?           ZeroNode          { get; private set; } = null; // KoreGodotMainSceneFactory.ZeroNode
-    public static KoreWorldMoverNode?     WorldCameraMount  { get; private set; } = null;
+    public static KoreWorldMoverNode2?    WorldCameraMount  { get; private set; } = null;
 
     // KoreGodotMainSceneFactory.ViewSize.LatestValue = new KoreXYRect(0, 0, 800, 600);
     // KoreXYRect currViewSize = KoreGodotMainSceneFactory.ViewSize.LatestValue();
@@ -60,7 +60,7 @@ public static class KoreGodotMainSceneFactory
         camera.Fov = 35f;
 
         // Create the camera mount
-        WorldCameraMount = new KoreWorldMoverNode();
+        WorldCameraMount = new KoreWorldMoverNode2();
         WorldCameraMount.Name = "CameraMount";
         WorldCameraMount.AddChild(camera);
         ZeroNode?.AddChild(WorldCameraMount);

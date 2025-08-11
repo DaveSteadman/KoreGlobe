@@ -83,6 +83,8 @@ public partial class KoreZeroNodeMapTile : Node3D
                 LoadTileEleArr();
             }
 
+
+            TileEleData[0, 0] = 10000f;
             // // Pause the thread, being a good citizen with lots of tasks around.
             // await Task.Yield();
 

@@ -37,7 +37,9 @@ public partial class KoreZeroNodeMapTile : Node3D
         int pointCountLon = TileEleData.Width;
         int pointCountLat = TileEleData.Height;
         List<double> lonZeroListRads = KoreValueUtils.CreateRangeList(pointCountLon, RwTileLLBox.HalfDeltaLonRads, -RwTileLLBox.HalfDeltaLonRads); // Relative azimuth
-        List<double> latListRads = KoreValueUtils.CreateRangeList(pointCountLat, RwTileLLBox.MaxLatRads, RwTileLLBox.MinLatRads);
+        List<double> latListRads     = KoreValueUtils.CreateRangeList(pointCountLat, RwTileLLBox.MaxLatRads, RwTileLLBox.MinLatRads);
+
+        // NOTE: The ranges mean the [0,0] is TOP LEFT
 
         // Simplicity: Create 2 x 2D arrays for the top and bottom of the tile. We'll only use the edges of the bottom.
         v3Data       = new KoreXYZVector[pointCountLon, pointCountLat];
@@ -62,6 +64,14 @@ public partial class KoreZeroNodeMapTile : Node3D
                 KoreXYZPoint rwXYZPointPos = rwLLAPointPos.ToXYZ();
                 KoreXYZVector rwXYZCenterOffset = rwXYZZeroLonCenter.XYZTo(rwXYZPointPos);
 
+                // GD Print the tilecode and LLA of the TL point
+                if (ix == 0 && jy == 0)
+                {
+                    GD.Print($"KoreZeroNodeMapTile: {TileCode} // ele: {ele:F2} / TL LLA: {rwLLAPointPos}");
+                }
+
+
+
                 rwXYZCenterOffset = rwXYZCenterOffset.Scale(KoreZeroOffset.RwToGeDistanceMultiplier);
 
                 // Convert the Real-World position to the Game Engine position.
@@ -73,7 +83,11 @@ public partial class KoreZeroNodeMapTile : Node3D
                     KoreLLAPoint rwLLABottomPos = new KoreLLAPoint() { LatRads = latRads, LonRads = lonRads, AltMslM = -1000 };
                     KoreXYZPoint rwXYZBottomPos = rwLLABottomPos.ToXYZ();
                     KoreXYZVector rwXYZBottomOffset = rwXYZZeroLonCenter.XYZTo(rwXYZBottomPos);
+
+                    v3DataBottom[ix, jy] = rwXYZBottomOffset;
                 }
+                else
+                    v3DataBottom[ix, jy] = KoreXYZVector.Zero; // No bottom point for the middle of the tile.
             }
         }
 
@@ -134,7 +148,7 @@ public partial class KoreZeroNodeMapTile : Node3D
         // Create the game-engine mesh from the V3s
         KoreMeshData meshData = new();
 
-        KoreUVBox uvBox = new KoreUVBox(0, 0, 1, 1);
+        KoreUVBox uvBox = new KoreUVBox(new KoreXYPoint(0, 0), new KoreXYPoint(1, 1));
 
         meshData = KoreMeshDataPrimitives.Surface(v3Data, uvBox);
 
@@ -177,7 +191,8 @@ public partial class KoreZeroNodeMapTile : Node3D
         double minUvX = UVBox.MinX;
         double maxUvX = UVBox.MaxX;
 
-        // left edge - get the top and bottom lists of points
+        // LEFT EDGE - Increasing Y-index top to bottom of top
+        // get the top and bottom lists of points
         List<KoreXYZVector> leftUpperPoints = new List<KoreXYZVector>();
         List<KoreXYVector> leftLowerUVs = new List<KoreXYVector>();
         for (int y = 0; y < v3Data.GetLength(1); y++)
@@ -193,6 +208,9 @@ public partial class KoreZeroNodeMapTile : Node3D
             leftLowerPoints.Add(v3DataBottom[0, y]);
             leftUpperUVs.Add(new KoreXYVector(minUvX, minUvY + (y / (double)v3DataBottom.GetLength(1)) * (maxUvY - minUvY)));
         }
+        
+        // 
+        
         // To visualise travelling down the ribbon, with visble tiles upwards, upper points are on the left
         KoreMeshData leftRibbonMesh = KoreMeshDataPrimitives.Ribbon(
             leftUpperPoints, leftUpperUVs,
@@ -201,6 +219,7 @@ public partial class KoreZeroNodeMapTile : Node3D
 
     }
 
+    // --------------------------------------------------------------------------------------------
 
     // Turn the elevation data into a 2D array of Vector3s, which we can then use to create a mesh.
 

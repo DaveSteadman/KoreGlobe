@@ -11,13 +11,13 @@ namespace KoreCommon;
 
 public static partial class KoreMeshDataPrimitives
 {
-    // Usage: var cubeMesh = KoreMeshDataPrimitives.BasicCube(1.0f, new KoreColorRGB(255, 0, 0));
+    // Usage: var cubeMesh = KoreMeshDataPrimitives.Surface(1.0f, new KoreColorRGB(255, 0, 0));
     public static KoreMeshData Surface(KoreXYZVector[,] vertices, KoreUVBox uvBox)
     {
         var mesh = new KoreMeshData();
         
         // Basic setup, dimensions and UVs
-        int width = vertices.GetLength(0);
+        int width  = vertices.GetLength(0);
         int height = vertices.GetLength(1);
         KoreXYVector[,] uvGrid = uvBox.GetUVGrid(width, height);
 

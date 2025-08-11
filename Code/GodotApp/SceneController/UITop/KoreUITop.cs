@@ -1,6 +1,7 @@
 using System;
 
 using Godot;
+using KoreCommon;
 
 #nullable enable
 
@@ -11,6 +12,12 @@ public partial class KoreUITop : Control
 {   
     private Button?          CliButton = null;
     private KoreUICLIWindow? CliWindow = null;
+    
+    private Button?          NetworkButton = null;
+    private KoreNetworkSettingsWindow? KoreNetworkSettingsWindow = null;
+
+    private float UIEventTimer = 0.0f;
+    private float UIEventTimerInterval = 0.1f;
 
     // ---------------------------------------------------------------------------------------------
     // MARK: Node Functions
@@ -25,7 +32,13 @@ public partial class KoreUITop : Control
 
     public override void _Process(double delta)
     {
-        UpdateCLIStates();
+        if (UIEventTimer < KoreCentralTime.RuntimeSecs)
+        {
+            UIEventTimer = KoreCentralTime.RuntimeSecs + UIEventTimerInterval;
+
+            UpdateCLIStates();
+            UpdateNetworkWindowStates();
+        }
     }
 
     // ----------------------------------------------------------------------------------------------
@@ -37,7 +50,11 @@ public partial class KoreUITop : Control
         CliButton = (Button)FindChild("CLIButton");
         if (CliButton == null) GD.PrintErr("KoreUITop: CliButton node not found.");
 
+        NetworkButton = (Button)FindChild("NetworkButton");
+        if (NetworkButton == null) GD.PrintErr("KoreUITop: NetworkButton node not found.");
+
         CliButton?.Connect("pressed", new Callable(this, "OnCliButtonPressed"));
+        NetworkButton?.Connect("pressed", new Callable(this, "OnNetworkButtonPressed"));
 
     }
 
@@ -65,6 +82,27 @@ public partial class KoreUITop : Control
 
     }
 
+    private void UpdateNetworkWindowStates()
+    {
+        if (KoreNetworkSettingsWindow != null)
+        {
+            // Disable the Network button if the Network Settings window is open
+            NetworkButton!.Disabled = true;
+
+            // If the window is valid and has it "Close Me" state set, clear it away and reset the states
+            if (KoreNetworkSettingsWindow != null && KoreNetworkSettingsWindow.ToClose)
+            {
+                KoreNetworkSettingsWindow.QueueFree(); // Clean up the Network Settings window
+                KoreNetworkSettingsWindow = null!; // Reset the reference
+                NetworkButton.Disabled = false; // Enable if the Network Settings window is closed
+            }
+        }
+        else
+        {
+            NetworkButton!.Disabled = false; // Enable if no Network Settings window is open
+        }
+    }
+
     // ----------------------------------------------------------------------------------------------
     // MARK: Actions
     // ----------------------------------------------------------------------------------------------
@@ -74,7 +112,6 @@ public partial class KoreUITop : Control
         GD.Print("KoreUITop: CLI Button Pressed");
 
         // Load the CLI window scene and display it
-        //var cliWindowScene = GD.Load<PackedScene>("res://Scenes/UITest.tscn");
         var cliWindowScene = GD.Load<PackedScene>("res://Scenes/GodotCommon/UICommandLineWindow.tscn");
         if (cliWindowScene == null)
         {
@@ -90,7 +127,36 @@ public partial class KoreUITop : Control
             return;
         }
         AddChild(CliWindow);
+        
+        UpdateCLIStates(); // Update the CLI states after adding the window
     }
+
+    private void OnNetworkButtonPressed()
+    {
+        GD.Print("KoreUITop: Network Button Pressed");
+
+        // Load the Network Settings window scene and display it
+        var networkWindowScene = GD.Load<PackedScene>("res://Scenes/GodotApp/NetworkControl.tscn");
+        if (networkWindowScene == null)
+        {
+            GD.PrintErr("KoreUITop: Failed to load KoreNetworkSettingsWindow scene.");
+            return;
+        }
+
+        // Instance the Network Settings window scene
+        var networkInstance = networkWindowScene.Instantiate();
+        KoreNetworkSettingsWindow = networkInstance as KoreNetworkSettingsWindow;
+        if (KoreNetworkSettingsWindow == null)
+        {
+            GD.PrintErr($"KoreUITop: Failed to cast instantiated scene to KoreNetworkSettingsWindow. Actual type: {networkInstance.GetType().Name}");
+            networkInstance?.QueueFree();
+            return;
+        }
+        AddChild(KoreNetworkSettingsWindow);
+
+        UpdateNetworkWindowStates(); // Update the Network window states after adding the window
+    }
+    
 
     private void OnCloseRequested()
     {
