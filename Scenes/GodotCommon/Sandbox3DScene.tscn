@@ -1,6 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://buqq7o2fp8vgm"]
+[gd_scene load_steps=8 format=3 uid="uid://buqq7o2fp8vgm"]
 
-[ext_resource type="Script" uid="uid://clnw1arvg2wlq" path="res://Code/GodotCommon/UserInput/KoreNodeMoverPlus.cs" id="1_1mhcm"]
+[ext_resource type="Script" uid="uid://b3ugf3exic1a2" path="res://Code/GodotCommon/SceneController/Sandbox3D/KoreSandbox3DScene.cs" id="1_8fiyk"]
+[ext_resource type="Theme" uid="uid://cjc7bspblebt3" path="res://Themes/Buttons/RedButton.tres" id="2_hlcvn"]
+[ext_resource type="Script" uid="uid://clnw1arvg2wlq" path="res://Code/GodotCommon/UserInput/KoreNodeMoverPlus.cs" id="3_s4y37"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_1dpv4"]
 
@@ -12,10 +14,33 @@
 
 [node name="SceneRoot" type="Node3D"]
 physics_interpolation_mode = 1
+script = ExtResource("1_8fiyk")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="CloseButton" type="Button" parent="MarginContainer"]
+custom_minimum_size = Vector2(120, 40)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+focus_mode = 0
+theme = ExtResource("2_hlcvn")
+text = "Exit"
 
 [node name="CameraMount" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5.991764)
-script = ExtResource("1_1mhcm")
+script = ExtResource("3_s4y37")
 
 [node name="Camera3D" type="Camera3D" parent="CameraMount"]
 fov = 38.8

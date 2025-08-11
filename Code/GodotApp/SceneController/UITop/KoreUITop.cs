@@ -16,6 +16,9 @@ public partial class KoreUITop : Control
     private Button?          NetworkButton = null;
     private KoreNetworkSettingsWindow? KoreNetworkSettingsWindow = null;
 
+    private Button?          DbgButton = null;
+    private KoreSandbox3DScene? Sandbox3DScene = null;
+
     private float UIEventTimer = 0.0f;
     private float UIEventTimerInterval = 0.1f;
 
@@ -55,6 +58,10 @@ public partial class KoreUITop : Control
 
         CliButton?.Connect("pressed", new Callable(this, "OnCliButtonPressed"));
         NetworkButton?.Connect("pressed", new Callable(this, "OnNetworkButtonPressed"));
+
+        DbgButton = (Button)FindChild("DbgButton");
+        if (DbgButton == null) GD.PrintErr("KoreUITop: DbgButton node not found.");
+        DbgButton?.Connect("pressed", new Callable(this, "OnDbgButtonPressed"));
 
     }
 
@@ -131,12 +138,14 @@ public partial class KoreUITop : Control
         UpdateCLIStates(); // Update the CLI states after adding the window
     }
 
+    // ----------------------------------------------------------------------------------------------
+
     private void OnNetworkButtonPressed()
     {
         GD.Print("KoreUITop: Network Button Pressed");
 
         // Load the Network Settings window scene and display it
-        var networkWindowScene = GD.Load<PackedScene>("res://Scenes/GodotApp/NetworkControl.tscn");
+        var networkWindowScene = GD.Load<PackedScene>("res://Scenes/GodotApp/NetworkControlWindow.tscn");
         if (networkWindowScene == null)
         {
             GD.PrintErr("KoreUITop: Failed to load KoreNetworkSettingsWindow scene.");
@@ -157,6 +166,36 @@ public partial class KoreUITop : Control
         UpdateNetworkWindowStates(); // Update the Network window states after adding the window
     }
     
+    // ----------------------------------------------------------------------------------------------
+
+    private void OnDbgButtonPressed()
+    {
+        GD.Print("KoreUITop: Dbg Button Pressed");
+
+        // Load the Test 3D scene and display it
+        var test3DScene = GD.Load<PackedScene>("res://Scenes/GodotCommon/Sandbox3DScene.tscn");
+        if (test3DScene == null)
+        {
+            GD.PrintErr("KoreUITop: Failed to load KoreSandbox3DScene.");
+            return;
+        }
+
+        // Instance the Test 3D scene
+        
+        
+        GetTree().ChangeSceneToPacked(test3DScene);
+    
+        
+        // Sandbox3DScene = test3DScene.Instantiate<KoreSandbox3DScene>();
+        // if (Sandbox3DScene == null)
+        // {
+        //     GD.PrintErr("KoreUITop: Failed to instantiate KoreSandbox3DScene.");
+        //     return;
+        // }
+        // AddChild(Sandbox3DScene);
+    }
+
+    // ----------------------------------------------------------------------------------------------
 
     private void OnCloseRequested()
     {

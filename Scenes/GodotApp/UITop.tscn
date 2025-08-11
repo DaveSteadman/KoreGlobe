@@ -39,7 +39,7 @@ custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 size_flags_horizontal = 0
 focus_mode = 0
-theme = ExtResource("2_emxrp")
+theme = ExtResource("3_761q3")
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 text = "CLI"
 
@@ -51,6 +51,15 @@ focus_mode = 0
 theme = ExtResource("3_761q3")
 icon = ExtResource("3_4h5jm")
 expand_icon = true
+
+[node name="DbgButton" type="Button" parent="UITopFrame/HeaderMarginFrame/HBoxContainer"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+size_flags_horizontal = 0
+focus_mode = 0
+theme = ExtResource("2_emxrp")
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+text = "DBG"
 
 [node name="BodyMarginFrame" type="HBoxContainer" parent="UITopFrame"]
 layout_mode = 2
