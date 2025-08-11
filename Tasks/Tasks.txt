@@ -1,8 +1,7 @@
+
 Tasks:
+======
+- Create a record of visibility/child tile control metrics, updated in background as used in
+  _process to trigger the creation of new tiles.
 
-- Get the whole Lvl0 tiles loaded
-- get the worldcam re-instated
-    - Have a root world mover class everything can build off of
-    
-- Add a debug marker / label for all of the cities?
-
+- Draw the tile edges

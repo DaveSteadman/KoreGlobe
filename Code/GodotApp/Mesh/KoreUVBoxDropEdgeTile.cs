@@ -15,6 +15,11 @@ public class KoreUVBoxDropEdgeTile
     public float BoxEdgeOffset { get; set; }
     public float BoxInsetOffset { get; set; }
 
+    public float MinX => TopLeft.X;
+    public float MaxX => BottomRight.X;
+    public float MinY => TopLeft.Y;
+    public float MaxY => BottomRight.Y;
+
     // The grid of UVs output for the tile, accomodating the drop-edge and insets
     private Vector2[,] UVGrid;
 

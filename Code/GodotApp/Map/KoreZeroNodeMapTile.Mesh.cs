@@ -67,13 +67,13 @@ public partial class KoreZeroNodeMapTile : Node3D
                 // Convert the Real-World position to the Game Engine position.
                 v3Data[ix, jy] = rwXYZCenterOffset;  // new KoreXYZVector(rwXYZPointPos);
 
-                // if (limitX || limitY) // Only do the edges, we don't use the middle.
-                // {
-                //     // Determine the tile position in the RW world, and then as an offset from the tile centre
-                //     KoreLLAPoint rwLLABottomPos = new KoreLLAPoint() { LatRads = latRads, LonRads = lonRads, AltMslM = -1000 };
-                //     KoreXYZPoint rwXYZBottomPos = rwLLABottomPos.ToXYZ();
-                //     KoreXYZVector rwXYZBottomOffset = rwXYZZeroLonCenter.XYZTo(rwXYZBottomPos);
-                // }
+                if (limitX || limitY) // Only do the edges, we don't use the middle.
+                {
+                    // Determine the tile position in the RW world, and then as an offset from the tile centre
+                    KoreLLAPoint rwLLABottomPos = new KoreLLAPoint() { LatRads = latRads, LonRads = lonRads, AltMslM = -1000 };
+                    KoreXYZPoint rwXYZBottomPos = rwLLABottomPos.ToXYZ();
+                    KoreXYZVector rwXYZBottomOffset = rwXYZZeroLonCenter.XYZTo(rwXYZBottomPos);
+                }
             }
         }
 
@@ -163,8 +163,44 @@ public partial class KoreZeroNodeMapTile : Node3D
 
     }
 
-
     // --------------------------------------------------------------------------------------------
+
+    // Create ribbon meshes for the "drop tile edges", the skirt around the tile that prevents visible
+    // gaps between tiles.
+
+    // Assumes v3Data and v3DataBottom are suitably populated.
+
+    public void CreateTileDropEdge()
+    {
+        double minUvY = UVBox.MinY;
+        double maxUvY = UVBox.MaxY;
+        double minUvX = UVBox.MinX;
+        double maxUvX = UVBox.MaxX;
+
+        // left edge - get the top and bottom lists of points
+        List<KoreXYZVector> leftUpperPoints = new List<KoreXYZVector>();
+        List<KoreXYVector> leftLowerUVs = new List<KoreXYVector>();
+        for (int y = 0; y < v3Data.GetLength(1); y++)
+        {
+            leftUpperPoints.Add(v3Data[0, y]);
+            leftLowerUVs.Add(new KoreXYVector(minUvX, maxUvY - (y / (double)v3Data.GetLength(1)) * (maxUvY - minUvY)));
+        }
+
+        List<KoreXYZVector> leftLowerPoints = new List<KoreXYZVector>();
+        List<KoreXYVector> leftUpperUVs = new List<KoreXYVector>();
+        for (int y = 0; y < v3DataBottom.GetLength(1); y++)
+        {
+            leftLowerPoints.Add(v3DataBottom[0, y]);
+            leftUpperUVs.Add(new KoreXYVector(minUvX, minUvY + (y / (double)v3DataBottom.GetLength(1)) * (maxUvY - minUvY)));
+        }
+        // To visualise travelling down the ribbon, with visble tiles upwards, upper points are on the left
+        KoreMeshData leftRibbonMesh = KoreMeshDataPrimitives.Ribbon(
+            leftUpperPoints, leftUpperUVs,
+            leftLowerPoints, leftLowerUVs,
+            isClosed: false);
+
+    }
+
 
     // Turn the elevation data into a 2D array of Vector3s, which we can then use to create a mesh.
 
