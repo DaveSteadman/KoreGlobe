@@ -1,10 +1,17 @@
-[gd_scene load_steps=3 format=3 uid="uid://buqq7o2fp8vgm"]
+[gd_scene load_steps=6 format=3 uid="uid://buqq7o2fp8vgm"]
 
-[ext_resource type="Script" uid="uid://c2yeihvinnomw" path="res://Code/GodotCommon/UserInput/KoreNodeMoverPlus.cs" id="1_1mhcm"]
+[ext_resource type="Script" uid="uid://clnw1arvg2wlq" path="res://Code/GodotCommon/UserInput/KoreNodeMoverPlus.cs" id="1_1mhcm"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_1dpv4"]
 
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_6i22l"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_iflb7"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_0yqbw"]
+
 [node name="SceneRoot" type="Node3D"]
+physics_interpolation_mode = 1
 
 [node name="CameraMount" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5.991764)
@@ -14,8 +21,26 @@ script = ExtResource("1_1mhcm")
 fov = 38.8
 
 [node name="Mesh-Capsule" type="MeshInstance3D" parent="."]
+physics_interpolation_mode = 1
 mesh = SubResource("CapsuleMesh_1dpv4")
+
+[node name="RigidBody3D" type="RigidBody3D" parent="Mesh-Capsule"]
+physics_interpolation_mode = 1
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mesh-Capsule/RigidBody3D"]
+shape = SubResource("CapsuleShape3D_6i22l")
 
 [node name="OmniLight3D" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.107076, 4.5527387)
 omni_range = 9.460011
+
+[node name="MeshInstance3D-FloorBox" type="MeshInstance3D" parent="."]
+transform = Transform3D(10, 0, 0, 0, 1, 0, 0, 0, 10, 0, -3, 0)
+mesh = SubResource("BoxMesh_iflb7")
+skeleton = NodePath("StaticBody3D/CollisionShape3D")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D-FloorBox"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D-FloorBox/StaticBody3D"]
+transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, 0, 0, 0)
+shape = SubResource("BoxShape3D_0yqbw")

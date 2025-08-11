@@ -1,4 +1,8 @@
+
 Tasks:
+======
+- Create a record of visibility/child tile control metrics, updated in background as used in
+  _process to trigger the creation of new tiles.
 
 - Fine tune the camera movement:
     - Slow down at lower altitudes
@@ -11,3 +15,5 @@ Tasks:
     - determine an angle to the tile based from the camera position and direction.
     
     - Create a score of draw priority and resolution.
+
+- Draw the tile edges
