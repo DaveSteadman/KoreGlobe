@@ -207,6 +207,28 @@ public static partial class KoreMeshDataIO
     }
 
     // --------------------------------------------------------------------------------------------
+    // MARK: Material
+    // --------------------------------------------------------------------------------------------
+
+    private static void WriteMaterial(BinaryWriter bw, KoreMeshMaterial material)
+    {
+        bw.Write(material.Name);                     // Write name as string
+        WriteColor(bw, material.BaseColor);          // BaseColor already includes alpha
+        bw.Write((float)material.Metallic);
+        bw.Write((float)material.Roughness);
+    }
+
+    private static KoreMeshMaterial ReadMaterial(BinaryReader br)
+    {
+        string name = br.ReadString();               // Read name
+        KoreColorRGB baseColor = ReadColor(br);      // BaseColor already includes alpha
+        float metallic = br.ReadSingle();
+        float roughness = br.ReadSingle();
+        
+        return new KoreMeshMaterial(name, baseColor, metallic, roughness);
+    }
+
+    // --------------------------------------------------------------------------------------------
     // MARK: Color
     // --------------------------------------------------------------------------------------------
 

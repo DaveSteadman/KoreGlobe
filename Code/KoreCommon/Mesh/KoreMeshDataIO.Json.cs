@@ -49,7 +49,8 @@ public static partial class KoreMeshDataIO
                 new TriangleConverter(),
                 new LineConverter(),
                 new KoreMeshTriangleColourConverter(),
-                new KoreMeshLineColourConverter()
+                new KoreMeshLineColourConverter(),
+                new KoreMeshMaterialConverter()
             }
         };
         return JsonSerializer.Serialize(obj, options);
@@ -368,6 +369,58 @@ public static partial class KoreMeshDataIO
                 return new KoreMeshTriangleColour(triColor);
             }
             return new KoreMeshTriangleColour(KoreColorRGB.White);
+        }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    // MARK: MaterialConverter
+    // --------------------------------------------------------------------------------------------
+
+    private class KoreMeshMaterialConverter : JsonConverter<KoreMeshMaterial>
+    {
+        public override KoreMeshMaterial Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            using var doc = JsonDocument.ParseValue(ref reader);
+            return ReadMaterial(doc.RootElement);
+        }
+
+        public override void Write(Utf8JsonWriter writer, KoreMeshMaterial value, JsonSerializerOptions options)
+        {
+            // Format: "name: Gold, baseColor: #FFD700, metallic: 1.0, roughness: 0.1"
+            string baseColorHex = KoreColorIO.RBGtoHexStringShort(value.BaseColor);
+            writer.WriteStringValue($"name: {value.Name}, baseColor: {baseColorHex}, metallic: {value.Metallic:F1}, roughness: {value.Roughness:F1}");
+        }
+
+        public static KoreMeshMaterial ReadMaterial(JsonElement el)
+        {
+            string? str = el.GetString() ?? "";
+
+            if (!string.IsNullOrEmpty(str))
+            {
+                // Parse format: "name: Gold, baseColor: #FFD700, metallic: 1.0, roughness: 0.1"
+                var parts = str.Split(',');
+                if (parts.Length != 4) 
+                    throw new FormatException($"Invalid KoreMeshMaterial string format. Expected 4 parts but got {parts.Length}: {str}");
+
+                // Parse name
+                string namePart = parts[0].Split(':')[1].Trim();
+                
+                // Parse base color (includes alpha)
+                string baseColorPart = parts[1].Split(':')[1].Trim();
+                KoreColorRGB baseColor = KoreColorIO.HexStringToRGB(baseColorPart);
+
+                // Parse metallic
+                string metallicPart = parts[2].Split(':')[1].Trim();
+                float metallic = float.Parse(metallicPart);
+
+                // Parse roughness
+                string roughnessPart = parts[3].Split(':')[1].Trim();
+                float roughness = float.Parse(roughnessPart);
+
+                return new KoreMeshMaterial(namePart, baseColor, metallic, roughness);
+            }
+            
+            return KoreMeshMaterialPalette.GetMaterial("White");
         }
     }
 }
