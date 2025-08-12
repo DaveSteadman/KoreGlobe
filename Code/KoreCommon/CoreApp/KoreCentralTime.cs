@@ -24,11 +24,26 @@ public static class KoreCentralTime
     public static string TimeOfDayHHMMSSUTC => DateTime.UtcNow.ToString("HHmmss");
     public static string DateYYYYMMDDUTC => DateTime.UtcNow.ToString("yyyyMMdd");
     public static string TimestampUTC => $"{DateYYYYMMDDUTC}-{TimeOfDayHHMMSSUTC}";
-    
+
     public static string RuntimeStartTimestampUTC => $"{DateYYYYMMDDUTC}-{TimeOfDayHHMMSSUTC}"; // KoreCentralTime.RuntimeStartTimestampUTC
 
     // Local Time and Date
     public static string TimeOfDayHHMMSSLocal => DateTime.Now.ToString("HHmmss");
     public static string DateYYYYMMDDLocal => DateTime.Now.ToString("yyyyMMdd");
     public static string TimestampLocal => $"{DateYYYYMMDDLocal}-{TimeOfDayHHMMSSLocal}";
+
+    // --------------------------------------------------------------------------------------------
+    // MARK: Timer Helper
+    // --------------------------------------------------------------------------------------------
+
+    // Usage: if (KoreCentralTime.CheckTimer(ref UITimer, UITimerInterval)) { ... }
+    public static bool CheckTimer(ref float timer, float interval)
+    {
+        if (timer <= KoreCentralTime.RuntimeSecs)
+        {
+            timer = KoreCentralTime.RuntimeSecs + interval;
+            return true;
+        }
+        return false;
+    }
 }

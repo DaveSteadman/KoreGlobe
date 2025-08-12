@@ -17,7 +17,7 @@ public partial class KoreUITop : Control
     private KoreNetworkSettingsWindow? KoreNetworkSettingsWindow = null;
 
     private Button?          DbgButton = null;
-    private KoreSandbox3DScene? Sandbox3DScene = null;
+    private KoreSandbox3DWindow? Sandbox3DWindow = null;
 
     private float UIEventTimer = 0.0f;
     private float UIEventTimerInterval = 0.1f;
@@ -41,6 +41,7 @@ public partial class KoreUITop : Control
 
             UpdateCLIStates();
             UpdateNetworkWindowStates();
+            UpdateSandbox3DWindowStates();
         }
     }
 
@@ -110,6 +111,27 @@ public partial class KoreUITop : Control
         }
     }
 
+    private void UpdateSandbox3DWindowStates()
+    {
+        if (Sandbox3DWindow != null)
+        {
+            // Disable the Dbg button if the Sandbox 3D window is open
+            DbgButton!.Disabled = true;
+
+            // If the window is valid and has it "Close Me" state set, clear it away and reset the states
+            if (Sandbox3DWindow != null && Sandbox3DWindow.ToClose)
+            {
+                Sandbox3DWindow.QueueFree(); // Clean up the Sandbox 3D window
+                Sandbox3DWindow = null!; // Reset the reference
+                DbgButton.Disabled = false; // Enable if the Sandbox 3D window is closed
+            }
+        }
+        else
+        {
+            DbgButton!.Disabled = false; // Enable if no Sandbox 3D window is open
+        }
+    }
+
     // ----------------------------------------------------------------------------------------------
     // MARK: Actions
     // ----------------------------------------------------------------------------------------------
@@ -134,7 +156,7 @@ public partial class KoreUITop : Control
             return;
         }
         AddChild(CliWindow);
-        
+
         UpdateCLIStates(); // Update the CLI states after adding the window
     }
 
@@ -165,7 +187,7 @@ public partial class KoreUITop : Control
 
         UpdateNetworkWindowStates(); // Update the Network window states after adding the window
     }
-    
+
     // ----------------------------------------------------------------------------------------------
 
     private void OnDbgButtonPressed()
@@ -181,18 +203,20 @@ public partial class KoreUITop : Control
         }
 
         // Instance the Test 3D scene
-        
-        
-        GetTree().ChangeSceneToPacked(test3DScene);
-    
-        
-        // Sandbox3DScene = test3DScene.Instantiate<KoreSandbox3DScene>();
-        // if (Sandbox3DScene == null)
-        // {
-        //     GD.PrintErr("KoreUITop: Failed to instantiate KoreSandbox3DScene.");
-        //     return;
-        // }
-        // AddChild(Sandbox3DScene);
+
+
+        // GetTree().ChangeSceneToPacked(test3DScene);
+
+
+        Sandbox3DWindow = test3DScene.Instantiate<KoreSandbox3DWindow>();
+        if (Sandbox3DWindow == null)
+        {
+            GD.PrintErr("KoreUITop: Failed to instantiate KoreSandbox3DWindow.");
+            return;
+        }
+        AddChild(Sandbox3DWindow);
+
+        UpdateSandbox3DWindowStates();
     }
 
     // ----------------------------------------------------------------------------------------------

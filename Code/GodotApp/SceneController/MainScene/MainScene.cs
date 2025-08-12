@@ -91,18 +91,14 @@ public partial class MainScene : Node3D
         // You can use 'delta' to make frame-rate independent calculations.
         // GD.Print("Processing frame with delta: " + delta);
 
-        if (UITimer < KoreCentralTime.RuntimeSecs)
+        if (KoreCentralTime.CheckTimer(ref UITimer, UITimerInterval))
         {
-            UITimer = KoreCentralTime.RuntimeSecs + UITimerInterval;
-
             // Update the current viewport size
             UpdateCurrentViewportSize();
         }
 
-        if (UISlowTimer < KoreCentralTime.RuntimeSecs)
+        if (KoreCentralTime.CheckTimer(ref UISlowTimer, UISlowTimerInterval))
         {
-            UISlowTimer = KoreCentralTime.RuntimeSecs + UISlowTimerInterval;
-
             // move the zero point a fraction of the way to the camera LLA
             KoreLLAPoint cameraLLA = KoreGodotMainSceneFactory.WorldCameraMount?.CurrLLA ?? KoreLLAPoint.Zero;
             KoreLLAPoint zeroPosLLA = KoreZeroOffset.AppliedZeroPosLLA;

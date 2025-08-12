@@ -30,9 +30,8 @@ public partial class KoreZeroNodeWorldPos : Node3D
     {
         // UpdateEntityPosition();
 
-        if (Timer1Hz <  KoreCentralTime.RuntimeSecs)
+        if (KoreCentralTime.CheckTimer(ref Timer1Hz, 1.0f))
         {
-            Timer1Hz =  KoreCentralTime.RuntimeSecs + 1.0f;
             UpdateZeroNode();
         }
     }

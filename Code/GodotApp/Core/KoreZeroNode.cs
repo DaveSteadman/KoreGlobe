@@ -37,14 +37,11 @@ public partial class KoreZeroNode : Node3D
     public override void _Process(double delta)
     {
         // On a timer, or explicit trigger, assess the ZeroNode position.
-        if ((CheckTimer < KoreCentralTime.RuntimeSecs) || (UpdateTrigger))
+        if (KoreCentralTime.CheckTimer(ref CheckTimer, CheckTimerIntervalsSecs) || (UpdateTrigger))
         {
             // Clear any manual trigger (even if there is no position change).
             // Likely a camera of scene change requires a quicker update, this is the purpose of the trigger.
             UpdateTrigger = false;
-
-            // Update the timer.
-            CheckTimer = KoreCentralTime.RuntimeSecs + CheckTimerIntervalsSecs;
 
             // If the ZeroPosChangePending is set, apply the new position, with a deferred call to the end-of-frame.
             if (KoreZeroOffset.ZeroPosChangePending)
