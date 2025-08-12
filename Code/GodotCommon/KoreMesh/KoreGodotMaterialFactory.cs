@@ -46,6 +46,32 @@ public static class KoreGodotMaterialFactory
         return material;
     }
 
+
+    // // Function to create a flat-shaded material - proper lighting but uniform across each triangle
+    // // Each triangle face gets one lighting value, not interpolated across vertices
+    // // Usage: KoreGodotMaterialFactory.FlatShadedMaterial(new Color(0.8f, 0.2f, 0.2f));
+    // public static StandardMaterial3D FlatShadedMaterial(Color color)
+    // {
+    //     StandardMaterial3D material = new StandardMaterial3D();
+    //     material.AlbedoColor = color;
+    //     material.Roughness = 0.7f;
+    //     material.Metallic = 0.0f;
+
+    //     // Use per-vertex shading (not per-pixel) for flat appearance
+    //     // The key is to ensure each triangle has identical normals on all 3 vertices
+    //     material.ShadingMode = BaseMaterial3D.ShadingModeEnum.PerVertex;
+    //     material.SpecularMode = BaseMaterial3D.SpecularModeEnum.SchlickGgx;
+
+    //     // Standard opaque material settings
+    //     material.Transparency = BaseMaterial3D.TransparencyEnum.Disabled;
+    //     material.CullMode = BaseMaterial3D.CullModeEnum.Back;
+    //     material.NoDepthTest = false;
+    //     material.DepthDrawMode = BaseMaterial3D.DepthDrawModeEnum.OpaqueOnly;
+
+    //     return material;
+    // }
+
+
     // --------------------------------------------------------------------------------------------
 
     // Function to create a transparent colored material

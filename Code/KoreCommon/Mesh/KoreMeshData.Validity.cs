@@ -92,9 +92,9 @@ public partial class KoreMeshData
         return new KoreXYZBox(center, width, height, length);
     }
 
-    // -----------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     // MARK: Vertices
-    // -----------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
 
     // Create a list of all the point IDs that are used in lines or triangles, then remove any points that are not in that list.
 
@@ -147,14 +147,83 @@ public partial class KoreMeshData
 
     public void RemoveDuplicatePoints(double tolerance = KoreConsts.ArbitrarySmallDouble)
     {
-        // A nested loop through the vertices to find any two that are within the tolerance distance
+        // Create a mapping from duplicate point ID to canonical (first found) point ID
+        var remapping = new Dictionary<int, int>();
+        var processedVertices = new List<int>();
+
+        // Find duplicates by comparing each vertex with all previously processed vertices
         foreach (var kvp in Vertices)
         {
-            int i = kvp.Key;
-            KoreXYZVector v = kvp.Value;
+            int currentId = kvp.Key;
+            KoreXYZVector currentVertex = kvp.Value;
+            bool foundDuplicate = false;
 
+            // Check against all previously processed vertices
+            foreach (int earlierId in processedVertices)
+            {
+                KoreXYZVector earlierVertex = Vertices[earlierId];
+                
+                if (currentVertex.IsEqualTo(earlierVertex, tolerance))
+                {
+                    // Found a duplicate - map current ID to the earlier ID
+                    remapping[currentId] = earlierId;
+                    foundDuplicate = true;
+                    break;
+                }
+            }
 
+            // If not a duplicate, add to processed list
+            if (!foundDuplicate)
+            {
+                processedVertices.Add(currentId);
+            }
         }
+
+        // Update all references to use canonical vertex IDs
+        RemapVertexReferences(remapping);
+
+        // Remove the duplicate vertices
+        foreach (int duplicateId in remapping.Keys)
+        {
+            Vertices.Remove(duplicateId);
+            // Also remove associated data for the duplicate vertex
+            Normals.Remove(duplicateId);
+            UVs.Remove(duplicateId);
+            VertexColors.Remove(duplicateId);
+        }
+    }
+
+    // Helper method to update all vertex ID references in lines and triangles
+    private void RemapVertexReferences(Dictionary<int, int> remapping)
+    {
+        // Update line references
+        var updatedLines = new Dictionary<int, KoreMeshLine>();
+        foreach (var kvp in Lines)
+        {
+            int lineId = kvp.Key;
+            KoreMeshLine line = kvp.Value;
+            
+            int newA = remapping.ContainsKey(line.A) ? remapping[line.A] : line.A;
+            int newB = remapping.ContainsKey(line.B) ? remapping[line.B] : line.B;
+            
+            updatedLines[lineId] = new KoreMeshLine(newA, newB);
+        }
+        Lines = updatedLines;
+
+        // Update triangle references
+        var updatedTriangles = new Dictionary<int, KoreMeshTriangle>();
+        foreach (var kvp in Triangles)
+        {
+            int triangleId = kvp.Key;
+            KoreMeshTriangle triangle = kvp.Value;
+            
+            int newA = remapping.ContainsKey(triangle.A) ? remapping[triangle.A] : triangle.A;
+            int newB = remapping.ContainsKey(triangle.B) ? remapping[triangle.B] : triangle.B;
+            int newC = remapping.ContainsKey(triangle.C) ? remapping[triangle.C] : triangle.C;
+            
+            updatedTriangles[triangleId] = new KoreMeshTriangle(newA, newB, newC);
+        }
+        Triangles = updatedTriangles;
     }
 
     // --------------------------------------------------------------------------------------------

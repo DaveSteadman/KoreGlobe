@@ -65,6 +65,9 @@ public static partial class KoreMeshDataPrimitives
             mesh = KoreMeshData.BasicAppendMesh(mesh, p2CapMesh);
         }
 
+        // Calculate normals from triangles for proper lighting
+        mesh.SetNormalsFromTriangles();
+
         return mesh;
     }
 }

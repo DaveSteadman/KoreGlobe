@@ -37,6 +37,9 @@ public partial class KoreGodotSurfaceMesh : MeshInstance3D
 
     public void UpdateMesh(KoreMeshData newMeshData)
     {
+        // Ensure mesh data is complete and valid before processing
+        newMeshData.FullyPopulate();
+        
         _surfaceTool = new SurfaceTool();
 
         _surfaceTool.Clear();

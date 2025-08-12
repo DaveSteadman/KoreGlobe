@@ -91,6 +91,13 @@ public struct KoreXYZVector
                Math.Abs(Z) < KoreConsts.ArbitrarySmallDouble;
     }
 
+    public bool IsEqualTo(KoreXYZVector other, double tolerance = KoreConsts.ArbitrarySmallDouble)
+    {
+        return Math.Abs(X - other.X) < tolerance &&
+               Math.Abs(Y - other.Y) < tolerance &&
+               Math.Abs(Z - other.Z) < tolerance;
+    }
+
     // --------------------------------------------------------------------------------------------
 
     public KoreXYZVector XYZTo(KoreXYZVector remoteXYZ)

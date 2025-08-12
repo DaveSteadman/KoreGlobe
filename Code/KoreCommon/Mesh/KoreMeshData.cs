@@ -81,7 +81,6 @@ public partial class KoreMeshData
         this.TriangleColors = new Dictionary<int, KoreMeshTriangleColour>(mesh.TriangleColors);
     }
 
-
     // Initialises the mesh data with empty dictionaries
     public void ClearAllData()
     {
@@ -97,8 +96,6 @@ public partial class KoreMeshData
         NextLineId = 0;
         NextTriangleId = 0;
     }
-
-
 
     // --------------------------------------------------------------------------------------------
     // MARK: Points
@@ -236,7 +233,6 @@ public partial class KoreMeshData
         return AddLine(line.A, line.B, colStart, colEnd);
     }
 
-
     public int AddLine(KoreXYZVector start, KoreXYZVector end, KoreColorRGB colLine) => AddLine(start, end, colLine, colLine);
     
     public int AddLine(KoreXYZVector start, KoreXYZVector end, KoreColorRGB colStart, KoreColorRGB colEnd)
@@ -321,7 +317,6 @@ public partial class KoreMeshData
             AddLine(pointIds[i], pointIds[i + 1], colLine);
         }
     }
-
 
     // --------------------------------------------------------------------------------------------
     // MARK: Line Colors
@@ -497,11 +492,9 @@ public partial class KoreMeshData
 
     }
 
-
     // --------------------------------------------------------------------------------------------
     // MARK: Triangle Colors
     // --------------------------------------------------------------------------------------------
-
 
     public void SetTriangleColor(int triangleId, KoreColorRGB color)
     {

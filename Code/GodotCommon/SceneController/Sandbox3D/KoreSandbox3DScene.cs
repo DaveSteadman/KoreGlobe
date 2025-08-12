@@ -33,6 +33,7 @@ public partial class KoreSandbox3DScene : Node3D
         CreateTestMeshData_Surface();
         CreateTestMeshData_Lathe();
         CreateTestMeshData_Cylinder();
+        AddTestMeshData_BoxArc();
     }
 
     public override void _Process(double delta)
@@ -118,6 +119,7 @@ public partial class KoreSandbox3DScene : Node3D
     // MARK: SURFACE
     // ---------------------------------------------------------------------------------------------
 
+    // KoreSandbox3DScene.CreateTestMeshData_Surface
     private void CreateTestMeshData_Surface()
     {
         Node3D Surface1Node = new Node3D() { Name = "Surface1Node" };
@@ -157,8 +159,6 @@ public partial class KoreSandbox3DScene : Node3D
                 }
             }
 
-
-
             // Create surface
             KoreMeshData surfaceMesh1 = KoreMeshDataPrimitives.Surface(vertices, KoreUVBox.Full);
 
@@ -168,6 +168,10 @@ public partial class KoreSandbox3DScene : Node3D
             KoreGodotSurfaceMesh childSurfaceMeshNode1 = new KoreGodotSurfaceMesh();
             childSurfaceMeshNode1.UpdateMesh(surfaceMesh1);
 
+            // Set the surface material
+            var surfaceMaterial = KoreGodotMaterialFactory.StandardColoredMaterial(new Color(0.2f, 0.8f, 0.6f));
+            childSurfaceMeshNode1.MaterialOverride = surfaceMaterial;
+            
             Surface1Node.AddChild(childMeshNode1);
             Surface1Node.AddChild(childSurfaceMeshNode1);
 
@@ -176,7 +180,6 @@ public partial class KoreSandbox3DScene : Node3D
 
             GD.Print("kk");
         }
-
     }
     
     // ---------------------------------------------------------------------------------------------
@@ -189,7 +192,6 @@ public partial class KoreSandbox3DScene : Node3D
         Node3D latheNode = new Node3D() { Name = "latheNode" };
         AddChild(latheNode);
         latheNode.Position = new Vector3(0, 1.5f, 0);
-
 
         KoreXYZVector p1 = new KoreXYZVector(0, 0, 0);
         KoreXYZVector p2 = new KoreXYZVector(0, 1, 1);
@@ -222,7 +224,6 @@ public partial class KoreSandbox3DScene : Node3D
         latheNode.AddChild(childSurfaceMeshNode1);
 
         GD.Print("lathe done");
-
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -256,6 +257,40 @@ public partial class KoreSandbox3DScene : Node3D
 
         GD.Print("cylinder done");
     }
+    
+    // ---------------------------------------------------------------------------------------------
+    // MARK: BOX ARC
+    // ---------------------------------------------------------------------------------------------
 
+    public void AddTestMeshData_BoxArc()
+    {
+        // Function to add a test box arc mesh
+        Node3D BoxArcNode = new Node3D() { Name = "BoxArcNode" };
+        AddChild(BoxArcNode);
+        BoxArcNode.Position = new Vector3(0, 0, -3.6f);
+
+        // Test Box Arc Mesh
+        {
+            var boxArcMesh = KoreMeshDataPrimitives.BoxArc(
+                1.5f, 3.75f, // Inner and outer radius
+                13.0f, // Vertical angle in degrees
+                40.0f, 120.0f // Horizontal start and delta angles in degrees
+            );
+
+            KoreGodotLineMesh childMeshNode1 = new KoreGodotLineMesh();
+            childMeshNode1.UpdateMesh(boxArcMesh);
+
+            KoreGodotSurfaceMesh childSurfaceMeshNode1 = new KoreGodotSurfaceMesh();
+            childSurfaceMeshNode1.UpdateMesh(boxArcMesh);
+
+            // Use a different color to distinguish from lathe
+            var surfaceMaterial = KoreGodotMaterialFactory.StandardColoredMaterial(new Color(0.3f, 0.3f, 0.8f));
+            childSurfaceMeshNode1.MaterialOverride = surfaceMaterial;
+
+
+            BoxArcNode.AddChild(childMeshNode1);
+            BoxArcNode.AddChild(childSurfaceMeshNode1);
+        }
+    }
     
 }

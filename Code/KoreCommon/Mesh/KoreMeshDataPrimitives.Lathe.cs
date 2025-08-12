@@ -58,30 +58,45 @@ public static partial class KoreMeshDataPrimitives
             }
         }
         
-        // Create triangles and lines connecting the grid
+        // Create ribbons for each band between adjacent profile points
+        // This gives us accurate normals without cross-contamination between bands
         for (int i = 0; i < profile.Count - 1; i++)
         {
+            // Create the left and right circles for this band
+            var leftCircle = new List<KoreXYZVector>();
+            var rightCircle = new List<KoreXYZVector>();
+            var leftUVs = new List<KoreXYVector>();
+            var rightUVs = new List<KoreXYVector>();
+            
+            var currentProfile = profile[i];
+            var nextProfile = profile[i + 1];
+            
             for (int j = 0; j < numSegments; j++)
             {
-                int nextJ = (j + 1) % numSegments; // Wrap around
+                // Current profile points (left side of ribbon)
+                leftCircle.Add(mesh.Vertices[vertexGrid[i, j]]);
+                leftUVs.Add(new KoreXYVector((double)j / numSegments, currentProfile.Fraction));
                 
-                // Get the four corner vertices of this quad
-                int v00 = vertexGrid[i, j];         // current profile, current segment
-                int v01 = vertexGrid[i, nextJ];     // current profile, next segment
-                int v10 = vertexGrid[i + 1, j];     // next profile, current segment
-                int v11 = vertexGrid[i + 1, nextJ]; // next profile, next segment
-                
-                // Create two triangles for the quad with their wireframe edges
-                // Fix triangle winding for outward-facing normals
-                var wireframeColor = new KoreColorRGB(255, 255, 255);
-                mesh.AddTriangleWithEdges(v00, v10, v01, null, wireframeColor);  // Counter-clockwise from outside
-                mesh.AddTriangleWithEdges(v01, v10, v11, null, wireframeColor);  // Counter-clockwise from outside
-                
-                // Note: The AddTriangleWithEdges method automatically handles:
-                // - Triangle creation
-                // - Edge line creation with duplicate checking
-                // - Proper wireframe without crossing diagonals
+                // Next profile points (right side of ribbon)
+                rightCircle.Add(mesh.Vertices[vertexGrid[i + 1, j]]);
+                rightUVs.Add(new KoreXYVector((double)j / numSegments, nextProfile.Fraction));
             }
+            
+            // Create ribbon for this band
+            KoreMeshData bandMesh = Ribbon(leftCircle, leftUVs, rightCircle, rightUVs, true);
+            
+            // Add wireframe lines for this band
+            var wireframeColor = new KoreColorRGB(255, 255, 255);
+            foreach (var lineKvp in bandMesh.Lines)
+            {
+                var line = lineKvp.Value;
+                var startPos = bandMesh.Vertices[line.A];
+                var endPos = bandMesh.Vertices[line.B];
+                mesh.AddLine(startPos, endPos, wireframeColor);
+            }
+            
+            // Append the band mesh to the main mesh
+            mesh = KoreMeshData.BasicAppendMesh(mesh, bandMesh);
         }
         
         // Add end caps if first or last radius > 0
@@ -114,6 +129,9 @@ public static partial class KoreMeshDataPrimitives
                 mesh = KoreMeshData.BasicAppendMesh(mesh, topCap);
             }
         }
+        
+        // Note: Normals are already calculated by each individual ribbon
+        // No need for SetNormalsFromTriangles() as each band has its own accurate normals
         
         return mesh;
     }
