@@ -374,6 +374,42 @@ public partial class KoreMeshData
         return AddTriangle(triangle.A, triangle.B, triangle.C, color);
     }
 
+    // Add a triangle using existing vertex IDs and also add its wireframe edges
+    public int AddTriangleWithEdges(int vertexIdA, int vertexIdB, int vertexIdC, KoreColorRGB? triangleColor = null, KoreColorRGB? lineColor = null)
+    {
+        // Add the triangle
+        int triangleId = AddTriangle(vertexIdA, vertexIdB, vertexIdC, triangleColor);
+
+        // Add the edge lines if line color is specified (with duplicate checking)
+        if (lineColor.HasValue)
+        {
+            AddLineIfNotExists(vertexIdA, vertexIdB, lineColor.Value);
+            AddLineIfNotExists(vertexIdB, vertexIdC, lineColor.Value);
+            AddLineIfNotExists(vertexIdC, vertexIdA, lineColor.Value);
+        }
+
+        return triangleId;
+    }
+
+    // Helper method to add a line only if it doesn't already exist
+    private int AddLineIfNotExists(int vertexIdA, int vertexIdB, KoreColorRGB lineColor)
+    {
+        // Check if line already exists (in either direction)
+        var targetLine1 = new KoreMeshLine(vertexIdA, vertexIdB);
+        var targetLine2 = new KoreMeshLine(vertexIdB, vertexIdA);
+        
+        foreach (var kvp in Lines)
+        {
+            if (kvp.Value.Equals(targetLine1) || kvp.Value.Equals(targetLine2))
+            {
+                return kvp.Key; // Return existing line ID
+            }
+        }
+        
+        // Line doesn't exist, create it
+        return AddLine(vertexIdA, vertexIdB, lineColor);
+    }
+
     // Add a completely independent triangle with vertices and optional color.
     public int AddTriangle(KoreXYZVector a, KoreXYZVector b, KoreXYZVector c, KoreColorRGB? linecolor = null, KoreColorRGB? fillColor = null)
     {

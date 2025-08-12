@@ -31,6 +31,8 @@ public partial class KoreSandbox3DScene : Node3D
         GD.Print("KoreSandbox3DScene _Ready");
         CreateTestMeshData_Box();
         CreateTestMeshData_Surface();
+        CreateTestMeshData_Lathe();
+        CreateTestMeshData_Cylinder();
     }
 
     public override void _Process(double delta)
@@ -130,9 +132,9 @@ public partial class KoreSandbox3DScene : Node3D
             KoreXYZVector[,] vertices = new KoreXYZVector[eleSize, eleSize];
 
             // Create a 3D sinewave pattern in the eleArray
-            for (int i = 0; i<eleSize; i++)
+            for (int i = 0; i < eleSize; i++)
             {
-                for (int j = 0; j<eleSize; j++)
+                for (int j = 0; j < eleSize; j++)
                 {
                     eleArray[i, j] = Math.Sin((double)i / (eleSize - 1) * Math.PI * 2) * Math.Cos((double)j / (eleSize - 1) * Math.PI * 2);
                 }
@@ -155,11 +157,11 @@ public partial class KoreSandbox3DScene : Node3D
                 }
             }
 
-            
-            
+
+
             // Create surface
             KoreMeshData surfaceMesh1 = KoreMeshDataPrimitives.Surface(vertices, KoreUVBox.Full);
-            
+
             KoreGodotLineMesh childMeshNode1 = new KoreGodotLineMesh();
             childMeshNode1.UpdateMesh(surfaceMesh1);
 
@@ -168,12 +170,92 @@ public partial class KoreSandbox3DScene : Node3D
 
             Surface1Node.AddChild(childMeshNode1);
             Surface1Node.AddChild(childSurfaceMeshNode1);
-            
+
+            // Experiment in line visibility, fudging it a fraction higher.
             childMeshNode1.Position = new Vector3(0, 0.001f, 0);
 
             GD.Print("kk");
         }
 
     }
+    
+    // ---------------------------------------------------------------------------------------------
+    // MARK: LATHE
+    // ---------------------------------------------------------------------------------------------
+
+    private void CreateTestMeshData_Lathe()
+    {
+
+        Node3D latheNode = new Node3D() { Name = "latheNode" };
+        AddChild(latheNode);
+        latheNode.Position = new Vector3(0, 1.5f, 0);
+
+
+        KoreXYZVector p1 = new KoreXYZVector(0, 0, 0);
+        KoreXYZVector p2 = new KoreXYZVector(0, 1, 1);
+
+        List<LathePoint> lathePoints = new List<LathePoint>
+        {
+            new LathePoint(0, 0.5),
+            new LathePoint(0.1, 0.5),
+            new LathePoint(0.3, 0.2),
+            new LathePoint(0.7, 0.2),
+            new LathePoint(0.9, 0.5),
+            new LathePoint(1, 0.5)
+        };
+
+        // Lathe the cplex shape
+        KoreMeshData koreMeshData1 = KoreMeshDataPrimitives.Lathe(p1, p2, lathePoints, 12, true);
+
+
+        KoreGodotLineMesh childMeshNode1 = new KoreGodotLineMesh();
+        childMeshNode1.UpdateMesh(koreMeshData1);
+
+        KoreGodotSurfaceMesh childSurfaceMeshNode1 = new KoreGodotSurfaceMesh();
+        childSurfaceMeshNode1.UpdateMesh(koreMeshData1);
+
+        // define a material for the surface mesh
+        var surfaceMaterial = KoreGodotMaterialFactory.StandardColoredMaterial(new Color(0.2f, 0.8f, 0.5f));
+        childSurfaceMeshNode1.MaterialOverride = surfaceMaterial;
+
+        latheNode.AddChild(childMeshNode1);
+        latheNode.AddChild(childSurfaceMeshNode1);
+
+        GD.Print("lathe done");
+
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // MARK: CYLINDER
+    // ---------------------------------------------------------------------------------------------
+
+    private void CreateTestMeshData_Cylinder()
+    {
+        Node3D cylinderNode = new Node3D() { Name = "cylinderNode" };
+        AddChild(cylinderNode);
+        cylinderNode.Position = new Vector3(3, 1.5f, 0); // Position to the right of lathe
+
+        KoreXYZVector p1 = new KoreXYZVector(0, 0, 0);
+        KoreXYZVector p2 = new KoreXYZVector(0, 2, 0);
+
+        // Create a simple cylinder to test end cap winding
+        KoreMeshData koreMeshData = KoreMeshDataPrimitives.Cylinder(p1, p2, 0.5, 0.5, 12, true);
+
+        KoreGodotLineMesh childMeshNode = new KoreGodotLineMesh();
+        childMeshNode.UpdateMesh(koreMeshData);
+
+        KoreGodotSurfaceMesh childSurfaceMeshNode = new KoreGodotSurfaceMesh();
+        childSurfaceMeshNode.UpdateMesh(koreMeshData);
+
+        // Use a different color to distinguish from lathe
+        var surfaceMaterial = KoreGodotMaterialFactory.StandardColoredMaterial(new Color(0.8f, 0.3f, 0.1f));
+        childSurfaceMeshNode.MaterialOverride = surfaceMaterial;
+
+        cylinderNode.AddChild(childMeshNode);
+        cylinderNode.AddChild(childSurfaceMeshNode);
+
+        GD.Print("cylinder done");
+    }
+
     
 }

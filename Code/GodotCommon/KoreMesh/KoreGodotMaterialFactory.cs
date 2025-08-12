@@ -37,6 +37,12 @@ public static class KoreGodotMaterialFactory
         material.ShadingMode  = BaseMaterial3D.ShadingModeEnum.PerPixel;
         material.SpecularMode = BaseMaterial3D.SpecularModeEnum.SchlickGgx;
 
+        // Ensure material is completely opaque and properly culled
+        material.Transparency = BaseMaterial3D.TransparencyEnum.Disabled;
+        material.CullMode = BaseMaterial3D.CullModeEnum.Back;
+        material.NoDepthTest = false;
+        material.DepthDrawMode = BaseMaterial3D.DepthDrawModeEnum.OpaqueOnly;
+
         return material;
     }
 
