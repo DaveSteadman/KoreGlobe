@@ -1,0 +1,83 @@
+[gd_scene load_steps=7 format=3 uid="uid://b2crx7di7xstt"]
+
+[ext_resource type="Script" uid="uid://bsa7m2r1t33j1" path="res://Code/GodotCommon/SceneController/ModelEditWindow/ModelEditWindow.cs" id="1_1htfu"]
+[ext_resource type="Script" uid="uid://dd6epp0iyhyal" path="res://Code/GodotCommon/Util/KoreViewportAutosize.cs" id="2_4lgcs"]
+[ext_resource type="Theme" uid="uid://p1asdjvj8ece" path="res://Themes/Buttons/GreenButton.tres" id="2_nl10j"]
+[ext_resource type="Script" uid="uid://clnw1arvg2wlq" path="res://Code/GodotCommon/UserInput/KoreNodeMoverPlus.cs" id="2_rb2ut"]
+[ext_resource type="Theme" uid="uid://dmowlcnw0dkpk" path="res://Themes/Buttons/YellowButton.tres" id="3_rb2ut"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_4lgcs"]
+size = Vector2(10, 10)
+center_offset = Vector3(0, -1, 0)
+
+[node name="Control" type="Window"]
+oversampling_override = 1.0
+initial_position = 2
+size = Vector2i(1600, 1000)
+script = ExtResource("1_1htfu")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ModelViewport" type="SubViewport" parent="MarginContainer/HBoxContainer/SubViewportContainer"]
+handle_input_locally = false
+size = Vector2i(1000, 1000)
+render_target_update_mode = 4
+script = ExtResource("2_4lgcs")
+ViewportCustom3DScale = 0.8000000000029104
+
+[node name="MountRoot" type="Node3D" parent="MarginContainer/HBoxContainer/SubViewportContainer/ModelViewport"]
+
+[node name="CameraRoot" type="Node3D" parent="MarginContainer/HBoxContainer/SubViewportContainer/ModelViewport/MountRoot"]
+script = ExtResource("2_rb2ut")
+
+[node name="Camera3D" type="Camera3D" parent="MarginContainer/HBoxContainer/SubViewportContainer/ModelViewport/MountRoot/CameraRoot"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="MarginContainer/HBoxContainer/SubViewportContainer/ModelViewport/MountRoot"]
+mesh = SubResource("PlaneMesh_4lgcs")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="MarginContainer/HBoxContainer/SubViewportContainer/ModelViewport/MountRoot"]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 4.5748982, 0)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="MeshJsonEdit" type="CodeEdit" parent="MarginContainer/HBoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(600, 0)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="MeshToCodeButton" type="Button" parent="MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(150, 50)
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("2_nl10j")
+text = "Mesh To Code"
+
+[node name="CodeToMeshButton" type="Button" parent="MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(150, 50)
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("3_rb2ut")
+text = "Code To Mesh"

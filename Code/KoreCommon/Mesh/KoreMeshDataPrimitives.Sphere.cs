@@ -91,7 +91,7 @@ public static partial class KoreMeshDataPrimitives
     {
         KoreMeshData sphereMesh = BasicSphere((float)radius, color ?? KoreColorPalette.Colors["White"], numLatSegments);
 
-        sphereMesh.OffsetAllVertices(center);
+        KoreMeshDataEditOps.OffsetAllVertices(sphereMesh, center);
 
         return sphereMesh;
     }

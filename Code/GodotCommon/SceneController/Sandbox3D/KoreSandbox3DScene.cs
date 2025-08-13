@@ -217,7 +217,7 @@ public partial class KoreSandbox3DScene : Node3D
         childSurfaceMeshNode1.UpdateMesh(koreMeshData1);
 
         // define a material for the surface mesh
-        var surfaceMaterial = KoreGodotMaterialFactory.StandardColoredMaterial(new Color(0.2f, 0.8f, 0.5f));
+        var surfaceMaterial = KoreGodotMaterialFactory.TransparentColoredMaterial(new Color(0.2f, 0.8f, 0.5f, 0.95f));
         childSurfaceMeshNode1.MaterialOverride = surfaceMaterial;
 
         latheNode.AddChild(childMeshNode1);

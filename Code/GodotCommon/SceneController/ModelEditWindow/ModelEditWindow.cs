@@ -1,0 +1,109 @@
+using Godot;
+using System;
+
+using KoreCommon;
+using System.Collections.Generic;
+
+#nullable enable
+
+public partial class ModelEditWindow : Window
+{
+    // Sandbox3DScene.UIMount
+    public Button? CodeToMeshButton = null;
+    public Button? MeshToCodeButton = null;
+    public SubViewport? ModelViewport = null;
+    public Node3D? MountRoot = null;
+    public CodeEdit? MeshJsonEdit = null;
+
+    // UI Timers
+    private float UITimer = 0.0f;
+    private float UITimerInterval = 0.1f; // 100ms
+
+    private float UISlowTimer = 0.0f;
+    private float UISlowTimerInterval = 2.5f;
+
+    public bool ToClose { get; set; } = false;
+
+    private Button? CloseButton = null;
+
+    // --------------------------------------------------------------------------------------------
+    // MARK: Node3D
+    // --------------------------------------------------------------------------------------------
+
+    public override void _Ready()
+    {
+        GD.Print("ModelEditWindow _Ready");
+
+        // var sv = GetNode<SubViewport>("SubViewport");
+        // sv.OwnWorld3D = true;
+        // sv.World3D = new World3D();
+
+        AttachControls();
+    }
+
+    public override void _Process(double delta)
+    {
+        if (KoreCentralTime.CheckTimer(ref UITimer, UITimerInterval))
+        {
+            // UpdateUI();
+        }
+
+        if (KoreCentralTime.CheckTimer(ref UISlowTimer, UISlowTimerInterval))
+        {
+            // UpdateUISlow();
+        }
+    }
+
+
+
+
+    // --------------------------------------------------------------------------------------------
+    // MARK: Support
+    // --------------------------------------------------------------------------------------------
+
+    private void AttachControls()
+    {
+        CodeToMeshButton = (Button)FindChild("CodeToMeshButton");
+        if (CodeToMeshButton == null) GD.PrintErr("ModelEditWindow: CodeToMeshButton node not found.");
+
+        MeshToCodeButton = (Button)FindChild("MeshToCodeButton");
+        if (MeshToCodeButton == null) GD.PrintErr("ModelEditWindow: MeshToCodeButton node not found.");
+
+        ModelViewport = (SubViewport)FindChild("ModelViewport");
+        if (ModelViewport == null) GD.PrintErr("ModelEditWindow: ModelViewport node not found.");
+
+        MountRoot = (Node3D)FindChild("MountRoot");
+        if (MountRoot == null) GD.PrintErr("ModelEditWindow: MountRoot node not found.");
+        
+        MeshJsonEdit = (CodeEdit)FindChild("MeshJsonEdit");
+        if (MeshJsonEdit == null) GD.PrintErr("ModelEditWindow: MeshJsonEdit node not found.");
+
+        CodeToMeshButton?.Connect("pressed", new Callable(this, nameof(OnCodeToMeshRequested)));
+        MeshToCodeButton?.Connect("pressed", new Callable(this, nameof(OnMeshToCodeRequested)));
+
+        // Link up the X button to close the window
+        Connect("close_requested", new Callable(this, nameof(OnCloseRequested)));
+    }
+
+    private void OnCloseRequested()
+    {
+        GD.Print("KoreSandbox3DWindow: Close button pressed");
+        ToClose = true;
+        // QueueFree();
+    }
+
+    private void OnCodeToMeshRequested()
+    {
+        GD.Print("ModelEditWindow: Code to Mesh button pressed");
+        // Implement the logic to convert code to mesh
+    }
+
+    private void OnMeshToCodeRequested()
+    {
+        GD.Print("ModelEditWindow: Mesh to Code button pressed");
+        // Implement the logic to convert mesh to code
+
+        OutputInitialJSON();
+    }
+
+}

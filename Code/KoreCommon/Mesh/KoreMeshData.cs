@@ -18,15 +18,19 @@ public partial class KoreMeshData
 {
     // Vertices by unique ID
     public Dictionary<int, KoreXYZVector> Vertices = new();
+
     // Normals by vertex ID
     public Dictionary<int, KoreXYZVector> Normals = new();
+
     // UVs by vertex ID
     public Dictionary<int, KoreXYVector> UVs = new();
+
     // Vertex colors by vertex ID - for when the mesh is colored by vertex
     public Dictionary<int, KoreColorRGB> VertexColors = new();
 
     // Lines by unique ID, each referencing vertex IDs
     public Dictionary<int, KoreMeshLine> Lines = new();
+
     // Line colors by line ID
     public Dictionary<int, KoreMeshLineColour> LineColors = new();
 
@@ -40,8 +44,8 @@ public partial class KoreMeshData
     public Dictionary<string, KoreMeshTriangleGroup> NamedTriangleGroups = new(); // Tags for grouping triangles
 
     // Internal counters for unique IDs
-    private int NextVertexId = 0;
-    private int NextLineId = 0;
+    private int NextVertexId   = 0;
+    private int NextLineId     = 0;
     private int NextTriangleId = 0;
     private int NextMaterialId = 0;
 
@@ -129,6 +133,18 @@ public partial class KoreMeshData
     // MARK: Points
     // --------------------------------------------------------------------------------------------
 
+    public int AddVertex(KoreXYZVector vertex)
+    {
+        int id = NextVertexId++;
+        Vertices[id] = vertex;
+        return id;
+    }
+
+    public void SetVertex(int id, KoreXYZVector vertex)
+    {
+        Vertices[id] = vertex;
+    }
+
     // Add a vertex and return its ID
     public int AddVertex(KoreXYZVector vertex, KoreXYZVector? normal = null, KoreColorRGB? color = null, KoreXYVector? uv = null)
     {
@@ -142,15 +158,6 @@ public partial class KoreMeshData
         return id;
     }
 
-    public void SetVertex(int id, KoreXYZVector vertex)
-    {
-        // We want to throw here, because we have a unique ID concept and random new additions break this
-        if (!Vertices.ContainsKey(id))
-            throw new ArgumentOutOfRangeException(nameof(id), "Vertex ID is not found.");
-
-        Vertices[id] = vertex;
-    }
-
     // function to add a point from a serialised source (ie bypassing some of the id checks)
     public void AddFromData(int vertexId, KoreXYZVector vertex, KoreXYZVector? normal = null, KoreColorRGB? color = null, KoreXYVector? uv = null)
     {
@@ -159,26 +166,6 @@ public partial class KoreMeshData
         if (normal.HasValue) Normals[vertexId] = normal.Value;
         if (color.HasValue) VertexColors[vertexId] = color.Value;
         if (uv.HasValue) UVs[vertexId] = uv.Value;
-    }
-
-    // --------------------------------------------------------------------------------------------
-
-    public void OffsetVertex(int vertexId, KoreXYZVector offset)
-    {
-        // We want to throw here, because we have a unique ID concept and random new additions break this
-        if (!Vertices.ContainsKey(vertexId))
-            throw new ArgumentOutOfRangeException(nameof(vertexId), "Vertex ID is not found.");
-
-        // Offset the vertex by the given offset vector
-        Vertices[vertexId] = Vertices[vertexId] + offset;
-    }
-
-    public void OffsetAllVertices(KoreXYZVector offset)
-    {
-        foreach (var vertexId in Vertices.Keys)
-        {
-            OffsetVertex(vertexId, offset);
-        }
     }
 
     // --------------------------------------------------------------------------------------------

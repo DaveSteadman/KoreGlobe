@@ -28,13 +28,15 @@ public static partial class KoreMeshDataIO
     {
         var obj = new
         {
-            vertices        = mesh.Vertices,
-            lines           = mesh.Lines,
-            triangles       = mesh.Triangles,
-            normals         = mesh.Normals,
-            uvs             = mesh.UVs,
-            vertexColors    = mesh.VertexColors,
-            lineColors      = mesh.LineColors,
+            vertices             = mesh.Vertices,
+            lines                = mesh.Lines,
+            triangles            = mesh.Triangles,
+            normals              = mesh.Normals,
+            uvs                  = mesh.UVs,
+            vertexColors         = mesh.VertexColors,
+            lineColors           = mesh.LineColors,
+            materials            = mesh.Materials,
+            namedTriangleGroups  = mesh.NamedTriangleGroups
         };
 
         var options = new JsonSerializerOptions
@@ -48,7 +50,8 @@ public static partial class KoreMeshDataIO
                 new TriangleConverter(),
                 new LineConverter(),
                 new KoreMeshLineColourConverter(),
-                new KoreMeshMaterialConverter()
+                new KoreMeshMaterialConverter(),
+                new KoreMeshTriangleGroupConverter()
             }
         };
         return JsonSerializer.Serialize(obj, options);
@@ -113,6 +116,20 @@ public static partial class KoreMeshDataIO
         {
             foreach (var c in lineColorsProp.EnumerateObject())
                 mesh.LineColors[int.Parse(c.Name)] = KoreMeshLineColourConverter.ReadLineColour(c.Value);
+        }
+
+        // --- Materials ---
+        if (root.TryGetProperty("materials", out var materialsProp) && materialsProp.ValueKind == JsonValueKind.Object)
+        {
+            foreach (var m in materialsProp.EnumerateObject())
+                mesh.Materials[int.Parse(m.Name)] = KoreMeshMaterialConverter.ReadMaterial(m.Value);
+        }
+
+        // --- NamedTriangleGroups ---
+        if (root.TryGetProperty("namedTriangleGroups", out var groupsProp) && groupsProp.ValueKind == JsonValueKind.Object)
+        {
+            foreach (var g in groupsProp.EnumerateObject())
+                mesh.NamedTriangleGroups[g.Name] = KoreMeshTriangleGroupConverter.ReadTriangleGroup(g.Value);
         }
 
         return mesh;
@@ -371,6 +388,62 @@ public static partial class KoreMeshDataIO
             }
             
             return KoreMeshMaterialPalette.Find("White");
+        }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    // MARK: TriangleGroupConverter
+    // --------------------------------------------------------------------------------------------
+
+    private class KoreMeshTriangleGroupConverter : JsonConverter<KoreMeshTriangleGroup>
+    {
+        public override KoreMeshTriangleGroup Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            using var doc = JsonDocument.ParseValue(ref reader);
+            return ReadTriangleGroup(doc.RootElement);
+        }
+
+        public override void Write(Utf8JsonWriter writer, KoreMeshTriangleGroup value, JsonSerializerOptions options)
+        {
+            // Format: "materialId: 0, triangleIds: [1,2,3,4]"
+            string triangleIdsList = string.Join(",", value.TriangleIds);
+            writer.WriteStringValue($"materialId: {value.MaterialId}, triangleIds: [{triangleIdsList}]");
+        }
+
+        public static KoreMeshTriangleGroup ReadTriangleGroup(JsonElement el)
+        {
+            string? str = el.GetString() ?? "";
+
+            if (!string.IsNullOrEmpty(str))
+            {
+                // Parse format: "materialId: 0, triangleIds: [1,2,3,4]"
+                var parts = str.Split(',');
+                if (parts.Length < 2)
+                    throw new FormatException($"Invalid KoreMeshTriangleGroup string format. Expected at least 2 parts: {str}");
+
+                // Parse materialId
+                string materialIdPart = parts[0].Split(':')[1].Trim();
+                int materialId = int.Parse(materialIdPart);
+
+                // Parse triangleIds - everything after "triangleIds: [" and before "]"
+                string triangleIdsPart = str.Substring(str.IndexOf('[') + 1);
+                triangleIdsPart = triangleIdsPart.Substring(0, triangleIdsPart.LastIndexOf(']'));
+                
+                var triangleIds = new List<int>();
+                if (!string.IsNullOrWhiteSpace(triangleIdsPart))
+                {
+                    var idStrings = triangleIdsPart.Split(',');
+                    foreach (var idStr in idStrings)
+                    {
+                        if (int.TryParse(idStr.Trim(), out int id))
+                            triangleIds.Add(id);
+                    }
+                }
+
+                return new KoreMeshTriangleGroup(materialId, triangleIds);
+            }
+            
+            return new KoreMeshTriangleGroup(-1, new List<int>());
         }
     }
 }
