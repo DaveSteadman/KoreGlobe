@@ -12,17 +12,28 @@ public partial class ModelEditWindow
     // Create a basic model and output the JSON into the code edit control
     private void OutputInitialJSON()
     {
-        KoreMeshData meshData = KoreMeshDataPrimitives.BasicCube(0.5f, KoreMeshMaterialPalette.DefaultMaterial);
-
-        string jsonStr = KoreMeshDataIO.ToJson(meshData, dense: false);
+        string jsonStr = KoreMeshDataIO.ToJson(WindowMeshData, dense: false);
 
         // Output the JSON string to the code edit control
         MeshJsonEdit!.SetText(jsonStr);
 
         // Also visualize the points and lines in the 3D scene
-        DrawPoints(meshData);
-        DrawLines(meshData);
+        DrawPoints(WindowMeshData);
+        DrawLines(WindowMeshData);
     }
+
+    // Text the text and update the model
+    private void UpdateModelFromText()
+    {
+        if (MeshJsonEdit == null) return;
+
+        string jsonStr = MeshJsonEdit.GetText();
+        WindowMeshData = KoreMeshDataIO.FromJson(jsonStr);
+    }
+
+    // --------------------------------------------------------------------------------------------
+    // MARK: Point
+    // --------------------------------------------------------------------------------------------
 
     /// <summary>
     /// Add a single debug sphere at the specified position in the 3D scene
@@ -40,14 +51,14 @@ public partial class ModelEditWindow
 
         // Use yellow as default color
         var sphereColor = color ?? KoreColorPalette.Colors["Yellow"];
-        
+
         // Create a container node for this point
         Node3D pointNode = new Node3D() { Name = $"DebugPoint_{position.X:F2}_{position.Y:F2}_{position.Z:F2}" };
         pointNode.Position = position;
-        
+
         // Add the debug sphere to the point node
         GodotMeshPrimitives.AddChildDebugSphere(pointNode, radius, sphereColor);
-        
+
         // Add the point node to the mount root
         MountRoot.AddChild(pointNode);
     }
@@ -78,7 +89,7 @@ public partial class ModelEditWindow
             int vertexId = kvp.Key;
             KoreXYZVector vertexPos = kvp.Value;
             Vector3 godotPos = new Vector3((float)vertexPos.X, (float)vertexPos.Y, (float)vertexPos.Z);
-            
+
             MarkPoint(godotPos, radius, sphereColor);
         }
 
@@ -104,7 +115,7 @@ public partial class ModelEditWindow
     }
 
     // --------------------------------------------------------------------------------------------
-    // MARK: Line Visualization
+    // MARK: Line
     // --------------------------------------------------------------------------------------------
 
     /// <summary>
@@ -124,24 +135,24 @@ public partial class ModelEditWindow
 
         // Use orange as default color for lines
         var cylinderColor = color ?? KoreColorPalette.Colors["Orange"];
-        
+
         // Calculate line properties
         Vector3 direction = end - start;
         float length = direction.Length();
         Vector3 center = (start + end) * 0.5f;
-        
+
         // Create a container node for this line
         Node3D lineNode = new Node3D() { Name = $"DebugLine_{start.X:F2}_{start.Y:F2}_{start.Z:F2}_to_{end.X:F2}_{end.Y:F2}_{end.Z:F2}" };
         lineNode.Position = center;
-        
+
         // Create the cylinder mesh data
         KoreXYZVector p1 = new KoreXYZVector(0, -length * 0.5, 0);
         KoreXYZVector p2 = new KoreXYZVector(0, length * 0.5, 0);
         KoreMeshData cylinderMesh = KoreMeshDataPrimitives.Cylinder(p1, p2, radius, radius, 8, false);
-        
+
         // Set all vertices to the cylinder color
         cylinderMesh.SetAllVertexColors(cylinderColor);
-        
+
         // Create and add the mesh nodes
         KoreGodotLineMesh lineMeshNode = new KoreGodotLineMesh() { Name = "CylinderLines" };
         lineMeshNode.UpdateMesh(cylinderMesh);
@@ -150,13 +161,13 @@ public partial class ModelEditWindow
         KoreGodotSurfaceMesh surfaceMeshNode = new KoreGodotSurfaceMesh() { Name = "CylinderSurface" };
         surfaceMeshNode.UpdateMesh(cylinderMesh);
         lineNode.AddChild(surfaceMeshNode);
-        
+
         // Rotate the cylinder to align with the line direction
         if (direction.Length() > 0.001f)
         {
             Vector3 up = Vector3.Up;
             Vector3 normalizedDirection = direction.Normalized();
-            
+
             // Calculate rotation to align Y-axis (cylinder default) with line direction
             if (Mathf.Abs(normalizedDirection.Dot(up)) < 0.999f)
             {
@@ -170,7 +181,7 @@ public partial class ModelEditWindow
                 lineNode.RotationDegrees = new Vector3(180, 0, 0);
             }
         }
-        
+
         // Add the line node to the mount root
         MountRoot.AddChild(lineNode);
     }
@@ -200,16 +211,16 @@ public partial class ModelEditWindow
         {
             int lineId = kvp.Key;
             KoreMeshLine line = kvp.Value;
-            
+
             // Get vertex positions
             if (meshData.Vertices.ContainsKey(line.A) && meshData.Vertices.ContainsKey(line.B))
             {
                 KoreXYZVector startPos = meshData.Vertices[line.A];
                 KoreXYZVector endPos = meshData.Vertices[line.B];
-                
+
                 Vector3 godotStart = new Vector3((float)startPos.X, (float)startPos.Y, (float)startPos.Z);
                 Vector3 godotEnd = new Vector3((float)endPos.X, (float)endPos.Y, (float)endPos.Z);
-                
+
                 MarkLine(godotStart, godotEnd, radius, cylinderColor);
             }
         }
@@ -243,5 +254,8 @@ public partial class ModelEditWindow
         ClearDebugPoints();
         ClearDebugLines();
     }
+
+
+
 
 }

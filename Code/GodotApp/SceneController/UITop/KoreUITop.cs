@@ -9,15 +9,18 @@ using KoreCommon;
 // various windows/controls within it.
 
 public partial class KoreUITop : Control
-{   
+{
     private Button?          CliButton = null;
     private KoreUICLIWindow? CliWindow = null;
-    
+
     private Button?          NetworkButton = null;
     private KoreNetworkSettingsWindow? KoreNetworkSettingsWindow = null;
 
     private Button?          DbgButton = null;
     private KoreSandbox3DWindow? Sandbox3DWindow = null;
+
+    private Button?          MeshButton = null;
+    private ModelEditWindow?  MeshWindow = null;
 
     private float UIEventTimer = 0.0f;
     private float UIEventTimerInterval = 0.1f;
@@ -64,6 +67,9 @@ public partial class KoreUITop : Control
         if (DbgButton == null) GD.PrintErr("KoreUITop: DbgButton node not found.");
         DbgButton?.Connect("pressed", new Callable(this, "OnDbgButtonPressed"));
 
+        MeshButton = (Button)FindChild("MeshButton");
+        if (MeshButton == null) GD.PrintErr("KoreUITop: MeshButton node not found.");
+        MeshButton?.Connect("pressed", new Callable(this, "OnMeshButtonPressed"));
     }
 
     // ----------------------------------------------------------------------------------------------
@@ -129,6 +135,27 @@ public partial class KoreUITop : Control
         else
         {
             DbgButton!.Disabled = false; // Enable if no Sandbox 3D window is open
+        }
+    }
+
+    private void UpdateMeshWindowStates()
+    {
+        if (MeshWindow != null)
+        {
+            // Disable the Mesh button if the Mesh Editor window is open
+            MeshButton!.Disabled = true;
+
+            // If the window is valid and has it "Close Me" state set, clear it away and reset the states
+            if (MeshWindow != null && MeshWindow.ToClose)
+            {
+                MeshWindow.QueueFree(); // Clean up the Mesh Editor window
+                MeshWindow = null!; // Reset the reference
+                MeshButton.Disabled = false; // Enable if the Mesh Editor window is closed
+            }
+        }
+        else
+        {
+            MeshButton!.Disabled = false; // Enable if no Mesh Editor window is open
         }
     }
 
@@ -217,6 +244,32 @@ public partial class KoreUITop : Control
         AddChild(Sandbox3DWindow);
 
         UpdateSandbox3DWindowStates();
+    }
+
+    // ----------------------------------------------------------------------------------------------
+
+    private void OnMeshButtonPressed()
+    {
+        GD.Print("KoreUITop: Mesh Button Pressed");
+
+        // Load the Mesh Editor window scene and display it
+        var meshWindowScene = GD.Load<PackedScene>("res://Scenes/GodotCommon/ModelEdit.tscn");
+        if (meshWindowScene == null)
+        {
+            GD.PrintErr("KoreUITop: Failed to load ModelEditWindow scene.");
+            return;
+        }
+
+        // Instance the Mesh Editor window scene
+        MeshWindow = meshWindowScene.Instantiate<ModelEditWindow>();
+        if (MeshWindow == null)
+        {
+            GD.PrintErr("KoreUITop: Failed to instantiate ModelEditWindow.");
+            return;
+        }
+        AddChild(MeshWindow);
+
+        UpdateMeshWindowStates();
     }
 
     // ----------------------------------------------------------------------------------------------

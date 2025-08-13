@@ -15,6 +15,9 @@ public partial class ModelEditWindow : Window
     public Node3D? MountRoot = null;
     public CodeEdit? MeshJsonEdit = null;
 
+    // Mesh
+    private KoreMeshData? WindowMeshData = null;
+
     // UI Timers
     private float UITimer = 0.0f;
     private float UITimerInterval = 0.1f; // 100ms
@@ -37,6 +40,7 @@ public partial class ModelEditWindow : Window
         // var sv = GetNode<SubViewport>("SubViewport");
         // sv.OwnWorld3D = true;
         // sv.World3D = new World3D();
+        WindowMeshData = KoreMeshDataPrimitives.BasicCube(0.5f, KoreMeshMaterialPalette.DefaultMaterial);
 
         AttachControls();
     }
@@ -74,7 +78,7 @@ public partial class ModelEditWindow : Window
 
         MountRoot = (Node3D)FindChild("MountRoot");
         if (MountRoot == null) GD.PrintErr("ModelEditWindow: MountRoot node not found.");
-        
+
         MeshJsonEdit = (CodeEdit)FindChild("MeshJsonEdit");
         if (MeshJsonEdit == null) GD.PrintErr("ModelEditWindow: MeshJsonEdit node not found.");
 
@@ -96,6 +100,8 @@ public partial class ModelEditWindow : Window
     {
         GD.Print("ModelEditWindow: Code to Mesh button pressed");
         // Implement the logic to convert code to mesh
+
+        UpdateModelFromText();
     }
 
     private void OnMeshToCodeRequested()
