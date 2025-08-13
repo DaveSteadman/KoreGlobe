@@ -72,7 +72,7 @@ public partial class KoreSandbox3DScene : Node3D
 
         // 1
         {
-            var cubeMesh1 = KoreMeshDataPrimitives.BasicCube(0.5f, new KoreColorRGB(255, 0, 0));
+            var cubeMesh1 = KoreMeshDataPrimitives.BasicCube(0.5f, KoreMeshMaterialPalette.Find("MattRed"));
 
             KoreGodotLineMesh childMeshNode1 = new KoreGodotLineMesh();
             childMeshNode1.UpdateMesh(cubeMesh1);
@@ -88,7 +88,7 @@ public partial class KoreSandbox3DScene : Node3D
 
         // 2
         {
-            var cubeMesh2 = KoreMeshDataPrimitives.BasicCubeSharpEdges(0.5f, new KoreColorRGB(255, 0, 0));
+            var cubeMesh2 = KoreMeshDataPrimitives.BasicCubeSharpEdges(0.5f, KoreMeshMaterialPalette.Find("MattGreen"));
 
             KoreGodotLineMesh childMeshNode2 = new KoreGodotLineMesh();
             childMeshNode2.UpdateMesh(cubeMesh2);
@@ -102,7 +102,7 @@ public partial class KoreSandbox3DScene : Node3D
 
         // 3
         {
-            var cubeMesh3 = KoreMeshDataPrimitives.BasicCubeSharpEdges2(0.5f, new KoreColorRGB(255, 0, 0, 128));
+            var cubeMesh3 = KoreMeshDataPrimitives.BasicCubeSharpEdges2(0.5f, KoreMeshMaterialPalette.Find("MattBlue"));
 
             KoreGodotLineMesh childMeshNode3 = new KoreGodotLineMesh();
             childMeshNode3.UpdateMesh(cubeMesh3);

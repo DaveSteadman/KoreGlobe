@@ -34,7 +34,6 @@ public partial class KoreMeshData
         CreateMissingUVs();
         CreateMissingVertexColors();
         CreateMissingLineColors(); // Lines
-        CreateMissingTriangleColors(); // Triangles
     }
 
     // Function to examine the vertex list, and remove any orphaned or duplicate lines, triangles, and colors.
@@ -54,8 +53,6 @@ public partial class KoreMeshData
 
         RemoveBrokenTriangles(); // Remove triangles that don't have supporting point IDs.
         RemoveDuplicateTriangles();
-
-        RemoveBrokenTriangleColors(); // Remove triangle colors that don't have supporting triangle IDs.
     }
 
     // --------------------------------------------------------------------------------------------
@@ -539,40 +536,10 @@ public partial class KoreMeshData
     }
 
     // --------------------------------------------------------------------------------------------
-    // MARK: Triangle Colour
+    // MARK: Materials
     // --------------------------------------------------------------------------------------------
 
-    public void CreateMissingTriangleColors(KoreColorRGB? defaultColor = null)
-    {
-        // Define the default color to pad the TriangleColors list if it doesn't match the triangles count.
-        KoreColorRGB fallback = defaultColor ?? new KoreColorRGB(1, 1, 1);
 
-        // Loop through the triangles dictionary
-        foreach (var kvp in Triangles)
-        {
-            int triangleId = kvp.Key;
-            KoreMeshTriangle triangle = kvp.Value;
-
-            // If the triangle colors dictionary does not contain this ID, add it with the fallback color
-            if (!TriangleColors.ContainsKey(triangleId))
-                TriangleColors[triangleId] = new KoreMeshTriangleColour(fallback);
-        }
-    }
-    public void RemoveBrokenTriangleColors()
-    {
-        // Loop through the TriangleColors dictionary
-        foreach (var kvp in TriangleColors)
-        {
-            int triangleId = kvp.Key;
-            KoreMeshTriangleColour triangleColor = kvp.Value;
-
-            // Remove any referenced trianglecolour that does not have a corresponding triangle
-            if (!Triangles.ContainsKey(triangleId))
-            {
-                TriangleColors.Remove(triangleId);
-            }
-        }
-    }
 
 
 }

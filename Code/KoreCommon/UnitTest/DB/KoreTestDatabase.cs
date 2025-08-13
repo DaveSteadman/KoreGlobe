@@ -79,7 +79,7 @@ public static class KoreTestDatabase
             File.Delete(dbPath);
 
         // Create a basic cube mesh
-        var mesh = KoreMeshDataPrimitives.BasicCube(1.0f, new KoreColorRGB(255, 0, 0));
+        var mesh = KoreMeshDataPrimitives.BasicCube(1.0f, KoreMeshMaterialPalette.DefaultMaterial);
 
         // Serialise to bytes
         byte[] meshBytes = KoreMeshDataIO.ToBytes(mesh);

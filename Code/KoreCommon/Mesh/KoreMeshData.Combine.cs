@@ -72,9 +72,6 @@ public partial class KoreMeshData
             newMesh.Triangles[triangleIdMap[kvp.Key]] = newTriangle;
         }
 
-        foreach (var kvp in TriangleColors)
-            newMesh.TriangleColors[triangleIdMap[kvp.Key]] = kvp.Value;
-
         // Update the new mesh Next-ID values based on the new counts
         newMesh.ResetMaxIDs();
 
@@ -160,9 +157,6 @@ public partial class KoreMeshData
             newMesh.Triangles[triangleIdMap[kvp.Key]] = newTriangle;
         }
 
-        foreach (var kvp in TriangleColors)
-            newMesh.TriangleColors[triangleIdMap[kvp.Key]] = kvp.Value;
-
         // Update the new mesh Next-ID values based on the new counts
         newMesh.ResetMaxIDs();
 
@@ -211,9 +205,6 @@ public partial class KoreMeshData
         // Copy in the triangles from mesh2, into mesh 1
         foreach (var kvp in mesh2Offset.Triangles)
             newMesh.Triangles[kvp.Key] = kvp.Value;
-
-        foreach (var kvp in mesh2Offset.TriangleColors)
-            newMesh.TriangleColors[kvp.Key] = kvp.Value;
 
         // Update the new mesh Next-ID values based on the new counts
         newMesh.ResetMaxIDs();

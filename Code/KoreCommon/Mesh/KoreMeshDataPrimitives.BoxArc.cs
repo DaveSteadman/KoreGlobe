@@ -112,14 +112,14 @@ public static partial class KoreMeshDataPrimitives
         // Update the mesh, to have each point's normal calculated off of the triangles it is part of.
         //mesh.UpdateNormals();
 
-        combiningMesh.AddIsolatedFace(
+        combiningMesh.AddFace(
             pointInnerUpperList[0],
             pointOuterUpperList[0],
             pointOuterLowerList[0],
             pointInnerLowerList[0]);
 
         int endId = pointInnerLowerList.Count - 1;
-        combiningMesh.AddIsolatedFace(
+        combiningMesh.AddFace(
             pointOuterUpperList[endId],
             pointInnerUpperList[endId],
             pointInnerLowerList[endId],

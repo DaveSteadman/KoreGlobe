@@ -100,16 +100,6 @@ public static partial class KoreMeshDataIO
             WriteColor(bw, lc.EndColor);
         }
 
-        // Triangle colors
-        bw.Write((int)mesh.TriangleColors.Count);
-        foreach (var kvp in mesh.TriangleColors)
-        {
-            int triangleId = kvp.Key;
-            KoreMeshTriangleColour tc = kvp.Value;
-            
-            bw.Write((int)triangleId);
-            WriteColor(bw, tc.Color);
-        }
 
         bw.Flush();
         return ms.ToArray();
@@ -176,11 +166,6 @@ public static partial class KoreMeshDataIO
         int lcCount = br.ReadInt32();
         for (int i = 0; i < lcCount; i++)
             mesh.LineColors[br.ReadInt32()] = new KoreMeshLineColour(ReadColor(br), ReadColor(br));
-
-        // Triangle colors
-        int tcCount = br.ReadInt32();
-        for (int i = 0; i < tcCount; i++)
-            mesh.TriangleColors[br.ReadInt32()] = new KoreMeshTriangleColour(ReadColor(br));
 
         return mesh;
     }

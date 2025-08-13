@@ -11,9 +11,14 @@ namespace KoreCommon;
 public static partial class KoreMeshDataPrimitives
 {
     // Usage: var cubeMesh = KoreMeshDataPrimitives.BasicCube(1.0f, new KoreColorRGB(255, 0, 0));
-    public static KoreMeshData BasicCube(float size, KoreColorRGB color)
+    public static KoreMeshData BasicCube(float size, KoreMeshMaterial mat)
     {
         var mesh = new KoreMeshData();
+
+        int matId = mesh.IdForMaterial(mat);
+        KoreColorRGB color = mat.BaseColor;
+
+        KoreColorRGB linecolor = KoreColorRGB.White;
 
         // Define the vertices of the cube
         int v0 = mesh.AddVertex(new KoreXYZVector(-size, -size, -size), null, color);
@@ -26,18 +31,18 @@ public static partial class KoreMeshDataPrimitives
         int v7 = mesh.AddVertex(new KoreXYZVector(-size, size, size), null, color);
 
         // Lines
-        mesh.AddLine(v0, v1, color, color);
-        mesh.AddLine(v1, v5, color, color);
-        mesh.AddLine(v5, v4, color, color);
-        mesh.AddLine(v4, v0, color, color);
-        mesh.AddLine(v2, v3, color, color);
-        mesh.AddLine(v3, v7, color, color);
-        mesh.AddLine(v7, v6, color, color);
-        mesh.AddLine(v6, v2, color, color);
-        mesh.AddLine(v0, v3, color, color);
-        mesh.AddLine(v1, v2, color, color);
-        mesh.AddLine(v4, v7, color, color);
-        mesh.AddLine(v5, v6, color, color);
+        mesh.AddLine(v0, v1, linecolor);
+        mesh.AddLine(v1, v5, linecolor);
+        mesh.AddLine(v5, v4, linecolor);
+        mesh.AddLine(v4, v0, linecolor);
+        mesh.AddLine(v2, v3, linecolor);
+        mesh.AddLine(v3, v7, linecolor);
+        mesh.AddLine(v7, v6, linecolor);
+        mesh.AddLine(v6, v2, linecolor);
+        mesh.AddLine(v0, v3, linecolor);
+        mesh.AddLine(v1, v2, linecolor);
+        mesh.AddLine(v4, v7, linecolor);
+        mesh.AddLine(v5, v6, linecolor);
 
         // Triangles
         mesh.AddTriangle(v0, v1, v2); mesh.AddTriangle(v0, v2, v3);
@@ -47,15 +52,21 @@ public static partial class KoreMeshDataPrimitives
         mesh.AddTriangle(v2, v7, v3); mesh.AddTriangle(v2, v6, v7); // top
         mesh.AddTriangle(v0, v5, v1); mesh.AddTriangle(v0, v4, v5); // bottom
 
+        mesh.AddAllTrianglesToGroup("DefaultMaterial");
+        mesh.SetGroupMaterialId("DefaultMaterial", matId);
+
         mesh.MakeValid();
         return mesh;
     }
 
     // Usage: var cubeMesh = KoreMeshDataPrimitives.BasicCubeSharpEdges(1.0f, new KoreColorRGB(255, 0, 0));
-    public static KoreMeshData BasicCubeSharpEdges(float size, KoreColorRGB color)
+    public static KoreMeshData BasicCubeSharpEdges(float size, KoreMeshMaterial mat)
     {
         var mesh = new KoreMeshData();
 
+        int matId = mesh.IdForMaterial(mat);
+        KoreColorRGB color = mat.BaseColor;
+        
         // Create 24 vertices (4 per face) with proper face normals for sharp edges
         // Each face gets its own 4 vertices with the correct normal
 
@@ -103,28 +114,28 @@ public static partial class KoreMeshDataPrimitives
 
         // Add triangles for each face (2 triangles per face)
         // Front face
-        mesh.AddTriangle(f0, f1, f2, color);
-        mesh.AddTriangle(f0, f2, f3, color);
+        mesh.AddTriangleToGroup(mesh.AddTriangle(f0, f1, f2), "face-front");
+        mesh.AddTriangleToGroup(mesh.AddTriangle(f0, f2, f3), "face-front");
 
         // Back face
-        mesh.AddTriangle(b0, b1, b2, color);
-        mesh.AddTriangle(b0, b2, b3, color);
+        mesh.AddTriangleToGroup(mesh.AddTriangle(b0, b1, b2), "face-back");
+        mesh.AddTriangleToGroup(mesh.AddTriangle(b0, b2, b3), "face-back");
 
         // Left face
-        mesh.AddTriangle(l0, l1, l2, color);
-        mesh.AddTriangle(l0, l2, l3, color);
+        mesh.AddTriangleToGroup(mesh.AddTriangle(l0, l1, l2), "face-left");
+        mesh.AddTriangleToGroup(mesh.AddTriangle(l0, l2, l3), "face-left");
 
         // Right face
-        mesh.AddTriangle(r0, r1, r2, color);
-        mesh.AddTriangle(r0, r2, r3, color);
+        mesh.AddTriangleToGroup(mesh.AddTriangle(r0, r1, r2), "face-right");
+        mesh.AddTriangleToGroup(mesh.AddTriangle(r0, r2, r3), "face-right");
 
         // Top face
-        mesh.AddTriangle(t0, t1, t2, color);
-        mesh.AddTriangle(t0, t2, t3, color);
+        mesh.AddTriangleToGroup(mesh.AddTriangle(t0, t1, t2), "face-top");
+        mesh.AddTriangleToGroup(mesh.AddTriangle(t0, t2, t3), "face-top");
 
         // Bottom face
-        mesh.AddTriangle(bot0, bot1, bot2, color);
-        mesh.AddTriangle(bot0, bot2, bot3, color);
+        mesh.AddTriangleToGroup(mesh.AddTriangle(bot0, bot1, bot2), "face-bottom");
+        mesh.AddTriangleToGroup(mesh.AddTriangle(bot0, bot2, bot3), "face-bottom");
 
         // Add edge lines for wireframe (using separate vertices to avoid interfering with face normals)
         int v0 = mesh.AddVertex(new KoreXYZVector(-size, -size, -size), null, color);
@@ -155,9 +166,12 @@ public static partial class KoreMeshDataPrimitives
     }
 
     // Usage: var cubeMesh = KoreMeshDataPrimitives.BasicCubeSharpEdges2(1.0f, new KoreColorRGB(255, 0, 0));
-    public static KoreMeshData BasicCubeSharpEdges2(float size, KoreColorRGB color)
+    public static KoreMeshData BasicCubeSharpEdges2(float size, KoreMeshMaterial mat)
     {
         var mesh = new KoreMeshData();
+
+        int matId = mesh.IdForMaterial(mat);
+        KoreColorRGB color = mat.BaseColor;
 
         // Define the 8 corner vertices manually outside of the mesh
         var v0 = new KoreXYZVector(-size, -size, -size); // front bottom left
@@ -176,12 +190,23 @@ public static partial class KoreMeshDataPrimitives
         float noiseFactor = 0.1f; // Adjust noise factor as needed
 
         // Copy the triangulation from BasicCube (which works perfectly)
-        mesh.AddIsolatedTriangle(v0, v1, v2, KoreColorOps.ColorWithRGBNoise(color, noiseFactor), color); mesh.AddIsolatedTriangle(v0, v2, v3, KoreColorOps.ColorWithRGBNoise(color, noiseFactor), color);
-        mesh.AddIsolatedTriangle(v0, v3, v4, KoreColorOps.ColorWithRGBNoise(color, noiseFactor), color); mesh.AddIsolatedTriangle(v3, v7, v4, KoreColorOps.ColorWithRGBNoise(color, noiseFactor), color);
-        mesh.AddIsolatedTriangle(v4, v7, v6, KoreColorOps.ColorWithRGBNoise(color, noiseFactor), color); mesh.AddIsolatedTriangle(v4, v6, v5, KoreColorOps.ColorWithRGBNoise(color, noiseFactor), color);
-        mesh.AddIsolatedTriangle(v5, v6, v2, KoreColorOps.ColorWithRGBNoise(color, noiseFactor), color); mesh.AddIsolatedTriangle(v5, v2, v1, KoreColorOps.ColorWithRGBNoise(color, noiseFactor), color);
-        mesh.AddIsolatedTriangle(v2, v7, v3, KoreColorOps.ColorWithRGBNoise(color, noiseFactor), color); mesh.AddIsolatedTriangle(v2, v6, v7, KoreColorOps.ColorWithRGBNoise(color, noiseFactor), color); // top
-        mesh.AddIsolatedTriangle(v0, v5, v1, KoreColorOps.ColorWithRGBNoise(color, noiseFactor), color); mesh.AddIsolatedTriangle(v0, v4, v5, KoreColorOps.ColorWithRGBNoise(color, noiseFactor), color); // bottom
+        mesh.AddTriangleToGroup(mesh.AddTriangle(v0, v1, v2), "sharpcube");
+        mesh.AddTriangleToGroup(mesh.AddTriangle(v0, v2, v3), "sharpcube");
+
+        mesh.AddTriangleToGroup(mesh.AddTriangle(v0, v3, v4), "sharpcube");
+        mesh.AddTriangleToGroup(mesh.AddTriangle(v3, v7, v4), "sharpcube");
+
+        mesh.AddTriangleToGroup(mesh.AddTriangle(v4, v7, v6), "sharpcube");
+        mesh.AddTriangleToGroup(mesh.AddTriangle(v4, v6, v5), "sharpcube");
+
+        mesh.AddTriangleToGroup(mesh.AddTriangle(v5, v6, v2), "sharpcube");
+        mesh.AddTriangleToGroup(mesh.AddTriangle(v5, v2, v1), "sharpcube");
+
+        mesh.AddTriangleToGroup(mesh.AddTriangle(v2, v7, v3), "sharpcube");
+        mesh.AddTriangleToGroup(mesh.AddTriangle(v2, v6, v7), "sharpcube"); // top
+
+        mesh.AddTriangleToGroup(mesh.AddTriangle(v0, v5, v1), "sharpcube");
+        mesh.AddTriangleToGroup(mesh.AddTriangle(v0, v4, v5), "sharpcube"); // bottom
 
         // Add wireframe lines using the same 8 corner vertices
         int lv0 = mesh.AddVertex(v0, null, color);
@@ -292,28 +317,28 @@ public static partial class KoreMeshDataPrimitives
         // Each triangle will automatically get the correct face normal
 
         // Front face (2 triangles)
-        mesh.AddIsolatedTriangle(v0, v1, v2, color, color);
-        mesh.AddIsolatedTriangle(v0, v2, v3, color, color);
+        mesh.AddTriangle(v0, v1, v2);
+        mesh.AddTriangle(v0, v2, v3);
 
         // Back face (2 triangles)
-        mesh.AddIsolatedTriangle(v5, v4, v7, color, color);
-        mesh.AddIsolatedTriangle(v5, v7, v6, color, color);
+        mesh.AddTriangle(v5, v4, v7);
+        mesh.AddTriangle(v5, v7, v6);
 
         // Left face (2 triangles)
-        mesh.AddIsolatedTriangle(v4, v0, v3, color, color);
-        mesh.AddIsolatedTriangle(v4, v3, v7, color, color);
+        mesh.AddTriangle(v4, v0, v3);
+        mesh.AddTriangle(v4, v3, v7);
 
         // Right face (2 triangles)
-        mesh.AddIsolatedTriangle(v1, v5, v6, color, color);
-        mesh.AddIsolatedTriangle(v1, v6, v2, color, color);
+        mesh.AddTriangle(v1, v5, v6);
+        mesh.AddTriangle(v1, v6, v2);
 
         // Top face (2 triangles)
-        mesh.AddIsolatedTriangle(v3, v2, v6, color, color);
-        mesh.AddIsolatedTriangle(v3, v6, v7, color, color);
+        mesh.AddTriangle(v3, v2, v6);
+        mesh.AddTriangle(v3, v6, v7);
 
         // Bottom face (2 triangles)
-        mesh.AddIsolatedTriangle(v4, v5, v1, color, color);
-        mesh.AddIsolatedTriangle(v4, v1, v0, color, color);
+        mesh.AddTriangle(v4, v5, v1);
+        mesh.AddTriangle(v4, v1, v0);
 
         // Add wireframe lines using shared vertices to avoid duplicating line geometry
         int lv0 = mesh.AddVertex(v0, null, color);

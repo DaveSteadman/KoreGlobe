@@ -11,133 +11,151 @@ namespace KoreCommon;
 
 public static class KoreMeshMaterialPalette
 {
-    public static readonly Dictionary<string, KoreMeshMaterial> Materials = new Dictionary<string, KoreMeshMaterial>
+    public static readonly KoreMeshMaterial DefaultMaterial = new KoreMeshMaterial("MattWhite", KoreColorRGB.White, 0.0f, 0.8f);
+
+    private static readonly List<KoreMeshMaterial> MaterialsList = new List<KoreMeshMaterial>
     {
         // --------------------------------------------------------------------------------------------
         // MARK: Basic Colors
         // --------------------------------------------------------------------------------------------
         
-        { "Red",         new KoreMeshMaterial("Red", new KoreColorRGB(255, 0, 0)) },
-        { "Green",       new KoreMeshMaterial("Green", new KoreColorRGB(0, 255, 0)) },
-        { "Blue",        new KoreMeshMaterial("Blue", new KoreColorRGB(0, 0, 255)) },
-        { "White",       new KoreMeshMaterial("White", KoreColorRGB.White) },
-        { "Black",       new KoreMeshMaterial("Black", new KoreColorRGB(0, 0, 0)) },
-        { "Gray",        new KoreMeshMaterial("Gray", new KoreColorRGB(128, 128, 128)) },
-        { "Yellow",      new KoreMeshMaterial("Yellow", new KoreColorRGB(255, 255, 0)) },
-        { "Magenta",     new KoreMeshMaterial("Magenta", new KoreColorRGB(255, 0, 255)) },
-        { "Cyan",        new KoreMeshMaterial("Cyan", new KoreColorRGB(0, 255, 255)) },
+        new KoreMeshMaterial("MattRed", new KoreColorRGB(255, 0, 0), 0f, 1f),
+        new KoreMeshMaterial("MattGreen", new KoreColorRGB(0, 255, 0), 0f, 1f),
+        new KoreMeshMaterial("MattBlue", new KoreColorRGB(0, 0, 255), 0f, 1f),
+        new KoreMeshMaterial("MattWhite", KoreColorRGB.White, 0f, 1f),
+        new KoreMeshMaterial("MattBlack", new KoreColorRGB(0, 0, 0), 0f, 1f),
+        new KoreMeshMaterial("MattGray", new KoreColorRGB(128, 128, 128), 0f, 1f),
+        new KoreMeshMaterial("MattYellow", new KoreColorRGB(255, 255, 0), 0f, 1f),
+        new KoreMeshMaterial("MattMagenta", new KoreColorRGB(255, 0, 255), 0f, 1f),
+        new KoreMeshMaterial("MattCyan", new KoreColorRGB(0, 255, 255), 0f, 1f),
+
+        new KoreMeshMaterial("MattDarkRed", new KoreColorRGB(130, 0, 0), 0f, 1f),
 
         // --------------------------------------------------------------------------------------------
         // MARK: Metallic Materials
         // --------------------------------------------------------------------------------------------
-        
-        { "Metal",       new KoreMeshMaterial("Metal", new KoreColorRGB(128, 128, 128), 1.0f, 0.2f) },
-        { "Gold",        new KoreMeshMaterial("Gold", new KoreColorRGB(1.0f, 0.84f, 0.0f), 1.0f, 0.1f) },
-        { "Silver",      new KoreMeshMaterial("Silver", new KoreColorRGB(0.95f, 0.95f, 0.95f), 1.0f, 0.1f) },
-        { "Copper",      new KoreMeshMaterial("Copper", new KoreColorRGB(0.72f, 0.45f, 0.20f), 1.0f, 0.2f) },
-        { "Bronze",      new KoreMeshMaterial("Bronze", new KoreColorRGB(0.64f, 0.50f, 0.24f), 1.0f, 0.3f) },
-        { "Steel",       new KoreMeshMaterial("Steel", new KoreColorRGB(0.70f, 0.70f, 0.70f), 1.0f, 0.2f) },
-        { "Iron",        new KoreMeshMaterial("Iron", new KoreColorRGB(0.56f, 0.57f, 0.58f), 1.0f, 0.4f) },
-        { "Aluminum",    new KoreMeshMaterial("Aluminum", new KoreColorRGB(0.91f, 0.92f, 0.92f), 1.0f, 0.1f) },
+
+        new KoreMeshMaterial("Metal", new KoreColorRGB(128, 128, 128), 1.0f, 0.2f),
+        new KoreMeshMaterial("Gold", new KoreColorRGB(255, 214, 0), 1.0f, 0.1f),
+        new KoreMeshMaterial("Silver", new KoreColorRGB(242, 242, 242), 1.0f, 0.1f),
+        new KoreMeshMaterial("Copper", new KoreColorRGB(184, 115, 51), 1.0f, 0.2f),
+        new KoreMeshMaterial("Bronze", new KoreColorRGB(163, 128, 61), 1.0f, 0.3f),
+        new KoreMeshMaterial("Steel", new KoreColorRGB(179, 179, 179), 1.0f, 0.2f),
+        new KoreMeshMaterial("Iron", new KoreColorRGB(143, 145, 148), 1.0f, 0.4f),
+        new KoreMeshMaterial("Aluminum", new KoreColorRGB(232, 235, 235), 1.0f, 0.1f),
 
         // --------------------------------------------------------------------------------------------
         // MARK: Plastic Materials
         // --------------------------------------------------------------------------------------------
         
-        { "PlasticRed",    new KoreMeshMaterial("PlasticRed", new KoreColorRGB(255, 0, 0), 0.0f, 0.8f) },
-        { "PlasticBlue",   new KoreMeshMaterial("PlasticBlue", new KoreColorRGB(0, 0, 255), 0.0f, 0.8f) },
-        { "PlasticGreen",  new KoreMeshMaterial("PlasticGreen", new KoreColorRGB(0, 255, 0), 0.0f, 0.8f) },
-        { "PlasticWhite",  new KoreMeshMaterial("PlasticWhite", KoreColorRGB.White, 0.0f, 0.8f) },
-        { "PlasticBlack",  new KoreMeshMaterial("PlasticBlack", new KoreColorRGB(0, 0, 0), 0.0f, 0.8f) },
-        { "PlasticYellow", new KoreMeshMaterial("PlasticYellow", new KoreColorRGB(255, 255, 0), 0.0f, 0.8f) },
-
-        // --------------------------------------------------------------------------------------------
-        // MARK: Wood Materials
-        // --------------------------------------------------------------------------------------------
-        
-        { "Oak",         new KoreMeshMaterial("Oak", new KoreColorRGB(0.65f, 0.50f, 0.39f), 0.0f, 0.9f) },
-        { "Pine",        new KoreMeshMaterial("Pine", new KoreColorRGB(0.85f, 0.75f, 0.45f), 0.0f, 0.9f) },
-        { "Mahogany",    new KoreMeshMaterial("Mahogany", new KoreColorRGB(0.42f, 0.26f, 0.15f), 0.0f, 0.8f) },
-        { "Walnut",      new KoreMeshMaterial("Walnut", new KoreColorRGB(0.40f, 0.28f, 0.18f), 0.0f, 0.9f) },
+        new KoreMeshMaterial("PlasticRed", new KoreColorRGB(255, 0, 0), 0.0f, 0.8f),
+        new KoreMeshMaterial("PlasticBlue", new KoreColorRGB(0, 0, 255), 0.0f, 0.8f),
+        new KoreMeshMaterial("PlasticGreen", new KoreColorRGB(0, 255, 0), 0.0f, 0.8f),
+        new KoreMeshMaterial("PlasticWhite", KoreColorRGB.White, 0.0f, 0.8f),
+        new KoreMeshMaterial("PlasticBlack", new KoreColorRGB(0, 0, 0), 0.0f, 0.8f),
+        new KoreMeshMaterial("PlasticYellow", new KoreColorRGB(255, 255, 0), 0.0f, 0.8f),
 
         // --------------------------------------------------------------------------------------------
         // MARK: Stone Materials
         // --------------------------------------------------------------------------------------------
         
-        { "Marble",      new KoreMeshMaterial("Marble", new KoreColorRGB(0.93f, 0.93f, 0.93f), 0.0f, 0.1f) },
-        { "Granite",     new KoreMeshMaterial("Granite", new KoreColorRGB(0.40f, 0.40f, 0.40f), 0.0f, 0.8f) },
-        { "Sandstone",   new KoreMeshMaterial("Sandstone", new KoreColorRGB(0.76f, 0.70f, 0.50f), 0.0f, 0.9f) },
-        { "Concrete",    new KoreMeshMaterial("Concrete", new KoreColorRGB(0.55f, 0.55f, 0.55f), 0.0f, 0.9f) },
+        new KoreMeshMaterial("Marble", new KoreColorRGB(237, 237, 237), 0.0f, 0.1f),
+        new KoreMeshMaterial("Granite", new KoreColorRGB(102, 102, 102), 0.0f, 0.8f),
+        new KoreMeshMaterial("Sandstone", new KoreColorRGB(194, 179, 128), 0.0f, 0.9f),
+        new KoreMeshMaterial("Concrete", new KoreColorRGB(140, 140, 140), 0.0f, 0.9f),
 
         // --------------------------------------------------------------------------------------------
         // MARK: Transparent Materials
         // --------------------------------------------------------------------------------------------
-        
-        { "Glass",         new KoreMeshMaterial("Glass", new KoreColorRGB(255, 255, 255, 77), 0.0f, 0.0f) }, // ~30% alpha
-        { "SmokedGlass",   new KoreMeshMaterial("SmokedGlass", new KoreColorRGB(0.3f, 0.3f, 0.3f, 0.5f), 0.0f, 0.1f) },
-        { "BlueGlass",     new KoreMeshMaterial("BlueGlass", new KoreColorRGB(0.2f, 0.4f, 0.8f, 0.4f), 0.0f, 0.0f) },
-        { "GreenGlass",    new KoreMeshMaterial("GreenGlass", new KoreColorRGB(0.2f, 0.8f, 0.4f, 0.4f), 0.0f, 0.0f) },
-        { "Water",         new KoreMeshMaterial("Water", new KoreColorRGB(0.0f, 0.4f, 0.8f, 0.7f), 0.0f, 0.0f) },
-        { "Ice",           new KoreMeshMaterial("Ice", new KoreColorRGB(0.9f, 0.95f, 1.0f, 0.8f), 0.0f, 0.0f) },
+
+        new KoreMeshMaterial("Glass", new KoreColorRGB(255, 255, 255, 77), 0.0f, 0.0f), // ~30% alpha
+        new KoreMeshMaterial("SmokedGlass", new KoreColorRGB(77, 77, 77, 128), 0.0f, 0.1f),
+        new KoreMeshMaterial("BlueGlass", new KoreColorRGB(51, 102, 204, 102), 0.0f, 0.0f),
+        new KoreMeshMaterial("GreenGlass", new KoreColorRGB(51, 204, 102, 102), 0.0f, 0.0f),
+        new KoreMeshMaterial("Water", new KoreColorRGB(0, 102, 204, 179), 0.0f, 0.0f),
+        new KoreMeshMaterial("Ice", new KoreColorRGB(230, 242, 255, 204), 0.0f, 0.0f),
 
         // --------------------------------------------------------------------------------------------
         // MARK: Fabric Materials
         // --------------------------------------------------------------------------------------------
         
-        { "Cotton",      new KoreMeshMaterial("Cotton", new KoreColorRGB(0.95f, 0.95f, 0.90f), 0.0f, 1.0f) },
-        { "Silk",        new KoreMeshMaterial("Silk", new KoreColorRGB(0.90f, 0.85f, 0.80f), 0.0f, 0.2f) },
-        { "Leather",     new KoreMeshMaterial("Leather", new KoreColorRGB(0.45f, 0.30f, 0.15f), 0.0f, 0.7f) },
-        { "Rubber",      new KoreMeshMaterial("Rubber", new KoreColorRGB(0.15f, 0.15f, 0.15f), 0.0f, 0.9f) },
+        new KoreMeshMaterial("Cotton", new KoreColorRGB(242, 242, 230), 0.0f, 1.0f),
+        new KoreMeshMaterial("Silk", new KoreColorRGB(230, 217, 204), 0.0f, 0.2f),
+        new KoreMeshMaterial("Leather", new KoreColorRGB(115, 77, 38), 0.0f, 0.7f),
+        new KoreMeshMaterial("Rubber", new KoreColorRGB(38, 38, 38), 0.0f, 0.9f),
 
         // --------------------------------------------------------------------------------------------
         // MARK: Special Effect Materials
         // --------------------------------------------------------------------------------------------
         
-        { "Chrome",      new KoreMeshMaterial("Chrome", new KoreColorRGB(0.95f, 0.95f, 0.95f), 1.0f, 0.0f) },
-        { "Mirror",      new KoreMeshMaterial("Mirror", new KoreColorRGB(0.98f, 0.98f, 0.98f), 1.0f, 0.0f) },
-        { "Ceramic",     new KoreMeshMaterial("Ceramic", KoreColorRGB.White, 0.0f, 0.1f) },
-        { "Porcelain",   new KoreMeshMaterial("Porcelain", new KoreColorRGB(0.98f, 0.98f, 0.96f), 0.0f, 0.0f) },
+        new KoreMeshMaterial("Chrome", new KoreColorRGB(242, 242, 242), 1.0f, 0.0f),
+        new KoreMeshMaterial("Mirror", new KoreColorRGB(250, 250, 250), 1.0f, 0.0f),
+        new KoreMeshMaterial("Ceramic", KoreColorRGB.White, 0.0f, 0.1f),
+        new KoreMeshMaterial("Porcelain", new KoreColorRGB(250, 250, 245), 0.0f, 0.0f),
     };
 
     // --------------------------------------------------------------------------------------------
     // MARK: Helper Methods
     // --------------------------------------------------------------------------------------------
 
-    // Get material by name, returns White if not found
+    // Find material by name, returns MattWhite if not found
+    public static KoreMeshMaterial Find(string name)
+    {
+        foreach (var material in MaterialsList)
+        {
+            if (material.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
+                return material;
+        }
+
+        // Return default MattWhite material if not found
+        return DefaultMaterial;
+    }
+
+    // Get material by name, returns White if not found (backward compatibility)
     public static KoreMeshMaterial GetMaterial(string name)
     {
-        return Materials.TryGetValue(name, out var material) ? material : KoreMeshMaterial.White;
+        return Find(name);
     }
 
     // Check if material exists in palette
     public static bool HasMaterial(string name)
     {
-        return Materials.ContainsKey(name);
+        foreach (var material in MaterialsList)
+        {
+            if (material.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
+                return true;
+        }
+        return false;
     }
+
+    // --------------------------------------------------------------------------------------------
 
     // Get all material names
     public static string[] GetMaterialNames()
     {
-        var names = new string[Materials.Count];
-        Materials.Keys.CopyTo(names, 0);
+        var names = new string[MaterialsList.Count];
+        for (int i = 0; i < MaterialsList.Count; i++)
+        {
+            names[i] = MaterialsList[i].Name;
+        }
         Array.Sort(names);
         return names;
     }
 
     // Get materials by category (basic approximation based on naming)
-    public static Dictionary<string, KoreMeshMaterial> GetMaterialsByCategory(string category)
+    public static List<KoreMeshMaterial> GetMaterialsByCategory(string category)
     {
-        var result = new Dictionary<string, KoreMeshMaterial>();
+        var result = new List<KoreMeshMaterial>();
         var categoryLower = category.ToLowerInvariant();
 
-        foreach (var kvp in Materials)
+        foreach (var material in MaterialsList)
         {
-            var nameLower = kvp.Key.ToLowerInvariant();
+            var nameLower = material.Name.ToLowerInvariant();
             bool matches = categoryLower switch
             {
-                "metal" or "metallic" => kvp.Value.IsMetallic,
+                "metal" or "metallic" => material.IsMetallic,
                 "plastic" => nameLower.Contains("plastic"),
-                "glass" or "transparent" => kvp.Value.IsTransparent,
+                "glass" or "transparent" => material.IsTransparent,
                 "wood" => nameLower.Contains("oak") || nameLower.Contains("pine") || 
                          nameLower.Contains("mahogany") || nameLower.Contains("walnut"),
                 "stone" => nameLower.Contains("marble") || nameLower.Contains("granite") || 
@@ -148,7 +166,7 @@ public static class KoreMeshMaterialPalette
             };
 
             if (matches)
-                result[kvp.Key] = kvp.Value;
+                result.Add(material);
         }
 
         return result;

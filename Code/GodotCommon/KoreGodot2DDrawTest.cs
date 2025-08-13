@@ -23,7 +23,7 @@ public partial class KoreGodot2DDrawTest : Node2D
         GD.Print("KoreGodot2DDrawTest is ready!");
 
 
-        var cubeMesh1 = KoreMeshDataPrimitives.BasicCube(0.5f, new KoreColorRGB(255, 0, 0));
+        var cubeMesh1 = KoreMeshDataPrimitives.BasicCube(0.5f, KoreMeshMaterialPalette.Find("MattRed"));
         KoreXYZBox cubeBBox = cubeMesh1.GetBoundingBox();
         _testPoints = KoreConvPos.KoreXYZBoxToV3List(cubeBBox);
 

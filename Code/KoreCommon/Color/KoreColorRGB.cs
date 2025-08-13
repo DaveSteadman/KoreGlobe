@@ -2,9 +2,11 @@
 
 using System;
 
+#nullable enable
+
 namespace KoreCommon;
 
-public struct KoreColorRGB
+public struct KoreColorRGB : IEquatable<KoreColorRGB>
 {
     public byte R { get; set; }
     public byte G { get; set; }
@@ -56,5 +58,34 @@ public struct KoreColorRGB
 
     public static readonly KoreColorRGB Zero = new KoreColorRGB(KoreColorIO.MinByte, KoreColorIO.MinByte, KoreColorIO.MinByte, KoreColorIO.MinByte);
     public static readonly KoreColorRGB White = new KoreColorRGB(KoreColorIO.MaxByte, KoreColorIO.MaxByte, KoreColorIO.MaxByte, KoreColorIO.MaxByte);
+
+    // --------------------------------------------------------------------------------------------
+    // MARK: Equality Operations
+    // --------------------------------------------------------------------------------------------
+
+    public override bool Equals(object? obj)
+    {
+        return obj is KoreColorRGB other && Equals(other);
+    }
+
+    public bool Equals(KoreColorRGB other)
+    {
+        return R == other.R && G == other.G && B == other.B && A == other.A;
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(R, G, B, A);
+    }
+
+    public static bool operator ==(KoreColorRGB left, KoreColorRGB right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(KoreColorRGB left, KoreColorRGB right)
+    {
+        return !left.Equals(right);
+    }
 
 }

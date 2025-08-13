@@ -25,12 +25,12 @@ public static class KoreTestMesh
     public static void TestBasicCubeJson(KoreTestLog testLog)
     {
         // Test for basic cube mesh creation
-        var cubeMesh = KoreMeshDataPrimitives.BasicCube(1.0f, new KoreColorRGB(255, 0, 0));
+        var cubeMesh = KoreMeshDataPrimitives.BasicCube(1.0f, KoreMeshMaterialPalette.Find("MattRed"));
 
         // Add some minort customizations to the cube mesh to see if they are serialized correctly
         cubeMesh.SetVertexColor(1, KoreColorPalette.Colors["Green"]);
         cubeMesh.SetLineColor(2, KoreColorPalette.Colors["Blue"], KoreColorPalette.Colors["Cyan"]);
-        cubeMesh.SetTriangleColor(3, KoreColorPalette.Colors["Yellow"]);
+        // cubeMesh.SetTriangleColor(3, KoreColorPalette.Colors["Yellow"]);
 
         bool denseJSON = false;
         string cubeJSON = KoreMeshDataIO.ToJson(cubeMesh, denseJSON);
