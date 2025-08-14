@@ -3,6 +3,7 @@ using System;
 
 using KoreCommon;
 using System.Collections.Generic;
+using System.IO;
 
 #nullable enable
 
@@ -10,7 +11,7 @@ public partial class ModelEditWindow
 {
 
     // Create a basic model and output the JSON into the code edit control
-    private void OutputInitialJSON()
+    private void MeshToJSON()
     {
         string jsonStr = KoreMeshDataIO.ToJson(WindowMeshData, dense: false);
 
@@ -18,19 +19,35 @@ public partial class ModelEditWindow
         MeshJsonEdit!.SetText(jsonStr);
 
         // Also visualize the points and lines in the 3D scene
-        DeleteAllDebug();
         DrawPoints(WindowMeshData);
         DrawLines(WindowMeshData);
     }
 
-    // Text the text and update the model
-    private void UpdateModelFromText()
+    private void JSONToMesh()
     {
-        if (MeshJsonEdit == null) return;
+        // Read the JSON from the code edit control
+        string jsonStr = MeshJsonEdit!.GetText();
 
-        string jsonStr = MeshJsonEdit.GetText();
+        // Parse the JSON into a KoreMeshData object
         WindowMeshData = KoreMeshDataIO.FromJson(jsonStr);
+
+
+        DeleteAllDebug();
+
+        // // Update the 3D mesh visualization
+        // if (MountRoot != null && WindowMeshData != null)
+        // {
+        //     MountRoot.ClearChildren();
+        //     var meshInstance = new KoreGodotSurfaceMesh();
+        //     meshInstance.UpdateMesh(WindowMeshData);
+        //     MountRoot.AddChild(meshInstance);
+        // }
+
+        // Also visualize the points and lines in the 3D scene
+        DrawPoints(WindowMeshData);
+        DrawLines(WindowMeshData);
     }
+
 
     // --------------------------------------------------------------------------------------------
     // MARK: Point
@@ -269,6 +286,35 @@ public partial class ModelEditWindow
     {
         ClearDebugPoints();
         ClearDebugLines();
+    }
+
+    // --------------------------------------------------------------------------------------------
+    // MARK: Export Testing
+    // --------------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// Test OBJ export functionality - prints OBJ and MTL content to console
+    /// </summary>
+    public void TestObjExport()
+    {
+        // Create test mesh
+        KoreMeshData meshData = KoreMeshDataPrimitives.BasicCube(0.5f, KoreMeshMaterialPalette.DefaultMaterial);
+        
+        // Export to OBJ/MTL
+        var (objContent, mtlContent) = KoreMeshDataIO.ToObjMtl(meshData, "TestCube", "cube_materials");
+        
+        GD.Print("=== OBJ Content ===");
+        GD.Print(objContent);
+        
+        GD.Print("=== MTL Content ===");
+        GD.Print(mtlContent);
+
+        File.WriteAllLines("TestCube.obj", new[] { objContent });
+        File.WriteAllLines("cube_materials.mtl", new[] { mtlContent });
+
+        // Also update the JSON display
+        string jsonStr = KoreMeshDataIO.ToJson(meshData, dense: false);
+        GD.Print($"OBJ Export Test Complete!\n\n=== JSON ===\n{jsonStr}");
     }
 
     // Function to get a named triangle grouping out of the mesh and extract the

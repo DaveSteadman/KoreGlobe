@@ -99,9 +99,16 @@ public partial class ModelEditWindow : Window
     private void OnCodeToMeshRequested()
     {
         GD.Print("ModelEditWindow: Code to Mesh button pressed");
-        // Implement the logic to convert code to mesh
+        // Test OBJ export functionality
+        TestObjExport();
 
-        UpdateModelFromText();
+        JSONToMesh();
+    }
+
+    private void UpdateModelFromText()
+    {
+        // TODO: Implement parsing JSON from MeshJsonEdit and updating the 3D visualization
+        GD.Print("UpdateModelFromText: Not yet implemented");
     }
 
     private void OnMeshToCodeRequested()
@@ -109,7 +116,9 @@ public partial class ModelEditWindow : Window
         GD.Print("ModelEditWindow: Mesh to Code button pressed");
         // Implement the logic to convert mesh to code
 
-        OutputInitialJSON();
+        // OutputInitialJSON();
+
+        MeshToJSON();
     }
 
 }
