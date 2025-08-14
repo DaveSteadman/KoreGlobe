@@ -37,7 +37,9 @@ size_flags_horizontal = 3
 
 [node name="ModelViewport" type="SubViewport" parent="MarginContainer/HBoxContainer/SubViewportContainer"]
 own_world_3d = true
-handle_input_locally = false
+msaa_3d = 2
+use_debanding = true
+scaling_3d_mode = 1
 size = Vector2i(1000, 1000)
 render_target_update_mode = 4
 script = ExtResource("2_4lgcs")
@@ -48,6 +50,7 @@ ViewportCustom3DScale = 0.8000000000029104
 [node name="MountRoot" type="Node3D" parent="MarginContainer/HBoxContainer/SubViewportContainer/ModelViewport/Root3D"]
 
 [node name="CameraRoot" type="Node3D" parent="MarginContainer/HBoxContainer/SubViewportContainer/ModelViewport/Root3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3)
 script = ExtResource("2_rb2ut")
 
 [node name="Camera3D" type="Camera3D" parent="MarginContainer/HBoxContainer/SubViewportContainer/ModelViewport/Root3D/CameraRoot"]
@@ -73,15 +76,30 @@ layout_mode = 2
 theme_override_constants/separation = 5
 
 [node name="MeshToCodeButton" type="Button" parent="MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
-custom_minimum_size = Vector2(150, 50)
+custom_minimum_size = Vector2(140, 50)
 layout_mode = 2
 focus_mode = 0
 theme = ExtResource("2_nl10j")
-text = "Mesh To Code"
+text = "Mesh To Code >"
 
 [node name="CodeToMeshButton" type="Button" parent="MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
-custom_minimum_size = Vector2(150, 50)
+custom_minimum_size = Vector2(140, 50)
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("2_nl10j")
+text = "Code To Mesh <"
+
+[node name="MeshToObjButton" type="Button" parent="MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(140, 50)
 layout_mode = 2
 focus_mode = 0
 theme = ExtResource("3_rb2ut")
-text = "Code To Mesh"
+text = "Mesh To OBJ
+"
+
+[node name="ObjToCodeButton" type="Button" parent="MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(140, 50)
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("3_rb2ut")
+text = "OBJ To Code"

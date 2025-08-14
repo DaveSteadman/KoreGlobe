@@ -11,6 +11,8 @@ public partial class ModelEditWindow : Window
     // Sandbox3DScene.UIMount
     public Button? CodeToMeshButton = null;
     public Button? MeshToCodeButton = null;
+    public Button? MeshToObjButton = null;
+    public Button? ObjToCodeButton = null;
     public SubViewport? ModelViewport = null;
     public Node3D? MountRoot = null;
     public CodeEdit? MeshJsonEdit = null;
@@ -68,22 +70,27 @@ public partial class ModelEditWindow : Window
     private void AttachControls()
     {
         CodeToMeshButton = (Button)FindChild("CodeToMeshButton");
-        if (CodeToMeshButton == null) GD.PrintErr("ModelEditWindow: CodeToMeshButton node not found.");
-
         MeshToCodeButton = (Button)FindChild("MeshToCodeButton");
+        MeshToObjButton = (Button)FindChild("MeshToObjButton");
+        ObjToCodeButton = (Button)FindChild("ObjToCodeButton");
+
+        if (CodeToMeshButton == null) GD.PrintErr("ModelEditWindow: CodeToMeshButton node not found.");
         if (MeshToCodeButton == null) GD.PrintErr("ModelEditWindow: MeshToCodeButton node not found.");
+        if (MeshToObjButton == null) GD.PrintErr("ModelEditWindow: MeshToObjButton node not found.");
+        if (ObjToCodeButton == null) GD.PrintErr("ModelEditWindow: ObjToCodeButton node not found.");
 
         ModelViewport = (SubViewport)FindChild("ModelViewport");
-        if (ModelViewport == null) GD.PrintErr("ModelEditWindow: ModelViewport node not found.");
-
         MountRoot = (Node3D)FindChild("MountRoot");
-        if (MountRoot == null) GD.PrintErr("ModelEditWindow: MountRoot node not found.");
-
         MeshJsonEdit = (CodeEdit)FindChild("MeshJsonEdit");
+
+        if (ModelViewport == null) GD.PrintErr("ModelEditWindow: ModelViewport node not found.");
+        if (MountRoot == null) GD.PrintErr("ModelEditWindow: MountRoot node not found.");
         if (MeshJsonEdit == null) GD.PrintErr("ModelEditWindow: MeshJsonEdit node not found.");
 
         CodeToMeshButton?.Connect("pressed", new Callable(this, nameof(OnCodeToMeshRequested)));
         MeshToCodeButton?.Connect("pressed", new Callable(this, nameof(OnMeshToCodeRequested)));
+        MeshToObjButton?.Connect("pressed", new Callable(this, nameof(OnMeshToObjRequested)));
+        ObjToCodeButton?.Connect("pressed", new Callable(this, nameof(OnObjToCodeRequested)));
 
         // Link up the X button to close the window
         Connect("close_requested", new Callable(this, nameof(OnCloseRequested)));
@@ -100,8 +107,6 @@ public partial class ModelEditWindow : Window
     {
         GD.Print("ModelEditWindow: Code to Mesh button pressed");
         // Test OBJ export functionality
-        TestObjExport();
-
         JSONToMesh();
     }
 
@@ -119,6 +124,20 @@ public partial class ModelEditWindow : Window
         // OutputInitialJSON();
 
         MeshToJSON();
+    }
+
+    private void OnMeshToObjRequested()
+    {
+        GD.Print("ModelEditWindow: Mesh to OBJ button pressed");
+        // Implement the logic to convert mesh to OBJ
+        TestObjExport();
+    }
+
+    private void OnObjToCodeRequested()
+    {
+        GD.Print("ModelEditWindow: OBJ to Code button pressed");
+        // Implement the logic to convert OBJ to code
+        TestObjImport();
     }
 
 }

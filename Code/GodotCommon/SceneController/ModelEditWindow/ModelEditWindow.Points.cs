@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Linq;
 
 using KoreCommon;
 using System.Collections.Generic;
@@ -34,14 +35,8 @@ public partial class ModelEditWindow
 
         DeleteAllDebug();
 
-        // // Update the 3D mesh visualization
-        // if (MountRoot != null && WindowMeshData != null)
-        // {
-        //     MountRoot.ClearChildren();
-        //     var meshInstance = new KoreGodotSurfaceMesh();
-        //     meshInstance.UpdateMesh(WindowMeshData);
-        //     MountRoot.AddChild(meshInstance);
-        // }
+        // Update the 3D mesh visualization using material groups
+        DrawMeshWithGroups(WindowMeshData);
 
         // Also visualize the points and lines in the 3D scene
         DrawPoints(WindowMeshData);
@@ -59,7 +54,7 @@ public partial class ModelEditWindow
     /// <param name="position">World position to place the debug sphere</param>
     /// <param name="radius">Radius of the debug sphere (default: 0.05)</param>
     /// <param name="color">Color of the debug sphere (default: yellow)</param>
-    public void MarkPoint(Vector3 position, float radius = 0.05f, KoreColorRGB? color = null)
+    public void MarkPoint(Vector3 position, float radius = 0.03f, KoreColorRGB? color = null)
     {
         if (MountRoot == null)
         {
@@ -87,7 +82,7 @@ public partial class ModelEditWindow
     /// <param name="meshData">The mesh data to visualize points for</param>
     /// <param name="radius">Radius of each debug sphere (default: 0.05)</param>
     /// <param name="color">Color of the debug spheres (default: cyan)</param>
-    public void DrawPoints(KoreMeshData meshData, float radius = 0.05f, KoreColorRGB? color = null)
+    public void DrawPoints(KoreMeshData meshData, float radius = 0.03f, KoreColorRGB? color = null)
     {
         if (MountRoot == null)
         {
@@ -289,6 +284,107 @@ public partial class ModelEditWindow
     }
 
     // --------------------------------------------------------------------------------------------
+    // MARK: Mesh Surface Rendering
+    // --------------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// Draw the mesh using separate MeshInstance3D nodes for each material group
+    /// </summary>
+    /// <param name="meshData">The mesh data to render</param>
+    public void DrawMeshWithGroups(KoreMeshData? meshData)
+    {
+        if (MountRoot == null || meshData == null) return;
+
+        // Clear any existing mesh instances (but keep debug objects)
+        ClearMeshInstances();
+
+        if (meshData.NamedTriangleGroups.Count == 0)
+        {
+            // No groups defined, render the entire mesh as one group
+            DrawEntireMeshAsGroup(meshData);
+        }
+        else
+        {
+            // Render each group separately
+            foreach (var groupKvp in meshData.NamedTriangleGroups)
+            {
+                string groupName = groupKvp.Key;
+                DrawSingleMeshGroup(meshData, groupName);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Draw a single material group as a MeshInstance3D
+    /// </summary>
+    /// <param name="meshData">The source mesh data</param>
+    /// <param name="groupName">Name of the group to render</param>
+    private void DrawSingleMeshGroup(KoreMeshData meshData, string groupName)
+    {
+        // Create a mesh containing only this group's geometry
+        KoreMeshData groupMesh = meshData.CreateMeshForGroup(groupName);
+        
+        if (groupMesh.Triangles.Count == 0) return; // Skip empty groups
+
+        // Create a MeshInstance3D for this group
+        var meshInstance = new KoreGodotSurfaceMesh();
+        meshInstance.Name = $"MeshGroup_{groupName}";
+        
+        // Update the mesh with the group data
+        meshInstance.UpdateMesh(groupMesh);
+        
+        // Add to the scene
+        MountRoot!.AddChild(meshInstance);
+        
+        GD.Print($"Drew mesh group '{groupName}' with {groupMesh.Triangles.Count} triangles, {groupMesh.Materials.Count} materials");
+    }
+
+    /// <summary>
+    /// Draw the entire mesh as a single group when no named groups are defined
+    /// </summary>
+    /// <param name="meshData">The mesh data to render</param>
+    private void DrawEntireMeshAsGroup(KoreMeshData meshData)
+    {
+        if (meshData.Triangles.Count == 0) return; // Skip empty mesh
+
+        // Create a MeshInstance3D for the entire mesh
+        var meshInstance = new KoreGodotSurfaceMesh();
+        meshInstance.Name = "MeshGroup_EntireMesh";
+        
+        // Update the mesh with all the data
+        meshInstance.UpdateMesh(meshData);
+        
+        // Add to the scene
+        MountRoot!.AddChild(meshInstance);
+        
+        GD.Print($"Drew entire mesh with {meshData.Triangles.Count} triangles, {meshData.Materials.Count} materials");
+    }
+
+    /// <summary>
+    /// Clear all mesh instances (but preserve debug objects like spheres and cylinders)
+    /// </summary>
+    private void ClearMeshInstances()
+    {
+        if (MountRoot == null) return;
+
+        // Remove only KoreGodotSurfaceMesh nodes, keep debug objects
+        var childrenToRemove = new List<Node>();
+        foreach (Node child in MountRoot.GetChildren())
+        {
+            if (child is KoreGodotSurfaceMesh)
+            {
+                childrenToRemove.Add(child);
+            }
+        }
+
+        foreach (Node child in childrenToRemove)
+        {
+            MountRoot.RemoveChild(child);
+            child.QueueFree();
+        }
+    }
+
+    // --------------------------------------------------------------------------------------------
     // MARK: Export Testing
     // --------------------------------------------------------------------------------------------
 
@@ -297,15 +393,40 @@ public partial class ModelEditWindow
     /// </summary>
     public void TestObjExport()
     {
-        // Create test mesh
+        // Create test mesh with multiple materials
         KoreMeshData meshData = KoreMeshDataPrimitives.BasicCube(0.5f, KoreMeshMaterialPalette.DefaultMaterial);
         
+        // Add a second material
+        var redMaterial = new KoreMeshMaterial("RedMaterial", new KoreColorRGB(255, 0, 0), 0.1f, 0.3f);
+        int redMaterialId = meshData.IdForMaterial(redMaterial);
+        
+        // Add a third material  
+        var blueMaterial = new KoreMeshMaterial("BlueMaterial", new KoreColorRGB(0, 0, 255), 0.8f, 0.1f);
+        int blueMaterialId = meshData.IdForMaterial(blueMaterial);
+
+        // Create triangle groups with different materials
+        var triangleIds = new List<int>(meshData.Triangles.Keys);
+        if (triangleIds.Count >= 6) // Cube should have 12 triangles (6 faces * 2 triangles each)
+        {
+            // Assign first 4 triangles to red material
+            var redTriangles = triangleIds.Take(4).ToList();
+            meshData.NamedTriangleGroups["RedGroup"] = new KoreMeshTriangleGroup(redMaterialId, redTriangles);
+            
+            // Assign next 4 triangles to blue material  
+            var blueTriangles = triangleIds.Skip(4).Take(4).ToList();
+            meshData.NamedTriangleGroups["BlueGroup"] = new KoreMeshTriangleGroup(blueMaterialId, blueTriangles);
+            
+            // Leave remaining triangles with default material
+        }
+
+        GD.Print($"=== Export Test - Materials: {meshData.Materials.Count}, Groups: {meshData.NamedTriangleGroups.Count} ===");
+
         // Export to OBJ/MTL
         var (objContent, mtlContent) = KoreMeshDataIO.ToObjMtl(meshData, "TestCube", "cube_materials");
-        
+
         GD.Print("=== OBJ Content ===");
         GD.Print(objContent);
-        
+
         GD.Print("=== MTL Content ===");
         GD.Print(mtlContent);
 
@@ -329,6 +450,48 @@ public partial class ModelEditWindow
         if (!WindowMeshData?.HasNamedGroup(triangleGroupName) ?? true) return;
 
         // Get the triangle group from the mesh data
+    }
+
+
+    // --------------------------------------------------------------------------------------------
+    // MARK: Import Testing
+    // --------------------------------------------------------------------------------------------
+
+    // Usage: ModelEditWindow.TestObjImport()
+    public void TestObjImport()
+    {
+        GD.Print("=== OBJ Import Test ===");
+
+        // Load the OBJ file
+        var objContent = File.ReadAllText("TestCube.obj");
+        var mtlContent = File.ReadAllText("cube_materials.mtl");
+
+        GD.Print("=== MTL Content ===");
+        GD.Print(mtlContent);
+
+        // Import the OBJ/MTL
+        var meshData = KoreMeshDataIO.FromObjMtl(objContent, mtlContent);
+        KoreMeshDataEditOps.ReorientAllFaces(meshData);
+
+        // Update the window mesh data
+        // WindowMeshData = meshData;
+
+        // Debug: Print material count and details
+        GD.Print($"=== Import Results ===");
+        GD.Print($"Materials count: {meshData.Materials.Count}");
+        foreach (var kvp in meshData.Materials)
+        {
+            var material = kvp.Value;
+            GD.Print($"Material ID {kvp.Key}: {material.Name} - Color: {material.BaseColor} - Metallic: {material.Metallic} - Roughness: {material.Roughness}");
+        }
+
+        string jsonStr = KoreMeshDataIO.ToJson(meshData, dense: false);
+        GD.Print($"Imported Mesh Data JSON:\n{jsonStr}");
+
+        // Put the new text in the edit window
+        MeshJsonEdit!.SetText(jsonStr);
+
+        GD.Print("=== OBJ Import Test Complete ===");
     }
 
 }

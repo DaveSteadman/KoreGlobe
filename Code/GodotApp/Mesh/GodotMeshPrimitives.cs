@@ -14,7 +14,7 @@ public static class GodotMeshPrimitives
     public static void AddChildDebugSphere(Node3D parentNode, float radius, KoreColorRGB color)
     {
         // create the basic mesh data
-        var cubeMesh1 = KoreMeshDataPrimitives.BasicSphere(radius, color, 12);
+        var cubeMesh1 = KoreMeshDataPrimitives.BasicSphere(radius, color, 8);
 
         // create the surface and line mesh nodes
         KoreGodotLineMesh lineMeshNode = new KoreGodotLineMesh() { Name = "SphereLines" };

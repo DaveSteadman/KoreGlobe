@@ -39,15 +39,16 @@ public partial class KoreMeshData
 
     // Palette of Material for this mesh, by unique ID
     public Dictionary<int, KoreMeshMaterial> Materials = new();
-
+    
     // Named groups, logical/useful sub-divisions of the mesh triangles, with a material.
+    // - Non-exclusive inclusion of triangles allows for multiple uses and some manner of hierarchy
     public Dictionary<string, KoreMeshTriangleGroup> NamedTriangleGroups = new(); // Tags for grouping triangles
 
-    // Internal counters for unique IDs
-    private int NextVertexId = 0;
-    private int NextLineId = 0;
-    private int NextTriangleId = 0;
-    private int NextMaterialId = 0;
+    // Counters for unique IDs
+    public int NextVertexId = 0;
+    public int NextLineId = 0;
+    public int NextTriangleId = 0;
+    public int NextMaterialId = 0;
 
     // --------------------------------------------------------------------------------------------
     // MARK: Constructors
@@ -55,46 +56,6 @@ public partial class KoreMeshData
 
     // Empty constructor
     public KoreMeshData() { }
-
-    // // Copy constructor
-    // public KoreMeshData(KoreMeshData copyFrom)
-    // {
-    //     this.Vertices = new Dictionary<int, KoreXYZVector>(copyFrom.Vertices);
-    //     this.Lines = new Dictionary<int, KoreMeshLine>(copyFrom.Lines);
-    //     this.Triangles = new Dictionary<int, KoreMeshTriangle>(copyFrom.Triangles);
-    //     this.Normals = new Dictionary<int, KoreXYZVector>(copyFrom.Normals);
-    //     this.UVs = new Dictionary<int, KoreXYVector>(copyFrom.UVs);
-    //     this.VertexColors = new Dictionary<int, KoreColorRGB>(copyFrom.VertexColors);
-    //     this.LineColors = new Dictionary<int, KoreMeshLineColour>(copyFrom.LineColors);
-    //     this.TriangleColors = new Dictionary<int, KoreMeshTriangleColour>(copyFrom.TriangleColors);
-    //     this.Materials = new Dictionary<int, KoreMeshMaterial>(copyFrom.Materials);
-    //     this.TriangleMaterialIds = new Dictionary<int, int>(copyFrom.TriangleMaterialIds);
-    // }
-
-    // // Copy constructor
-    // public KoreMeshData(
-    //     Dictionary<int, KoreXYZVector> vertices,
-    //     Dictionary<int, KoreMeshLine> lines,
-    //     Dictionary<int, KoreMeshTriangle> triangles,
-    //     Dictionary<int, KoreXYZVector> normals,
-    //     Dictionary<int, KoreXYVector> uvs,
-    //     Dictionary<int, KoreColorRGB> vertexColors,
-    //     Dictionary<int, KoreMeshLineColour> lineColors,
-    //     Dictionary<int, KoreMeshTriangleColour> triangleColors,
-    //     Dictionary<int, KoreMeshMaterial> materials,
-    //     Dictionary<int, int> triangleMaterialIds)
-    // {
-    //     this.Vertices = vertices;
-    //     this.Lines = lines;
-    //     this.Triangles = triangles;
-    //     this.Normals = normals;
-    //     this.UVs = uvs;
-    //     this.VertexColors = vertexColors;
-    //     this.LineColors = lineColors;
-    //     this.TriangleColors = triangleColors;
-    //     this.Materials = materials;
-    //     this.TriangleMaterialIds = triangleMaterialIds;
-    // }
 
     // Copy constructor
     public KoreMeshData(KoreMeshData mesh)
@@ -172,14 +133,6 @@ public partial class KoreMeshData
     // MARK: Normals
     // --------------------------------------------------------------------------------------------
 
-    // public int AddNormal(KoreXYZVector normal)
-    // {
-    //     int id = NextVertexId++;
-
-    //     Normals[id] = normal;
-    //     return id;
-    // }
-
     public void SetNormalForId(int vertexId, KoreXYZVector normal)
     {
         // Need to have the normal tied to the vertex ID
@@ -191,7 +144,7 @@ public partial class KoreMeshData
 
     // --------------------------------------------------------------------------------------------
 
-    public KoreXYZVector SetNormalsForTriangle(int triangleId)
+    public KoreXYZVector CalcNormalsForTriangle(int triangleId)
     {
         if (!Triangles.ContainsKey(triangleId))
             return KoreXYZVector.Zero;
@@ -222,16 +175,16 @@ public partial class KoreMeshData
     // --------------------------------------------------------------------------------------------
 
     // Set normals for all vertices based on the first triangle that contains each vertex
-    // Usage: mesh.SetNormalsForAllTriangles();
+    // Usage: mesh.CalcNormalsForAllTriangles();
 
-    public void SetNormalsForAllTriangles()
+    public void CalcNormalsForAllTriangles()
     {
         foreach (var kvp in Triangles)
         {
             int triangleId = kvp.Key;
             KoreMeshTriangle triangle = kvp.Value;
 
-            SetNormalsForTriangle(triangleId);
+            CalcNormalsForTriangle(triangleId);
         }
     }
 
@@ -530,6 +483,7 @@ public partial class KoreMeshData
         AddTriangle(aId, bId, cId);
         AddTriangle(aId, cId, dId);
     }
+
 
     // --------------------------------------------------------------------------------------------
     // MARK: Materials

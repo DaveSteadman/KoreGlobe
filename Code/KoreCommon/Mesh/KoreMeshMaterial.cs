@@ -13,10 +13,10 @@ namespace KoreCommon;
 public struct KoreMeshMaterial : IEquatable<KoreMeshMaterial>
 {
 
-    public string Name { get; init; }                // Material name for GLTF export/import and identification
+    public string       Name      { get; init; }     // Material name for GLTF export/import and identification
     public KoreColorRGB BaseColor { get; init; }     // Includes RGBA - alpha channel handles transparency
-    public float Metallic { get; init; }              // 0 = dielectric (plastic/wood), 1 = metallic
-    public float Roughness { get; init; }             // 0 = mirror smooth, 1 = completely rough
+    public float        Metallic  { get; init; }     // 0 = dielectric (plastic/wood), 1 = metallic
+    public float        Roughness { get; init; }     // 0 = mirror smooth, 1 = completely rough
 
     // --------------------------------------------------------------------------------------------
     // MARK: Constructors
@@ -24,9 +24,9 @@ public struct KoreMeshMaterial : IEquatable<KoreMeshMaterial>
 
     public KoreMeshMaterial(string name, KoreColorRGB baseColor, float metallic = 0.0f, float roughness = 0.7f)
     {
-        Name = name;
+        Name      = name;
         BaseColor = baseColor;
-        Metallic = metallic;
+        Metallic  = metallic;
         Roughness = roughness;
     }
 

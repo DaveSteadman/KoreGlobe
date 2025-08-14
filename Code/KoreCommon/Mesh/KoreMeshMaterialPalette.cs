@@ -19,12 +19,13 @@ public static class KoreMeshMaterialPalette
         // MARK: Basic Colors
         // --------------------------------------------------------------------------------------------
         
+        new KoreMeshMaterial("MattWhite", new KoreColorRGB(255, 255, 255), 0f, 1f),
+        new KoreMeshMaterial("MattGray", new KoreColorRGB(128, 128, 128), 0f, 1f),
+        new KoreMeshMaterial("MattBlack", new KoreColorRGB(0, 0, 0), 0f, 1f),
+
         new KoreMeshMaterial("MattRed", new KoreColorRGB(255, 0, 0), 0f, 1f),
         new KoreMeshMaterial("MattGreen", new KoreColorRGB(0, 255, 0), 0f, 1f),
         new KoreMeshMaterial("MattBlue", new KoreColorRGB(0, 0, 255), 0f, 1f),
-        new KoreMeshMaterial("MattWhite", KoreColorRGB.White, 0f, 1f),
-        new KoreMeshMaterial("MattBlack", new KoreColorRGB(0, 0, 0), 0f, 1f),
-        new KoreMeshMaterial("MattGray", new KoreColorRGB(128, 128, 128), 0f, 1f),
         new KoreMeshMaterial("MattYellow", new KoreColorRGB(255, 255, 0), 0f, 1f),
         new KoreMeshMaterial("MattMagenta", new KoreColorRGB(255, 0, 255), 0f, 1f),
         new KoreMeshMaterial("MattCyan", new KoreColorRGB(0, 255, 255), 0f, 1f),
@@ -68,7 +69,7 @@ public static class KoreMeshMaterialPalette
         // MARK: Transparent Materials
         // --------------------------------------------------------------------------------------------
 
-        new KoreMeshMaterial("Glass", new KoreColorRGB(255, 255, 255, 77), 0.0f, 0.0f), // ~30% alpha
+        new KoreMeshMaterial("Glass", new KoreColorRGB(250, 250, 250, 100), 0.0f, 0.0f), 
         new KoreMeshMaterial("SmokedGlass", new KoreColorRGB(77, 77, 77, 128), 0.0f, 0.1f),
         new KoreMeshMaterial("BlueGlass", new KoreColorRGB(51, 102, 204, 102), 0.0f, 0.0f),
         new KoreMeshMaterial("GreenGlass", new KoreColorRGB(51, 204, 102, 102), 0.0f, 0.0f),
