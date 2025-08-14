@@ -44,8 +44,8 @@ public partial class KoreMeshData
     public Dictionary<string, KoreMeshTriangleGroup> NamedTriangleGroups = new(); // Tags for grouping triangles
 
     // Internal counters for unique IDs
-    private int NextVertexId   = 0;
-    private int NextLineId     = 0;
+    private int NextVertexId = 0;
+    private int NextLineId = 0;
     private int NextTriangleId = 0;
     private int NextMaterialId = 0;
 
@@ -58,7 +58,7 @@ public partial class KoreMeshData
 
     // // Copy constructor
     // public KoreMeshData(KoreMeshData copyFrom)
-    // { 
+    // {
     //     this.Vertices = new Dictionary<int, KoreXYZVector>(copyFrom.Vertices);
     //     this.Lines = new Dictionary<int, KoreMeshLine>(copyFrom.Lines);
     //     this.Triangles = new Dictionary<int, KoreMeshTriangle>(copyFrom.Triangles);
@@ -579,6 +579,11 @@ public partial class KoreMeshData
         }
     }
 
+    public bool HasNamedGroup(string groupName)
+    {
+        return NamedTriangleGroups.ContainsKey(groupName);
+    }
+
     public void SetGroupMaterialId(string groupName, int materialId)
     {
         if (NamedTriangleGroups.ContainsKey(groupName))
@@ -645,6 +650,25 @@ public partial class KoreMeshData
         NamedTriangleGroups[groupName] = group;
     }
 
+    public HashSet<KoreXYZVector> NamedGroupVertices(string groupName)
+    {
+        HashSet<KoreXYZVector> vertices = new HashSet<KoreXYZVector>();
+
+        if (NamedTriangleGroups.ContainsKey(groupName))
+        {
+            KoreMeshTriangleGroup group = NamedTriangleGroups[groupName];
+            foreach (int triangleId in group.TriangleIds)
+            {
+                if (Triangles.ContainsKey(triangleId))
+                {
+                    KoreMeshTriangle triangle = Triangles[triangleId];
+                    vertices.Add(Vertices[triangle.A]);
+                    vertices.Add(Vertices[triangle.B]);
+                    vertices.Add(Vertices[triangle.C]);
+                }
+            }
+        }
+
+        return vertices;
+    }
 }
-
-

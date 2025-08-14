@@ -39,9 +39,8 @@ public partial class KoreGodotSurfaceMesh : MeshInstance3D
     {
         // Ensure mesh data is complete and valid before processing
         newMeshData.FullyPopulate();
-        
-        _surfaceTool = new SurfaceTool();
 
+        _surfaceTool = new SurfaceTool();
         _surfaceTool.Clear();
         _surfaceTool.Begin(Mesh.PrimitiveType.Triangles);
 
@@ -88,12 +87,12 @@ public partial class KoreGodotSurfaceMesh : MeshInstance3D
         {
             int triangleId = kvp.Key;
             KoreMeshTriangle triangle = kvp.Value;
-            
+
             // Get the SurfaceTool indices for each vertex
             int indexA = vertexIdToSurfaceIndex[triangle.A];
             int indexB = vertexIdToSurfaceIndex[triangle.B];
             int indexC = vertexIdToSurfaceIndex[triangle.C];
-            
+
             // Add the triangle indices
             _surfaceTool.AddIndex(indexA);
             _surfaceTool.AddIndex(indexB);
@@ -103,7 +102,7 @@ public partial class KoreGodotSurfaceMesh : MeshInstance3D
         // Check if any vertex colors have transparency
         bool hasTransparency = false;
         bool hasVertexColors = newMeshData.VertexColors.Count > 0;
-        
+
         foreach (var vertexColor in newMeshData.VertexColors.Values)
         {
             if (vertexColor.IsTransparent) // Check for transparency in byte values
@@ -133,18 +132,31 @@ public partial class KoreGodotSurfaceMesh : MeshInstance3D
 
         // Commit the mesh and assign it to the MeshInstance3D
         Mesh mesh = _surfaceTool.Commit();
-        
+
         // Generate normals if they weren't provided
         //_surfaceTool.GenerateNormals();
         //mesh = _surfaceTool.Commit();
-        
+
         Mesh = mesh;
         MaterialOverride = material;
-        
+
         // Enable shadow casting for surface meshes
         CastShadow = GeometryInstance3D.ShadowCastingSetting.On;
 
         _meshNeedsUpdate = false;
     }
 
+    // --------------------------------------------------------------------------------------------
+    // MARK: Mesh
+    // --------------------------------------------------------------------------------------------
+
+    public void UpdateMeshNamedGroup(KoreMeshData newMeshData, string groupName)
+    {
+        _surfaceTool = new SurfaceTool();
+        _surfaceTool.Clear();
+        _surfaceTool.Begin(Mesh.PrimitiveType.Triangles);
+
+
+
+    }
 }

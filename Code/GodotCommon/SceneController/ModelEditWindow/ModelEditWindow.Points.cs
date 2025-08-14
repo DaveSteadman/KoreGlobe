@@ -18,6 +18,7 @@ public partial class ModelEditWindow
         MeshJsonEdit!.SetText(jsonStr);
 
         // Also visualize the points and lines in the 3D scene
+        DeleteAllDebug();
         DrawPoints(WindowMeshData);
         DrawLines(WindowMeshData);
     }
@@ -247,6 +248,21 @@ public partial class ModelEditWindow
     }
 
     /// <summary>
+    // Iteratively get and delete any node parented from MountRoot
+    /// </summary>
+    public void DeleteAllDebug()
+    {
+        if (MountRoot == null) return;
+
+        // Remove all children whose names start with "Debug_"
+        var children = MountRoot.GetChildren();
+        foreach (Node child in children)
+        {
+            child.QueueFree();
+        }
+    }
+
+    /// <summary>
     /// Clear all debug visualization elements (both points and lines)
     /// </summary>
     public void ClearAllDebugGeometry()
@@ -255,7 +271,18 @@ public partial class ModelEditWindow
         ClearDebugLines();
     }
 
+    // Function to get a named triangle grouping out of the mesh and extract the
+    // triangles as a new meshinstance3d.
 
+    public void DrawDebugTriangles(string triangleGroupName)
+    {
+        // Fail if no mount point control
+        if (MountRoot == null) return;
 
+        // Fail if no mesh data or named group
+        if (!WindowMeshData?.HasNamedGroup(triangleGroupName) ?? true) return;
+
+        // Get the triangle group from the mesh data
+    }
 
 }

@@ -43,17 +43,20 @@ render_target_update_mode = 4
 script = ExtResource("2_4lgcs")
 ViewportCustom3DScale = 0.8000000000029104
 
-[node name="MountRoot" type="Node3D" parent="MarginContainer/HBoxContainer/SubViewportContainer/ModelViewport"]
+[node name="Root3D" type="Node3D" parent="MarginContainer/HBoxContainer/SubViewportContainer/ModelViewport"]
 
-[node name="CameraRoot" type="Node3D" parent="MarginContainer/HBoxContainer/SubViewportContainer/ModelViewport/MountRoot"]
+[node name="MountRoot" type="Node3D" parent="MarginContainer/HBoxContainer/SubViewportContainer/ModelViewport/Root3D"]
+
+[node name="CameraRoot" type="Node3D" parent="MarginContainer/HBoxContainer/SubViewportContainer/ModelViewport/Root3D"]
 script = ExtResource("2_rb2ut")
 
-[node name="Camera3D" type="Camera3D" parent="MarginContainer/HBoxContainer/SubViewportContainer/ModelViewport/MountRoot/CameraRoot"]
+[node name="Camera3D" type="Camera3D" parent="MarginContainer/HBoxContainer/SubViewportContainer/ModelViewport/Root3D/CameraRoot"]
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="MarginContainer/HBoxContainer/SubViewportContainer/ModelViewport/MountRoot"]
+[node name="FloorPlane-MeshInstance3D" type="MeshInstance3D" parent="MarginContainer/HBoxContainer/SubViewportContainer/ModelViewport/Root3D"]
 mesh = SubResource("PlaneMesh_4lgcs")
+skeleton = NodePath("../MountRoot")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="MarginContainer/HBoxContainer/SubViewportContainer/ModelViewport/MountRoot"]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="MarginContainer/HBoxContainer/SubViewportContainer/ModelViewport/Root3D"]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 4.5748982, 0)
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
