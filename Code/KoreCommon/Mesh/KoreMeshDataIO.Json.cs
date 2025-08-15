@@ -119,10 +119,26 @@ public static partial class KoreMeshDataIO
         }
 
         // --- Materials ---
-        if (root.TryGetProperty("materials", out var materialsProp) && materialsProp.ValueKind == JsonValueKind.Object)
+        if (root.TryGetProperty("materials", out var materialsProp))
         {
-            foreach (var m in materialsProp.EnumerateObject())
-                mesh.Materials[int.Parse(m.Name)] = KoreMeshMaterialConverter.ReadMaterial(m.Value);
+            if (materialsProp.ValueKind == JsonValueKind.Array)
+            {
+                // New format: array of materials
+                foreach (var m in materialsProp.EnumerateArray())
+                {
+                    var material = KoreMeshMaterialConverter.ReadMaterial(m);
+                    mesh.AddMaterial(material);
+                }
+            }
+            else if (materialsProp.ValueKind == JsonValueKind.Object)
+            {
+                // Legacy format: object with material IDs (backwards compatibility)
+                foreach (var m in materialsProp.EnumerateObject())
+                {
+                    var material = KoreMeshMaterialConverter.ReadMaterial(m.Value);
+                    mesh.AddMaterial(material);
+                }
+            }
         }
 
         // --- NamedTriangleGroups ---
@@ -405,9 +421,9 @@ public static partial class KoreMeshDataIO
 
         public override void Write(Utf8JsonWriter writer, KoreMeshTriangleGroup value, JsonSerializerOptions options)
         {
-            // Format: "materialId: 0, triangleIds: [1,2,3,4]"
+            // Format: "materialName: Gold, triangleIds: [1,2,3,4]"
             string triangleIdsList = string.Join(",", value.TriangleIds);
-            writer.WriteStringValue($"materialId: {value.MaterialId}, triangleIds: [{triangleIdsList}]");
+            writer.WriteStringValue($"materialName: {value.MaterialName}, triangleIds: [{triangleIdsList}]");
         }
 
         public static KoreMeshTriangleGroup ReadTriangleGroup(JsonElement el)
@@ -416,14 +432,14 @@ public static partial class KoreMeshDataIO
 
             if (!string.IsNullOrEmpty(str))
             {
-                // Parse format: "materialId: 0, triangleIds: [1,2,3,4]"
+                // Parse format: "materialName: Gold, triangleIds: [1,2,3,4]"
                 var parts = str.Split(',');
                 if (parts.Length < 2)
                     throw new FormatException($"Invalid KoreMeshTriangleGroup string format. Expected at least 2 parts: {str}");
 
-                // Parse materialId
-                string materialIdPart = parts[0].Split(':')[1].Trim();
-                int materialId = int.Parse(materialIdPart);
+                // Parse materialName
+                string materialNamePart = parts[0].Split(':')[1].Trim();
+                string materialName = materialNamePart.Trim('"'); // Remove quotes if present
 
                 // Parse triangleIds - everything after "triangleIds: [" and before "]"
                 string triangleIdsPart = str.Substring(str.IndexOf('[') + 1);
@@ -440,10 +456,10 @@ public static partial class KoreMeshDataIO
                     }
                 }
 
-                return new KoreMeshTriangleGroup(materialId, triangleIds);
+                return new KoreMeshTriangleGroup(materialName, triangleIds);
             }
             
-            return new KoreMeshTriangleGroup(-1, new List<int>());
+            return new KoreMeshTriangleGroup("", new List<int>());
         }
     }
 }

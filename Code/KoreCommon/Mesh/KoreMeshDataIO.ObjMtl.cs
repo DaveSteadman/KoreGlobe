@@ -135,11 +135,11 @@ public static partial class KoreMeshDataIO
             string groupName = groupKvp.Key;
             KoreMeshTriangleGroup group = groupKvp.Value;
             
-            // Get material name
+            // Get material name from the group
             string materialName = "default";
-            if (mesh.Materials.TryGetValue(group.MaterialId, out KoreMeshMaterial material))
+            if (!string.IsNullOrEmpty(group.MaterialName))
             {
-                materialName = material.Name;
+                materialName = group.MaterialName;
             }
             
             if (!trianglesByMaterial.ContainsKey(materialName))
@@ -229,9 +229,9 @@ public static partial class KoreMeshDataIO
         sb.AppendLine("# MTL file exported from KoreMeshData");
         sb.AppendLine();
         
-        foreach (var kvp in mesh.Materials.OrderBy(x => x.Key))
+        foreach (KoreMeshMaterial material in mesh.Materials)
         {
-            KoreMeshMaterial material = kvp.Value;
+            // KoreMeshMaterial material = kvp.Value;
             
             sb.AppendLine($"newmtl {material.Name}");
             
@@ -309,10 +309,10 @@ public static partial class KoreMeshDataIO
         {
             materials = ParseMtl(mtlContent);
             
-            // Add materials to mesh using IdForMaterial
+            // Add materials to mesh using AddMaterial
             foreach (var kvp in materials)
             {
-                mesh.IdForMaterial(kvp.Value);
+                mesh.AddMaterial(kvp.Value);
             }
         }
         
@@ -457,16 +457,15 @@ public static partial class KoreMeshDataIO
             
             if (triangleIds.Count > 0)
             {
-                // Find material ID
-                int materialId = 0;
-                if (materials.TryGetValue(materialName, out KoreMeshMaterial material))
+                // Ensure the material exists in the mesh (add it if found in materials dictionary)
+                if (materials.ContainsKey(materialName))
                 {
-                    materialId = mesh.IdForMaterial(material);
+                    mesh.AddMaterial(materials[materialName]);
                 }
                 
                 // Create triangle group using the NamedTriangleGroups collection
                 string groupName = materialName == "default" ? "DefaultMaterial" : materialName;
-                var triangleGroup = new KoreMeshTriangleGroup(materialId, triangleIds);
+                var triangleGroup = new KoreMeshTriangleGroup(materialName, triangleIds);
                 mesh.NamedTriangleGroups[groupName] = triangleGroup;
             }
         }

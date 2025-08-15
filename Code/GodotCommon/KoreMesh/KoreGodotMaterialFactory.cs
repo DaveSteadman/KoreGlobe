@@ -176,6 +176,52 @@ void fragment() {
         return material;
     }
 
+    // --------------------------------------------------------------------------------------------
+    // MARK: KoreMeshMaterial Conversion
+    // --------------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// Converts a KoreMeshMaterial to Godot's StandardMaterial3D.
+    /// Usage: StandardMaterial3D material = KoreGodotMaterialFactory.FromKoreMaterial(koreMaterial);
+    /// </summary>
+    public static StandardMaterial3D FromKoreMaterial(KoreMeshMaterial koreMaterial)
+    {
+        StandardMaterial3D material = new StandardMaterial3D();
+        
+        // Convert base color
+        Color godotColor = KoreConvColor.ToGodotColor(koreMaterial.BaseColor);
+        material.AlbedoColor = godotColor;
+        
+        // Set metallic and roughness properties
+        material.Metallic = koreMaterial.Metallic;
+        material.Roughness = koreMaterial.Roughness;
+        
+        // Handle transparency
+        if (koreMaterial.IsTransparent)
+        {
+            material.Transparency = BaseMaterial3D.TransparencyEnum.Alpha;
+        }
+        else
+        {
+            material.Transparency = BaseMaterial3D.TransparencyEnum.Disabled;
+        }
+        
+        // Set up proper shading
+        material.ShadingMode = BaseMaterial3D.ShadingModeEnum.PerPixel;
+        material.SpecularMode = BaseMaterial3D.SpecularModeEnum.SchlickGgx;
+        
+        // Standard settings for proper rendering
+        material.CullMode = BaseMaterial3D.CullModeEnum.Back;
+        material.NoDepthTest = false;
+        
+        if (!koreMaterial.IsTransparent)
+        {
+            material.DepthDrawMode = BaseMaterial3D.DepthDrawModeEnum.OpaqueOnly;
+        }
+        
+        return material;
+    }
+
 
 
 }

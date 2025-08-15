@@ -300,6 +300,7 @@ public partial class ModelEditWindow
 
         if (meshData.NamedTriangleGroups.Count == 0)
         {
+            GD.Print("ModelEditWindow.DrawMeshWithGroups: No named triangle groups defined, rendering entire mesh as one group.");
             // No groups defined, render the entire mesh as one group
             DrawEntireMeshAsGroup(meshData);
         }
@@ -321,6 +322,8 @@ public partial class ModelEditWindow
     /// <param name="groupName">Name of the group to render</param>
     private void DrawSingleMeshGroup(KoreMeshData meshData, string groupName)
     {
+        GD.Print($"Drawing mesh group: {groupName}");
+        
         // Create a mesh containing only this group's geometry
         KoreMeshData groupMesh = meshData.CreateMeshForGroup(groupName);
         
@@ -331,7 +334,7 @@ public partial class ModelEditWindow
         meshInstance.Name = $"MeshGroup_{groupName}";
         
         // Update the mesh with the group data
-        meshInstance.UpdateMesh(groupMesh);
+        meshInstance.UpdateMesh(groupMesh, groupName);
         
         // Add to the scene
         MountRoot!.AddChild(meshInstance);
@@ -398,11 +401,11 @@ public partial class ModelEditWindow
         
         // Add a second material
         var redMaterial = new KoreMeshMaterial("RedMaterial", new KoreColorRGB(255, 0, 0), 0.1f, 0.3f);
-        int redMaterialId = meshData.IdForMaterial(redMaterial);
+        meshData.AddMaterial(redMaterial);
         
         // Add a third material  
         var blueMaterial = new KoreMeshMaterial("BlueMaterial", new KoreColorRGB(0, 0, 255), 0.8f, 0.1f);
-        int blueMaterialId = meshData.IdForMaterial(blueMaterial);
+        meshData.AddMaterial(blueMaterial);
 
         // Create triangle groups with different materials
         var triangleIds = new List<int>(meshData.Triangles.Keys);
@@ -410,11 +413,11 @@ public partial class ModelEditWindow
         {
             // Assign first 4 triangles to red material
             var redTriangles = triangleIds.Take(4).ToList();
-            meshData.NamedTriangleGroups["RedGroup"] = new KoreMeshTriangleGroup(redMaterialId, redTriangles);
+            meshData.NamedTriangleGroups["RedGroup"] = new KoreMeshTriangleGroup("RedMaterial", redTriangles);
             
             // Assign next 4 triangles to blue material  
             var blueTriangles = triangleIds.Skip(4).Take(4).ToList();
-            meshData.NamedTriangleGroups["BlueGroup"] = new KoreMeshTriangleGroup(blueMaterialId, blueTriangles);
+            meshData.NamedTriangleGroups["BlueGroup"] = new KoreMeshTriangleGroup("BlueMaterial", blueTriangles);
             
             // Leave remaining triangles with default material
         }
@@ -479,10 +482,10 @@ public partial class ModelEditWindow
         // Debug: Print material count and details
         GD.Print($"=== Import Results ===");
         GD.Print($"Materials count: {meshData.Materials.Count}");
-        foreach (var kvp in meshData.Materials)
+        for (int i = 0; i < meshData.Materials.Count; i++)
         {
-            var material = kvp.Value;
-            GD.Print($"Material ID {kvp.Key}: {material.Name} - Color: {material.BaseColor} - Metallic: {material.Metallic} - Roughness: {material.Roughness}");
+            var material = meshData.Materials[i];
+            GD.Print($"Material {i}: {material.Name} - Color: {material.BaseColor} - Metallic: {material.Metallic} - Roughness: {material.Roughness}");
         }
 
         string jsonStr = KoreMeshDataIO.ToJson(meshData, dense: false);

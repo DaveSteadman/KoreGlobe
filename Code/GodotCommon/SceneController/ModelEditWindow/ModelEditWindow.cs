@@ -43,6 +43,8 @@ public partial class ModelEditWindow : Window
         // sv.OwnWorld3D = true;
         // sv.World3D = new World3D();
         WindowMeshData = KoreMeshDataPrimitives.BasicCube(0.5f, KoreMeshMaterialPalette.DefaultMaterial);
+        KoreMeshDataEditOps.IsolateAllTriangles(WindowMeshData);
+        WindowMeshData.CalcNormalsForAllTriangles();
 
         AttachControls();
     }

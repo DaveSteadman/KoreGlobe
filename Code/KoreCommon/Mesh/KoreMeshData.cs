@@ -5,10 +5,11 @@ using System.Collections.Generic;
 
 namespace KoreCommon;
 
+// Minor structs for mesh data components
 public record struct KoreMeshLine(int A, int B);
 public record struct KoreMeshTriangle(int A, int B, int C);
 public record struct KoreMeshLineColour(KoreColorRGB StartColor, KoreColorRGB EndColor);
-public record struct KoreMeshTriangleGroup(int MaterialId, List<int> TriangleIds);
+public record struct KoreMeshTriangleGroup(string MaterialName, List<int> TriangleIds);
 
 // KoreMeshData: A class to hold mesh data for 3D geometry.
 // - points, lines, triangles, normals, UVs, vertex colors, line colors, and triangle colors.
@@ -16,39 +17,38 @@ public record struct KoreMeshTriangleGroup(int MaterialId, List<int> TriangleIds
 
 public partial class KoreMeshData
 {
-    // Vertices by unique ID
+    // Vertices by VertexID
     public Dictionary<int, KoreXYZVector> Vertices = new();
 
-    // Normals by vertex ID
+    // Normals by VertexID
     public Dictionary<int, KoreXYZVector> Normals = new();
 
-    // UVs by vertex ID
+    // UVs by VertexID
     public Dictionary<int, KoreXYVector> UVs = new();
 
-    // Vertex colors by vertex ID - for when the mesh is colored by vertex
+    // Vertex colors by VertexID - for when the mesh is colored by vertex
     public Dictionary<int, KoreColorRGB> VertexColors = new();
 
-    // Lines by unique ID, each referencing vertex IDs
+    // Lines by LineID, each referencing VertexIDs
     public Dictionary<int, KoreMeshLine> Lines = new();
 
-    // Line colors by line ID
+    // Line colors by LineID
     public Dictionary<int, KoreMeshLineColour> LineColors = new();
 
-    // Triangles by unique ID, each referencing vertex IDs
+    // Triangles by TriangleID, each referencing VertexIDs
     public Dictionary<int, KoreMeshTriangle> Triangles = new();
 
-    // Palette of Material for this mesh, by unique ID
-    public Dictionary<int, KoreMeshMaterial> Materials = new();
+    // list of Material for this mesh
+    public List<KoreMeshMaterial> Materials = new();
     
     // Named groups, logical/useful sub-divisions of the mesh triangles, with a material.
     // - Non-exclusive inclusion of triangles allows for multiple uses and some manner of hierarchy
     public Dictionary<string, KoreMeshTriangleGroup> NamedTriangleGroups = new(); // Tags for grouping triangles
 
-    // Counters for unique IDs
+    // Counters for unique IDs 
     public int NextVertexId = 0;
     public int NextLineId = 0;
     public int NextTriangleId = 0;
-    public int NextMaterialId = 0;
 
     // --------------------------------------------------------------------------------------------
     // MARK: Constructors
@@ -67,7 +67,7 @@ public partial class KoreMeshData
         this.UVs = new Dictionary<int, KoreXYVector>(mesh.UVs);
         this.VertexColors = new Dictionary<int, KoreColorRGB>(mesh.VertexColors);
         this.LineColors = new Dictionary<int, KoreMeshLineColour>(mesh.LineColors);
-        this.Materials = new Dictionary<int, KoreMeshMaterial>(mesh.Materials);
+        this.Materials = new List<KoreMeshMaterial>();
         this.NamedTriangleGroups = new Dictionary<string, KoreMeshTriangleGroup>(mesh.NamedTriangleGroups);
     }
 
@@ -87,7 +87,6 @@ public partial class KoreMeshData
         NextVertexId = 0;
         NextLineId = 0;
         NextTriangleId = 0;
-        NextMaterialId = 0;
     }
 
     // --------------------------------------------------------------------------------------------
@@ -492,28 +491,29 @@ public partial class KoreMeshData
     // The mesh class will look to add materials given any opportunity, and use a cull orphaned materials function
     // to remove them later if needed.
 
-    public int IdForMaterial(KoreMeshMaterial material)
+    public void AddMaterial(KoreMeshMaterial material)
     {
         // Search the Materials list for a matching material
-        foreach (var kvp in Materials)
+        foreach (KoreMeshMaterial existingMaterial in Materials)
         {
-            if (kvp.Value.Equals(material))
-            {
-                return kvp.Key; // Return existing material ID if found
-            }
+            if (existingMaterial.Name == material.Name)
+                return; // existing material found, return without action
         }
-
-        // Material not found - add a new one
-        int materialId = NextMaterialId++;
-        Materials[materialId] = material;
-
-        return materialId;
+        
+        // Material not found - add a new one using its name
+        Materials.Add(material);
     }
-
+        
     // Get the material, or return the default material if not setup
-    public KoreMeshMaterial MaterialForId(int materialId)
+    public KoreMeshMaterial GetMaterial(string materialName)
     {
-        return Materials.ContainsKey(materialId) ? Materials[materialId] : KoreMeshMaterialPalette.DefaultMaterial;
+        // Loop through the existing materials, and return if we find one with a matching name
+        foreach (KoreMeshMaterial existingMaterial in Materials)
+        {
+            if (existingMaterial.Name == materialName)
+                return existingMaterial;
+        }
+        return KoreMeshMaterialPalette.DefaultMaterial;
     }
 
     // --------------------------------------------------------------------------------------------
@@ -526,7 +526,7 @@ public partial class KoreMeshData
         {
             KoreMeshTriangleGroup newGroup = new KoreMeshTriangleGroup
             {
-                MaterialId = -1,
+                MaterialName = "",
                 TriangleIds = new List<int>()
             };
             NamedTriangleGroups[newName] = newGroup;
@@ -538,35 +538,58 @@ public partial class KoreMeshData
         return NamedTriangleGroups.ContainsKey(groupName);
     }
 
-    public void SetGroupMaterialId(string groupName, int materialId)
+    public KoreMeshTriangleGroup? NamedGroup(string groupName)
+    {
+        if (NamedTriangleGroups.ContainsKey(groupName))
+        {
+            return NamedTriangleGroups[groupName];
+        }
+        return null;
+    }
+
+    // --------------------------------------------------------------------------------------------
+
+    public void AddGroupWithMaterial(string groupName, KoreMeshMaterial material)
+    {
+        AddMaterial(material);
+
+        if (!NamedTriangleGroups.ContainsKey(groupName))
+        {
+            NamedTriangleGroups[groupName] = new KoreMeshTriangleGroup
+            {
+                MaterialName = material.Name,
+                TriangleIds = new List<int>()
+            };
+        }
+    }
+
+    public void SetGroupMaterialName(string groupName, string materialName)
     {
         if (NamedTriangleGroups.ContainsKey(groupName))
         {
             KoreMeshTriangleGroup currGroup = NamedTriangleGroups[groupName];
-            currGroup.MaterialId = materialId;
-            NamedTriangleGroups[groupName] = currGroup;
+            NamedTriangleGroups[groupName] = currGroup with { MaterialName = materialName };
         }
         else
         {
             KoreMeshTriangleGroup newGroup = new KoreMeshTriangleGroup
             {
-                MaterialId = materialId,
+                MaterialName = materialName,
                 TriangleIds = new List<int>()
             };
             NamedTriangleGroups[groupName] = newGroup;
         }
     }
 
-    public void AddGroupWithMaterial(string groupName, KoreMeshMaterial material)
+    
+    public KoreMeshMaterial MaterialForGroup(string groupName)
     {
-        if (!NamedTriangleGroups.ContainsKey(groupName))
+        if (NamedTriangleGroups.ContainsKey(groupName))
         {
-            NamedTriangleGroups[groupName] = new KoreMeshTriangleGroup
-            {
-                MaterialId = IdForMaterial(material),
-                TriangleIds = new List<int>()
-            };
+            string materialName = NamedTriangleGroups[groupName].MaterialName;
+            return GetMaterial(materialName);
         }
+        return KoreMeshMaterialPalette.DefaultMaterial; // No material for this group, or no group found
     }
 
     // --------------------------------------------------------------------------------------------
@@ -582,7 +605,7 @@ public partial class KoreMeshData
         {
             KoreMeshTriangleGroup newGroup = new KoreMeshTriangleGroup
             {
-                MaterialId = -1,
+                MaterialName = "",
                 TriangleIds = new List<int> { triangleId }
             };
             NamedTriangleGroups[groupName] = newGroup;

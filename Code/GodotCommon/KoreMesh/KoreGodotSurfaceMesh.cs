@@ -6,6 +6,8 @@ using System.Collections.Generic;
 
 using Godot;
 
+#nullable enable
+
 public partial class KoreGodotSurfaceMesh : MeshInstance3D
 {
     private SurfaceTool _surfaceTool = new SurfaceTool();
@@ -35,12 +37,13 @@ public partial class KoreGodotSurfaceMesh : MeshInstance3D
     // MARK: Mesh
     // --------------------------------------------------------------------------------------------
 
-    public void UpdateMesh(KoreMeshData newMeshData)
+    public void UpdateMesh(KoreMeshData newMeshData, string? groupName = null)
     {
         // Ensure mesh data is complete and valid before processing
         newMeshData.FullyPopulate();
 
         _surfaceTool = new SurfaceTool();
+
         _surfaceTool.Clear();
         _surfaceTool.Begin(Mesh.PrimitiveType.Triangles);
 
@@ -99,37 +102,6 @@ public partial class KoreGodotSurfaceMesh : MeshInstance3D
             _surfaceTool.AddIndex(indexC);
         }
 
-        // Check if any vertex colors have transparency
-        bool hasTransparency = false;
-        bool hasVertexColors = newMeshData.VertexColors.Count > 0;
-
-        foreach (var vertexColor in newMeshData.VertexColors.Values)
-        {
-            if (vertexColor.IsTransparent) // Check for transparency in byte values
-            {
-                hasTransparency = true;
-                break;
-            }
-        }
-
-        // Choose material based on vertex colors and transparency
-        StandardMaterial3D material;
-        if (hasVertexColors && hasTransparency)
-        {
-            // Use vertex color transparent material
-            material = KoreGodotMaterialFactory.VertexColorTransparentStandardMaterial();
-        }
-        else if (hasVertexColors)
-        {
-            // Use vertex color opaque material
-            material = KoreGodotMaterialFactory.VertexColorStandardMaterial();
-        }
-        else
-        {
-            // Use standard colored material with default color
-            material = KoreGodotMaterialFactory.StandardColoredMaterial(new Color(0.8f, 0.2f, 0.2f));
-        }
-
         // Commit the mesh and assign it to the MeshInstance3D
         Mesh mesh = _surfaceTool.Commit();
 
@@ -138,6 +110,17 @@ public partial class KoreGodotSurfaceMesh : MeshInstance3D
         //mesh = _surfaceTool.Commit();
 
         Mesh = mesh;
+        StandardMaterial3D material;
+        if (groupName != null)
+        {
+            // Handle grouping logic here
+            KoreMeshMaterial kMat = newMeshData.MaterialForGroup(groupName);
+            material = KoreGodotMaterialFactory.FromKoreMaterial(kMat);
+        }
+        else
+        {
+            material = KoreGodotMaterialFactory.StandardColoredMaterial(new Color(0.8f, 0.2f, 0.2f));
+        }
         MaterialOverride = material;
 
         // Enable shadow casting for surface meshes
@@ -146,17 +129,4 @@ public partial class KoreGodotSurfaceMesh : MeshInstance3D
         _meshNeedsUpdate = false;
     }
 
-    // --------------------------------------------------------------------------------------------
-    // MARK: Mesh
-    // --------------------------------------------------------------------------------------------
-
-    public void UpdateMeshNamedGroup(KoreMeshData newMeshData, string groupName)
-    {
-        _surfaceTool = new SurfaceTool();
-        _surfaceTool.Clear();
-        _surfaceTool.Begin(Mesh.PrimitiveType.Triangles);
-
-
-
-    }
 }

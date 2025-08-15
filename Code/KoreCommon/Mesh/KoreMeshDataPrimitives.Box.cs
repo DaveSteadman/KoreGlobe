@@ -15,7 +15,7 @@ public static partial class KoreMeshDataPrimitives
     {
         var mesh = new KoreMeshData();
 
-        int matId = mesh.IdForMaterial(mat);
+        mesh.AddMaterial(mat);
         KoreColorRGB color = mat.BaseColor;
 
         KoreColorRGB linecolor = KoreColorRGB.White;
@@ -53,7 +53,7 @@ public static partial class KoreMeshDataPrimitives
         mesh.AddTriangle(v0, v5, v1); mesh.AddTriangle(v0, v4, v5); // bottom
 
         mesh.AddAllTrianglesToGroup("DefaultMaterial");
-        mesh.SetGroupMaterialId("DefaultMaterial", matId);
+        mesh.SetGroupMaterialName("DefaultMaterial", mat.Name);
 
         mesh.MakeValid();
         return mesh;
@@ -64,7 +64,7 @@ public static partial class KoreMeshDataPrimitives
     {
         var mesh = new KoreMeshData();
 
-        int matId = mesh.IdForMaterial(mat);
+        mesh.AddMaterial(mat);
         KoreColorRGB color = mat.BaseColor;
         
         // Create 24 vertices (4 per face) with proper face normals for sharp edges
@@ -170,7 +170,7 @@ public static partial class KoreMeshDataPrimitives
     {
         var mesh = new KoreMeshData();
 
-        int matId = mesh.IdForMaterial(mat);
+        mesh.AddMaterial(mat);
         KoreColorRGB color = mat.BaseColor;
 
         // Define the 8 corner vertices manually outside of the mesh

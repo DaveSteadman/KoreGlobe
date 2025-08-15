@@ -491,31 +491,3 @@ public static partial class KoreMeshDataEditOps
         }
     }
 }
-
-/// <summary>
-/// Extension methods to provide backward compatibility with instance-based calls
-/// These methods delegate to the static implementations
-/// </summary>
-public static class KoreMeshDataValidityExtensions
-{
-    public static void ResetMaxIDs(this KoreMeshData mesh) => KoreMeshDataEditOps.ResetMaxIDs(mesh);
-    public static void FullyPopulate(this KoreMeshData mesh) => KoreMeshDataEditOps.FullyPopulate(mesh);
-    public static void MakeValid(this KoreMeshData mesh) => KoreMeshDataEditOps.MakeValid(mesh);
-    public static KoreXYZBox GetBoundingBox(this KoreMeshData mesh) => KoreMeshDataEditOps.GetBoundingBox(mesh);
-    public static void RemoveOrphanedPoints(this KoreMeshData mesh) => KoreMeshDataEditOps.RemoveOrphanedPoints(mesh);
-    public static void RemoveDuplicatePoints(this KoreMeshData mesh, double tolerance = KoreConsts.ArbitrarySmallDouble) => KoreMeshDataEditOps.RemoveDuplicatePoints(mesh, tolerance);
-    public static void RemoveBrokenNormals(this KoreMeshData mesh) => KoreMeshDataEditOps.RemoveBrokenNormals(mesh);
-    public static void CreateMissingNormals(this KoreMeshData mesh, KoreXYZVector? defaultNormal = null) => KoreMeshDataEditOps.CreateMissingNormals(mesh, defaultNormal);
-    public static KoreXYZVector NormalForTriangle(this KoreMeshData mesh, int triangleId) => KoreMeshDataEditOps.NormalForTriangle(mesh, triangleId);
-    public static void SetNormalFromFirstTriangle(this KoreMeshData mesh, int vertexId) => KoreMeshDataEditOps.SetNormalFromFirstTriangle(mesh, vertexId);
-    public static void SetNormalsFromTriangles(this KoreMeshData mesh) => KoreMeshDataEditOps.SetNormalsFromTriangles(mesh);
-    public static void RemoveBrokenUVs(this KoreMeshData mesh) => KoreMeshDataEditOps.RemoveBrokenUVs(mesh);
-    public static void CreateMissingUVs(this KoreMeshData mesh, KoreXYVector? defaultUV = null) => KoreMeshDataEditOps.CreateMissingUVs(mesh, defaultUV);
-    public static void CreateMissingVertexColors(this KoreMeshData mesh, KoreColorRGB? defaultColor = null) => KoreMeshDataEditOps.CreateMissingVertexColors(mesh, defaultColor);
-    public static void RemoveBrokenLines(this KoreMeshData mesh) => KoreMeshDataEditOps.RemoveBrokenLines(mesh);
-    public static void RemoveDuplicateLines(this KoreMeshData mesh) => KoreMeshDataEditOps.RemoveDuplicateLines(mesh);
-    public static void RemoveBrokenLineColors(this KoreMeshData mesh) => KoreMeshDataEditOps.RemoveBrokenLineColors(mesh);
-    public static void CreateMissingLineColors(this KoreMeshData mesh, KoreColorRGB? defaultColor = null) => KoreMeshDataEditOps.CreateMissingLineColors(mesh, defaultColor);
-    public static void RemoveBrokenTriangles(this KoreMeshData mesh) => KoreMeshDataEditOps.RemoveBrokenTriangles(mesh);
-    public static void RemoveDuplicateTriangles(this KoreMeshData mesh) => KoreMeshDataEditOps.RemoveDuplicateTriangles(mesh);
-}

@@ -32,7 +32,7 @@ public static partial class KoreMeshDataEditOps
             OffsetVertex(mesh, vertexId, offset);
         }
     }
-    
+
     /// <summary>
     /// Creates a duplicate vertex with all associated data (normal, UV, color)
     /// </summary>
@@ -45,13 +45,13 @@ public static partial class KoreMeshDataEditOps
         KoreXYZVector vertex = mesh.Vertices[originalVertexId];
 
         KoreXYZVector? normal = mesh.Normals.ContainsKey(originalVertexId) ? mesh.Normals[originalVertexId] : null;
-        KoreXYVector?  uv     = mesh.UVs.ContainsKey(originalVertexId) ? mesh.UVs[originalVertexId] : null;
-        KoreColorRGB?  color  = mesh.VertexColors.ContainsKey(originalVertexId) ? mesh.VertexColors[originalVertexId] : null;
+        KoreXYVector? uv = mesh.UVs.ContainsKey(originalVertexId) ? mesh.UVs[originalVertexId] : null;
+        KoreColorRGB? color = mesh.VertexColors.ContainsKey(originalVertexId) ? mesh.VertexColors[originalVertexId] : null;
 
         // Create new vertex with all associated data
         return mesh.AddVertex(vertex, normal, color, uv);
     }
-    
+
     // --------------------------------------------------------------------------------------------
     // MARK: TRIANGLES
     // --------------------------------------------------------------------------------------------
@@ -113,8 +113,8 @@ public static partial class KoreMeshDataEditOps
             return new HashSet<int>();
 
         KoreMeshTriangle targetTriangle = mesh.Triangles[targetTriangleId];
-        HashSet<int>     targetVertices = new HashSet<int> { targetTriangle.A, targetTriangle.B, targetTriangle.C };
-        HashSet<int>     sharedVertices = new HashSet<int>();
+        HashSet<int> targetVertices = new HashSet<int> { targetTriangle.A, targetTriangle.B, targetTriangle.C };
+        HashSet<int> sharedVertices = new HashSet<int>();
 
         // Check all other triangles for shared vertices
         foreach (var kvp in mesh.Triangles)
@@ -123,7 +123,7 @@ public static partial class KoreMeshDataEditOps
                 continue;
 
             KoreMeshTriangle otherTriangle = kvp.Value;
-            
+
             if (targetVertices.Contains(otherTriangle.A)) sharedVertices.Add(otherTriangle.A);
             if (targetVertices.Contains(otherTriangle.B)) sharedVertices.Add(otherTriangle.B);
             if (targetVertices.Contains(otherTriangle.C)) sharedVertices.Add(otherTriangle.C);
@@ -132,6 +132,14 @@ public static partial class KoreMeshDataEditOps
         return sharedVertices;
     }
 
+
+    public static void IsolateAllTriangles(KoreMeshData mesh)
+    {
+        foreach (var kvp in mesh.Triangles)
+        {
+            IsolateTriangle(mesh, kvp.Key);
+        }
+    }
 
 }
 
