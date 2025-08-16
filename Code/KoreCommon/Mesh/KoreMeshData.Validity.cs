@@ -39,20 +39,8 @@ public partial class KoreMeshData
     // Function to examine the vertex list, and remove any orphaned or duplicate lines, triangles, and colors.
     public void MakeValid()
     {
-        RemoveOrphanedPoints();
-        RemoveDuplicatePoints();
-
-        RemoveBrokenNormals(); // Remove normals that don't have supporting point IDs.
-
-        RemoveBrokenUVs(); // Remove UVs that don't have supporting point IDs.
-
-        RemoveBrokenLines(); // Remove lines that don't have supporting point IDs.
-        RemoveDuplicateLines();
-
-        RemoveBrokenLineColors(); // Remove line colors that don't have supporting line IDs.
-
-        RemoveBrokenTriangles(); // Remove triangles that don't have supporting point IDs.
-        RemoveDuplicateTriangles();
+        // Delegate to the static EditOps version for consistency
+        KoreMeshDataEditOps.MakeValid(this);
     }
 
     // --------------------------------------------------------------------------------------------
@@ -81,7 +69,7 @@ public partial class KoreMeshData
             if (vertex.Z > maxZ) maxZ = vertex.Z;
         }
 
-        KoreXYZPoint center = new KoreXYZPoint((minX + maxX) / 2, (minY + maxY) / 2, (minZ + maxZ) / 2);
+        KoreXYZVector center = new KoreXYZVector((minX + maxX) / 2, (minY + maxY) / 2, (minZ + maxZ) / 2);
         double width = maxX - minX;
         double height = maxY - minY;
         double length = maxZ - minZ;
@@ -97,44 +85,8 @@ public partial class KoreMeshData
 
     public void RemoveOrphanedPoints()
     {
-        // Determine which vertices are referenced by lines or triangles
-        var used = new HashSet<int>();
-
-        // Loop through the lines dictionary
-        foreach (var kvp in Lines)
-        {
-            int lineId = kvp.Key;
-            KoreMeshLine line = kvp.Value;
-
-            used.Add(line.A);
-            used.Add(line.B);
-        }
-        // Loop through the triangles dictionary
-        foreach (var kvp in Triangles)
-        {
-            int triangleId = kvp.Key;
-            KoreMeshTriangle triangle = kvp.Value;
-
-            used.Add(triangle.A);
-            used.Add(triangle.B);
-            used.Add(triangle.C);
-        }
-        // Loop through the vertex colors dictionary
-        foreach (var kvp in VertexColors)
-        {
-            // Get the vertex ID and its color
-            int vertexId = kvp.Key;
-            KoreColorRGB color = kvp.Value;
-
-            used.Add(vertexId);
-        }
-
-        // Now loop through the vertices and remove any that are not in the used set
-        foreach (var key in Vertices.Keys)
-        {
-            if (!used.Contains(key))
-                Vertices.Remove(key);
-        }
+        // Delegate to the static EditOps version for consistency
+        KoreMeshDataEditOps.RemoveOrphanedPoints(this);
     }
 
     // A duplicate point, is one within a close tollerance of distance from another point
@@ -159,7 +111,7 @@ public partial class KoreMeshData
             foreach (int earlierId in processedVertices)
             {
                 KoreXYZVector earlierVertex = Vertices[earlierId];
-                
+
                 if (currentVertex.IsEqualTo(earlierVertex, tolerance))
                 {
                     // Found a duplicate - map current ID to the earlier ID
@@ -199,10 +151,10 @@ public partial class KoreMeshData
         {
             int lineId = kvp.Key;
             KoreMeshLine line = kvp.Value;
-            
+
             int newA = remapping.ContainsKey(line.A) ? remapping[line.A] : line.A;
             int newB = remapping.ContainsKey(line.B) ? remapping[line.B] : line.B;
-            
+
             updatedLines[lineId] = new KoreMeshLine(newA, newB);
         }
         Lines = updatedLines;
@@ -213,11 +165,11 @@ public partial class KoreMeshData
         {
             int triangleId = kvp.Key;
             KoreMeshTriangle triangle = kvp.Value;
-            
+
             int newA = remapping.ContainsKey(triangle.A) ? remapping[triangle.A] : triangle.A;
             int newB = remapping.ContainsKey(triangle.B) ? remapping[triangle.B] : triangle.B;
             int newC = remapping.ContainsKey(triangle.C) ? remapping[triangle.C] : triangle.C;
-            
+
             updatedTriangles[triangleId] = new KoreMeshTriangle(newA, newB, newC);
         }
         Triangles = updatedTriangles;
@@ -233,7 +185,7 @@ public partial class KoreMeshData
         foreach (var kvp in Normals)
         {
             int normalId = kvp.Key;
-            
+
             // If we don't have a matching vertex ID, remove the normal
             if (!Vertices.ContainsKey(normalId))
                 Normals.Remove(normalId);

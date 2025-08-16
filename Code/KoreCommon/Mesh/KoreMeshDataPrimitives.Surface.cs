@@ -15,7 +15,7 @@ public static partial class KoreMeshDataPrimitives
     public static KoreMeshData Surface(KoreXYZVector[,] vertices, KoreUVBox uvBox)
     {
         var mesh = new KoreMeshData();
-        
+
         // Basic setup, dimensions and UVs
         int width  = vertices.GetLength(0);
         int height = vertices.GetLength(1);
@@ -23,7 +23,7 @@ public static partial class KoreMeshDataPrimitives
 
         // Loop through the grid, adding points and UVs. Create a corresponding output grid of the point IDs
         int[,] pointIds = new int[width, height];
-        
+
         for (int iX = 0; iX < width; iX++)
         {
             for (int iY = 0; iY < height; iY++)
@@ -34,7 +34,7 @@ public static partial class KoreMeshDataPrimitives
                     null, null, uvGrid[iX, iY]);
             }
         }
-        
+
         // Loop through the point IDs to create triangles and lines
         for (int iX = 0; iX < width - 1; iX++)
         {

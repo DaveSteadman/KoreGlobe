@@ -7,7 +7,7 @@ public static class KoreXYZMagnitudeSphereOps
 
     // Create a simple heightmap sphere with a single radius
 
-    public static KoreXYZMagnitudeSphere CreateSimpleHeightmapSphere(KoreXYZPoint center, double radius)
+    public static KoreXYZMagnitudeSphere CreateSimpleHeightmapSphere(KoreXYZVector center, double radius)
     {
         KoreFloat2DArray hm = new(360, 180);
         hm.SetAll((float)radius);
@@ -16,7 +16,7 @@ public static class KoreXYZMagnitudeSphereOps
 
     // Create a heightmap with a lobe pattern derived from a sine wave
 
-    public static KoreXYZMagnitudeSphere CreateLobeHeightmapSphere(KoreXYZPoint center, double radius, double lobeHeight, double lobeWidth)
+    public static KoreXYZMagnitudeSphere CreateLobeHeightmapSphere(KoreXYZVector center, double radius, double lobeHeight, double lobeWidth)
     {
         KoreFloat2DArray hm = new(360, 180);
 

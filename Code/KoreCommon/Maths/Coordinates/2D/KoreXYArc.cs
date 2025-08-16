@@ -11,7 +11,7 @@ namespace KoreCommon;
 
 public struct KoreXYArc
 {
-    public KoreXYPoint Center { get; }
+    public KoreXYVector Center { get; }
     public double Radius { get; }
     public double StartAngleRads { get; }
     public double DeltaAngleRads { get; }
@@ -27,8 +27,8 @@ public struct KoreXYArc
     public double LengthCurved { get { return Radius * AngleSpanRads; } }
     public double LengthStraightLine { get { return Math.Sqrt(Diameter * Diameter + LengthCurved * LengthCurved); } }
 
-    public KoreXYPoint StartPoint { get { return KoreXYPointOps.OffsetPolar(Center, Radius, StartAngleRads); } }
-    public KoreXYPoint EndPoint { get { return KoreXYPointOps.OffsetPolar(Center, Radius, EndAngleRads); } }
+    public KoreXYVector StartPoint { get { return KoreXYVectorOps.OffsetPolar(Center, Radius, StartAngleRads); } }
+    public KoreXYVector EndPoint { get { return KoreXYVectorOps.OffsetPolar(Center, Radius, EndAngleRads); } }
 
     public double StartAngleDegs { get { return KoreValueUtils.RadsToDegs(StartAngleRads); } }
     public double EndAngleDegs { get { return KoreValueUtils.RadsToDegs(EndAngleRads); } }
@@ -40,7 +40,7 @@ public struct KoreXYArc
     // Constructor
     // --------------------------------------------------------------------------------------------
 
-    public KoreXYArc(KoreXYPoint center, double radius, double startAngleRads, double deltaAngleRads)
+    public KoreXYArc(KoreXYVector center, double radius, double startAngleRads, double deltaAngleRads)
     {
         Center = center;
         Radius = radius;

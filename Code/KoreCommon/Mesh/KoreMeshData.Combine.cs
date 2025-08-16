@@ -72,6 +72,31 @@ public partial class KoreMeshData
             newMesh.Triangles[triangleIdMap[kvp.Key]] = newTriangle;
         }
 
+        // - - - - Copy materials - - - -
+
+        // Materials don't have IDs, so copy them directly
+        foreach (var material in Materials)
+            newMesh.Materials.Add(material);
+
+        // - - - - Copy named triangle groups with remapped triangle IDs - - - -
+
+        foreach (var kvp in NamedTriangleGroups)
+        {
+            var originalGroup = kvp.Value;
+            var remappedTriangleIds = new List<int>();
+
+            // Remap each triangle ID in the group
+            foreach (var originalTriangleId in originalGroup.TriangleIds)
+            {
+                if (triangleIdMap.ContainsKey(originalTriangleId))
+                    remappedTriangleIds.Add(triangleIdMap[originalTriangleId]);
+            }
+
+            // Create new group with remapped triangle IDs
+            var newGroup = new KoreMeshTriangleGroup(originalGroup.MaterialName, remappedTriangleIds);
+            newMesh.NamedTriangleGroups[kvp.Key] = newGroup;
+        }
+
         // Update the new mesh Next-ID values based on the new counts
         newMesh.ResetMaxIDs();
 
@@ -157,6 +182,31 @@ public partial class KoreMeshData
             newMesh.Triangles[triangleIdMap[kvp.Key]] = newTriangle;
         }
 
+        // - - - - Copy materials - - - -
+
+        // Materials don't have IDs, so copy them directly
+        foreach (var material in Materials)
+            newMesh.Materials.Add(material);
+
+        // - - - - Copy named triangle groups with remapped triangle IDs - - - -
+
+        foreach (var kvp in NamedTriangleGroups)
+        {
+            var originalGroup = kvp.Value;
+            var remappedTriangleIds = new List<int>();
+
+            // Remap each triangle ID in the group
+            foreach (var originalTriangleId in originalGroup.TriangleIds)
+            {
+                if (triangleIdMap.ContainsKey(originalTriangleId))
+                    remappedTriangleIds.Add(triangleIdMap[originalTriangleId]);
+            }
+
+            // Create new group with remapped triangle IDs
+            var newGroup = new KoreMeshTriangleGroup(originalGroup.MaterialName, remappedTriangleIds);
+            newMesh.NamedTriangleGroups[kvp.Key] = newGroup;
+        }
+
         // Update the new mesh Next-ID values based on the new counts
         newMesh.ResetMaxIDs();
 
@@ -206,10 +256,17 @@ public partial class KoreMeshData
         foreach (var kvp in mesh2Offset.Triangles)
             newMesh.Triangles[kvp.Key] = kvp.Value;
 
+        // Copy in the materials from mesh2, into mesh 1
+        foreach (var material in mesh2Offset.Materials)
+            newMesh.Materials.Add(material);
+
+        // Copy in the named triangle groups from mesh2, into mesh 1
+        foreach (var kvp in mesh2Offset.NamedTriangleGroups)
+            newMesh.NamedTriangleGroups[kvp.Key] = kvp.Value;
+
         // Update the new mesh Next-ID values based on the new counts
         newMesh.ResetMaxIDs();
 
         return newMesh;
     }
-
 }

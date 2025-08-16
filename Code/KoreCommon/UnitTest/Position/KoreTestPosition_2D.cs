@@ -6,19 +6,19 @@ namespace KoreCommon.UnitTest;
 
 public static partial class KoreTestPosition
 {
-    private static void TestKoreXYPoint(KoreTestLog testLog)
+    private static void TestKoreXYVector(KoreTestLog testLog)
     {
-        // Example: Test creation of KoreXYPoint points and basic operations
-        var pointA = new KoreXYPoint(1, 2);
-        var pointB = new KoreXYPoint(4, 5);
+        // Example: Test creation of KoreXYVector points and basic operations
+        var pointA = new KoreXYVector(1, 2);
+        var pointB = new KoreXYVector(4, 5);
 
-        testLog.AddResult("KoreXYPoint Creation", pointA.X == 1 && pointA.Y == 2);
+        testLog.AddResult("KoreXYVector Creation", pointA.X == 1 && pointA.Y == 2);
 
         double calcDistance = Math.Sqrt((4 - 1) * (4 - 1) + (5 - 2) * (5 - 2));
-        testLog.AddResult("KoreXYPoint Distance", KoreValueUtils.EqualsWithinTolerance(pointA.DistanceTo(pointB), calcDistance, 0.001));
+        testLog.AddResult("KoreXYVector Distance", KoreValueUtils.EqualsWithinTolerance(pointA.DistanceTo(pointB), calcDistance, 0.001));
 
 
-        // Add more tests for KoreXYZPoint
+        // Add more tests for KoreXYZVector
     }
 
     private static void TestKoreXYLine(KoreTestLog testLog)

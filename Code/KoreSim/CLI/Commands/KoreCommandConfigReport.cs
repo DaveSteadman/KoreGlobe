@@ -4,6 +4,8 @@ using System.Text;
 using KoreCommon;
 namespace KoreSim;
 
+#nullable enable
+
 public class KoreCommandConfigReport : KoreCommand
 {
     public KoreCommandConfigReport()
@@ -28,10 +30,10 @@ public class KoreCommandConfigReport : KoreCommand
 
         if (validOperation)
         {
-            int numEntries = KoreSimFactory.Instance.KoreConfig.Count;
+            int numEntries = KoreSimFactory.Instance.KoreConfig?.Count ?? 0;
             sb.AppendLine($"Config Report: {numEntries} entries");
 
-            sb.Append(KoreSimFactory.Instance.KoreConfig.Report());
+            sb.Append(KoreSimFactory.Instance.KoreConfig?.Report() ?? "No config available");
         }
 
         // -------------------------------------------------

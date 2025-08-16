@@ -12,10 +12,10 @@ namespace KoreCommon;
 
 public struct KoreUVBox
 {
-    public KoreXYPoint TopLeft;
-    public KoreXYPoint BottomRight;
+    public KoreXYVector TopLeft;
+    public KoreXYVector BottomRight;
 
-    public KoreUVBox(KoreXYPoint topLeft, KoreXYPoint bottomRight)
+    public KoreUVBox(KoreXYVector topLeft, KoreXYVector bottomRight)
     {
         TopLeft     = topLeft;
         BottomRight = bottomRight;
@@ -23,12 +23,12 @@ public struct KoreUVBox
 
     public KoreUVBox(double topLeftX, double topLeftY, double bottomRightX, double bottomRightY)
     {
-        TopLeft     = new KoreXYPoint(topLeftX, topLeftY);
-        BottomRight = new KoreXYPoint(bottomRightX, bottomRightY);
+        TopLeft     = new KoreXYVector(topLeftX, topLeftY);
+        BottomRight = new KoreXYVector(bottomRightX, bottomRightY);
     }
 
-    public static KoreUVBox Zero { get { return new KoreUVBox(KoreXYPoint.Zero, KoreXYPoint.Zero); } }
-    public static KoreUVBox Full { get { return new KoreUVBox(KoreXYPoint.Zero, KoreXYPoint.One); } }
+    public static KoreUVBox Zero { get { return new KoreUVBox(KoreXYVector.Zero, KoreXYVector.Zero); } }
+    public static KoreUVBox Full { get { return new KoreUVBox(KoreXYVector.Zero, KoreXYVector.One); } }
 
     // --------------------------------------------------------------------------------------------
 
@@ -57,7 +57,7 @@ public struct KoreUVBox
 
     // Get a 2D grid of UV coordinates based on the dimensions of a destination point grid
     // Quick UV generation method.
-    // Usage: KoreXYPoint[,] uvGrid = uvBox.GetUVGrid(10, 10);
+    // Usage: KoreXYVector[,] uvGrid = uvBox.GetUVGrid(10, 10);
     public KoreXYVector[,] GetUVGrid(int horizSize, int vertSize)
     {
         var uvGrid = new KoreXYVector[horizSize, vertSize];
@@ -88,7 +88,7 @@ public struct KoreUVBox
     // (0,0) is top left box, (size-1, size-1) is bottom right box.
 
     // Creates a UV box for a subtile within the main tile
-    public static KoreUVBox BoxFromGrid(KoreXYPoint topLeft, KoreXYPoint bottomRight, int horizSize, int vertSize, int horizIndex, int vertIndex)
+    public static KoreUVBox BoxFromGrid(KoreXYVector topLeft, KoreXYVector bottomRight, int horizSize, int vertSize, int horizIndex, int vertIndex)
     {
         double horizStep = 1.0f / horizSize;
         double vertStep  = 1.0f / vertSize;
@@ -98,7 +98,7 @@ public struct KoreUVBox
         double topValue   = topLeft.Y + vertIndex * vertStep * (bottomRight.Y - topLeft.Y);
         double botValue   = topLeft.Y + (vertIndex + 1) * vertStep * (bottomRight.Y - topLeft.Y);
 
-        return new KoreUVBox(new KoreXYPoint(leftValue, topValue), new KoreXYPoint(rightValue, botValue));
+        return new KoreUVBox(new KoreXYVector(leftValue, topValue), new KoreXYVector(rightValue, botValue));
     }
 
     public KoreUVBox BoxFromGrid(KoreNumeric2DPosition<int> innerBoxPos)
@@ -114,7 +114,7 @@ public struct KoreUVBox
         double bottomValue = TopLeft.Y + (innerBoxPos.PosY + 1) * vertStep;
 
         // Return a new KoreUVBox using the calculated values
-        return new KoreUVBox(new KoreXYPoint(leftValue, topValue), new KoreXYPoint(rightValue, bottomValue));
+        return new KoreUVBox(new KoreXYVector(leftValue, topValue), new KoreXYVector(rightValue, bottomValue));
     }
 
 }

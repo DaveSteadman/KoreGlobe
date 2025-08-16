@@ -9,15 +9,15 @@ public static class KoreXYArcOps
     // Intersections
     // --------------------------------------------------------------------------------------------
 
-    public static List<KoreXYPoint> IntersectionPoints(KoreXYArc arc, KoreXYLine line)
+    public static List<KoreXYVector> IntersectionPoints(KoreXYArc arc, KoreXYLine line)
     {
-        List<KoreXYPoint> intersectionPoints = new List<KoreXYPoint>();
+        List<KoreXYVector> intersectionPoints = new List<KoreXYVector>();
 
         // Use the new ToCircle method
         KoreXYCircle circle = arc.Circle;
 
         // Assume IntersectionPoints(KoreXYCircle, KoreXYLine) is implemented elsewhere
-        List<KoreXYPoint> circleIntersections = KoreXYCircleOps.IntersectionPoints(circle, line);
+        List<KoreXYVector> circleIntersections = KoreXYCircleOps.IntersectionPoints(circle, line);
 
         foreach (var point in circleIntersections)
         {
@@ -35,15 +35,15 @@ public static class KoreXYArcOps
     // Conversions
     // --------------------------------------------------------------------------------------------
 
-    public static KoreXYPoint PointAtFraction(KoreXYArc arc, double fraction)
+    public static KoreXYVector PointAtFraction(KoreXYArc arc, double fraction)
     {
         double angle = arc.StartAngleRads + (arc.DeltaAngleRads * fraction);
-        return KoreXYPointOps.OffsetPolar(arc.Center, arc.Radius, angle);
+        return KoreXYVectorOps.OffsetPolar(arc.Center, arc.Radius, angle);
     }
 
     public static KoreXYPolyLine ToPolyLine(KoreXYArc arc, int numPoints)
     {
-        List<KoreXYPoint> points = new List<KoreXYPoint>();
+        List<KoreXYVector> points = new List<KoreXYVector>();
 
         double startAngle = arc.StartAngleRads;
         double endAngle = arc.EndAngleRads;
@@ -52,7 +52,7 @@ public static class KoreXYArcOps
         for (int i = 0; i < numPoints; i++)
         {
             double angle = startAngle + (i * angleIncrement);
-            points.Add(KoreXYPointOps.OffsetPolar(arc.Center, arc.Radius, angle));
+            points.Add(KoreXYVectorOps.OffsetPolar(arc.Center, arc.Radius, angle));
         }
 
         return new KoreXYPolyLine(points);

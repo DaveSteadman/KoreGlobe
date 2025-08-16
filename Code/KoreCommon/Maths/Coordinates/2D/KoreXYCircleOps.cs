@@ -5,7 +5,7 @@ namespace KoreCommon;
 
 public static class KoreXYCircleOps
 {
-    public static double ClosestDistanceTo(KoreXYCircle circle, KoreXYPoint xy)
+    public static double ClosestDistanceTo(KoreXYCircle circle, KoreXYVector xy)
     {
         return circle.Center.DistanceTo(xy) - circle.Radius;
     }
@@ -14,9 +14,9 @@ public static class KoreXYCircleOps
     {
         double closestDistance = double.MaxValue;
 
-        List<KoreXYPoint> intersectionPoints = IntersectionPoints(circle, line);
+        List<KoreXYVector> intersectionPoints = IntersectionPoints(circle, line);
 
-        foreach (KoreXYPoint intersectionPoint in intersectionPoints)
+        foreach (KoreXYVector intersectionPoint in intersectionPoints)
         {
             double distance = ClosestDistanceTo(circle, intersectionPoint);
             if (distance < closestDistance)
@@ -32,16 +32,16 @@ public static class KoreXYCircleOps
     // Circumference points
     // --------------------------------------------------------------------------------------------
 
-    public static KoreXYPoint PointAtAngleRads(KoreXYCircle circle, double angleRads)
+    public static KoreXYVector PointAtAngleRads(KoreXYCircle circle, double angleRads)
     {
         double x = circle.Center.X + circle.Radius * Math.Cos(angleRads);
         double y = circle.Center.Y + circle.Radius * Math.Sin(angleRads);
-        return new KoreXYPoint(x, y);
+        return new KoreXYVector(x, y);
     }
 
     public static KoreXYPolyLine ToPolyLine(KoreXYCircle circle, int numPoints)
     {
-        List<KoreXYPoint> points = new List<KoreXYPoint>();
+        List<KoreXYVector> points = new List<KoreXYVector>();
 
         double angleIncrement = 2 * Math.PI / numPoints;
 
@@ -63,9 +63,9 @@ public static class KoreXYCircleOps
         return KoreXYCircleOps.ClosestDistanceTo(circle, line) <= circle.Radius;
     }
 
-    public static List<KoreXYPoint> IntersectionPoints(KoreXYCircle circle, KoreXYLine line)
+    public static List<KoreXYVector> IntersectionPoints(KoreXYCircle circle, KoreXYLine line)
     {
-        List<KoreXYPoint> intersectionPoints = new List<KoreXYPoint>();
+        List<KoreXYVector> intersectionPoints = new List<KoreXYVector>();
 
         double x1 = line.P1.X - circle.Center.X; // Translate line to circle origin
         double y1 = line.P1.Y - circle.Center.Y;
@@ -90,7 +90,7 @@ public static class KoreXYCircleOps
         double xIntersect1 = (D * dy + signDy * dx * sqrtDiscriminant) / (dr * dr) + circle.Center.X;
         double yIntersect1 = (-D * dx + Math.Abs(dy) * sqrtDiscriminant) / (dr * dr) + circle.Center.Y;
 
-        KoreXYPoint p1 = new(xIntersect1, yIntersect1);
+        KoreXYVector p1 = new(xIntersect1, yIntersect1);
         if (KoreXYLineOps.IsPointOnLine(line, p1))
             intersectionPoints.Add(p1);
 
@@ -99,7 +99,7 @@ public static class KoreXYCircleOps
             double xIntersect2 = (D * dy - signDy * dx * sqrtDiscriminant) / (dr * dr) + circle.Center.X;
             double yIntersect2 = (-D * dx - Math.Abs(dy) * sqrtDiscriminant) / (dr * dr) + circle.Center.Y;
 
-            KoreXYPoint p2 = new(xIntersect2, yIntersect2);
+            KoreXYVector p2 = new(xIntersect2, yIntersect2);
             if (KoreXYLineOps.IsPointOnLine(line, p2))
                 intersectionPoints.Add(p2);
         }
@@ -107,9 +107,9 @@ public static class KoreXYCircleOps
         return intersectionPoints;
     }
 
-    public static List<KoreXYPoint> IntersectionPoints(KoreXYCircle circle1, KoreXYCircle circle2)
+    public static List<KoreXYVector> IntersectionPoints(KoreXYCircle circle1, KoreXYCircle circle2)
     {
-        List<KoreXYPoint> intersectionPoints = new List<KoreXYPoint>();
+        List<KoreXYVector> intersectionPoints = new List<KoreXYVector>();
 
         double x0 = circle1.Center.X;
         double y0 = circle1.Center.Y;
@@ -136,14 +136,14 @@ public static class KoreXYCircleOps
 
         double x3 = x2 + h * dy / d;
         double y3 = y2 - h * dx / d;
-        intersectionPoints.Add(new KoreXYPoint(x3, y3));
+        intersectionPoints.Add(new KoreXYVector(x3, y3));
 
         // Check for the case when circles intersect at two points
         if (d != r0 + r1)
         {
             double x4 = x2 - h * dy / d;
             double y4 = y2 + h * dx / d;
-            intersectionPoints.Add(new KoreXYPoint(x4, y4));
+            intersectionPoints.Add(new KoreXYVector(x4, y4));
         }
 
         return intersectionPoints;
@@ -156,9 +156,9 @@ public static class KoreXYCircleOps
 
     // Return the list of (most of the time) two tangent points from a point to a circle. Will be zero
     // if the point is insider the circle.
-    public static List<KoreXYPoint> TangentPoints(KoreXYCircle circle, KoreXYPoint pos)
+    public static List<KoreXYVector> TangentPoints(KoreXYCircle circle, KoreXYVector pos)
     {
-        List<KoreXYPoint> tangentPoints = new List<KoreXYPoint>();
+        List<KoreXYVector> tangentPoints = new List<KoreXYVector>();
 
         double x1 = circle.Center.X;
         double y1 = circle.Center.Y;
@@ -185,8 +185,8 @@ public static class KoreXYCircleOps
         double x4 = x1 + r * Math.Cos(theta - phi);
         double y4 = y1 + r * Math.Sin(theta - phi);
 
-        tangentPoints.Add(new KoreXYPoint(x3, y3));
-        tangentPoints.Add(new KoreXYPoint(x4, y4));
+        tangentPoints.Add(new KoreXYVector(x3, y3));
+        tangentPoints.Add(new KoreXYVector(x4, y4));
 
         return tangentPoints;
     }

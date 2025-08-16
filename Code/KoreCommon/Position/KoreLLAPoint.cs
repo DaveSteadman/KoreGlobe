@@ -6,7 +6,7 @@ namespace KoreCommon;
 
 // The struct KoreLLAPoint stores a Lat Long Altitude (LLA) position and calculates various new positions, angles and offsets related to it.
 // Data is stored in SI units and additional accessor properties allow setting and getting in different units.
-// An associates KoreXYZPoint class defines a position in an ENU, XYZ format. An associates KoreConsts class hold constants regarding conversion and earth radius.
+// An associates KoreXYZVector class defines a position in an ENU, XYZ format. An associates KoreConsts class hold constants regarding conversion and earth radius.
 
 // Design Decisions:
 // - The code uses a struct rather than an immutable class, as the constructor options with flexible units
@@ -114,9 +114,9 @@ public struct KoreLLAPoint
     // MARK: Conversion
     // --------------------------------------------------------------------------------------------
 
-    public KoreXYZPoint ToXYZ()
+    public KoreXYZVector ToXYZ()
     {
-        KoreXYZPoint retXYZ = new KoreXYZPoint(
+        KoreXYZVector retXYZ = new KoreXYZVector(
             RadiusM * Math.Cos(LatRads) * Math.Cos(LonRads),
             RadiusM * Math.Sin(LatRads),
             RadiusM * Math.Cos(LatRads) * Math.Sin(LonRads));
@@ -124,7 +124,7 @@ public struct KoreLLAPoint
     }
 
     // Usage: KoreLLAPoint pos = KoreLLAPoint.FromXYZ(xyz);
-    public static KoreLLAPoint FromXYZ(KoreXYZPoint inputXYZ)
+    public static KoreLLAPoint FromXYZ(KoreXYZVector inputXYZ)
     {
         double radius = inputXYZ.Magnitude;
 
@@ -180,8 +180,8 @@ public struct KoreLLAPoint
 
     public double StraightLineDistanceToM(KoreLLAPoint destPos)
     {
-        KoreXYZPoint startXYZ = this.ToXYZ();
-        KoreXYZPoint destXYZ = destPos.ToXYZ();
+        KoreXYZVector startXYZ = this.ToXYZ();
+        KoreXYZVector destXYZ = destPos.ToXYZ();
         return startXYZ.DistanceTo(destXYZ);
     }
 

@@ -20,7 +20,7 @@ public partial class KoreZeroNodeMapManager : Node3D
 
     // Map load ref position
     public static KoreLLAPoint LoadRefLLA = new() { LatDegs = 41, LonDegs = 6, AltMslM = 0 };
-    public static KoreXYZPoint LoadRefXYZ => LoadRefLLA.ToXYZ();
+    public static KoreXYZVector LoadRefXYZ => LoadRefLLA.ToXYZ();
     public static float DistanceToHorizonM = 0;
 
     // Tile Action counter - Sets up a number of tile creation actions to be performed per _Process call.
@@ -28,7 +28,7 @@ public partial class KoreZeroNodeMapManager : Node3D
 
     // lvl0 tile list
     private List<KoreZeroNodeMapTile> Lvl0Tiles = new List<KoreZeroNodeMapTile>();
-    
+
     private float currTimer = 0;
     private float currTimerIncrement = 1.0f; // 1sec
 
@@ -55,8 +55,8 @@ public partial class KoreZeroNodeMapManager : Node3D
         // Lvl0Tiles.Add(new KoreZeroNodeMapTile(new KoreMapTileCode("BG")));
         // Lvl0Tiles.Add(new KoreZeroNodeMapTile(new KoreMapTileCode("CG")));
         // Lvl0Tiles.Add(new KoreZeroNodeMapTile(new KoreMapTileCode("BH")));
-        
-        
+
+
         List<KoreMapTileCode> lvl0CodesList = KoreMapTileCode.Lvl0Codes();
         foreach (KoreMapTileCode lvl0Code in lvl0CodesList)
         {

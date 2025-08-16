@@ -4,7 +4,7 @@ namespace KoreCommon;
 
 public struct KoreXYZSphere
 {
-    public KoreXYZPoint Center { get; private set; }
+    public KoreXYZVector Center { get; private set; }
     public double Radius { get; private set; }
 
     // --------------------------------------------------------------------------------------------
@@ -19,7 +19,7 @@ public struct KoreXYZSphere
     // Constructor
     // --------------------------------------------------------------------------------------------
 
-    public KoreXYZSphere(KoreXYZPoint center, double radius)
+    public KoreXYZSphere(KoreXYZVector center, double radius)
     {
         if (radius <= 0)
         {
@@ -30,7 +30,7 @@ public struct KoreXYZSphere
         Radius = radius;
     }
 
-    public bool ContainsPoint(KoreXYZPoint point)
+    public bool ContainsPoint(KoreXYZVector point)
     {
         return (point - Center).Magnitude <= Radius;
     }
@@ -39,7 +39,7 @@ public struct KoreXYZSphere
     //
     // --------------------------------------------------------------------------------------------
 
-    public KoreXYZPoint SurfacePoint(double AzDegs, double ElDegs)
+    public KoreXYZVector SurfacePoint(double AzDegs, double ElDegs)
     {
         double azRads = AzDegs * KoreConsts.DegsToRadsMultiplier;
         double elRads = ElDegs * KoreConsts.DegsToRadsMultiplier;
@@ -48,7 +48,7 @@ public struct KoreXYZSphere
         double y = Center.Y + Radius * Math.Cos(elRads) * Math.Sin(azRads);
         double z = Center.Z + Radius * Math.Sin(elRads);
 
-        return new KoreXYZPoint(x, y, z);
+        return new KoreXYZVector(x, y, z);
     }
 
     // Additional methods can be added here as needed

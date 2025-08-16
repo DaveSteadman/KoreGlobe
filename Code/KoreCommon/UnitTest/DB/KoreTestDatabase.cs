@@ -25,7 +25,7 @@ public static class KoreTestDatabase
 
     private static void TestDatabaseReadWrite(KoreTestLog testLog)
     {
-        string dbPath = "test_db.sqlite";
+        string dbPath = "UnitTestArtefacts/test_db.sqlite";
         if (File.Exists(dbPath))
             File.Delete(dbPath);
 

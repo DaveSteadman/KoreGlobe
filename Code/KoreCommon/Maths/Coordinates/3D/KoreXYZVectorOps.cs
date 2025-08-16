@@ -2,7 +2,7 @@ using System;
 
 namespace KoreCommon;
 
-public static class KoreXYZPointOps
+public static class KoreXYZVectorOps
 {
     // Dot Product - the cosine of the angle between the two vectors
     // Considering both as lines from 0,0 to the points, this is the cosine of the angle between them
@@ -15,7 +15,7 @@ public static class KoreXYZPointOps
     // Calculates the dot product of two 3D points (vectors).
     // This returns the sum of the products of their corresponding components.
     // The result is proportional to the cosine of the angle between the vectors.
-    public static double DotProduct(KoreXYZPoint a, KoreXYZPoint b)
+    public static double DotProduct(KoreXYZVector a, KoreXYZVector b)
     {
         return (a.X * b.X) + (a.Y * b.Y) + (a.Z * b.Z);
     }
@@ -29,13 +29,13 @@ public static class KoreXYZPointOps
     // Calculates the cross product of two 3D points (vectors).
     // Returns a new vector perpendicular to both input vectors, following the right-hand rule.
     // Useful for finding normals or the area of a parallelogram defined by the vectors.
-    public static KoreXYZPoint CrossProduct(KoreXYZPoint a, KoreXYZPoint b)
+    public static KoreXYZVector CrossProduct(KoreXYZVector a, KoreXYZVector b)
     {
         double x = (a.Y * b.Z) - (a.Z * b.Y);
         double y = (a.Z * b.X) - (a.X * b.Z);
         double z = (a.X * b.Y) - (a.Y * b.X);
 
-        return new KoreXYZPoint(x, y, z);
+        return new KoreXYZVector(x, y, z);
     }
 
     // --------------------------------------------------------------------------------------------
@@ -45,7 +45,7 @@ public static class KoreXYZPointOps
     // Calculates the angle (in radians) between two 3D vectors from the origin.
     // Uses the dot product and magnitudes to compute the angle via arccosine.
     // Handles edge cases to avoid NaN from floating-point rounding errors.
-    public static double AngleBetweenRads(KoreXYZPoint a, KoreXYZPoint b)
+    public static double AngleBetweenRads(KoreXYZVector a, KoreXYZVector b)
     {
         double dotProduct = DotProduct(a, b);
         double magA = a.Magnitude;
@@ -63,39 +63,39 @@ public static class KoreXYZPointOps
     }
 
     // Get the angle between lines origin-A and origin-B
-    public static double AngleBetweenRads(KoreXYZPoint origin, KoreXYZPoint a, KoreXYZPoint b)
+    public static double AngleBetweenRads(KoreXYZVector origin, KoreXYZVector a, KoreXYZVector b)
     {
-        KoreXYZPoint vecA = a - origin;
-        KoreXYZPoint vecB = b - origin;
+        KoreXYZVector vecA = a - origin;
+        KoreXYZVector vecB = b - origin;
 
         return AngleBetweenRads(vecA, vecB);
     }
 
     // --------------------------------------------------------------------------------------------
 
-    // usage: KoreXYZPoint a = new KoreXYZPoint(1, 2, 3);
-    //        KoreXYZPoint c = KoreXYZPointOps.OffsetAzEl(a, 10, KoreValueUtils.DegsToRads(45), KoreValueUtils.DegsToRads(30));
+    // usage: KoreXYZVector a = new KoreXYZVector(1, 2, 3);
+    //        KoreXYZVector c = KoreXYZVectorOps.OffsetAzEl(a, 10, KoreValueUtils.DegsToRads(45), KoreValueUtils.DegsToRads(30));
 
     // Returns a new point offset from the origin by a given radius, azimuth, and elevation (in radians).
     // Converts spherical coordinates to Cartesian, then adds to the origin.
     // Useful for generating points on a sphere or in polar coordinate systems.
-    public static KoreXYZPoint OffsetAzEl(KoreXYZPoint origin, double radius, double azimuthRads, double elevationRads)
+    public static KoreXYZVector OffsetAzEl(KoreXYZVector origin, double radius, double azimuthRads, double elevationRads)
     {
         double x = origin.X + radius * Math.Cos(azimuthRads) * Math.Cos(elevationRads);
         double y = origin.Y + radius * Math.Sin(azimuthRads) * Math.Cos(elevationRads);
         double z = origin.Z + radius * Math.Sin(elevationRads);
 
-        return new KoreXYZPoint(x, y, z);
+        return new KoreXYZVector(x, y, z);
     }
 
     // --------------------------------------------------------------------------------------------
 
-    // Usage: KoreXYZPoint c = KoreXYZPointOps.Lerp(from, to, 0.1);
+    // Usage: KoreXYZVector c = KoreXYZVectorOps.Lerp(from, to, 0.1);
 
     // Linearly interpolates between two 3D points by a given fraction (0.0 to 1.0).
     // Returns a point along the straight line from 'fromPoint' to 'toPoint'.
     // Handles edge cases for fraction <= 0 or >= 1.
-    public static KoreXYZPoint Lerp(KoreXYZPoint fromPoint, KoreXYZPoint toPoint, double fraction)
+    public static KoreXYZVector Lerp(KoreXYZVector fromPoint, KoreXYZVector toPoint, double fraction)
     {
         // Handle edge cases
         if (fraction <= 0.0) return fromPoint;
@@ -106,7 +106,7 @@ public static class KoreXYZPointOps
         double y = fromPoint.Y + (toPoint.Y - fromPoint.Y) * fraction;
         double z = fromPoint.Z + (toPoint.Z - fromPoint.Z) * fraction;
 
-        return new KoreXYZPoint(x, y, z);
+        return new KoreXYZVector(x, y, z);
     }
 
     // --------------------------------------------------------------------------------------------
@@ -114,7 +114,7 @@ public static class KoreXYZPointOps
     // Spherically interpolates between two 3D points on a unit sphere by a given fraction.
     // Produces smooth interpolation along the surface of the sphere (great arc), not a straight line.
     // Normalizes inputs, computes the angle, and blends using sine-based weights.
-    public static KoreXYZPoint Slerp(KoreXYZPoint a, KoreXYZPoint b, double fraction)
+    public static KoreXYZVector Slerp(KoreXYZVector a, KoreXYZVector b, double fraction)
     {
         // Handle edge cases
         if (fraction <= 0.0) return a;
@@ -136,7 +136,7 @@ public static class KoreXYZPointOps
         double sinComplementAngle = Math.Sin((1 - fraction) * angle);
 
         // Calculate the interpolated point
-        KoreXYZPoint interpolated = (a * sinComplementAngle + b * sinFractionAngle) / sinAngle;
+        KoreXYZVector interpolated = (a * sinComplementAngle + b * sinFractionAngle) / sinAngle;
 
         return interpolated;
     }
@@ -146,7 +146,7 @@ public static class KoreXYZPointOps
     // Computes an inset point at vertex B, offset along the angle bisector of segments AB and BC by distance t.
     // Useful for generating smoothed or beveled corners in 3D geometry.
     // Handles all three dimensions for accurate 3D insetting.
-    public static KoreXYZPoint InsetPoint(KoreXYZPoint a, KoreXYZPoint b, KoreXYZPoint c, double t)
+    public static KoreXYZVector InsetPoint(KoreXYZVector a, KoreXYZVector b, KoreXYZVector c, double t)
     {
         // Calculate direction vectors for AB and BC, including the Z dimension
         double dxAB = b.X - a.X;
@@ -180,7 +180,7 @@ public static class KoreXYZPointOps
         double yInset = b.Y + t * bisectorY;
         double zInset = b.Z + t * bisectorZ; // Include Z dimension
 
-        return new KoreXYZPoint(xInset, yInset, zInset);
+        return new KoreXYZVector(xInset, yInset, zInset);
     }
 
     // --------------------------------------------------------------------------------------------
@@ -188,7 +188,7 @@ public static class KoreXYZPointOps
     // Rotates a 3D point around an arbitrary axis by a given angle (in radians).
     // Uses Rodrigues' rotation formula to compute the rotated coordinates.
     // Axis must be nonzero; function normalizes it internally.
-    public static KoreXYZPoint RotateAboutAxis(KoreXYZPoint point, KoreXYZPoint axis, double angleRads)
+    public static KoreXYZVector RotateAboutAxis(KoreXYZVector point, KoreXYZVector axis, double angleRads)
     {
         // Normalize the axis vector
         double axisLength = Math.Sqrt(axis.X * axis.X + axis.Y * axis.Y + axis.Z * axis.Z);
@@ -214,7 +214,7 @@ public static class KoreXYZPointOps
                     + ((1 - cosAngle) * axisZ * axisY + axisX * sinAngle) * point.Y
                     + (cosAngle + (1 - cosAngle) * axisZ * axisZ) * point.Z;
 
-        return new KoreXYZPoint(newX, newY, newZ);
+        return new KoreXYZVector(newX, newY, newZ);
     }
 
     // --------------------------------------------------------------------------------------------
@@ -223,8 +223,8 @@ public static class KoreXYZPointOps
     // The plane is defined by its normal and a reference direction (zero angle), with the circle centered at 'origin'.
     // Returns the point at the given radius and angle (in radians) from the reference direction.
 
-    public static KoreXYZPoint PointOnCirclePlane(
-        KoreXYZPoint origin,
+    public static KoreXYZVector PointOnCirclePlane(
+        KoreXYZVector origin,
         KoreXYZVector normal,         // Plane normal
         KoreXYZVector reference,      // Zero-angle direction in the plane (must be perpendicular to normal)
         double radius,
@@ -242,7 +242,7 @@ public static class KoreXYZPointOps
 
     // --------------------------------------------------------------------------------------------
 
-    public static bool EqualsWithinTolerance(KoreXYZPoint a, KoreXYZPoint b, double tolerance = KoreConsts.ArbitrarySmallDouble)
+    public static bool EqualsWithinTolerance(KoreXYZVector a, KoreXYZVector b, double tolerance = KoreConsts.ArbitrarySmallDouble)
     {
         return KoreValueUtils.EqualsWithinTolerance(a.X, b.X, tolerance)
             && KoreValueUtils.EqualsWithinTolerance(a.Y, b.Y, tolerance)

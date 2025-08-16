@@ -132,7 +132,7 @@ public static partial class KoreMeshDataEditOps
         return sharedVertices;
     }
 
-
+    // Usage: KoreMeshDataEditOps.IsolateAllTriangles(mesh);
     public static void IsolateAllTriangles(KoreMeshData mesh)
     {
         foreach (var kvp in mesh.Triangles)

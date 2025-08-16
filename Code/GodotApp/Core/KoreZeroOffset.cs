@@ -21,7 +21,7 @@ public static class KoreZeroOffset
 
     // APPLIED values
     public static KoreLLAPoint AppliedZeroPosLLA = KoreLLAPoint.Zero;
-    public static KoreXYZPoint AppliedZeroPosXYZ = KoreXYZPoint.Zero;
+    public static KoreXYZVector AppliedZeroPosXYZ = KoreXYZVector.Zero;
 
 
     public static bool IsPosChangeCycle = false; // KoreZeroOffset.IsPosChangeCycle
@@ -34,7 +34,7 @@ public static class KoreZeroOffset
     // public static KoreLLAPoint RwZeroPointLLA = new KoreLLAPoint();
 
     // // Offset "FROM real-world Earth center TO game engine center". We use the inverse of this to place the earth center.
-    // public static KoreXYZPoint RwZeroPointXYZ = new KoreXYZPoint(0, 0, 0);
+    // public static KoreXYZVector RwZeroPointXYZ = new KoreXYZVector(0, 0, 0);
 
     // Game engine earth radius and conversion around it.
     public static double GeEarthRadius = 10; // Earth radius in Game Engine units
@@ -94,17 +94,17 @@ public static class KoreZeroOffset
     // The real-world XYZ we have from the model in A. the Earth centre offset is B, and we need the game engine
     // zero-offset C: C = A - B
 
-    public static KoreXYZPoint RwZeroPointOffset(KoreXYZPoint RwXYZ)
+    public static KoreXYZVector RwZeroPointOffset(KoreXYZVector RwXYZ)
     {
         KoreXYZVector offset = AppliedZeroPosXYZ.XYZTo(RwXYZ);
-        return new KoreXYZPoint(offset.X, offset.Y, offset.Z);
+        return new KoreXYZVector(offset.X, offset.Y, offset.Z);
     }
 
-    public static KoreXYZPoint RwZeroPointOffset(KoreLLAPoint RwLLA)
+    public static KoreXYZVector RwZeroPointOffset(KoreLLAPoint RwLLA)
     {
-        KoreXYZPoint RwXYZ = RwLLA.ToXYZ();
+        KoreXYZVector RwXYZ = RwLLA.ToXYZ();
         KoreXYZVector offset = AppliedZeroPosXYZ.XYZTo(RwXYZ);
-        return new KoreXYZPoint(offset.X, offset.Y, offset.Z);
+        return new KoreXYZVector(offset.X, offset.Y, offset.Z);
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -117,7 +117,7 @@ public static class KoreZeroOffset
 
     // Usage: Vector3 GePos = KoreZeroOffset.GeZeroPointOffset(RwXYZPos);
 
-    public static Vector3 GeZeroPointOffset(KoreXYZPoint RwXYZ)
+    public static Vector3 GeZeroPointOffset(KoreXYZVector RwXYZ)
     {
         // 1 - Subtract the zero point offset to get the offset XYZ.
         KoreXYZVector rwOffsetXYZ = AppliedZeroPosXYZ.XYZTo(RwXYZ);

@@ -280,7 +280,7 @@ public partial class KoreSkiaSharpPlotter
 
     // --------------------------------------------------------------------------------------------
 
-    public void DrawTextAtPosition(string text, KoreXYPoint pos, KoreXYRectPosition anchorPos, int fontSize = 12)
+    public void DrawTextAtPosition(string text, KoreXYVector pos, KoreXYRectPosition anchorPos, int fontSize = 12)
     {
         using var font = new SKFont(SKTypeface.Default, fontSize);
         using var textPaint = new SKPaint

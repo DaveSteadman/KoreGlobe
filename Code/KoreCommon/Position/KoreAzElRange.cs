@@ -110,16 +110,16 @@ public struct KoreAzElRange
     // MARK: Conversion
     // --------------------------------------------------------------------------------------------
 
-    public KoreXYZPoint ToXYZ()
+    public KoreXYZVector ToXYZ()
     {
         double x = RangeM * Math.Cos(ElRads) * Math.Sin(AzRads);
         double y = RangeM * Math.Sin(ElRads);
         double z = RangeM * Math.Cos(ElRads) * Math.Cos(AzRads);
 
-        return new KoreXYZPoint(x, y, z);
+        return new KoreXYZVector(x, y, z);
     }
 
-    public static KoreAzElRange FromXYZ(KoreXYZPoint xyz)
+    public static KoreAzElRange FromXYZ(KoreXYZVector xyz)
     {
         KoreAzElRange newOffset = new KoreAzElRange() {
             RangeM = xyz.Length,

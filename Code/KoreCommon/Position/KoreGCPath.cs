@@ -8,8 +8,8 @@ namespace KoreCommon;
 
 public class KoreGCPath
 {
-    public KoreXYZPoint StartPos { get; private set; }
-    public KoreXYZPoint EndPos { get; private set; }
+    public KoreXYZVector StartPos { get; private set; }
+    public KoreXYZVector EndPos { get; private set; }
 
     private double RefAngleRads { get; set; } // Internal pre-calculated reference angle
 
@@ -18,7 +18,7 @@ public class KoreGCPath
     {
         this.StartPos = startLLA.ToXYZ();
         this.EndPos   = endLLA.ToXYZ();
-        this.RefAngleRads = KoreXYZPointOps.AngleBetweenRads(this.StartPos, this.EndPos);
+        this.RefAngleRads = KoreXYZVectorOps.AngleBetweenRads(this.StartPos, this.EndPos);
     }
 
     public KoreGCPath(KoreLLAPoint startLLA, double heading)
@@ -31,21 +31,21 @@ public class KoreGCPath
         // Call other constructor to create object
         this.StartPos = startLLA.ToXYZ();
         this.EndPos = endLLA.ToXYZ();
-        this.RefAngleRads = KoreXYZPointOps.AngleBetweenRads(this.StartPos, this.EndPos);
+        this.RefAngleRads = KoreXYZVectorOps.AngleBetweenRads(this.StartPos, this.EndPos);
     }
 
     // Calculate position along the path given a fraction
-    public KoreXYZPoint PositionAtFractionOfRoute(double fraction)
+    public KoreXYZVector PositionAtFractionOfRoute(double fraction)
     {
         // Handle edge cases
         if (RefAngleRads < KoreConsts.ArbitrarySmallDouble)
             return StartPos;
 
         // Spherical Linear Interpolation (SLERP)
-        return KoreXYZPointOps.Slerp(StartPos, EndPos, fraction);
+        return KoreXYZVectorOps.Slerp(StartPos, EndPos, fraction);
     }
 
-    public KoreXYZPoint PositionAtFractionOfFullCircle(double fraction)
+    public KoreXYZVector PositionAtFractionOfFullCircle(double fraction)
     {
         // Normalize the fraction to ensure it's between 0 and 1
         fraction = fraction % 1;
@@ -57,10 +57,10 @@ public class KoreGCPath
         double scaledAngle = angleForFullCircle / RefAngleRads;
 
         // Use the Slerp function for the scaled angle
-        return KoreXYZPointOps.Slerp(StartPos, EndPos, scaledAngle);
+        return KoreXYZVectorOps.Slerp(StartPos, EndPos, scaledAngle);
     }
 
-    public KoreXYZPoint PositionAtDistance(double distAlongRouteM)
+    public KoreXYZVector PositionAtDistance(double distAlongRouteM)
     {
         // Find the fraction of the path covered by the given distance
         double totalPathDistance = this.PathDistance();

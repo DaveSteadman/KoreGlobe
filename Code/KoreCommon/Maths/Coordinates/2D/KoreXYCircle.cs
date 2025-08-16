@@ -4,7 +4,7 @@ namespace KoreCommon;
 
 public struct KoreXYCircle
 {
-    public KoreXYPoint Center { get; }
+    public KoreXYVector Center { get; }
     public double Radius { get; }
 
     // --------------------------------------------------------------------------------------------
@@ -25,7 +25,7 @@ public struct KoreXYCircle
         Radius = radius;
     }
 
-    public KoreXYCircle(KoreXYPoint center, double radius)
+    public KoreXYCircle(KoreXYVector center, double radius)
     {
         Center = center;
         Radius = radius;
@@ -46,7 +46,7 @@ public struct KoreXYCircle
         return Center.DistanceTo(x, y) <= Radius;
     }
 
-    public bool Contains(KoreXYPoint xy)
+    public bool Contains(KoreXYVector xy)
     {
         return Center.DistanceTo(xy) <= Radius;
     }
@@ -74,12 +74,12 @@ public struct KoreXYCircle
     //
     // --------------------------------------------------------------------------------------------
 
-    public KoreXYPoint PointAtAngle(double angleDegs)
+    public KoreXYVector PointAtAngle(double angleDegs)
     {
         double angleRads = angleDegs * KoreConsts.DegsToRadsMultiplier;
         double x = Center.X + Radius * Math.Cos(angleRads);
         double y = Center.Y + Radius * Math.Sin(angleRads);
-        return new KoreXYPoint(x, y);
+        return new KoreXYVector(x, y);
     }
 
 }

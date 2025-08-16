@@ -10,7 +10,7 @@ namespace KoreCommon;
 
 public struct KoreXYZSphereWedge
 {
-    public KoreXYZPoint Center { get; set; }
+    public KoreXYZVector Center { get; set; }
     public double InnerRadius { get; set; }
     public double OuterRadius { get; set; }
     public double StartAzRads { get; set; } // Using start and delta (clockwise) angles to better accomodate wrapping
@@ -55,24 +55,24 @@ public struct KoreXYZSphereWedge
     public KoreNumericRange<double> ElRangeRads { get { return new KoreNumericRange<double>(StartElRads, EndElRads); } }
     public KoreNumericRange<double> RadiusRange { get { return new KoreNumericRange<double>(InnerRadius, OuterRadius); } }
 
-    public KoreXYZPoint BaseStartInnerPoint { get { return Center.PlusPolarOffset(new(StartAzRads, StartElRads, InnerRadius)); } }
-    public KoreXYZPoint BaseEndInnerPoint { get { return Center.PlusPolarOffset(new(EndAzRads, StartElRads, InnerRadius)); } }
-    public KoreXYZPoint BaseStartOuterPoint { get { return Center.PlusPolarOffset(new(StartAzRads, StartElRads, OuterRadius)); } }
-    public KoreXYZPoint BaseEndOuterPoint { get { return Center.PlusPolarOffset(new(EndAzRads, StartElRads, OuterRadius)); } }
+    public KoreXYZVector BaseStartInnerPoint { get { return Center.PlusPolarOffset(new(StartAzRads, StartElRads, InnerRadius)); } }
+    public KoreXYZVector BaseEndInnerPoint { get { return Center.PlusPolarOffset(new(EndAzRads, StartElRads, InnerRadius)); } }
+    public KoreXYZVector BaseStartOuterPoint { get { return Center.PlusPolarOffset(new(StartAzRads, StartElRads, OuterRadius)); } }
+    public KoreXYZVector BaseEndOuterPoint { get { return Center.PlusPolarOffset(new(EndAzRads, StartElRads, OuterRadius)); } }
 
-    public KoreXYZPoint TopStartInnerPoint { get { return Center.PlusPolarOffset(new(StartAzRads, EndElRads, InnerRadius)); } }
-    public KoreXYZPoint TopEndInnerPoint { get { return Center.PlusPolarOffset(new(EndAzRads, EndElRads, InnerRadius)); } }
-    public KoreXYZPoint TopStartOuterPoint { get { return Center.PlusPolarOffset(new(StartAzRads, EndElRads, OuterRadius)); } }
-    public KoreXYZPoint TopEndOuterPoint { get { return Center.PlusPolarOffset(new(EndAzRads, EndElRads, OuterRadius)); } }
+    public KoreXYZVector TopStartInnerPoint { get { return Center.PlusPolarOffset(new(StartAzRads, EndElRads, InnerRadius)); } }
+    public KoreXYZVector TopEndInnerPoint { get { return Center.PlusPolarOffset(new(EndAzRads, EndElRads, InnerRadius)); } }
+    public KoreXYZVector TopStartOuterPoint { get { return Center.PlusPolarOffset(new(StartAzRads, EndElRads, OuterRadius)); } }
+    public KoreXYZVector TopEndOuterPoint { get { return Center.PlusPolarOffset(new(EndAzRads, EndElRads, OuterRadius)); } }
 
     // --------------------------------------------------------------------------------------------
     // Constructor
     // --------------------------------------------------------------------------------------------
 
-    public KoreXYZSphereWedge() : this(KoreXYZPoint.Zero, 0, 0, 0, 0, 0, 0) { }
+    public KoreXYZSphereWedge() : this(KoreXYZVector.Zero, 0, 0, 0, 0, 0, 0) { }
 
     public KoreXYZSphereWedge(
-        KoreXYZPoint center, double innerRadius, double outerRadius,
+        KoreXYZVector center, double innerRadius, double outerRadius,
         double startAzRads, double deltaAzRads, double startElRads, double deltaElRads)
     {
         // Swap the inner and outer radii if they are the wrong way around
@@ -99,7 +99,7 @@ public struct KoreXYZSphereWedge
         DeltaElRads = wedge.DeltaElRads;
     }
 
-    public static KoreXYZSphereWedge Zero => new KoreXYZSphereWedge(KoreXYZPoint.Zero, 0, 0, 0, 0, 0, 0);
+    public static KoreXYZSphereWedge Zero => new KoreXYZSphereWedge(KoreXYZVector.Zero, 0, 0, 0, 0, 0, 0);
 
     // --------------------------------------------------------------------------------------------
     // Public methods

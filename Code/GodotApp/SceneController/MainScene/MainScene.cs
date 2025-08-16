@@ -16,7 +16,7 @@ public partial class MainScene : Node3D
     private float UITimerInterval = 0.1f; // 100ms
 
     private float UISlowTimer = 0.0f;
-    private float UISlowTimerInterval = 2.5f; 
+    private float UISlowTimerInterval = 2.5f;
 
     // ---------------------------------------------------------------------------------------------
     // MARK: Node3D
@@ -102,7 +102,7 @@ public partial class MainScene : Node3D
             // move the zero point a fraction of the way to the camera LLA
             KoreLLAPoint cameraLLA = KoreGodotMainSceneFactory.WorldCameraMount?.CurrLLA ?? KoreLLAPoint.Zero;
             KoreLLAPoint zeroPosLLA = KoreZeroOffset.AppliedZeroPosLLA;
-            
+
             // Lerp 10% of the way to the camera position, but fix the alt at 0
             KoreLLAPoint newZeroPos = KoreLLAPointOps.GreatCircleInterpolation(zeroPosLLA, cameraLLA, 0.1);
             newZeroPos.AltMslM = 0;
@@ -190,7 +190,7 @@ public partial class MainScene : Node3D
     //     // 1 - Basic Pyramid
     //     {
     //         var pyramidMesh1 = KoreMeshDataPrimitives.BasicPyramid(
-    //             new KoreXYZPoint(0, 0, 0), // Apex point
+    //             new KoreXYZVector(0, 0, 0), // Apex point
     //             new KoreXYZVector(0, -1, 0), // Apex to base center
     //             new KoreXYZVector(1, 0, 0), // Base forward vector
     //             1.0f, 1.0f, // Width and height
@@ -210,7 +210,7 @@ public partial class MainScene : Node3D
     //     // 2 - Sharp Edges Pyramid
     //     {
     //         var pyramidMesh2 = KoreMeshDataPrimitives.BasicPyramidSharpEdges(
-    //             new KoreXYZPoint(0, 0, 0), // Apex point
+    //             new KoreXYZVector(0, 0, 0), // Apex point
     //             new KoreXYZVector(0, -1, 0), // Apex to base center
     //             new KoreXYZVector(1, 0, 0), // Base forward vector
     //             1.0f, 1.0f, // Width and height
@@ -416,7 +416,7 @@ public partial class MainScene : Node3D
     //         int divisions = 50; // Number of segments to divide the Bezier curve into
     //         double angleIncrement = KoreAngle.DegsToRads(5); // Angle increment for each point
 
-    //         List<KoreXYZPoint> controlPoints = new List<KoreXYZPoint>();
+    //         List<KoreXYZVector> controlPoints = new List<KoreXYZVector>();
 
     //         for (int i = 0; i < numPoints; i++)
     //         {
@@ -425,15 +425,15 @@ public partial class MainScene : Node3D
     //             double z = radius * Math.Sin(angle);
     //             double y = startingY + (i * yInc);
 
-    //             controlPoints.Add(new KoreXYZPoint(x, y, z));
+    //             controlPoints.Add(new KoreXYZVector(x, y, z));
     //             radius += radiusInc; // Increase the radius for the next point
     //         }
 
     //         // Create the Bezier mesh from the control points
-    //         List<KoreXYZPoint> points = KoreMeshDataPrimitives.PointsListFromBezier(controlPoints, divisions);
+    //         List<KoreXYZVector> points = KoreMeshDataPrimitives.PointsListFromBezier(controlPoints, divisions);
 
     //         List<KoreXYZVector> vpoints = new List<KoreXYZVector>();
-    //         foreach (KoreXYZPoint point in points)
+    //         foreach (KoreXYZVector point in points)
     //         {
     //             vpoints.Add(new KoreXYZVector(point.X, point.Y, point.Z));
     //         }

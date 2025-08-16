@@ -9,15 +9,15 @@ public static class KoreXYPolygonOps
     // public static KoreXYLine? ClipLineToPolygon(this KoreXYLine line, KoreXYPolygon polygon)
     // {
     //     KoreXYLine? clippedLine = null;
-    //     KoreXYPoint? p1 = null;
-    //     KoreXYPoint? p2 = null;
+    //     KoreXYVector? p1 = null;
+    //     KoreXYVector? p2 = null;
 
     //     for (int i = 0; i < polygon.Vertices.Count; i++)
     //     {
     //         // Check if the line intersects with the polygon edge
     //         KoreXYLine curredge = new KoreXYLine(polygon.Vertices[i], polygon.Vertices[(i + 1) % polygon.Vertices.Count]);
 
-    //         if (KoreXYLineOps.TryIntersect(line, curredge, out KoreXYPoint intersection))
+    //         if (KoreXYLineOps.TryIntersect(line, curredge, out KoreXYVector intersection))
     //         {
     //             // If we found an intersection, we can use it
     //             if (p1 == null)

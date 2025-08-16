@@ -23,7 +23,7 @@ public static class KoreXYPolarOffsetOps
         return new KoreXYPolarOffset(angleRads, distance);
     }
 
-    // public static KoreXYPolarOffset ToPolarOffset(KoreXYPoint fromPoint, KoreXYPoint toPoint)
+    // public static KoreXYPolarOffset ToPolarOffset(KoreXYVector fromPoint, KoreXYVector toPoint)
     // {
     //     double xDiff = toPoint.X - fromPoint.X;
     //     double yDiff = toPoint.Y - fromPoint.Y;

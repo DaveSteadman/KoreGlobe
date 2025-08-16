@@ -31,7 +31,7 @@ public partial class KoreZeroNodeMapTile : Node3D
             LonDegs = 0,
             RadiusM = KoreWorldConsts.EarthRadiusM
         };
-        KoreXYZPoint rwXYZZeroLonCenter = rwLLAZeroLonCenter.ToXYZ();
+        KoreXYZVector rwXYZZeroLonCenter = rwLLAZeroLonCenter.ToXYZ();
 
         // Setup the loop control values
         int pointCountLon = TileEleData.Width;
@@ -61,7 +61,7 @@ public partial class KoreZeroNodeMapTile : Node3D
 
                 // Determine the tile position in the RW world, and then as an offset from the tile centre
                 KoreLLAPoint rwLLAPointPos = new KoreLLAPoint() { LatRads = latRads, LonRads = lonRads, AltMslM = ele };
-                KoreXYZPoint rwXYZPointPos = rwLLAPointPos.ToXYZ();
+                KoreXYZVector rwXYZPointPos = rwLLAPointPos.ToXYZ();
                 KoreXYZVector rwXYZCenterOffset = rwXYZZeroLonCenter.XYZTo(rwXYZPointPos);
 
                 // GD Print the tilecode and LLA of the TL point
@@ -81,7 +81,7 @@ public partial class KoreZeroNodeMapTile : Node3D
                 {
                     // Determine the tile position in the RW world, and then as an offset from the tile centre
                     KoreLLAPoint rwLLABottomPos = new KoreLLAPoint() { LatRads = latRads, LonRads = lonRads, AltMslM = -1000 };
-                    KoreXYZPoint rwXYZBottomPos = rwLLABottomPos.ToXYZ();
+                    KoreXYZVector rwXYZBottomPos = rwLLABottomPos.ToXYZ();
                     KoreXYZVector rwXYZBottomOffset = rwXYZZeroLonCenter.XYZTo(rwXYZBottomPos);
 
                     v3DataBottom[ix, jy] = rwXYZBottomOffset;
@@ -102,7 +102,7 @@ public partial class KoreZeroNodeMapTile : Node3D
         //     KoreLLAPoint rwLLATileLabel = new KoreLLAPoint() { LatDegs = rwLLAZeroLonCenter.LatDegs, LonDegs = rwLLAZeroLonCenter.LonDegs, AltMslM = tileMaxAlt + 50 };
 
         //     //KoreLLAPoint  rwLLATileLabel       = new KoreLLAPoint() { LatDegs = RwTileCenterLLA.LatDegs, LonDegs = 0, RadiusM = KoreWorldConsts.EarthRadiusM - 1000 };
-        //     KoreXYZPoint rwXYZTileLabel = rwLLATileLabel.ToXYZ();
+        //     KoreXYZVector rwXYZTileLabel = rwLLATileLabel.ToXYZ();
         //     KoreXYZVector rwXYZTileLabelOffset = rwXYZZeroLonCenter.XYZTo(rwXYZTileLabel);
         //     //KoreXYZVector rwXYZTileLabelOffset = RwTileCenterXYZ.XYZTo(rwXYZTileLabel);
 
@@ -116,7 +116,7 @@ public partial class KoreZeroNodeMapTile : Node3D
 
         //     KoreLLAPoint rwLLATileLabelN = rwLLATileLabel;
         //     rwLLATileLabelN.LatDegs = RwTileCenterLLA.LatDegs + 0.01;
-        //     KoreXYZPoint rwXYZTileLabelN = rwLLATileLabelN.ToXYZ();
+        //     KoreXYZVector rwXYZTileLabelN = rwLLATileLabelN.ToXYZ();
         //     KoreXYZVector rwXYZTileLabelNOffset = rwXYZZeroLonCenter.XYZTo(rwXYZTileLabelN);
 
         //     TileLabelOffsetN = new Vector3(
@@ -126,7 +126,7 @@ public partial class KoreZeroNodeMapTile : Node3D
 
         //     KoreLLAPoint rwLLATileLabelBelow = rwLLATileLabel;
         //     rwLLATileLabelN.RadiusM = RwTileCenterLLA.RadiusM - 1000;
-        //     KoreXYZPoint rwXYZTileLabelBelow = rwLLATileLabelN.ToXYZ();
+        //     KoreXYZVector rwXYZTileLabelBelow = rwLLATileLabelN.ToXYZ();
         //     KoreXYZVector rwXYZTileLabelBelowOffset = rwXYZZeroLonCenter.XYZTo(rwXYZTileLabelBelow);
 
         //     TileLabelOffsetBelow = new Vector3(
@@ -148,7 +148,7 @@ public partial class KoreZeroNodeMapTile : Node3D
         // Create the game-engine mesh from the V3s
         KoreMeshData meshData = new();
 
-        KoreUVBox uvBox = new KoreUVBox(new KoreXYPoint(0, 0), new KoreXYPoint(1, 1));
+        KoreUVBox uvBox = new KoreUVBox(new KoreXYVector(0, 0), new KoreXYVector(1, 1));
 
         meshData = KoreMeshDataPrimitives.Surface(v3Data, uvBox);
 
@@ -208,9 +208,9 @@ public partial class KoreZeroNodeMapTile : Node3D
             leftLowerPoints.Add(v3DataBottom[0, y]);
             leftUpperUVs.Add(new KoreXYVector(minUvX, minUvY + (y / (double)v3DataBottom.GetLength(1)) * (maxUvY - minUvY)));
         }
-        
-        // 
-        
+
+        //
+
         // To visualise travelling down the ribbon, with visble tiles upwards, upper points are on the left
         KoreMeshData leftRibbonMesh = KoreMeshDataPrimitives.Ribbon(
             leftUpperPoints, leftUpperUVs,

@@ -20,7 +20,6 @@ public static partial class KoreMeshDataPrimitives
     public static KoreMeshData Bezier3Line(
         KoreXYZVector p1, KoreXYZVector p2, KoreXYZVector p3, KoreColorRGB? lineColor = null, int divisions = 10)
     {
-
         KoreNumeric1DArray<double> xValues = new KoreNumeric1DArray<double>(3);
         KoreNumeric1DArray<double> yValues = new KoreNumeric1DArray<double>(3);
         KoreNumeric1DArray<double> zValues = new KoreNumeric1DArray<double>(3);
@@ -154,11 +153,11 @@ public static partial class KoreMeshDataPrimitives
     // MARK: Bezier Support
     // --------------------------------------------------------------------------------------------
 
-    // Usage : List<KoreXYZPoint> points = KoreMeshDataPrimitives.PointsListFromBezier(controlPoints, divisions);
-    public static List<KoreXYZPoint> PointsListFromBezier(
-        List<KoreXYZPoint> controlPoints, int divisions = 10)
+    // Usage : List<KoreXYZVector> points = KoreMeshDataPrimitives.PointsListFromBezier(controlPoints, divisions);
+    public static List<KoreXYZVector> PointsListFromBezier(
+        List<KoreXYZVector> controlPoints, int divisions = 10)
     {
-        List<KoreXYZPoint> resultPoints = new List<KoreXYZPoint>();
+        List<KoreXYZVector> resultPoints = new List<KoreXYZVector>();
 
         if (controlPoints.Count < 3)
         {
@@ -186,7 +185,7 @@ public static partial class KoreMeshDataPrimitives
             while (segmentStart + 2 < controlPoints.Count)
             {
                 int remainingPoints = controlPoints.Count - segmentStart;
-                List<KoreXYZPoint> segmentPoints;
+                List<KoreXYZVector> segmentPoints;
 
                 if (remainingPoints >= 4)
                 {
@@ -263,9 +262,9 @@ public static partial class KoreMeshDataPrimitives
     }
 
     // Helper method for 3-point Bézier calculation
-    private static List<KoreXYZPoint> CalculateBezier3Points(KoreXYZPoint p1, KoreXYZPoint p2, KoreXYZPoint p3, int divisions, double tStart = 0.0, double tEnd = 1.0)
+    private static List<KoreXYZVector> CalculateBezier3Points(KoreXYZVector p1, KoreXYZVector p2, KoreXYZVector p3, int divisions, double tStart = 0.0, double tEnd = 1.0)
     {
-        var points = new List<KoreXYZPoint>();
+        var points = new List<KoreXYZVector>();
 
         KoreNumeric1DArray<double> xValues = new KoreNumeric1DArray<double>(3);
         KoreNumeric1DArray<double> yValues = new KoreNumeric1DArray<double>(3);
@@ -283,16 +282,16 @@ public static partial class KoreMeshDataPrimitives
             double y = KoreNumeric1DArrayOps<double>.CalculateBezierPoint(t, yValues);
             double z = KoreNumeric1DArrayOps<double>.CalculateBezierPoint(t, zValues);
 
-            points.Add(new KoreXYZPoint(x, y, z));
+            points.Add(new KoreXYZVector(x, y, z));
         }
 
         return points;
     }
 
     // Helper method for 4-point Bézier calculation
-    private static List<KoreXYZPoint> CalculateBezier4Points(KoreXYZPoint p1, KoreXYZPoint p2, KoreXYZPoint p3, KoreXYZPoint p4, int divisions, double tStart = 0.0, double tEnd = 1.0)
+    private static List<KoreXYZVector> CalculateBezier4Points(KoreXYZVector p1, KoreXYZVector p2, KoreXYZVector p3, KoreXYZVector p4, int divisions, double tStart = 0.0, double tEnd = 1.0)
     {
-        var points = new List<KoreXYZPoint>();
+        var points = new List<KoreXYZVector>();
 
         KoreNumeric1DArray<double> xValues = new KoreNumeric1DArray<double>(4);
         KoreNumeric1DArray<double> yValues = new KoreNumeric1DArray<double>(4);
@@ -310,7 +309,7 @@ public static partial class KoreMeshDataPrimitives
             double y = KoreNumeric1DArrayOps<double>.CalculateBezierPoint(t, yValues);
             double z = KoreNumeric1DArrayOps<double>.CalculateBezierPoint(t, zValues);
 
-            points.Add(new KoreXYZPoint(x, y, z));
+            points.Add(new KoreXYZVector(x, y, z));
         }
 
         return points;

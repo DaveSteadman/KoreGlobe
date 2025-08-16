@@ -14,30 +14,21 @@ public partial class KoreSkiaSharpPlotter
     // MARK: Point
     // --------------------------------------------------------------------------------------------
 
-    public void DrawPoint(KoreXYPoint point, int crossSize = 3) => DrawPointAsCross(KoreSkiaSharpConv.ToSKPoint(point), crossSize);
-    public void DrawPoint(KoreXYVector vector, int crossSize = 3) => DrawPointAsCross(KoreSkiaSharpConv.ToSKPoint(vector), crossSize);
-
-    // --------------------------------------------------------------------------------------------
-
-    public void DrawPointAsCross(KoreXYPoint point, int crossSize = 3) => DrawPointAsCross(KoreSkiaSharpConv.ToSKPoint(point), crossSize);
-    public void DrawPointAsCross(KoreXYVector vector, int crossSize = 3) => DrawPointAsCross(KoreSkiaSharpConv.ToSKPoint(vector), crossSize);
-
-    // --------------------------------------------------------------------------------------------
-
-    public void DrawPointAsCircle(KoreXYPoint p, int circleRadius = 3) => DrawPointAsCircle(KoreSkiaSharpConv.ToSKPoint(p), circleRadius);
+    public void DrawPoint(KoreXYVector v, int crossSize = 3)        => DrawPointAsCross(KoreSkiaSharpConv.ToSKPoint(v), crossSize);
+    public void DrawPointAsCross(KoreXYVector v, int crossSize = 3) => DrawPointAsCross(KoreSkiaSharpConv.ToSKPoint(v), crossSize);
+    public void DrawPointAsCircle(KoreXYVector v, int radius = 3)   => DrawPointAsCircle(KoreSkiaSharpConv.ToSKPoint(v), radius);
 
     // --------------------------------------------------------------------------------------------
     // MARK: Line
     // --------------------------------------------------------------------------------------------
 
-    public void DrawLine(KoreXYPoint p1, KoreXYPoint p2) => DrawLine(KoreSkiaSharpConv.ToSKPoint(p1), KoreSkiaSharpConv.ToSKPoint(p2));
     public void DrawLine(KoreXYVector v1, KoreXYVector v2) => DrawLine(KoreSkiaSharpConv.ToSKPoint(v1), KoreSkiaSharpConv.ToSKPoint(v2));
 
     // --------------------------------------------------------------------------------------------
     // MARK: Triangle
     // --------------------------------------------------------------------------------------------
 
-    public void DrawTriangle(KoreXYPoint p1, KoreXYPoint p2, KoreXYPoint p3) => DrawTriangle(KoreSkiaSharpConv.ToSKPoint(p1), KoreSkiaSharpConv.ToSKPoint(p2), KoreSkiaSharpConv.ToSKPoint(p3));
+    public void DrawTriangle(KoreXYVector p1, KoreXYVector p2, KoreXYVector p3) => DrawTriangle(KoreSkiaSharpConv.ToSKPoint(p1), KoreSkiaSharpConv.ToSKPoint(p2), KoreSkiaSharpConv.ToSKPoint(p3));
 
     // --------------------------------------------------------------------------------------------
     // MARK: Rect
@@ -67,8 +58,8 @@ public partial class KoreSkiaSharpPlotter
     // MARK: Text
     // --------------------------------------------------------------------------------------------
 
-    public void DrawText(string text, KoreXYPoint pos, int fontSize = 12)             => DrawText(text, KoreSkiaSharpConv.ToSKPoint(pos), fontSize);
-    public void DrawTextCentered(string text, KoreXYPoint pos, float fontSize = 12) => DrawTextCentered(text, KoreSkiaSharpConv.ToSKPoint(pos), fontSize);
+    public void DrawText(string text, KoreXYVector pos, int fontSize = 12)             => DrawText(text, KoreSkiaSharpConv.ToSKPoint(pos), fontSize);
+    public void DrawTextCentered(string text, KoreXYVector pos, float fontSize = 12) => DrawTextCentered(text, KoreSkiaSharpConv.ToSKPoint(pos), fontSize);
 
     // --------------------------------------------------------------------------------------------
     // MARK: Mesh Data Drawing
@@ -130,7 +121,7 @@ public partial class KoreSkiaSharpPlotter
     // MARK: Path Drawing (for Bezier curves)
     // --------------------------------------------------------------------------------------------
 
-    public void DrawPath(List<KoreXYPoint> pathPoints, KoreColorRGB? lineColor = null)
+    public void DrawPath(List<KoreXYVector> pathPoints, KoreColorRGB? lineColor = null)
     {
         if (pathPoints.Count < 2) return;
 

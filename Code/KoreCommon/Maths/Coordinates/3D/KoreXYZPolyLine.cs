@@ -5,26 +5,26 @@ namespace KoreCommon;
 
 public class KoreXYZPolyLine
 {
-    public List<KoreXYZPoint> Points { get; }
+    public List<KoreXYZVector> Points { get; }
 
     // --------------------------------------------------------------------------------------------
     // Constructor
     // --------------------------------------------------------------------------------------------
 
     // Example declaration:
-    //      KoreXYPolyLine polyLine = new KoreXYPolyLine (new List<KoreXYPoint> {
-    //          new KoreXYPoint(0, 0),
-    //          new KoreXYPoint(1, 1),
-    //          new KoreXYPoint(2, 2) });
+    //      KoreXYPolyLine polyLine = new KoreXYPolyLine (new List<KoreXYVector> {
+    //          new KoreXYVector(0, 0),
+    //          new KoreXYVector(1, 1),
+    //          new KoreXYVector(2, 2) });
 
-    public KoreXYZPolyLine(List<KoreXYZPoint> points)
+    public KoreXYZPolyLine(List<KoreXYZVector> points)
     {
         Points = points;
     }
 
     public KoreXYZPolyLine(KoreXYZPolyLine polyLine)
     {
-        Points = new List<KoreXYZPoint>(polyLine.Points);
+        Points = new List<KoreXYZVector>(polyLine.Points);
     }
 
     // --------------------------------------------------------------------------------------------
@@ -76,18 +76,18 @@ public class KoreXYZPolyLine
 
     public KoreXYZPolyLine Offset(double x, double y, double z)
     {
-        List<KoreXYZPoint> newPoints = new List<KoreXYZPoint>();
-        foreach (KoreXYZPoint point in Points)
+        List<KoreXYZVector> newPoints = new List<KoreXYZVector>();
+        foreach (KoreXYZVector point in Points)
         {
             newPoints.Add(point.Offset(x, y, z));
         }
         return new KoreXYZPolyLine(newPoints);
     }
 
-    public KoreXYZPolyLine Offset(KoreXYZPoint xy)
+    public KoreXYZPolyLine Offset(KoreXYZVector xy)
     {
-        List<KoreXYZPoint> newPoints = new List<KoreXYZPoint>();
-        foreach (KoreXYZPoint point in Points)
+        List<KoreXYZVector> newPoints = new List<KoreXYZVector>();
+        foreach (KoreXYZVector point in Points)
         {
             newPoints.Add(point.Offset(xy));
         }

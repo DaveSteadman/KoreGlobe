@@ -2,21 +2,21 @@ using System;
 
 namespace KoreCommon;
 
-public static class KoreXYPointOps
+public static class KoreXYVectorOps
 {
     // Dot Product - the cosine of the angle between the two vectors
     // Considering both as lines from 0,0 to the points, this is the cosine of the angle between them
     // near +1 means the angle is near 0 degrees (absolute to remove sign)
     // wiki - https://en.wikipedia.org/wiki/Dot_product
 
-    public static double DotProduct(KoreXYPoint a, KoreXYPoint b)
+    public static double DotProduct(KoreXYVector a, KoreXYVector b)
     {
         return (a.X * b.X) + (a.Y * b.Y);
     }
 
     // Angle from one point to another, useful when we start creating arcs.
 
-    public static double Angle(KoreXYPoint fromPos, KoreXYPoint toPos)
+    public static double Angle(KoreXYVector fromPos, KoreXYVector toPos)
     {
         double x = toPos.X - fromPos.X;
         double y = toPos.Y - fromPos.Y;
@@ -28,16 +28,16 @@ public static class KoreXYPointOps
     // Polar Offset.  Given a point and a distance and an angle, return the new point.
     // To work consistently with the creation of Arc points.
 
-    // KoreXYPointOps.OffsetPolar(fromPos, distance, angleRads);
+    // KoreXYVectorOps.OffsetPolar(fromPos, distance, angleRads);
 
-    public static KoreXYPoint OffsetPolar(KoreXYPoint fromPos, double distance, double angleRads)
+    public static KoreXYVector OffsetPolar(KoreXYVector fromPos, double distance, double angleRads)
     {
         // Normalise the angle, as may have been from a start value + delta
         // angleRads = KoreNumericAngle<double>.NormalizeRads(angleRads);
 
         double x = fromPos.X + (distance * Math.Cos(angleRads));
         double y = fromPos.Y + (distance * Math.Sin(angleRads));
-        return new KoreXYPoint(x, y);
+        return new KoreXYVector(x, y);
     }
 
     // --------------------------------------------------------------------------------------------
@@ -46,7 +46,7 @@ public static class KoreXYPointOps
     // Given 3 points ABC representing two lines AB and BC, return the smallest angle
     // between BA and BC in radians. The result is always in the range [0, pi] (0 to 180 degrees).
     // This is the geometric angle between the two lines at point B.
-    public static double AngleBetweenRads(KoreXYPoint a, KoreXYPoint b, KoreXYPoint c)
+    public static double AngleBetweenRads(KoreXYVector a, KoreXYVector b, KoreXYVector c)
     {
         double dx1 = a.X - b.X;
         double dy1 = a.Y - b.Y;
@@ -64,7 +64,7 @@ public static class KoreXYPointOps
     // Given 3 points, ABC forming to lines AB and BC, find a point D that is equally inset between AB and BC
     // by parameter distance t.
 
-    public static KoreXYPoint InsetPoint(KoreXYPoint a, KoreXYPoint b, KoreXYPoint c, double t)
+    public static KoreXYVector InsetPoint(KoreXYVector a, KoreXYVector b, KoreXYVector c, double t)
     {
         // Calculate direction vectors for AB and BC
         double dxAB = b.X - a.X;
@@ -91,12 +91,12 @@ public static class KoreXYPointOps
         double xInset = b.X + t * bisectorX;
         double yInset = b.Y + t * bisectorY;
 
-        return new KoreXYPoint(xInset, yInset);
+        return new KoreXYVector(xInset, yInset);
     }
 
     // --------------------------------------------------------------------------------------------
 
-    public static bool EqualsWithinTolerance(KoreXYPoint a, KoreXYPoint b, double tolerance = KoreConsts.ArbitrarySmallDouble)
+    public static bool EqualsWithinTolerance(KoreXYVector a, KoreXYVector b, double tolerance = KoreConsts.ArbitrarySmallDouble)
     {
         return KoreValueUtils.EqualsWithinTolerance(a.X, b.X, tolerance)
             && KoreValueUtils.EqualsWithinTolerance(a.Y, b.Y, tolerance);

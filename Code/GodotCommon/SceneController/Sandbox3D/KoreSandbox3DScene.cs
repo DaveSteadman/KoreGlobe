@@ -88,7 +88,7 @@ public partial class KoreSandbox3DScene : Node3D
 
         // 2
         {
-            var cubeMesh2 = KoreMeshDataPrimitives.BasicCubeSharpEdges(0.5f, KoreMeshMaterialPalette.Find("MattGreen"));
+            var cubeMesh2 = KoreMeshDataPrimitives.IsolatedCube(0.5f, KoreMeshMaterialPalette.Find("MattGreen"));
 
             KoreGodotLineMesh childMeshNode2 = new KoreGodotLineMesh();
             childMeshNode2.UpdateMesh(cubeMesh2);
@@ -102,7 +102,7 @@ public partial class KoreSandbox3DScene : Node3D
 
         // 3
         {
-            var cubeMesh3 = KoreMeshDataPrimitives.BasicCubeSharpEdges2(0.5f, KoreMeshMaterialPalette.Find("MattBlue"));
+            var cubeMesh3 = KoreMeshDataPrimitives.IsolatedCube(0.5f, KoreMeshMaterialPalette.Find("MattBlue"));
 
             KoreGodotLineMesh childMeshNode3 = new KoreGodotLineMesh();
             childMeshNode3.UpdateMesh(cubeMesh3);
@@ -171,7 +171,7 @@ public partial class KoreSandbox3DScene : Node3D
             // Set the surface material
             var surfaceMaterial = KoreGodotMaterialFactory.StandardColoredMaterial(new Color(0.2f, 0.8f, 0.6f));
             childSurfaceMeshNode1.MaterialOverride = surfaceMaterial;
-            
+
             Surface1Node.AddChild(childMeshNode1);
             Surface1Node.AddChild(childSurfaceMeshNode1);
 
@@ -181,7 +181,7 @@ public partial class KoreSandbox3DScene : Node3D
             GD.Print("kk");
         }
     }
-    
+
     // ---------------------------------------------------------------------------------------------
     // MARK: LATHE
     // ---------------------------------------------------------------------------------------------
@@ -257,7 +257,7 @@ public partial class KoreSandbox3DScene : Node3D
 
         GD.Print("cylinder done");
     }
-    
+
     // ---------------------------------------------------------------------------------------------
     // MARK: BOX ARC
     // ---------------------------------------------------------------------------------------------
@@ -292,5 +292,5 @@ public partial class KoreSandbox3DScene : Node3D
             BoxArcNode.AddChild(childSurfaceMeshNode1);
         }
     }
-    
+
 }

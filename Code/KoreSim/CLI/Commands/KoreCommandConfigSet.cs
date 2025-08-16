@@ -16,7 +16,7 @@ public class KoreCommandConfigSet : KoreCommand
 
     public override string Execute(List<string> parameters)
     {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new ();
         bool validOperation = true;
 
         if (parameters.Count != 2)
@@ -35,9 +35,9 @@ public class KoreCommandConfigSet : KoreCommand
 
         if (validOperation)
         {
-            KoreSimFactory.Instance.KoreConfig.Set(name, value);
+            KoreSimFactory.Instance.KoreConfig?.Set(name, value);
             sb.AppendLine($"KoreCommandConfigSet.Execute -> Set '{name}' to '{value}'");
-            
+
             KoreSimFactory.Instance.SaveConfig(KoreSimFactory.ConfigPath);
         }
 
@@ -46,3 +46,5 @@ public class KoreCommandConfigSet : KoreCommand
         return sb.ToString();
     }
 }
+
+

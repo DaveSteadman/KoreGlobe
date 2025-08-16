@@ -10,7 +10,7 @@ namespace KoreCommon;
 
 public struct KoreXYAnnularSector
 {
-    public KoreXYPoint Center { get; }
+    public KoreXYVector Center { get; }
     public double InnerRadius { get; }
     public double OuterRadius { get; }
     public double StartAngleRads { get; }
@@ -29,10 +29,10 @@ public struct KoreXYAnnularSector
     public double AngleSpanRads { get { return KoreValueUtils.AngleDiffRads(StartAngleRads, EndAngleRads); } }
     public double AngleSpanDegs { get { return KoreValueUtils.RadsToDegs(AngleSpanRads); } }
 
-    public KoreXYPoint StartInnerPoint { get { return KoreXYPointOps.OffsetPolar(Center, InnerRadius, StartAngleRads); } }
-    public KoreXYPoint EndInnerPoint { get { return KoreXYPointOps.OffsetPolar(Center, InnerRadius, EndAngleRads); } }
-    public KoreXYPoint StartOuterPoint { get { return KoreXYPointOps.OffsetPolar(Center, OuterRadius, StartAngleRads); } }
-    public KoreXYPoint EndOuterPoint { get { return KoreXYPointOps.OffsetPolar(Center, OuterRadius, EndAngleRads); } }
+    public KoreXYVector StartInnerPoint { get { return KoreXYVectorOps.OffsetPolar(Center, InnerRadius, StartAngleRads); } }
+    public KoreXYVector EndInnerPoint { get { return KoreXYVectorOps.OffsetPolar(Center, InnerRadius, EndAngleRads); } }
+    public KoreXYVector StartOuterPoint { get { return KoreXYVectorOps.OffsetPolar(Center, OuterRadius, StartAngleRads); } }
+    public KoreXYVector EndOuterPoint { get { return KoreXYVectorOps.OffsetPolar(Center, OuterRadius, EndAngleRads); } }
 
     public KoreXYLine StartInnerOuterLine { get { return new KoreXYLine(StartInnerPoint, StartOuterPoint); } }
     public KoreXYLine EndInnerOuterLine { get { return new KoreXYLine(EndInnerPoint, EndOuterPoint); } }
@@ -47,7 +47,7 @@ public struct KoreXYAnnularSector
     // Constructor
     // --------------------------------------------------------------------------------------------
 
-    public KoreXYAnnularSector(KoreXYPoint center, double innerRadius, double outerRadius, double startAngleRads, double deltaAngleRads)
+    public KoreXYAnnularSector(KoreXYVector center, double innerRadius, double outerRadius, double startAngleRads, double deltaAngleRads)
     {
         // Swap the inner and outer radii if they are the wrong way around
         if (innerRadius > outerRadius)
@@ -80,7 +80,7 @@ public struct KoreXYAnnularSector
 
     // Check if a point is within the arc box, first by checking distance against the two radii, then by checking the angle.
 
-    public bool Contains(KoreXYPoint checkPos)
+    public bool Contains(KoreXYVector checkPos)
     {
         // Containing the point is three checks:
         // 1 - Its inside the outer radius

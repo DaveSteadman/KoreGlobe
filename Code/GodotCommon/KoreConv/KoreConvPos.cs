@@ -10,7 +10,7 @@ public static class KoreConvPos
     // MARK: KoreCommon To Godot
     // ---------------------------------------------------------------------------------------------------
 
-    // Converts KoreXYZPoint to Godot Vector3
+    // Converts KoreXYZVector to Godot Vector3
     // Usage: Vector3 godotPos = KoreConvPos.ToGodotVector3(koreVect);
     public static Vector3 VecToV3(KoreXYZVector pos)
     {
@@ -18,7 +18,7 @@ public static class KoreConvPos
     }
 
     // Usage: Vector3 godotPos = KoreConvPos.ToGodotVector3(korePos);
-    public static Vector3 PosToV3(KoreXYZPoint pos)
+    public static Vector3 PosToV3(KoreXYZVector pos)
     {
         return new Vector3((float)pos.X, (float)pos.Y, (float)pos.Z);
     }
@@ -52,11 +52,11 @@ public static class KoreConvPos
         return new KoreXYZVector { X = vec.X, Y = vec.Y, Z = vec.Z };
     }
 
-    // Converts Godot Vector3 to KoreXYZPoint
-    // Usage: KoreXYZPoint korePos = KoreConvPos.FromV3(godotPos);
-    public static KoreXYZPoint V3ToPos(Vector3 pos)
+    // Converts Godot Vector3 to KoreXYZVector
+    // Usage: KoreXYZVector korePos = KoreConvPos.FromV3(godotPos);
+    public static KoreXYZVector V3ToPos(Vector3 pos)
     {
-        return new KoreXYZPoint { X = pos.X, Y = pos.Y, Z = pos.Z };
+        return new KoreXYZVector { X = pos.X, Y = pos.Y, Z = pos.Z };
     }
 
     // ---------------------------------------------------------------------------------------------------

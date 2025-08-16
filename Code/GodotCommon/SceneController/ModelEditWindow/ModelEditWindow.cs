@@ -42,9 +42,9 @@ public partial class ModelEditWindow : Window
         // var sv = GetNode<SubViewport>("SubViewport");
         // sv.OwnWorld3D = true;
         // sv.World3D = new World3D();
-        WindowMeshData = KoreMeshDataPrimitives.BasicCube(0.5f, KoreMeshMaterialPalette.DefaultMaterial);
-        KoreMeshDataEditOps.IsolateAllTriangles(WindowMeshData);
-        WindowMeshData.CalcNormalsForAllTriangles();
+        WindowMeshData = KoreMeshDataPrimitives.IsolatedCube(0.5f, KoreMeshMaterialPalette.DefaultMaterial);
+        // KoreMeshDataEditOps.IsolateAllTriangles(WindowMeshData);
+        // KoreMeshDataEditOps.CalcNormalsForAllTriangles();
 
         AttachControls();
     }

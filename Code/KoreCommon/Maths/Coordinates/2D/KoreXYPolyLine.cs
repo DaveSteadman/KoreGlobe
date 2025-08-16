@@ -5,26 +5,26 @@ namespace KoreCommon;
 
 public class KoreXYPolyLine
 {
-    public List<KoreXYPoint> Points { get; }
+    public List<KoreXYVector> Points { get; }
 
     // --------------------------------------------------------------------------------------------
     // Constructor
     // --------------------------------------------------------------------------------------------
 
     // Example declaration:
-    //      KoreXYPolyLine polyLine = new KoreXYPolyLine (new List<KoreXYPoint> {
-    //          new KoreXYPoint(0, 0),
-    //          new KoreXYPoint(1, 1),
-    //          new KoreXYPoint(2, 2) });
+    //      KoreXYPolyLine polyLine = new KoreXYPolyLine (new List<KoreXYVector> {
+    //          new KoreXYVector(0, 0),
+    //          new KoreXYVector(1, 1),
+    //          new KoreXYVector(2, 2) });
 
-    public KoreXYPolyLine(List<KoreXYPoint> points)
+    public KoreXYPolyLine(List<KoreXYVector> points)
     {
         Points = points;
     }
 
     public KoreXYPolyLine(KoreXYPolyLine polyLine)
     {
-        Points = new List<KoreXYPoint>(polyLine.Points);
+        Points = new List<KoreXYVector>(polyLine.Points);
     }
 
     // --------------------------------------------------------------------------------------------
@@ -76,8 +76,8 @@ public class KoreXYPolyLine
 
     public KoreXYPolyLine Offset(double x, double y)
     {
-        List<KoreXYPoint> newPoints = new List<KoreXYPoint>();
-        foreach (KoreXYPoint point in Points)
+        List<KoreXYVector> newPoints = new List<KoreXYVector>();
+        foreach (KoreXYVector point in Points)
         {
             newPoints.Add(point.Offset(x, y));
         }
@@ -86,8 +86,8 @@ public class KoreXYPolyLine
 
     public KoreXYPolyLine Offset(KoreXYVector xy)
     {
-        List<KoreXYPoint> newPoints = new List<KoreXYPoint>();
-        foreach (KoreXYPoint point in Points)
+        List<KoreXYVector> newPoints = new List<KoreXYVector>();
+        foreach (KoreXYVector point in Points)
         {
             newPoints.Add(point.Offset(xy));
         }

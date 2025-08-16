@@ -11,15 +11,15 @@ public static class KoreXYZSphereOps
     public static bool LineIntersectsSphere(
         KoreXYZLine line,
         KoreXYZSphere sphere,
-        out KoreXYZPoint? intersection1,
-        out KoreXYZPoint? intersection2)
+        out KoreXYZVector? intersection1,
+        out KoreXYZVector? intersection2)
     {
         intersection1 = null;
         intersection2 = null;
 
         // Compute line direction and the vector from sphere center to line start
         KoreXYZVector lineDir = line.DirectionVector;
-        KoreXYZVector sphereToLineStart = line.P1.VectorTo(sphere.Center);
+        KoreXYZVector sphereToLineStart = line.P1.XYZTo(sphere.Center);
 
         // Calculate coefficients of the quadratic equation
         double a = KoreXYZVector.DotProduct(lineDir, lineDir);

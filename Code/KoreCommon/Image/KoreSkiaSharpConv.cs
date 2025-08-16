@@ -18,27 +18,12 @@ public static class KoreSkiaSharpConv
         return new SKPoint((float)vector.X, (float)vector.Y);
     }
 
-    public static SKPoint ToSKPoint(this KoreXYPoint point)
-    {
-        return new SKPoint((float)point.X, (float)point.Y);
-    }
-
     public static SKPoint ToSKPoint(this KoreXYZVector vector)
     {
         return new SKPoint((float)vector.X, (float)vector.Y);
     }
 
-    public static SKPoint ToSKPoint(this KoreXYZPoint point)
-    {
-        return new SKPoint((float)point.X, (float)point.Y);
-    }
-
     // --------------------------------------------------------------------------------------------
-
-    public static KoreXYPoint ToKoreXYPoint(this SKPoint point)
-    {
-        return new KoreXYPoint(point.X, point.Y);
-    }
 
     public static KoreXYVector ToKoreXYVector(this SKPoint point)
     {

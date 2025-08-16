@@ -10,7 +10,7 @@ public static class KoreXYLineOps
 
     // Get the distance from a point to a line
 
-    public static double ClosestDistanceTo(this KoreXYLine line, KoreXYPoint xy)
+    public static double ClosestDistanceTo(this KoreXYLine line, KoreXYVector xy)
     {
         double x1 = line.P1.X, y1 = line.P1.Y;
         double x2 = line.P2.X, y2 = line.P2.Y;
@@ -35,7 +35,7 @@ public static class KoreXYLineOps
 
     // Its double precision maths, so a point will never *exactly* be on a line, just check that the distance is within a tolerance
 
-    public static bool IsPointOnLine(this KoreXYLine line, KoreXYPoint xy, bool limitToLineSegment = true, double tolerance = 1e-6)
+    public static bool IsPointOnLine(this KoreXYLine line, KoreXYVector xy, bool limitToLineSegment = true, double tolerance = 1e-6)
     {
         double x1 = line.P1.X;
         double y1 = line.P1.Y;
@@ -161,8 +161,8 @@ public static class KoreXYLineOps
         // Handle the case where the line has no length
         if (line.Length == 0) return line;
 
-        KoreXYPoint p1 = line.P1;
-        KoreXYPoint p2 = line.P2;
+        KoreXYVector p1 = line.P1;
+        KoreXYVector p2 = line.P2;
 
         // Get the delta and normalise it so we apply the delta in the direction of the line
         double dx = (p2.X - p1.X) / line.Length;
@@ -174,14 +174,14 @@ public static class KoreXYLineOps
         double p2x = p2.X + (dx * p2Dist);
         double p2y = p2.Y + (dy * p2Dist);
 
-        return new KoreXYLine(new KoreXYPoint(p1x, p1y), new KoreXYPoint(p2x, p2y));
+        return new KoreXYLine(new KoreXYVector(p1x, p1y), new KoreXYVector(p2x, p2y));
     }
 
     // --------------------------------------------------------------------------------------------
 
     // Extrapolate the line by a distance. -ve is back from P1, +ve is forward from P2
-    // Usage: KoreXYPoint extrapolatedPoint = KoreXYLineOps.ExtrapolateDistance(line, distance);
-    public static KoreXYPoint ExtrapolateDistance(KoreXYLine line, double distance)
+    // Usage: KoreXYVector extrapolatedPoint = KoreXYLineOps.ExtrapolateDistance(line, distance);
+    public static KoreXYVector ExtrapolateDistance(KoreXYLine line, double distance)
     {
         double dx = line.P2.X - line.P1.X;
         double dy = line.P2.Y - line.P1.Y;
@@ -192,14 +192,14 @@ public static class KoreXYLineOps
             // Extend from P2
             double newX = line.P2.X + (dx * distance / len);
             double newY = line.P2.Y + (dy * distance / len);
-            return new KoreXYPoint(newX, newY);
+            return new KoreXYVector(newX, newY);
         }
         else
         {
             // Backtrack from P1
             double newX = line.P1.X + (dx * distance / len);
             double newY = line.P1.Y + (dy * distance / len);
-            return new KoreXYPoint(newX, newY);
+            return new KoreXYVector(newX, newY);
         }
     }
 
@@ -210,8 +210,8 @@ public static class KoreXYLineOps
         // Handle the case where the line has no length
         if (line.Length == 0) return line;
 
-        KoreXYPoint p1 = line.P1;
-        KoreXYPoint p2 = line.P2;
+        KoreXYVector p1 = line.P1;
+        KoreXYVector p2 = line.P2;
 
         // Get the delta and normalise it so we apply the delta in the direction of the line
         double dx = (p2.X - p1.X) / line.Length;
@@ -222,7 +222,7 @@ public static class KoreXYLineOps
         double p2x = p2.X - (dx * insetDist);
         double p2y = p2.Y - (dy * insetDist);
 
-        return new KoreXYLine(new KoreXYPoint(p1x, p1y), new KoreXYPoint(p2x, p2y));
+        return new KoreXYLine(new KoreXYVector(p1x, p1y), new KoreXYVector(p2x, p2y));
     }
 
     // --------------------------------------------------------------------------------------------
@@ -289,7 +289,7 @@ public static class KoreXYLineOps
         double clippedX1 = x0 + t1 * dx;
         double clippedY1 = y0 + t1 * dy;
 
-        return new KoreXYLine(new KoreXYPoint(clippedX0, clippedY0), new KoreXYPoint(clippedX1, clippedY1));
+        return new KoreXYLine(new KoreXYVector(clippedX0, clippedY0), new KoreXYVector(clippedX1, clippedY1));
     }
 
     // OffsetInward() shifts a line segment perpendicular to its direction by a given distance,
@@ -298,7 +298,7 @@ public static class KoreXYLineOps
     // the shape, not outward. This is especially useful for triangle insetting, where each edge
     // must be moved inward toward the triangle's centroid while preserving its orientation.
 
-    public static KoreXYLine OffsetInward(KoreXYLine line, KoreXYPoint oppositePoint, double inset)
+    public static KoreXYLine OffsetInward(KoreXYLine line, KoreXYVector oppositePoint, double inset)
     {
         // Compute the direction vector of the line
         double dx = line.P2.X - line.P1.X;
@@ -314,7 +314,7 @@ public static class KoreXYLineOps
 
         // Determine if the normal points toward the triangle's interior
         var mid = line.MidPoint();
-        var toC = new KoreXYPoint(oppositePoint.X - mid.X, oppositePoint.Y - mid.Y);
+        var toC = new KoreXYVector(oppositePoint.X - mid.X, oppositePoint.Y - mid.Y);
         double dot = nx * toC.X + ny * toC.Y;
 
         // If normal points away from the triangle, flip it
@@ -330,12 +330,12 @@ public static class KoreXYLineOps
     }
 
     // Look for an intersection point between two lines.
-    public static bool TryIntersect(KoreXYLine l1, KoreXYLine l2, out KoreXYPoint result)
+    public static bool TryIntersect(KoreXYLine l1, KoreXYLine l2, out KoreXYVector result)
     {
         double d = (l1.P1.X - l1.P2.X) * (l2.P1.Y - l2.P2.Y) - (l1.P1.Y - l1.P2.Y) * (l2.P1.X - l2.P2.X);
         if (Math.Abs(d) < 1e-12)
         {
-            result = KoreXYPoint.Zero;
+            result = KoreXYVector.Zero;
             return false;
         }
 
@@ -345,7 +345,7 @@ public static class KoreXYLineOps
         double px = (det1 * (l2.P1.X - l2.P2.X) - (l1.P1.X - l1.P2.X) * det2) / d;
         double py = (det1 * (l2.P1.Y - l2.P2.Y) - (l1.P1.Y - l1.P2.Y) * det2) / d;
 
-        result = new KoreXYPoint(px, py);
+        result = new KoreXYVector(px, py);
         return true;
     }
 

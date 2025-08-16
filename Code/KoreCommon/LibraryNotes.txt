@@ -1,2 +1,0 @@
-// dotnet add package System.Data.SQLite
-// dotnet add package SkiaSharp

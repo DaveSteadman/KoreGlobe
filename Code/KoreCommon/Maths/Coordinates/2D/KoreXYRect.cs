@@ -2,8 +2,6 @@ using System;
 
 // Class defining a simple 2D rectangle, with no rotation
 
-// NOTE: Code is vertically aligned readability. Do not refactor this away.
-
 namespace KoreCommon;
 
 // enum to define rect positions
@@ -23,27 +21,28 @@ public enum KoreXYRectPosition
 public struct KoreXYRect
 {
     // Main attributes
-    public KoreXYPoint TopLeft { get; }
-    public KoreXYPoint BottomRight { get; }
+    public KoreXYVector TopLeft { get; }
+    public KoreXYVector BottomRight { get; }
 
     // Derived attributes
-    public double Width  => BottomRight.X - TopLeft.X;
-    public double Height => BottomRight.Y - TopLeft.Y;
     public double Left   => TopLeft.X;
     public double Right  => BottomRight.X;
     public double Top    => TopLeft.Y;
     public double Bottom => BottomRight.Y;
+    public double Width  => BottomRight.X - TopLeft.X;
+    public double Height => BottomRight.Y - TopLeft.Y;
     public double Area   => Width * Height;
 
-    public KoreXYPoint TopRight     => new KoreXYPoint(Right, Top);
-    public KoreXYPoint BottomLeft   => new KoreXYPoint(Left, Bottom);
+    // Derive the other corners and centers
+    public KoreXYVector TopRight => new KoreXYVector(Right, Top);
+    public KoreXYVector TopCenter    => new KoreXYVector((Left + Right) / 2, Top);
+    public KoreXYVector LeftCenter   => new KoreXYVector(Left, (Top + Bottom) / 2);
+    public KoreXYVector Center       => new KoreXYVector((Left + Right) / 2, (Top + Bottom) / 2);
+    public KoreXYVector RightCenter  => new KoreXYVector(Right, (Top + Bottom) / 2);
+    public KoreXYVector BottomLeft   => new KoreXYVector(Left, Bottom);
+    public KoreXYVector BottomCenter => new KoreXYVector((Left + Right) / 2, Bottom);
 
-    public KoreXYPoint Center       => new KoreXYPoint((Left + Right) / 2, (Top + Bottom) / 2);
-    public KoreXYPoint TopCenter    => new KoreXYPoint((Left + Right) / 2, Top);
-    public KoreXYPoint BottomCenter => new KoreXYPoint((Left + Right) / 2, Bottom);
-    public KoreXYPoint LeftCenter   => new KoreXYPoint(Left, (Top + Bottom) / 2);
-    public KoreXYPoint RightCenter  => new KoreXYPoint(Right, (Top + Bottom) / 2);
-
+    // Edges
     public KoreXYLine TopLine       => new KoreXYLine(TopLeft, TopRight);
     public KoreXYLine BottomLine    => new KoreXYLine(BottomLeft, BottomRight);
     public KoreXYLine LeftLine      => new KoreXYLine(TopLeft, BottomLeft);
@@ -61,7 +60,7 @@ public struct KoreXYRect
         BottomRight = new(x2, y2);
     }
 
-    public KoreXYRect(KoreXYPoint topLeft, KoreXYPoint bottomRight)
+    public KoreXYRect(KoreXYVector topLeft, KoreXYVector bottomRight)
     {
         TopLeft = topLeft;
         BottomRight = bottomRight;
@@ -79,8 +78,8 @@ public struct KoreXYRect
 
     public KoreXYRect Offset(KoreXYVector xyOffset)
     {
-        KoreXYPoint newTL = TopLeft.Offset(xyOffset);
-        KoreXYPoint newBR = BottomRight.Offset(xyOffset);
+        KoreXYVector newTL = TopLeft.Offset(xyOffset);
+        KoreXYVector newBR = BottomRight.Offset(xyOffset);
         return new KoreXYRect(newTL, newBR);
     }
 
@@ -100,15 +99,15 @@ public struct KoreXYRect
     // MARK: Point
     // --------------------------------------------------------------------------------------------
 
-    public KoreXYPoint PointFromFraction(double xFraction, double yFraction)
+    public KoreXYVector PointFromFraction(double xFraction, double yFraction)
     {
         // Get the point at a given fraction along the rectangle axis
         // - 0 = top/left, 1 = bottom/right, 0.5 = midpoint
         // - Values beyond 0->1 are allowed, to go outside the rectangle
-        return new KoreXYPoint(Left + (Width * xFraction), Top + (Height * yFraction));
+        return new KoreXYVector(Left + (Width * xFraction), Top + (Height * yFraction));
     }
 
-    public KoreXYPoint PointFromPosition(KoreXYRectPosition position)
+    public KoreXYVector PointFromPosition(KoreXYRectPosition position)
     {
         // Get a point at a given position within the rectangle
         return position switch
@@ -130,9 +129,9 @@ public struct KoreXYRect
     // MARK: Checks
     // --------------------------------------------------------------------------------------------
 
-    public bool Contains(KoreXYPoint xy)
+    public bool Contains(KoreXYVector xy)
     {
-        return xy.X >= Left && xy.X <= Right && 
+        return xy.X >= Left && xy.X <= Right &&
                xy.Y >= Top  && xy.Y <= Bottom;
     }
 

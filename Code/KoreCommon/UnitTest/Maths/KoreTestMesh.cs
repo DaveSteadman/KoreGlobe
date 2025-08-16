@@ -12,6 +12,7 @@ public static class KoreTestMesh
         try
         {
             TestBasicCubeJson(testLog);
+            TestCylinderJson(testLog);
         }
         catch (Exception ex)
         {
@@ -63,4 +64,21 @@ public static class KoreTestMesh
         // testLog.AddResult("KoreMeshDataIO TriangleColorCount",      deserializedCubeMesh.TriangleColors.Count == cubeMesh.TriangleColors.Count);
     }
 
+    // Test to create a cylinder - convert it to JSON (text) and then back again, to ensure all the lists are correctly serialized and deserialized.
+    // - we are looking for the material and group assignments to be correct.
+    public static void TestCylinderJson(KoreTestLog testLog)
+    {
+        // define the cylinder endpoints
+        KoreXYZVector p1 = new KoreXYZVector(1, 0, 0);
+        KoreXYZVector p2 = new KoreXYZVector(1, 0, 1);
+
+        // Create the cylinder mesh
+        var cylinderMesh = KoreMeshDataPrimitives.Cylinder(p1, p2, 0.5f, 0.5f, 8, true);
+
+        // Output to a JSON string
+        string cylinderJSON = KoreMeshDataIO.ToJson(cylinderMesh, dense: false);
+
+        testLog.AddComment($"KoreMeshDataIO ToJson Cylinder: {cylinderJSON}");
+
+    }
 }

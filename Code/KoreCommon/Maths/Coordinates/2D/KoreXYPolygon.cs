@@ -10,11 +10,11 @@ namespace KoreCommon;
 /// </summary>
 public struct KoreXYPolygon
 {
-    public IReadOnlyList<KoreXYPoint> Vertices { get; }
+    public IReadOnlyList<KoreXYVector> Vertices { get; }
 
-    public KoreXYPolygon(IEnumerable<KoreXYPoint> vertices)
+    public KoreXYPolygon(IEnumerable<KoreXYVector> vertices)
     {
-        Vertices = new List<KoreXYPoint>(vertices).AsReadOnly();
+        Vertices = new List<KoreXYVector>(vertices).AsReadOnly();
     }
 
     // --------------------------------------------------------------------------------------------
@@ -38,8 +38,8 @@ public struct KoreXYPolygon
 
     public KoreXYPolygon Offset(double x, double y)
     {
-        List<KoreXYPoint> newVertices = new List<KoreXYPoint>();
-        foreach (KoreXYPoint vertex in Vertices)
+        List<KoreXYVector> newVertices = new List<KoreXYVector>();
+        foreach (KoreXYVector vertex in Vertices)
         {
             newVertices.Add(vertex.Offset(x, y));
         }
@@ -50,8 +50,8 @@ public struct KoreXYPolygon
 
     public KoreXYPolygon Offset(KoreXYVector xy)
     {
-        List<KoreXYPoint> newVertices = new List<KoreXYPoint>();
-        foreach (KoreXYPoint vertex in Vertices)
+        List<KoreXYVector> newVertices = new List<KoreXYVector>();
+        foreach (KoreXYVector vertex in Vertices)
         {
             newVertices.Add(vertex.Offset(xy));
         }

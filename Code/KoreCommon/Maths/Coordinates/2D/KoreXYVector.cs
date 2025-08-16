@@ -20,7 +20,7 @@ public struct KoreXYVector
     public KoreXYVector UnitVector => Normalized; // Alias for Normalized
 
     // --------------------------------------------------------------------------------------------
-    // Constructor
+    // MARK: Constructor
     // --------------------------------------------------------------------------------------------
 
     public KoreXYVector(double x, double y)
@@ -37,9 +37,10 @@ public struct KoreXYVector
 
     // Zero default constructor
     public static KoreXYVector Zero => new KoreXYVector(0, 0);
+    public static KoreXYVector One => new KoreXYVector(1, 1);
 
     // --------------------------------------------------------------------------------------------
-    // Public methods
+    // MARK: Public methods
     // --------------------------------------------------------------------------------------------
 
     // return the angle FROM this point TO the given point - East / Positve X axis is zero
@@ -63,6 +64,16 @@ public struct KoreXYVector
     public double AngleToDegs(double x, double y) => KoreValueUtils.RadsToDegs(AngleToRads(x, y));
     public double AngleToDegs(KoreXYVector xy) => KoreValueUtils.RadsToDegs(AngleToRads(xy));
 
+    public double DistanceTo(double x, double y)
+    {
+        return Math.Sqrt(Math.Pow(X - x, 2) + Math.Pow(Y - y, 2));
+    }
+
+    public double DistanceTo(KoreXYVector xy)
+    {
+        return Math.Sqrt(Math.Pow(X - xy.X, 2) + Math.Pow(Y - xy.Y, 2));
+    }
+
     // --------------------------------------------------------------------------------------------
 
     // Return a new point offset by an XY amount.
@@ -72,7 +83,7 @@ public struct KoreXYVector
     public KoreXYVector Offset(KoreXYPolarOffset o) => Offset(KoreXYPolarOffsetOps.ToXY(o));
 
     // --------------------------------------------------------------------------------------------
-    // static methods
+    // MARK: static methods
     // --------------------------------------------------------------------------------------------
 
     public static KoreXYVector Sum(KoreXYVector a, KoreXYVector b) => new KoreXYVector(a.X + b.X, a.Y + b.Y);
@@ -86,7 +97,7 @@ public struct KoreXYVector
     }
 
     // --------------------------------------------------------------------------------------------
-    // Operator overloads
+    // MARK: Operator overloads
     // --------------------------------------------------------------------------------------------
 
     // + operator overload
@@ -103,4 +114,9 @@ public struct KoreXYVector
     public static KoreXYVector operator /(KoreXYVector a, double b) { return new KoreXYVector(a.X / b, a.Y / b); }
     public static KoreXYVector operator /(double b, KoreXYVector a) { return new KoreXYVector(a.X / b, a.Y / b); }
 
+    // MARK: ToString
+    public override string ToString()
+    {
+        return $"KoreXYVector(X: {X:F3}, Y: {Y:F3})";
+    }
 }

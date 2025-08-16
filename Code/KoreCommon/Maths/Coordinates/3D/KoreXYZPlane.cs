@@ -5,7 +5,7 @@ namespace KoreCommon;
 public struct KoreXYZPlane
 {
     // Three points defining the plane
-    public KoreXYZPoint  PntOrigin { get; }
+    public KoreXYZVector  PntOrigin { get; }
     public KoreXYZVector VecNormal { get; }
     public KoreXYZVector VecX { get; }
     public KoreXYZVector VecY { get; }
@@ -15,7 +15,7 @@ public struct KoreXYZPlane
     // ---------------------------------------------------------------------------------------------
 
     // Constructor
-    public KoreXYZPlane(KoreXYZPoint pO, KoreXYZVector vN, KoreXYZVector vX, KoreXYZVector vY)
+    public KoreXYZPlane(KoreXYZVector pO, KoreXYZVector vN, KoreXYZVector vX, KoreXYZVector vY)
     {
         PntOrigin = pO;
         VecNormal = vN;
@@ -26,13 +26,13 @@ public struct KoreXYZPlane
     // ---------------------------------------------------------------------------------------------
 
     // Zero default constructor
-    public static KoreXYZPlane Zero => new KoreXYZPlane(KoreXYZPoint.Zero, KoreXYZVector.Zero, KoreXYZVector.Zero, KoreXYZVector.Zero);
+    public static KoreXYZPlane Zero => new KoreXYZPlane(KoreXYZVector.Zero, KoreXYZVector.Zero, KoreXYZVector.Zero, KoreXYZVector.Zero);
 
     // ---------------------------------------------------------------------------------------------
 
     // Given a normal and a Y (Up) axis, create the X axis and the plane.
     // Also normalises everything
-    public static KoreXYZPlane MakePlane(KoreXYZPoint pO, KoreXYZVector vN, KoreXYZVector vY)
+    public static KoreXYZPlane MakePlane(KoreXYZVector pO, KoreXYZVector vN, KoreXYZVector vY)
     {
         // Normalize the normal vector
         vN = vN.Normalize();
@@ -71,7 +71,7 @@ public struct KoreXYZPlane
     // ---------------------------------------------------------------------------------------------
 
     // take a 2D point, with reference to the plane, and project it to 3D
-    public KoreXYZPoint Project2DTo3D(KoreXYPoint pnt2D)
+    public KoreXYZVector Project2DTo3D(KoreXYVector pnt2D)
     {
         // Convert the 2D point to 3D using the plane's axes and origin
         // X and Y are the local coordinates in the plane
@@ -83,7 +83,7 @@ public struct KoreXYZPlane
     // ---------------------------------------------------------------------------------------------
 
     // Take a 3D Point and project it to 2D - assuming any deviation from the 3D plane is parallel to the plane normal
-    public KoreXYPoint Project3DTo2D(KoreXYZPoint pnt3D)
+    public KoreXYVector Project3DTo2D(KoreXYZVector pnt3D)
     {
         // Get the vector from the origin to the point
         KoreXYZVector vecToPoint = pnt3D.XYZTo(PntOrigin);
@@ -92,7 +92,7 @@ public struct KoreXYZPlane
         double x = KoreXYZVector.DotProduct(vecToPoint, VecX);
         double y = KoreXYZVector.DotProduct(vecToPoint, VecY);
 
-        return new KoreXYPoint(x, y);
+        return new KoreXYVector(x, y);
     }
 
 }

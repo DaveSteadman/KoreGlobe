@@ -4,21 +4,21 @@ namespace KoreCommon;
 
 public struct KoreXYLine : IEquatable<KoreXYLine>
 {
-    public KoreXYPoint P1 { get; }
-    public KoreXYPoint P2 { get; }
+    public KoreXYVector P1 { get; }
+    public KoreXYVector P2 { get; }
 
     // --------------------------------------------------------------------------------------------
     // MARK: attributes
     // --------------------------------------------------------------------------------------------
 
     public double Length => P1.DistanceTo(P2);
-    public KoreXYPoint Direction => P2 - P1; // return a position as the vector from 0,0
+    public KoreXYVector Direction => P2 - P1; // return a position as the vector from 0,0
 
-    public KoreXYPoint DirectionUnitVector
+    public KoreXYVector DirectionUnitVector
     { // return a direction, with a magniude of 1
         get
         {
-            if (Length == 0) return new KoreXYPoint(0, 0);
+            if (Length == 0) return new KoreXYVector(0, 0);
             return Direction * (1 / Length);
         }
     }
@@ -38,11 +38,11 @@ public struct KoreXYLine : IEquatable<KoreXYLine>
 
     public KoreXYLine(double x1, double y1, double x2, double y2)
     {
-        P1 = new KoreXYPoint(x1, y1);
-        P2 = new KoreXYPoint(x2, y2);
+        P1 = new KoreXYVector(x1, y1);
+        P2 = new KoreXYVector(x2, y2);
     }
 
-    public KoreXYLine(KoreXYPoint p1, KoreXYPoint p2)
+    public KoreXYLine(KoreXYVector p1, KoreXYVector p2)
     {
         P1 = p1;
         P2 = p2;
@@ -60,12 +60,12 @@ public struct KoreXYLine : IEquatable<KoreXYLine>
 
     // Get the centre point of the line
 
-    public KoreXYPoint MidPoint()
+    public KoreXYVector MidPoint()
     {
-        return new KoreXYPoint((P1.X + P2.X) / 2, (P1.Y + P2.Y) / 2);
+        return new KoreXYVector((P1.X + P2.X) / 2, (P1.Y + P2.Y) / 2);
     }
 
-    public KoreXYPoint Fraction(double fraction)
+    public KoreXYVector Fraction(double fraction)
     {
         // Get the point at a given fraction along the line
         // - 0 = P1, 1 = P2, 0.5 = midpoint
@@ -78,20 +78,20 @@ public struct KoreXYLine : IEquatable<KoreXYLine>
         double newX = P1.X + (dx * fraction);
         double newY = P1.Y + (dy * fraction);
 
-        return new KoreXYPoint(newX, newY);
+        return new KoreXYVector(newX, newY);
     }
 
     // --------------------------------------------------------------------------------------------
     // MARK: Vector methods
     // --------------------------------------------------------------------------------------------
 
-    public KoreXYVector VectorTo(KoreXYPoint P2)
+    public KoreXYVector VectorTo(KoreXYVector P2)
     {
         // Return a vector from P1 to P2
         return new KoreXYVector(P2.X - P1.X, P2.Y - P1.Y);
     }
 
-    public KoreXYVector UnitVectorTo(KoreXYPoint P2)
+    public KoreXYVector UnitVectorTo(KoreXYVector P2)
     {
         // Return a unit vector from P1 to P2
         KoreXYVector vector = VectorTo(P2);

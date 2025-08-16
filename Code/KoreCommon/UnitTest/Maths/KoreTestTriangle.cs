@@ -20,7 +20,7 @@ public static class KoreTestTriangle
 
     private static void TestInternalAnglesSum(KoreTestLog testLog)
     {
-        var tri = new KoreXYTriangle(new KoreXYPoint(0, 0), new KoreXYPoint(1, 0), new KoreXYPoint(0, 1));
+        var tri = new KoreXYTriangle(new KoreXYVector(0, 0), new KoreXYVector(1, 0), new KoreXYVector(0, 1));
 
         double angAB = tri.InternalAngleABRads();
         double angBC = tri.InternalAngleBCRads();

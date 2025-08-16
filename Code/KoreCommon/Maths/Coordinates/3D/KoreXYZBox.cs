@@ -4,7 +4,7 @@ namespace KoreCommon;
 
 public struct KoreXYZBox
 {
-    public KoreXYZPoint Center { get; set; } = KoreXYZPoint.Zero;
+    public KoreXYZVector Center { get; set; } = KoreXYZVector.Zero;
 
     public enum EnumFace { Top, Bottom, Left, Right, Front, Back }
     public enum EnumCorner { TopLeftFront, TopRightFront, BottomLeftFront, BottomRightFront, TopLeftBack, TopRightBack, BottomLeftBack, BottomRightBack }
@@ -22,14 +22,14 @@ public struct KoreXYZBox
 
     public KoreXYZBox()
     {
-        Center = KoreXYZPoint.Zero;
+        Center = KoreXYZVector.Zero;
 
         Width = 0;
         Height = 0;
         Length = 0;
     }
 
-    public KoreXYZBox(KoreXYZPoint center, double width, double height, double length)
+    public KoreXYZBox(KoreXYZVector center, double width, double height, double length)
     {
         Center = center;
         Width = width;
@@ -43,12 +43,12 @@ public struct KoreXYZBox
 
     public static KoreXYZBox Zero
     {
-        get { return new KoreXYZBox(KoreXYZPoint.Zero, 0, 0, 0); }
+        get { return new KoreXYZBox(KoreXYZVector.Zero, 0, 0, 0); }
     }
 
     public static KoreXYZBox One
     {
-        get { return new KoreXYZBox(KoreXYZPoint.Zero, 1, 1, 1); }
+        get { return new KoreXYZBox(KoreXYZVector.Zero, 1, 1, 1); }
     }
 
     // --------------------------------------------------------------------------------------------
@@ -87,7 +87,7 @@ public struct KoreXYZBox
 
     // Get the corner of the box - considering the width, height and length
 
-    public KoreXYZPoint Corner(EnumCorner corner)
+    public KoreXYZVector Corner(EnumCorner corner)
     {
         double halfWidth = Width / 2;
         double halfHeight = Height / 2;
@@ -95,14 +95,14 @@ public struct KoreXYZBox
 
         switch (corner)
         {
-            case EnumCorner.TopLeftFront: return new KoreXYZPoint(Center.X - halfWidth, Center.Y + halfHeight, Center.Z - halfLength);
-            case EnumCorner.TopRightFront: return new KoreXYZPoint(Center.X + halfWidth, Center.Y + halfHeight, Center.Z - halfLength);
-            case EnumCorner.BottomLeftFront: return new KoreXYZPoint(Center.X - halfWidth, Center.Y - halfHeight, Center.Z - halfLength);
-            case EnumCorner.BottomRightFront: return new KoreXYZPoint(Center.X + halfWidth, Center.Y - halfHeight, Center.Z - halfLength);
-            case EnumCorner.TopLeftBack: return new KoreXYZPoint(Center.X - halfWidth, Center.Y + halfHeight, Center.Z + halfLength);
-            case EnumCorner.TopRightBack: return new KoreXYZPoint(Center.X + halfWidth, Center.Y + halfHeight, Center.Z + halfLength);
-            case EnumCorner.BottomLeftBack: return new KoreXYZPoint(Center.X - halfWidth, Center.Y - halfHeight, Center.Z + halfLength);
-            case EnumCorner.BottomRightBack: return new KoreXYZPoint(Center.X + halfWidth, Center.Y - halfHeight, Center.Z + halfLength);
+            case EnumCorner.TopLeftFront: return new KoreXYZVector(Center.X - halfWidth, Center.Y + halfHeight, Center.Z - halfLength);
+            case EnumCorner.TopRightFront: return new KoreXYZVector(Center.X + halfWidth, Center.Y + halfHeight, Center.Z - halfLength);
+            case EnumCorner.BottomLeftFront: return new KoreXYZVector(Center.X - halfWidth, Center.Y - halfHeight, Center.Z - halfLength);
+            case EnumCorner.BottomRightFront: return new KoreXYZVector(Center.X + halfWidth, Center.Y - halfHeight, Center.Z - halfLength);
+            case EnumCorner.TopLeftBack: return new KoreXYZVector(Center.X - halfWidth, Center.Y + halfHeight, Center.Z + halfLength);
+            case EnumCorner.TopRightBack: return new KoreXYZVector(Center.X + halfWidth, Center.Y + halfHeight, Center.Z + halfLength);
+            case EnumCorner.BottomLeftBack: return new KoreXYZVector(Center.X - halfWidth, Center.Y - halfHeight, Center.Z + halfLength);
+            case EnumCorner.BottomRightBack: return new KoreXYZVector(Center.X + halfWidth, Center.Y - halfHeight, Center.Z + halfLength);
             default:
                 return Center;
         }

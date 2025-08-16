@@ -10,7 +10,7 @@ public static class KoreXYPolyLineOps
     // 3 point Bezier curve
     // --------------------------------------------------------------------------------------------
 
-    public static KoreXYPoint Calculate3PointBezierPos(double t, KoreXYPoint start, KoreXYPoint control, KoreXYPoint end)
+    public static KoreXYVector Calculate3PointBezierPos(double t, KoreXYVector start, KoreXYVector control, KoreXYVector end)
     {
         double u = 1 - t;
         double tt = t * t;
@@ -19,10 +19,10 @@ public static class KoreXYPolyLineOps
         double x = uu * start.X + 2 * u * t * control.X + tt * end.X;
         double y = uu * start.Y + 2 * u * t * control.Y + tt * end.Y;
 
-        return new KoreXYPoint(x, y);
+        return new KoreXYVector(x, y);
     }
 
-    public static double Calculate3PointBezierTangentAngle(double t, KoreXYPoint start, KoreXYPoint control, KoreXYPoint end)
+    public static double Calculate3PointBezierTangentAngle(double t, KoreXYVector start, KoreXYVector control, KoreXYVector end)
     {
         // Calculate the derivative of the quadratic Bézier curve at t
         double dx = 2 * (1 - t) * (control.X - start.X) + 2 * t * (end.X - control.X);
@@ -37,24 +37,24 @@ public static class KoreXYPolyLineOps
         return angleDegrees;
     }
 
-    public static KoreXYPoint Calculate3PointBezierFirstDerivative(KoreXYPoint start, KoreXYPoint control, KoreXYPoint end, double t)
+    public static KoreXYVector Calculate3PointBezierFirstDerivative(KoreXYVector start, KoreXYVector control, KoreXYVector end, double t)
     {
         // Calculate the components of the derivative
         double dx = 2 * (1 - t) * (control.X - start.X) + 2 * t * (end.X - control.X);
         double dy = 2 * (1 - t) * (control.Y - start.Y) + 2 * t * (end.Y - control.Y);
 
-        // Return the derivative as a KoreXYPoint
-        return new KoreXYPoint(dx, dy);
+        // Return the derivative as a KoreXYVector
+        return new KoreXYVector(dx, dy);
     }
 
     // Calculate the second derivative for a 3-point Bezier curve
-    public static KoreXYPoint Calculate3PointBezierSecondDerivative(KoreXYPoint start, KoreXYPoint control, KoreXYPoint end, double t)
+    public static KoreXYVector Calculate3PointBezierSecondDerivative(KoreXYVector start, KoreXYVector control, KoreXYVector end, double t)
     {
         // For a quadratic Bezier curve, the second derivative is constant
-        return new KoreXYPoint(2 * (end.X - 2 * control.X + start.X), 2 * (end.Y - 2 * control.Y + start.Y));
+        return new KoreXYVector(2 * (end.X - 2 * control.X + start.X), 2 * (end.Y - 2 * control.Y + start.Y));
     }
 
-    public static KoreXYPolyLine? Create3PointBezier(KoreXYPoint p1, KoreXYPoint p2, KoreXYPoint p3, int numSegments)
+    public static KoreXYPolyLine? Create3PointBezier(KoreXYVector p1, KoreXYVector p2, KoreXYVector p3, int numSegments)
     {
         KoreXYPolyLine? bezier = null;
 
@@ -62,7 +62,7 @@ public static class KoreXYPolyLineOps
         {
             double t = 0;
             double dt = 1.0 / numSegments;
-            KoreXYPoint[] points = new KoreXYPoint[numSegments + 1];
+            KoreXYVector[] points = new KoreXYVector[numSegments + 1];
 
             for (int i = 0; i <= numSegments; i++)
             {
@@ -72,13 +72,13 @@ public static class KoreXYPolyLineOps
                 t += dt;
             }
 
-            bezier = new KoreXYPolyLine(new System.Collections.Generic.List<KoreXYPoint>(points));
+            bezier = new KoreXYPolyLine(new System.Collections.Generic.List<KoreXYVector>(points));
         }
 
         return bezier;
     }
 
-    public static double Calculate3PointBezierCurvature(double t, KoreXYPoint start, KoreXYPoint control, KoreXYPoint end)
+    public static double Calculate3PointBezierCurvature(double t, KoreXYVector start, KoreXYVector control, KoreXYVector end)
     {
         var firstDerivative = Calculate3PointBezierFirstDerivative(start, control, end, t);
         var secondDerivative = Calculate3PointBezierSecondDerivative(start, control, end, t);
@@ -89,7 +89,7 @@ public static class KoreXYPolyLineOps
     // 4 point Bezier curve
     // --------------------------------------------------------------------------------------------
 
-    public static KoreXYPoint Calculate4PointBezierPos(double fraction, KoreXYPoint start, KoreXYPoint control1, KoreXYPoint control2, KoreXYPoint end)
+    public static KoreXYVector Calculate4PointBezierPos(double fraction, KoreXYVector start, KoreXYVector control1, KoreXYVector control2, KoreXYVector end)
     {
         double u = 1 - fraction;
         double tt = fraction * fraction;
@@ -107,10 +107,10 @@ public static class KoreXYPolyLineOps
         y += 3 * u * tt * control2.Y; // third term
         y += ttt * end.Y; // fourth term
 
-        return new KoreXYPoint(x, y);
+        return new KoreXYVector(x, y);
     }
 
-    public static double Calculate4PointBezierTangentAngle(double t, KoreXYPoint start, KoreXYPoint control1, KoreXYPoint control2, KoreXYPoint end)
+    public static double Calculate4PointBezierTangentAngle(double t, KoreXYVector start, KoreXYVector control1, KoreXYVector control2, KoreXYVector end)
     {
         // Calculate the derivative of the Bézier curve at t
         double dx = 3 * (1 - t) * (1 - t) * (control1.X - start.X) +
@@ -130,7 +130,7 @@ public static class KoreXYPolyLineOps
         return angleDegrees;
     }
 
-    public static KoreXYPoint Calculate4PointBezierFirstDerivative(KoreXYPoint start, KoreXYPoint control1, KoreXYPoint control2, KoreXYPoint end, double t)
+    public static KoreXYVector Calculate4PointBezierFirstDerivative(KoreXYVector start, KoreXYVector control1, KoreXYVector control2, KoreXYVector end, double t)
     {
         double dx = 3 * (1 - t) * (1 - t) * (control1.X - start.X) +
                     6 * (1 - t) * t * (control2.X - control1.X) +
@@ -139,24 +139,24 @@ public static class KoreXYPolyLineOps
                     6 * (1 - t) * t * (control2.Y - control1.Y) +
                     3 * t * t * (end.Y - control2.Y);
 
-        return new KoreXYPoint(dx, dy);
+        return new KoreXYVector(dx, dy);
     }
 
     // Calculate the second derivative for a 4-point Bezier curve
-    public static KoreXYPoint Calculate4PointBezierSecondDerivative(KoreXYPoint start, KoreXYPoint control1, KoreXYPoint control2, KoreXYPoint end, double t)
+    public static KoreXYVector Calculate4PointBezierSecondDerivative(KoreXYVector start, KoreXYVector control1, KoreXYVector control2, KoreXYVector end, double t)
     {
         double dx = 6 * (1 - t) * (control2.X - 2 * control1.X + start.X) + 6 * t * (end.X - 2 * control2.X + control1.X);
         double dy = 6 * (1 - t) * (control2.Y - 2 * control1.Y + start.Y) + 6 * t * (end.Y - 2 * control2.Y + control1.Y);
-        return new KoreXYPoint(dx, dy);
+        return new KoreXYVector(dx, dy);
     }
 
-    public static KoreXYPolyLine? Create4PointBezier(KoreXYPoint p1, KoreXYPoint p2, KoreXYPoint p3, KoreXYPoint p4, int numSegments)
+    public static KoreXYPolyLine? Create4PointBezier(KoreXYVector p1, KoreXYVector p2, KoreXYVector p3, KoreXYVector p4, int numSegments)
     {
         KoreXYPolyLine? bezier = null;
 
         if (numSegments > 0)
         {
-            KoreXYPoint[] points = new KoreXYPoint[numSegments + 1];
+            KoreXYVector[] points = new KoreXYVector[numSegments + 1];
 
             for (int i = 0; i <= numSegments; i++)
             {
@@ -164,7 +164,7 @@ public static class KoreXYPolyLineOps
                 points[i] = Calculate4PointBezierPos(fraction, p1, p2, p3, p4);
             }
 
-            bezier = new KoreXYPolyLine(new System.Collections.Generic.List<KoreXYPoint>(points));
+            bezier = new KoreXYPolyLine(new System.Collections.Generic.List<KoreXYVector>(points));
         }
 
         return bezier;
@@ -174,12 +174,12 @@ public static class KoreXYPolyLineOps
     // Commmon
     // --------------------------------------------------------------------------------------------
 
-    // CalculateCurvature now takes KoreXYPoint arguments for first and second derivatives
+    // CalculateCurvature now takes KoreXYVector arguments for first and second derivatives
     // Calculations of first and second derivatives inside curvature methods
     // (Implement Calculate3PointBezierFirstDerivative and Calculate4PointBezierFirstDerivative as needed)
 
     // Common method to calculate curvature from first and second derivatives
-    private static double CalculateCurvature(KoreXYPoint firstDerivative, KoreXYPoint secondDerivative)
+    private static double CalculateCurvature(KoreXYVector firstDerivative, KoreXYVector secondDerivative)
     {
         double numerator = Math.Abs(firstDerivative.X * secondDerivative.Y - firstDerivative.Y * secondDerivative.X);
         double denominator = Math.Pow(Math.Pow(firstDerivative.X, 2) + Math.Pow(firstDerivative.Y, 2), 1.5);

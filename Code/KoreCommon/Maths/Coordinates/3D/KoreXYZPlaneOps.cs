@@ -7,7 +7,7 @@ namespace KoreCommon;
 public static class KoreXYZPlaneOps
 {
     // Check if three points are colinear
-    public static bool PointsCollinear(KoreXYZPoint p1, KoreXYZPoint p2, KoreXYZPoint p3)
+    public static bool PointsCollinear(KoreXYZVector p1, KoreXYZVector p2, KoreXYZVector p3)
     {
         // Validate inputs to avoid undefined lines (e.g., same start and end points)
         if (p1.Equals(p2) || p2.Equals(p3) || p1.Equals(p3))
@@ -23,7 +23,7 @@ public static class KoreXYZPlaneOps
     }
 
     // Find the intersection point of a line with a plane, if it exists
-    // public static KoreXYZPoint? IntersectionWithLine(KoreXYZPlane plane, KoreXYZLine line)
+    // public static KoreXYZVector? IntersectionWithLine(KoreXYZPlane plane, KoreXYZLine line)
     // {
     //     KoreXYZVector planeNormal = plane.VecNormal;
 
@@ -47,9 +47,9 @@ public static class KoreXYZPlaneOps
     //     }
 
     //     // Calculate the parameter t at the intersection point
-    //     double t = KoreXYZPointOps.DotProduct(planeNormal, KoreXYZPoint.Diff(plane.P1, line.P1)) / dotProduct;
+    //     double t = KoreXYZVectorOps.DotProduct(planeNormal, KoreXYZVector.Diff(plane.P1, line.P1)) / dotProduct;
 
     //     // Calculate and return the intersection point
-    //     return KoreXYZPoint.Sum(line.P1, KoreXYZPoint.Scale(lineDir, t));
+    //     return KoreXYZVector.Sum(line.P1, KoreXYZVector.Scale(lineDir, t));
     // }
 }

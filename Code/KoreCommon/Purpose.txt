@@ -1,7 +1,0 @@
-
-KoreCommon:
-- Exists to define a number of common classes and serives that could be useful to any number of C# applications.
-
-Requirements:
-- The code is portable across platforms.
-- All code is potentially relevant to multiple consumers (leave app specific stuff in apps).

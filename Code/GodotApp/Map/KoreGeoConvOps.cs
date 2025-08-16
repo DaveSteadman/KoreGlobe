@@ -65,7 +65,7 @@ public static class KoreGeoConvOps
 
         // Convert the LLA to an XYZ - No offset for this function
         KoreLLAPoint llap = new KoreLLAPoint() { LatDegs = latDegs, LonDegs = lonDegs, RadiusM = radiusM };
-        KoreXYZPoint p = llap.ToXYZ();
+        KoreXYZVector p = llap.ToXYZ();
 
         // Create a new vector3, with the Z axis inverted as Godot needs.
         return new Vector3((float)p.X, (float)p.Y, (float)-p.Z);
@@ -92,10 +92,10 @@ public static class KoreGeoConvOps
         double rwY = gePos.Y * KoreZeroOffset.GeToRwDistanceMultiplier;
         double rwZ = gePos.Z * KoreZeroOffset.GeToRwDistanceMultiplier * -1;
 
-        KoreXYZPoint rwOffset = new KoreXYZPoint(rwX, rwY, rwZ);
+        KoreXYZVector rwOffset = new KoreXYZVector(rwX, rwY, rwZ);
 
         // 2 - Apply the real world earth centre offset
-        KoreXYZPoint rwEarthCentrePos = KoreZeroOffset.AppliedZeroPosXYZ + rwOffset;
+        KoreXYZVector rwEarthCentrePos = KoreZeroOffset.AppliedZeroPosXYZ + rwOffset;
 
         // 3 - Convert the XYZ into an LLA
         KoreLLAPoint llap = KoreLLAPoint.FromXYZ(rwEarthCentrePos);
@@ -227,9 +227,9 @@ public static class KoreGeoConvOps
         Vector3 v3PosAhead = KoreZeroOffset.GeZeroPointOffset(posAhead.ToXYZ());
 
         {
-            KoreXYZPoint p      = pos.ToXYZ();
-            KoreXYZPoint pAhead = posAhead.ToXYZ();
-            KoreXYZPoint pAbove = posAbove.ToXYZ();
+            KoreXYZVector p      = pos.ToXYZ();
+            KoreXYZVector pAhead = posAhead.ToXYZ();
+            KoreXYZVector pAbove = posAbove.ToXYZ();
 
             double distUp    = p.DistanceTo(pAbove);
             double distAhead = p.DistanceTo(pAhead);

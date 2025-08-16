@@ -9,7 +9,7 @@ namespace KoreCommon;
 
 public struct KoreXYZArc
 {
-    public KoreXYZPoint Origin { get; }
+    public KoreXYZVector Origin { get; }
     public double Radius { get; }
     public double StartAzimuthRads { get; }
     public double StartElevationRads { get; }
@@ -37,14 +37,14 @@ public struct KoreXYZArc
     public double ElevationSpanRads { get { return KoreValueUtils.AngleDiffRads(StartElevationRads, EndElevationRads); } }
     public double ElevationSpanDegs { get { return KoreValueUtils.RadsToDegs(ElevationSpanRads); } }
 
-    public KoreXYZPoint StartPoint { get { return KoreXYZPointOps.OffsetAzEl(Origin, Radius, StartAzimuthRads, StartElevationRads); } }
-    public KoreXYZPoint EndPoint { get { return KoreXYZPointOps.OffsetAzEl(Origin, Radius, EndAzimuthRads, EndElevationRads); } }
+    public KoreXYZVector StartPoint { get { return KoreXYZVectorOps.OffsetAzEl(Origin, Radius, StartAzimuthRads, StartElevationRads); } }
+    public KoreXYZVector EndPoint { get { return KoreXYZVectorOps.OffsetAzEl(Origin, Radius, EndAzimuthRads, EndElevationRads); } }
 
     // --------------------------------------------------------------------------------------------
     // Constructor
     // --------------------------------------------------------------------------------------------
 
-    public KoreXYZArc(KoreXYZPoint origin, double radius, double startAzimuthRads, double deltaAzimuthRads, double startElevationRads, double deltaElevationRads)
+    public KoreXYZArc(KoreXYZVector origin, double radius, double startAzimuthRads, double deltaAzimuthRads, double startElevationRads, double deltaElevationRads)
     {
         Origin = origin;
         Radius = radius;
@@ -76,7 +76,7 @@ public struct KoreXYZArc
     // return the angle between the two points in the plane of the points, in radians. Essentially a 2D angle and a 2D cross product.
     public double Angle()
     {
-        return KoreXYZPointOps.AngleBetweenRads(Origin, StartPoint, EndPoint);
+        return KoreXYZVectorOps.AngleBetweenRads(Origin, StartPoint, EndPoint);
     }
 
     // --------------------------------------------------------------------------------------------

@@ -38,7 +38,7 @@ public partial class KoreZeroNodeMapTile : Node3D
     // Tile Code and tile centre positions - Setup early in tile creation and then fixed.
     public  KoreMapTileCode  TileCode        = KoreMapTileCode.Zero;
     private KoreLLAPoint     RwTileCenterLLA = KoreLLAPoint.Zero; // Shortcut from the tilecode center
-    private KoreXYZPoint     RwTileCenterXYZ = KoreXYZPoint.Zero; // Shortcut from the tilecode center
+    private KoreXYZVector     RwTileCenterXYZ = KoreXYZVector.Zero; // Shortcut from the tilecode center
     private KoreLLBox        RwTileLLBox     = KoreLLBox.Zero; // Shortcut from the tilecode center
 
     // Parent/child tiles relationships
@@ -70,9 +70,9 @@ public partial class KoreZeroNodeMapTile : Node3D
     // Godot Game Engine objects
     // private MeshInstance3D MeshInstance  = new();
     // private KoreLineMesh3D  MeshInstanceW = new();
-    
+
     private KoreMeshData TileMesh = new();
-    
+
     private Label3D TileCodeLabel;
     private List<Node3D> GEElements = new List<Node3D>();
 
@@ -152,7 +152,7 @@ public partial class KoreZeroNodeMapTile : Node3D
     public override void _Ready()
     {
         GD.Print($"Tile Ready: {TileCode}");
-        
+
         TileVisibilityStats.LatestValue = new KoreZeroTileVisibilityStats();
         Task.Run(() => BackgroundProcessing());
     }
@@ -184,7 +184,7 @@ public partial class KoreZeroNodeMapTile : Node3D
             {
                 LocateTile();
             }
-            
+
             // Slow the tile visibility processing down to a manageable pace
             if (UIUpdateTimer < KoreCentralTime.RuntimeSecs)
             {
@@ -192,7 +192,7 @@ public partial class KoreZeroNodeMapTile : Node3D
                 UIUpdateTimer = KoreCentralTime.RuntimeSecs + RandomLoopList.GetNext();
                 UpdateVisbilityRules();
             }
-            
+
             // if (KoreAppRoot.Instance != null)
             // {
             //     CanvasLayer? bboxLayer = KoreAppRoot.GetBBoxCanvasLayer();
@@ -219,7 +219,7 @@ public partial class KoreZeroNodeMapTile : Node3D
             //         }
             //     }
             // }
-            
+
         }
     }
 
@@ -309,9 +309,9 @@ public partial class KoreZeroNodeMapTile : Node3D
 
     private void LocateTile()
     {
-        
+
         GD.Print($"Locating Tile: {TileCode} - {RwTileCenterLLA}");
-        
+
         // Set the local position from the parent object
         Vector3 newPos = KoreGeoConvOps.RwToOffsetGe(RwTileCenterLLA);
 

@@ -40,12 +40,12 @@ public partial class KoreMeshData
 
     // list of Material for this mesh
     public List<KoreMeshMaterial> Materials = new();
-    
+
     // Named groups, logical/useful sub-divisions of the mesh triangles, with a material.
     // - Non-exclusive inclusion of triangles allows for multiple uses and some manner of hierarchy
     public Dictionary<string, KoreMeshTriangleGroup> NamedTriangleGroups = new(); // Tags for grouping triangles
 
-    // Counters for unique IDs 
+    // Counters for unique IDs
     public int NextVertexId = 0;
     public int NextLineId = 0;
     public int NextTriangleId = 0;
@@ -90,7 +90,7 @@ public partial class KoreMeshData
     }
 
     // --------------------------------------------------------------------------------------------
-    // MARK: Points
+    // MARK: Vertices
     // --------------------------------------------------------------------------------------------
 
     public int AddVertex(KoreXYZVector vertex)
@@ -139,52 +139,6 @@ public partial class KoreMeshData
             throw new ArgumentOutOfRangeException(nameof(vertexId), "Vertex ID is not found.");
 
         Normals[vertexId] = normal;
-    }
-
-    // --------------------------------------------------------------------------------------------
-
-    public KoreXYZVector CalcNormalsForTriangle(int triangleId)
-    {
-        if (!Triangles.ContainsKey(triangleId))
-            return KoreXYZVector.Zero;
-
-        // Get the vertices
-        KoreMeshTriangle triangle = Triangles[triangleId];
-        KoreXYZVector a = Vertices[triangle.A];
-        KoreXYZVector b = Vertices[triangle.B];
-        KoreXYZVector c = Vertices[triangle.C];
-
-        // Calculate the face normal using cross product
-        KoreXYZVector ab = b - a;  // Vector from A to B
-        KoreXYZVector ac = c - a;  // Vector from A to C
-        KoreXYZVector faceNormal = KoreXYZVector.CrossProduct(ab, ac).Normalize();
-
-        // Normalize and invert the face normal
-        faceNormal = faceNormal.Normalize();
-        faceNormal = faceNormal.Invert(); // Required Step - no explanation
-
-        // Set the normals
-        Normals[triangle.A] = faceNormal;
-        Normals[triangle.B] = faceNormal;
-        Normals[triangle.C] = faceNormal;
-
-        return faceNormal;
-    }
-
-    // --------------------------------------------------------------------------------------------
-
-    // Set normals for all vertices based on the first triangle that contains each vertex
-    // Usage: mesh.CalcNormalsForAllTriangles();
-
-    public void CalcNormalsForAllTriangles()
-    {
-        foreach (var kvp in Triangles)
-        {
-            int triangleId = kvp.Key;
-            KoreMeshTriangle triangle = kvp.Value;
-
-            CalcNormalsForTriangle(triangleId);
-        }
     }
 
     // --------------------------------------------------------------------------------------------
@@ -320,8 +274,8 @@ public partial class KoreMeshData
     public void AddDottedLineByDistance(int vertexIdA, int vertexIdB, KoreColorRGB colLine, double dotSpacing)
     {
         // Calculate the distance between the two vertices
-        KoreXYZPoint pntA = new KoreXYZPoint(Vertices[vertexIdA]);
-        KoreXYZPoint pntB = new KoreXYZPoint(Vertices[vertexIdB]);
+        KoreXYZVector pntA = new KoreXYZVector(Vertices[vertexIdA]);
+        KoreXYZVector pntB = new KoreXYZVector(Vertices[vertexIdB]);
 
         double distance = pntA.DistanceTo(pntB);
 
@@ -332,7 +286,7 @@ public partial class KoreMeshData
         {
             // Calculate the start point of this dot
             double tStart = currDist / distance;
-            KoreXYZPoint dotStart = new KoreXYZPoint(
+            KoreXYZVector dotStart = new KoreXYZVector(
                 pntA.X + (pntB.X - pntA.X) * tStart,
                 pntA.Y + (pntB.Y - pntA.Y) * tStart,
                 pntA.Z + (pntB.Z - pntA.Z) * tStart
@@ -341,7 +295,7 @@ public partial class KoreMeshData
             // Calculate the end point of this dot
             double dotEndDist = Math.Min(currDist + dotLength, distance);
             double tEnd = dotEndDist / distance;
-            KoreXYZPoint dotEnd = new KoreXYZPoint(
+            KoreXYZVector dotEnd = new KoreXYZVector(
                 pntA.X + (pntB.X - pntA.X) * tEnd,
                 pntA.Y + (pntB.Y - pntA.Y) * tEnd,
                 pntA.Z + (pntB.Z - pntA.Z) * tEnd
@@ -499,11 +453,11 @@ public partial class KoreMeshData
             if (existingMaterial.Name == material.Name)
                 return; // existing material found, return without action
         }
-        
+
         // Material not found - add a new one using its name
         Materials.Add(material);
     }
-        
+
     // Get the material, or return the default material if not setup
     public KoreMeshMaterial GetMaterial(string materialName)
     {
@@ -581,7 +535,7 @@ public partial class KoreMeshData
         }
     }
 
-    
+
     public KoreMeshMaterial MaterialForGroup(string groupName)
     {
         if (NamedTriangleGroups.ContainsKey(groupName))
@@ -648,4 +602,45 @@ public partial class KoreMeshData
 
         return vertices;
     }
+
+    // --------------------------------------------------------------------------------------------
+    // MARK: Spatial Queries
+    // --------------------------------------------------------------------------------------------
+
+    // Find all vertices within a specified distance of a given point
+    // Useful for identifying a shared vertex location between triangles
+    public List<int> FindVerticesWithinDistance(KoreXYZVector targetPoint, double maxDistance)
+    {
+        List<int> nearbyVertices = new List<int>();
+        double maxDistanceSquared = maxDistance * maxDistance; // Use squared distance for performance
+
+        foreach (var kvp in Vertices)
+        {
+            int vertexId = kvp.Key;
+            KoreXYZVector vertex = kvp.Value;
+
+            // Calculate squared distance to avoid expensive sqrt operation
+            double deltaX = vertex.X - targetPoint.X;
+            double deltaY = vertex.Y - targetPoint.Y;
+            double deltaZ = vertex.Z - targetPoint.Z;
+            double distanceSquared = deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ;
+
+            if (distanceSquared <= maxDistanceSquared)
+            {
+                nearbyVertices.Add(vertexId);
+            }
+        }
+
+        return nearbyVertices;
+    }
+
+    // Find all vertices within a specified distance of a vertex by ID
+    public List<int> FindVerticesWithinDistance(int targetVertexId, double maxDistance)
+    {
+        if (!Vertices.ContainsKey(targetVertexId))
+            throw new ArgumentOutOfRangeException(nameof(targetVertexId), "Vertex ID is not found.");
+
+        return FindVerticesWithinDistance(Vertices[targetVertexId], maxDistance);
+    }
+
 }

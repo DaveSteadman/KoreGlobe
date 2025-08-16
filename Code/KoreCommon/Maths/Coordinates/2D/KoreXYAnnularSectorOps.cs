@@ -11,15 +11,15 @@ public static class KoreXYAnnularSectorOps
     // Intersections
     // --------------------------------------------------------------------------------------------
 
-    // public static List<KoreXYPoint> IntersectionPoints(KoreXYAnnularSector sector, KoreXYLine line)
+    // public static List<KoreXYVector> IntersectionPoints(KoreXYAnnularSector sector, KoreXYLine line)
     // {
-    //     List<KoreXYPoint> intersectionPoints = new List<KoreXYPoint>();
+    //     List<KoreXYVector> intersectionPoints = new List<KoreXYVector>();
 
     //     // Break up the shape into two arcs and two lines, then use the intersection methods for each
-    //     List<KoreXYPoint> innerArcIntersections = KoreXYArcOps.IntersectionPoints(sector.InnerArc, line);
-    //     List<KoreXYPoint> outerArcIntersections = KoreXYArcOps.IntersectionPoints(sector.OuterArc, line);
-    //     KoreXYPoint? startIntersection          = KoreXYLineOps.Intersection(sector.StartInnerOuterLine, line);
-    //     KoreXYPoint? endIntersection            = KoreXYLineOps.Intersection(sector.EndInnerOuterLine, line);
+    //     List<KoreXYVector> innerArcIntersections = KoreXYArcOps.IntersectionPoints(sector.InnerArc, line);
+    //     List<KoreXYVector> outerArcIntersections = KoreXYArcOps.IntersectionPoints(sector.OuterArc, line);
+    //     KoreXYVector? startIntersection          = KoreXYLineOps.Intersection(sector.StartInnerOuterLine, line);
+    //     KoreXYVector? endIntersection            = KoreXYLineOps.Intersection(sector.EndInnerOuterLine, line);
 
     //     // Consolidate the results into one list
     //     if (startIntersection != null)

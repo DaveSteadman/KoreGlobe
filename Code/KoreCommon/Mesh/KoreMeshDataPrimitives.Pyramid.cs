@@ -16,7 +16,7 @@ public static partial class KoreMeshDataPrimitives
     // - baseForwardVector: The vector, from the base centre point outwards, that defines the forward direction of the base
     // - width and height: relative to the forward or up direction of the base.
     public static KoreMeshData BasicPyramid(
-        KoreXYZPoint apexPoint, KoreXYZVector apexBaseVector, KoreXYZVector baseForwardVector,
+        KoreXYZVector apexPoint, KoreXYZVector apexBaseVector, KoreXYZVector baseForwardVector,
         float width, float height,
         KoreColorRGB linecolor, KoreMeshMaterial material)
     {
@@ -25,26 +25,26 @@ public static partial class KoreMeshDataPrimitives
         KoreColorRGB vertexColor = material.BaseColor;
 
         // Calculate base center point
-        KoreXYZPoint baseCenterPoint = apexPoint + apexBaseVector;
-        
+        KoreXYZVector baseCenterPoint = apexPoint + apexBaseVector;
+
         // Ensure baseForwardVector is perpendicular to apexBaseVector
         // If they're not perpendicular, project baseForwardVector onto the plane perpendicular to apexBaseVector
         KoreXYZVector normalizedApexBase = apexBaseVector.Normalize();
         double dotProduct = KoreXYZVector.DotProduct(baseForwardVector, normalizedApexBase);
         KoreXYZVector projectedForward = baseForwardVector - (normalizedApexBase * dotProduct);
         KoreXYZVector normalizedForward = projectedForward.Normalize();
-        
+
         // Create the right vector perpendicular to both apexBaseVector and baseForwardVector
         KoreXYZVector rightVector = KoreXYZVector.CrossProduct(normalizedForward, normalizedApexBase).Normalize();
-        
+
         // Calculate the 4 base vertices for a square pyramid
         double halfWidth = width * 0.5;
         double halfHeight = height * 0.5;
-        
-        KoreXYZPoint baseVertex1 = baseCenterPoint + (normalizedForward * halfHeight) + (rightVector * halfWidth);   // front-right
-        KoreXYZPoint baseVertex2 = baseCenterPoint + (normalizedForward * halfHeight) - (rightVector * halfWidth);   // front-left
-        KoreXYZPoint baseVertex3 = baseCenterPoint - (normalizedForward * halfHeight) - (rightVector * halfWidth);   // back-left
-        KoreXYZPoint baseVertex4 = baseCenterPoint - (normalizedForward * halfHeight) + (rightVector * halfWidth);   // back-right
+
+        KoreXYZVector baseVertex1 = baseCenterPoint + (normalizedForward * halfHeight) + (rightVector * halfWidth);   // front-right
+        KoreXYZVector baseVertex2 = baseCenterPoint + (normalizedForward * halfHeight) - (rightVector * halfWidth);   // front-left
+        KoreXYZVector baseVertex3 = baseCenterPoint - (normalizedForward * halfHeight) - (rightVector * halfWidth);   // back-left
+        KoreXYZVector baseVertex4 = baseCenterPoint - (normalizedForward * halfHeight) + (rightVector * halfWidth);   // back-right
 
         // Convert points to vectors for AddVertex (AddVertex expects KoreXYZVector)
         int idxApex = pyramidMesh.AddVertex(new KoreXYZVector(apexPoint.X, apexPoint.Y, apexPoint.Z), null, vertexColor);
@@ -87,21 +87,21 @@ public static partial class KoreMeshDataPrimitives
 
         // Calculate base center point
         KoreXYZVector baseCenter = apexVector + offsetToBaseCenter;
-        
+
         // Ensure baseForwardVector is perpendicular to apexBaseVector
         // If they're not perpendicular, project baseForwardVector onto the plane perpendicular to apexBaseVector
         KoreXYZVector normalizedApexBase = offsetToBaseCenter.Normalize();
         double dotProduct = KoreXYZVector.DotProduct(baseForwardVector, normalizedApexBase);
         KoreXYZVector projectedForward = baseForwardVector - (normalizedApexBase * dotProduct);
         KoreXYZVector normalizedForward = projectedForward.Normalize();
-        
+
         // Create the right vector perpendicular to both apexBaseVector and baseForwardVector
         KoreXYZVector rightVector = KoreXYZVector.CrossProduct(normalizedForward, normalizedApexBase).Normalize();
-        
+
         // Calculate the 4 base vertices for a square pyramid
         double halfWidth = width * 0.5;
         double halfHeight = height * 0.5;
-        
+
         KoreXYZVector baseVertex1 = offsetToBaseCenter + (normalizedForward * halfHeight) + (rightVector * halfWidth);   // front-right
         KoreXYZVector baseVertex2 = offsetToBaseCenter + (normalizedForward * halfHeight) - (rightVector * halfWidth);   // front-left
         KoreXYZVector baseVertex3 = offsetToBaseCenter - (normalizedForward * halfHeight) - (rightVector * halfWidth);   // back-left
@@ -126,7 +126,7 @@ public static partial class KoreMeshDataPrimitives
         int idxBase2 = pyramidMesh.AddVertex(baseVertex2);
         int idxBase3 = pyramidMesh.AddVertex(baseVertex3);
         int idxBase4 = pyramidMesh.AddVertex(baseVertex4);
-        
+
         pyramidMesh.OutlineTriangle(idxApex, idxBase1, idxBase2, linecolor);
         pyramidMesh.OutlineTriangle(idxApex, idxBase2, idxBase3, linecolor);
         pyramidMesh.OutlineTriangle(idxApex, idxBase3, idxBase4, linecolor);
@@ -134,6 +134,6 @@ public static partial class KoreMeshDataPrimitives
 
         return pyramidMesh;
     }
-    
+
 
 }
