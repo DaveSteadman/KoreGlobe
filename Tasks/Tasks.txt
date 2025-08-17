@@ -5,21 +5,46 @@ A 3D world to explore, and visualise customer data.
 
 Target of current iteration:
 ============================
-Deliver the core functionality and demonstrate through tech-demo windows.
+Deliver the core functionality and demonstrate developing areas through tech-demo windows.
 - Dynamically loading earth - reducing VRAM burden
 - 2D selectable elements
 - Windows of entity details
 - Better 3D model loading and management (consistency).
 - Management of linked and unlinked elements.
 
-Functional Goal: Just tech demo presentation.
+Functional Goal:
+- Tech demo presentation.
+- Outline next version of the app - validate tech demos.
 
+
+
+App Outline
+===========
+- 3D Globe - Dynamically loading
+    - Demos smooth tile loading, minimum VRAM burden
+    - New LOD levels, load textures later.
+    - New decimated mesh, geometry saved in database.
+
+- Camera controls
+    - World view
+    - Chase cam
+
+- Entity Data
+    - List entities
+    - Show pos/speed
+    - Show Element summary
+
+- Control
+    - Settings
+    - Network
+    - CLI
 
 
 Immeditate Task:
 ================
 
 - Draw the tile edges
+
 
 
 Short Term Todo List:

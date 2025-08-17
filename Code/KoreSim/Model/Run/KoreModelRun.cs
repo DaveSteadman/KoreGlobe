@@ -12,7 +12,7 @@ namespace KoreSim;
 public class KoreModelRun
 {
     private Thread? modelThread = null;
-    private float TargetUpdateIntervalSecs = 0.020f; // 50Hz target (20ms interval)
+    private readonly float TargetUpdateIntervalSecs = 0.020f; // 50Hz target (20ms interval)
 
     // --------------------------------------------------------------------------------------------
 

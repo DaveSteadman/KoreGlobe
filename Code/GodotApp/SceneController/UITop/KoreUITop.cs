@@ -45,6 +45,7 @@ public partial class KoreUITop : Control
             UpdateCLIStates();
             UpdateNetworkWindowStates();
             UpdateSandbox3DWindowStates();
+            UpdateMeshWindowStates();
         }
     }
 

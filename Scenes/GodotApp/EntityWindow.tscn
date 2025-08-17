@@ -1,0 +1,33 @@
+[gd_scene format=3 uid="uid://dy4b5xnq0ifde"]
+
+[node name="EntityWindow" type="Window"]
+oversampling_override = 1.0
+size = Vector2i(800, 640)
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="Tree" type="Tree" parent="MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+
+[node name="TabContainer" type="TabContainer" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+current_tab = 0
+
+[node name="TabBar" type="TabBar" parent="MarginContainer/HBoxContainer/TabContainer"]
+layout_mode = 2
+metadata/_tab_index = 0
