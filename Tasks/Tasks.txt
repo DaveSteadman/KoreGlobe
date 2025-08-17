@@ -1,4 +1,20 @@
 
+Vision:
+=======
+A 3D world to explore, and visualise customer data.
+
+Target of current iteration:
+============================
+Deliver the core functionality and demonstrate through tech-demo windows.
+- Dynamically loading earth - reducing VRAM burden
+- 2D selectable elements
+- Windows of entity details
+- Better 3D model loading and management (consistency).
+- Management of linked and unlinked elements.
+
+Functional Goal: Just tech demo presentation.
+
+
 
 Immeditate Task:
 ================
@@ -20,11 +36,11 @@ Short Term Todo List:
     - Determine distance to tile
     - determine vertical and horizontal angles the tile presents, and thus an estimated area.
     - determine an angle to the tile based from the camera position and direction.
-    
+
     - Create a distance-resolution score of draw priority and resolution, that we can judge against. ie (anything above 50, add the child tiles or next LOD)
 `
 
-- At least add and display a child 
+- At least add and display a child
     - Make sure the core mechanics of it are working okay
 
 
@@ -54,7 +70,7 @@ Tile Longitude:
 
 Future Ideas:
 =============
-- OSM Data: 
+- OSM Data:
     - https://github.com/OsmSharp/core
 
 
@@ -69,6 +85,7 @@ Comparable Apps/Frameworks:
     https://marble.kde.org/
 
 - Caesium
+    Expansive 3D world framework and community
 
 
 

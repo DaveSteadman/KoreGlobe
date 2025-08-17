@@ -12,6 +12,7 @@ namespace KoreSim;
 public class KoreModelRun
 {
     private Thread? modelThread = null;
+    private float TargetUpdateIntervalSecs = 0.020f; // 50Hz target (20ms interval)
 
     // --------------------------------------------------------------------------------------------
 
@@ -90,10 +91,22 @@ public class KoreModelRun
 
         while (running)
         {
+            float startCycleTime = KoreCentralTime.RuntimeSecs;
             Update();
-            // Assuming the update should happen at regular intervals
-            // Sleep for a while to create the cyclic update
-            Thread.Sleep(20); // Adjust the interval as needed - running the model at 50Hz for now.
+            float endCycleTime = KoreCentralTime.RuntimeSecs;
+
+            float processingTime = endCycleTime - startCycleTime;
+            if (processingTime > TargetUpdateIntervalSecs)
+            {
+                KoreCentralLog.AddEntry($"KoreModelRun: Processing time exceeded target - {processingTime * 1000.0f:F1}ms");
+            }
+            else
+            {
+                float sleepTimeMs = (TargetUpdateIntervalSecs - processingTime) * 1000.0f;
+                sleepTimeMs = KoreValueUtils.Clamp(sleepTimeMs, 10, 1000);
+                Thread.Sleep((int)sleepTimeMs);
+            }
+
             running = KoreSimFactory.Instance.SimClock.IsRunning;
         }
     }

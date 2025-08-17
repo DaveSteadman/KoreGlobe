@@ -24,13 +24,13 @@ public static partial class KoreMeshDataIO
         {
             int vertexId = kvp.Key;
             KoreXYZVector v = kvp.Value;
-            
+
             bw.Write((int)vertexId);
             bw.Write((double)v.X);
             bw.Write((double)v.Y);
             bw.Write((double)v.Z);
         }
-    
+
         // Lines
         bw.Write((int)mesh.Lines.Count);
         foreach (var kvp in mesh.Lines)
@@ -87,19 +87,36 @@ public static partial class KoreMeshDataIO
             bw.Write((int)vertexId);
             WriteColor(bw, color);
         }
-        
+
         // Line colors
         bw.Write((int)mesh.LineColors.Count);
         foreach (var kvp in mesh.LineColors)
         {
             int lineId = kvp.Key;
             KoreMeshLineColour lc = kvp.Value;
-            
+
             bw.Write((int)lineId);
             WriteColor(bw, lc.StartColor);
             WriteColor(bw, lc.EndColor);
         }
 
+        // Materials
+        bw.Write((int)mesh.Materials.Count);
+        foreach (KoreMeshMaterial material in mesh.Materials)
+        {
+            WriteMaterial(bw, material);
+        }
+
+        // Triangle Groups
+        bw.Write((int)mesh.NamedTriangleGroups.Count);
+        foreach (var kvp in mesh.NamedTriangleGroups)
+        {
+            string groupName = kvp.Key;
+            KoreMeshTriangleGroup group = kvp.Value;
+
+            bw.Write(groupName);
+            WriteTriangleGroup(bw, group);
+        }
 
         bw.Flush();
         return ms.ToArray();
@@ -167,6 +184,20 @@ public static partial class KoreMeshDataIO
         for (int i = 0; i < lcCount; i++)
             mesh.LineColors[br.ReadInt32()] = new KoreMeshLineColour(ReadColor(br), ReadColor(br));
 
+        // Materials
+        int mCount = br.ReadInt32();
+        for (int i = 0; i < mCount; i++)
+            mesh.Materials.Add(ReadMaterial(br));
+
+        // Triangle Groups
+        int tgCount = br.ReadInt32();
+        for (int i = 0; i < tgCount; i++)
+        {
+            string groupName = br.ReadString();
+            KoreMeshTriangleGroup group = ReadTriangleGroup(br);
+            mesh.NamedTriangleGroups.Add(groupName, group);
+        }
+
         return mesh;
     }
 
@@ -209,7 +240,7 @@ public static partial class KoreMeshDataIO
         KoreColorRGB baseColor = ReadColor(br);      // BaseColor already includes alpha
         float metallic = br.ReadSingle();
         float roughness = br.ReadSingle();
-        
+
         return new KoreMeshMaterial(name, baseColor, metallic, roughness);
     }
 
@@ -228,5 +259,31 @@ public static partial class KoreMeshDataIO
     private static KoreColorRGB ReadColor(BinaryReader br)
     {
         return new KoreColorRGB(br.ReadByte(), br.ReadByte(), br.ReadByte(), br.ReadByte());
+    }
+
+    // --------------------------------------------------------------------------------------------
+    // MARK: Triangle Groups
+    // --------------------------------------------------------------------------------------------
+
+    private static void WriteTriangleGroup(BinaryWriter bw, KoreMeshTriangleGroup group)
+    {
+        bw.Write(group.MaterialName);
+        bw.Write((int)group.TriangleIds.Count);
+        foreach (var triangleId in group.TriangleIds)
+        {
+            bw.Write((int)triangleId);
+        }
+    }
+
+    private static KoreMeshTriangleGroup ReadTriangleGroup(BinaryReader br)
+    {
+        string materialName = br.ReadString();
+        int triangleCount = br.ReadInt32();
+        List<int> triangleIds = new List<int>();
+        for (int i = 0; i < triangleCount; i++)
+        {
+            triangleIds.Add(br.ReadInt32());
+        }
+        return new KoreMeshTriangleGroup(materialName, triangleIds);
     }
 }

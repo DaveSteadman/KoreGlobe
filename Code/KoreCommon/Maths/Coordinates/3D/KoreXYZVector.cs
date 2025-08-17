@@ -3,6 +3,9 @@ using System;
 // KoreXYZVector: A class to hold an XYZ vector. Units are abstract, for the consumer to decide the context.
 // This class is immutable, so all operations return a new object.
 
+// An XYZVector is an abstract, relative difference in 3D position. An XYZPoint is an absolute position.
+// - So you can't scale a position, but you can scale a vector. etc.
+
 namespace KoreCommon;
 
 public struct KoreXYZVector

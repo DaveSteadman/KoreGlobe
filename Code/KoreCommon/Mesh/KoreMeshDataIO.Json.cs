@@ -130,15 +130,15 @@ public static partial class KoreMeshDataIO
                     mesh.AddMaterial(material);
                 }
             }
-            else if (materialsProp.ValueKind == JsonValueKind.Object)
-            {
-                // Legacy format: object with material IDs (backwards compatibility)
-                foreach (var m in materialsProp.EnumerateObject())
-                {
-                    var material = KoreMeshMaterialConverter.ReadMaterial(m.Value);
-                    mesh.AddMaterial(material);
-                }
-            }
+            // else if (materialsProp.ValueKind == JsonValueKind.Object)
+            // {
+            //     // Legacy format: object with material IDs (backwards compatibility)
+            //     foreach (var m in materialsProp.EnumerateObject())
+            //     {
+            //         var material = KoreMeshMaterialConverter.ReadMaterial(m.Value);
+            //         mesh.AddMaterial(material);
+            //     }
+            // }
         }
 
         // --- NamedTriangleGroups ---
