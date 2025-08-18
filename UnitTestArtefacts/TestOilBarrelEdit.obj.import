@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://rncmr4cu3dvb"
+path="res://.godot/imported/TestOilBarrelEdit.obj-b769c1d639806f39f9c89c3ee7a3a44f.mesh"
+
+[deps]
+
+files=["res://.godot/imported/TestOilBarrelEdit.obj-b769c1d639806f39f9c89c3ee7a3a44f.mesh"]
+
+source_file="res://UnitTestArtefacts/TestOilBarrelEdit.obj"
+dest_files=["res://.godot/imported/TestOilBarrelEdit.obj-b769c1d639806f39f9c89c3ee7a3a44f.mesh", "res://.godot/imported/TestOilBarrelEdit.obj-b769c1d639806f39f9c89c3ee7a3a44f.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false
