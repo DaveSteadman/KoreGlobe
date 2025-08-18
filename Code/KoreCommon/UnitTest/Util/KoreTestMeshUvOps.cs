@@ -5,7 +5,7 @@ using KoreCommon.SkiaSharp;
 
 namespace KoreCommon.UnitTest;
 
-public static class KoreTestMeshUvOps
+public static partial class KoreTestMeshUvOps
 {
     public static void RunTests(KoreTestLog testLog)
     {
@@ -13,6 +13,7 @@ public static class KoreTestMeshUvOps
         
         TestDiceCubeUVLayout(testLog);
         TestSimpleQuadUVs(testLog);
+        TestOilBarrelUVLayout(testLog);
     }
 
     /// <summary>
@@ -54,7 +55,6 @@ public static class KoreTestMeshUvOps
         File.WriteAllText("UnitTestArtefacts/TestUVCube.obj", objContent);
         File.WriteAllText("UnitTestArtefacts/TestUVCubeMats.mtl", mtlContent);
         testLog.AddComment("OBJ/MTL files created for dice cube UV layout with UV texture assignment");
-
     }
 
     private static void TestSimpleQuadUVs(KoreTestLog testLog)
