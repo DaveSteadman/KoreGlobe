@@ -18,32 +18,32 @@ public record struct KoreMeshTriangleGroup(string MaterialName, List<int> Triang
 public partial class KoreMeshData
 {
     // Vertices by VertexID
-    public Dictionary<int, KoreXYZVector> Vertices = new();
+    public Dictionary<int, KoreXYZVector> Vertices = [];
 
     // Normals by VertexID
-    public Dictionary<int, KoreXYZVector> Normals = new();
+    public Dictionary<int, KoreXYZVector> Normals = [];
 
     // UVs by VertexID
-    public Dictionary<int, KoreXYVector> UVs = new();
+    public Dictionary<int, KoreXYVector> UVs = [];
 
     // Vertex colors by VertexID - for when the mesh is colored by vertex
-    public Dictionary<int, KoreColorRGB> VertexColors = new();
+    public Dictionary<int, KoreColorRGB> VertexColors = [];
 
     // Lines by LineID, each referencing VertexIDs
-    public Dictionary<int, KoreMeshLine> Lines = new();
+    public Dictionary<int, KoreMeshLine> Lines = [];
 
     // Line colors by LineID
-    public Dictionary<int, KoreMeshLineColour> LineColors = new();
+    public Dictionary<int, KoreMeshLineColour> LineColors = [];
 
     // Triangles by TriangleID, each referencing VertexIDs
-    public Dictionary<int, KoreMeshTriangle> Triangles = new();
+    public Dictionary<int, KoreMeshTriangle> Triangles = [];
 
     // list of Material for this mesh
-    public List<KoreMeshMaterial> Materials = new();
+    public List<KoreMeshMaterial> Materials = [];
 
     // Named groups, logical/useful sub-divisions of the mesh triangles, with a material.
     // - Non-exclusive inclusion of triangles allows for multiple uses and some manner of hierarchy
-    public Dictionary<string, KoreMeshTriangleGroup> NamedTriangleGroups = new(); // Tags for grouping triangles
+    public Dictionary<string, KoreMeshTriangleGroup> NamedTriangleGroups = []; // Tags for grouping triangles
 
     // Counters for unique IDs
     public int NextVertexId = 0;
@@ -602,6 +602,7 @@ public partial class KoreMeshData
 
         return vertices;
     }
+
 
     // --------------------------------------------------------------------------------------------
     // MARK: Spatial Queries

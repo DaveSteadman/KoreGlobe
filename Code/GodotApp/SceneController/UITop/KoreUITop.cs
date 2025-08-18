@@ -22,6 +22,9 @@ public partial class KoreUITop : Control
     private Button?          MeshButton = null;
     private ModelEditWindow?  MeshWindow = null;
 
+    private Button?          EntityButton = null;
+    private KoreEntityWindow?    EntityWindow = null;
+
     private float UIEventTimer = 0.0f;
     private float UIEventTimerInterval = 0.1f;
 
@@ -46,6 +49,7 @@ public partial class KoreUITop : Control
             UpdateNetworkWindowStates();
             UpdateSandbox3DWindowStates();
             UpdateMeshWindowStates();
+            UpdateEntityWindowStates();
         }
     }
 
@@ -71,6 +75,10 @@ public partial class KoreUITop : Control
         MeshButton = (Button)FindChild("MeshButton");
         if (MeshButton == null) GD.PrintErr("KoreUITop: MeshButton node not found.");
         MeshButton?.Connect("pressed", new Callable(this, "OnMeshButtonPressed"));
+
+        EntityButton = (Button)FindChild("EntityButton");
+        if (EntityButton == null) GD.PrintErr("KoreUITop: EntityButton node not found.");
+        EntityButton?.Connect("pressed", new Callable(this, "OnEntityButtonPressed"));
     }
 
     // ----------------------------------------------------------------------------------------------
@@ -157,6 +165,27 @@ public partial class KoreUITop : Control
         else
         {
             MeshButton!.Disabled = false; // Enable if no Mesh Editor window is open
+        }
+    }
+
+    private void UpdateEntityWindowStates()
+    {
+        if (EntityWindow != null)
+        {
+            // Disable the Entity button if the Entity window is open
+            EntityButton!.Disabled = true;
+
+            // If the window is valid and has it "Close Me" state set, clear it away and reset the states
+            if (EntityWindow != null && EntityWindow.ToClose)
+            {
+                EntityWindow.QueueFree(); // Clean up the Entity window
+                EntityWindow = null!; // Reset the reference
+                EntityButton.Disabled = false; // Enable if the Entity window is closed
+            }
+        }
+        else
+        {
+            EntityButton!.Disabled = false; // Enable if no Entity window is open
         }
     }
 
@@ -271,6 +300,30 @@ public partial class KoreUITop : Control
         AddChild(MeshWindow);
 
         UpdateMeshWindowStates();
+    }
+
+    private void OnEntityButtonPressed()
+    {
+        GD.Print("KoreUITop: Entity Button Pressed");
+
+        // Load the Entity window scene and display it
+        var entityWindowScene = GD.Load<PackedScene>("res://Scenes/GodotApp/EntityWindow.tscn");
+        if (entityWindowScene == null)
+        {
+            GD.PrintErr("KoreUITop: Failed to load KoreEntityWindow scene.");
+            return;
+        }
+
+        // Instance the Entity window scene
+        EntityWindow = entityWindowScene.Instantiate<KoreEntityWindow>();
+        if (EntityWindow == null)
+        {
+            GD.PrintErr("KoreUITop: Failed to instantiate KoreEntityWindow.");
+            return;
+        }
+        AddChild(EntityWindow);
+
+        UpdateEntityWindowStates(); // Update the Entity window states after adding the window
     }
 
     // ----------------------------------------------------------------------------------------------

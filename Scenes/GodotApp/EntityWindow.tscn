@@ -1,8 +1,12 @@
-[gd_scene format=3 uid="uid://dy4b5xnq0ifde"]
+[gd_scene load_steps=2 format=3 uid="uid://dy4b5xnq0ifde"]
+
+[ext_resource type="Script" uid="uid://btxjbiya77uax" path="res://Code/GodotApp/SceneController/EntityWindow/KoreEntityWindow.cs" id="1_4jj74"]
 
 [node name="EntityWindow" type="Window"]
 oversampling_override = 1.0
+initial_position = 2
 size = Vector2i(800, 640)
+script = ExtResource("1_4jj74")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 anchors_preset = 15
@@ -15,19 +19,34 @@ theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
 theme_override_constants/separation = 5
 
-[node name="Tree" type="Tree" parent="MarginContainer/HBoxContainer"]
+[node name="EntityTreeList" type="Tree" parent="MarginContainer/VBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 
-[node name="TabContainer" type="TabContainer" parent="MarginContainer/HBoxContainer"]
+[node name="TabContainer" type="TabContainer" parent="MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 current_tab = 0
 
-[node name="TabBar" type="TabBar" parent="MarginContainer/HBoxContainer/TabContainer"]
+[node name="TabBar" type="TabBar" parent="MarginContainer/VBoxContainer/HBoxContainer/TabContainer"]
 layout_mode = 2
 metadata/_tab_index = 0
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+size_flags_vertical = 8
+alignment = 2
+
+[node name="CloseButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer2"]
+custom_minimum_size = Vector2(150, 50)
+layout_mode = 2
+text = "Close"

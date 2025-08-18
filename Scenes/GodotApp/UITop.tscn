@@ -1,10 +1,11 @@
-[gd_scene load_steps=7 format=3 uid="uid://cvnlpk0a74la0"]
+[gd_scene load_steps=8 format=3 uid="uid://cvnlpk0a74la0"]
 
 [ext_resource type="Script" uid="uid://b6sjq33bhdn3m" path="res://Code/GodotApp/SceneController/UITop/KoreUITop.cs" id="1_lqaa4"]
 [ext_resource type="Theme" uid="uid://dmowlcnw0dkpl" path="res://Themes/Buttons/OrangeButton.tres" id="2_emxrp"]
 [ext_resource type="Script" uid="uid://b5wtnd7y14cpo" path="res://Code/GodotApp/SceneController/RootScene/KoreAppVersionLabel.cs" id="2_h4igh"]
 [ext_resource type="Texture2D" uid="uid://vh8wcd4q68sv" path="res://Resources/WhiteIcons/White_Connections2.png" id="3_4h5jm"]
 [ext_resource type="Theme" uid="uid://dmowlcnw0dkpk" path="res://Themes/Buttons/YellowButton.tres" id="3_761q3"]
+[ext_resource type="Texture2D" uid="uid://dgxm1rjf0glu2" path="res://Resources/WhiteIcons/Plane.png" id="4_eic0c"]
 [ext_resource type="Texture2D" uid="uid://dspcjji6qc1em" path="res://Resources/WhiteIcons/White_Connections.png" id="5_761q3"]
 
 [node name="UiTop" type="Control"]
@@ -34,6 +35,7 @@ theme_override_constants/margin_bottom = 5
 
 [node name="HBoxContainer" type="HBoxContainer" parent="UITopFrame/HeaderMarginFrame"]
 layout_mode = 2
+size_flags_horizontal = 0
 
 [node name="CLIButton" type="Button" parent="UITopFrame/HeaderMarginFrame/HBoxContainer"]
 custom_minimum_size = Vector2(50, 50)
@@ -51,6 +53,15 @@ size_flags_horizontal = 2
 focus_mode = 0
 theme = ExtResource("3_761q3")
 icon = ExtResource("3_4h5jm")
+expand_icon = true
+
+[node name="EntityButton" type="Button" parent="UITopFrame/HeaderMarginFrame/HBoxContainer"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+size_flags_horizontal = 2
+focus_mode = 0
+theme = ExtResource("3_761q3")
+icon = ExtResource("4_eic0c")
 expand_icon = true
 
 [node name="MeshButton" type="Button" parent="UITopFrame/HeaderMarginFrame/HBoxContainer"]
