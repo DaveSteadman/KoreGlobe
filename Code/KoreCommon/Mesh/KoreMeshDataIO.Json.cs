@@ -130,15 +130,6 @@ public static partial class KoreMeshDataIO
                     mesh.AddMaterial(material);
                 }
             }
-            // else if (materialsProp.ValueKind == JsonValueKind.Object)
-            // {
-            //     // Legacy format: object with material IDs (backwards compatibility)
-            //     foreach (var m in materialsProp.EnumerateObject())
-            //     {
-            //         var material = KoreMeshMaterialConverter.ReadMaterial(m.Value);
-            //         mesh.AddMaterial(material);
-            //     }
-            // }
         }
 
         // --- NamedTriangleGroups ---
@@ -369,9 +360,10 @@ public static partial class KoreMeshDataIO
 
         public override void Write(Utf8JsonWriter writer, KoreMeshMaterial value, JsonSerializerOptions options)
         {
-            // Format: "name: Gold, baseColor: #FFD700, metallic: 1.0, roughness: 0.1"
+            // Format: "name: Gold, baseColor: #FFD700, metallic: 1.0, roughness: 0.1, filename: texture.png"
             string baseColorHex = KoreColorIO.RBGtoHexStringShort(value.BaseColor);
-            writer.WriteStringValue($"name: {value.Name}, baseColor: {baseColorHex}, metallic: {value.Metallic:F1}, roughness: {value.Roughness:F1}");
+            string filenameSection = string.IsNullOrEmpty(value.Filename) ? "" : $", filename: {value.Filename}";
+            writer.WriteStringValue($"name: {value.Name}, baseColor: {baseColorHex}, metallic: {value.Metallic:F1}, roughness: {value.Roughness:F1}{filenameSection}");
         }
 
         public static KoreMeshMaterial ReadMaterial(JsonElement el)
@@ -380,10 +372,10 @@ public static partial class KoreMeshDataIO
 
             if (!string.IsNullOrEmpty(str))
             {
-                // Parse format: "name: Gold, baseColor: #FFD700, metallic: 1.0, roughness: 0.1"
+                // Parse format: "name: Gold, baseColor: #FFD700, metallic: 1.0, roughness: 0.1, filename: texture.png"
                 var parts = str.Split(',');
-                if (parts.Length != 4)
-                    throw new FormatException($"Invalid KoreMeshMaterial string format. Expected 4 parts but got {parts.Length}: {str}");
+                if (parts.Length < 4 || parts.Length > 5)
+                    throw new FormatException($"Invalid KoreMeshMaterial string format. Expected 4-5 parts but got {parts.Length}: {str}");
 
                 // Parse name
                 string namePart = parts[0].Split(':')[1].Trim();
@@ -400,7 +392,14 @@ public static partial class KoreMeshDataIO
                 string roughnessPart = parts[3].Split(':')[1].Trim();
                 float roughness = float.Parse(roughnessPart);
 
-                return new KoreMeshMaterial(namePart, baseColor, metallic, roughness);
+                // Parse filename (optional)
+                string? filename = null;
+                if (parts.Length == 5)
+                {
+                    filename = parts[4].Split(':')[1].Trim();
+                }
+
+                return new KoreMeshMaterial(namePart, baseColor, metallic, roughness, filename);
             }
 
             return KoreMeshMaterialPalette.Find("White");
