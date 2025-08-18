@@ -5,6 +5,8 @@ using System.IO;
 using Godot;
 using KoreCommon;
 
+#nullable enable
+
 
 public static class KoreGodotMaterialFactory
 {
@@ -220,6 +222,77 @@ void fragment() {
         }
         
         return material;
+    }
+
+    /// <summary>
+    /// Enhanced material conversion that supports texture files with OBJ path resolution.
+    /// If filename is present, attempts to load texture relative to OBJ file location.
+    /// Falls back to color-based material if texture loading fails.
+    /// Usage: StandardMaterial3D material = KoreGodotMaterialFactory.FromKoreMaterialForObjMesh(koreMaterial, objFilePath);
+    /// </summary>
+    public static StandardMaterial3D FromKoreMaterialForObjMesh(KoreMeshMaterial koreMaterial, string? objFilePath = null)
+    {
+        // If material has a texture filename and we have an OBJ path, try to load texture
+        if (!string.IsNullOrEmpty(koreMaterial.Filename) && !string.IsNullOrEmpty(objFilePath))
+        {
+            string? texturePath = ResolveTexturePathRelativeToObj(koreMaterial.Filename, objFilePath);
+            
+            if (!string.IsNullOrEmpty(texturePath))
+            {
+                var material = KoreGodotImageOps.LoadMaterial2(texturePath);
+                if (material != null)
+                {
+                    // Apply metallic and roughness properties to the loaded material
+                    material.Metallic = koreMaterial.Metallic;
+                    material.Roughness = koreMaterial.Roughness;
+                    
+                    // Handle transparency if the original material was transparent
+                    if (koreMaterial.IsTransparent)
+                    {
+                        material.Transparency = BaseMaterial3D.TransparencyEnum.Alpha;
+                    }
+                    
+                    KoreCentralLog.AddEntry($"Successfully loaded texture material: {texturePath}");
+                    return material;
+                }
+                else
+                {
+                    KoreCentralLog.AddEntry($"Failed to load texture: {texturePath}, falling back to color material");
+                }
+            }
+        }
+        
+        // Fall back to standard color-based material
+        return FromKoreMaterial(koreMaterial);
+    }
+
+    /// <summary>
+    /// Resolves texture filename relative to OBJ file location.
+    /// Handles both relative and absolute paths properly.
+    /// </summary>
+    private static string? ResolveTexturePathRelativeToObj(string textureFilename, string objFilePath)
+    {
+        try
+        {
+            // Get the directory containing the OBJ file
+            string? objDirectory = Path.GetDirectoryName(objFilePath);
+            if (string.IsNullOrEmpty(objDirectory))
+                return null;
+            
+            // Combine the OBJ directory with the texture filename
+            string fullTexturePath = Path.Combine(objDirectory, textureFilename);
+            
+            // Convert to Godot resource path if it's within the project
+            if (File.Exists(fullTexturePath))
+                return fullTexturePath;
+
+            return null;
+        }
+        catch (Exception ex)
+        {
+            KoreCentralLog.AddEntry($"Error resolving texture path: {ex.Message}");
+            return null;
+        }
     }
 
 

@@ -91,6 +91,7 @@ public class KoreConsole
 
         // General app control commands
         AddCommandHandler(new KoreCliCmdFileRename());
+        AddCommandHandler(new KoreCliCmdCommonUnitTest());
 
     }
 

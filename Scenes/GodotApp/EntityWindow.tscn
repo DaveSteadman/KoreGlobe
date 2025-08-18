@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://dy4b5xnq0ifde"]
+[gd_scene load_steps=3 format=3 uid="uid://dy4b5xnq0ifde"]
 
 [ext_resource type="Script" uid="uid://btxjbiya77uax" path="res://Code/GodotApp/SceneController/EntityWindow/KoreEntityWindow.cs" id="1_4jj74"]
+[ext_resource type="Script" uid="uid://dexa8rmatep4j" path="res://Code/GodotApp/SceneController/EntityWindow/KoreEntityWindowPositionTab.cs" id="2_nptfu"]
 
 [node name="EntityWindow" type="Window"]
 oversampling_override = 1.0
@@ -36,9 +37,15 @@ layout_mode = 2
 size_flags_horizontal = 3
 current_tab = 0
 
-[node name="TabBar" type="TabBar" parent="MarginContainer/VBoxContainer/HBoxContainer/TabContainer"]
+[node name="Position" type="Panel" parent="MarginContainer/VBoxContainer/HBoxContainer/TabContainer"]
 layout_mode = 2
+script = ExtResource("2_nptfu")
 metadata/_tab_index = 0
+
+[node name="Panel" type="Panel" parent="MarginContainer/VBoxContainer/HBoxContainer/TabContainer"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 1
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 60)

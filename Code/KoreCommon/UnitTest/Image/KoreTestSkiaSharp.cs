@@ -40,10 +40,10 @@ public static class KoreTestSkiaSharp
         // Test Lines - Various line widths and colors
         int xStart = 10;
         int yStart = 10;
-        int yEnd   = 100;
+        int yEnd = 100;
 
         KoreXYVector startPnt = new KoreXYVector(xStart, yStart);
-        KoreXYVector endPnt   = new KoreXYVector(xStart, yEnd);
+        KoreXYVector endPnt = new KoreXYVector(xStart, yEnd);
 
         imagePlotter.DrawSettings.LineWidth = 1;
         imagePlotter.DrawSettings.Color = SKColors.Black;
@@ -68,7 +68,10 @@ public static class KoreTestSkiaSharp
 
         // Save the image to a file
         string filePath = "UnitTestArtefacts/testcard.png";
+        KoreFileOps.CreateDirectoryForFile(filePath);
+        
         imagePlotter.Save(filePath);
+        testLog.AddComment("Test card image saved to " + filePath);
     }
 
     // Test circumcircle calculation and visualization

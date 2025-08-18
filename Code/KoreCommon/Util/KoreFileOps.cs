@@ -138,7 +138,8 @@ public static class KoreFileOps
         if (string.IsNullOrEmpty(directory))
             throw new ArgumentException($"Invalid file path: '{directory}'");
 
-        Directory.CreateDirectory(DirectoryFromPath(directory));
+        // Directly create the directory - don't use DirectoryFromPath which treats it as a file path
+        Directory.CreateDirectory(directory);
     }
 
         // Usage: KoreFileOps.CreateDirectoryForFile("C:/Users/User/Documents/file.txt");

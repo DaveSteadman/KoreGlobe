@@ -309,8 +309,7 @@ public partial class KoreZeroNodeMapTile : Node3D
 
     private void LocateTile()
     {
-
-        GD.Print($"Locating Tile: {TileCode} - {RwTileCenterLLA}");
+        // GD.Print($"Locating Tile: {TileCode} - {RwTileCenterLLA}");
 
         // Set the local position from the parent object
         Vector3 newPos = KoreGeoConvOps.RwToOffsetGe(RwTileCenterLLA);

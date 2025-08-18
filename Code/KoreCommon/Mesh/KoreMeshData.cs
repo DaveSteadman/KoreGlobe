@@ -451,7 +451,11 @@ public partial class KoreMeshData
         foreach (KoreMeshMaterial existingMaterial in Materials)
         {
             if (existingMaterial.Name == material.Name)
-                return; // existing material found, return without action
+            {
+                // remove the material
+                Materials.Remove(existingMaterial);
+                break;
+            }
         }
 
         // Material not found - add a new one using its name

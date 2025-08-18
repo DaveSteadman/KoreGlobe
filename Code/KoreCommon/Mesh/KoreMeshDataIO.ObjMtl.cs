@@ -259,6 +259,12 @@ public static partial class KoreMeshDataIO
                 sb.AppendLine($"Tr {(1.0f - alpha).ToString("F6", CultureInfo.InvariantCulture)}");
             }
             
+            // Texture map (if filename is specified)
+            if (!string.IsNullOrEmpty(material.Filename))
+            {
+                sb.AppendLine($"map_Kd {material.Filename}");
+            }
+            
             // Illumination model (2 = color on and ambient on and highlight on)
             sb.AppendLine("illum 2");
             
@@ -600,6 +606,22 @@ public static partial class KoreMeshDataIO
                         Console.WriteLine($"ParseMtl: Set Tr for '{currentMaterialName}': {currentMaterial["tr"]}");
                     }
                     break;
+                    
+                case "map_kd": // Diffuse texture map
+                    if (parts.Length >= 2)
+                    {
+                        currentMaterial["map_kd"] = parts[1];
+                        Console.WriteLine($"ParseMtl: Set map_Kd for '{currentMaterialName}': {currentMaterial["map_kd"]}");
+                    }
+                    break;
+                    
+                case "map_ka": // Ambient texture map (treat as diffuse)
+                    if (parts.Length >= 2)
+                    {
+                        currentMaterial["map_ka"] = parts[1];
+                        Console.WriteLine($"ParseMtl: Set map_Ka for '{currentMaterialName}': {currentMaterial["map_ka"]}");
+                    }
+                    break;
             }
         }
         
@@ -625,8 +647,19 @@ public static partial class KoreMeshDataIO
         KoreColorRGB baseColor = KoreColorRGB.White;
         float metallic = 0.0f;
         float roughness = 0.5f;
+        string? textureFilename = null;
         
-        // Parse diffuse color
+        // Check for texture maps first (priority over color)
+        if (properties.TryGetValue("map_kd", out string? mapKdValue))
+        {
+            textureFilename = mapKdValue;
+        }
+        else if (properties.TryGetValue("map_ka", out string? mapKaValue))
+        {
+            textureFilename = mapKaValue;
+        }
+        
+        // Parse diffuse color (fallback if no texture)
         if (properties.TryGetValue("kd", out string? kdValue))
         {
             var parts = kdValue.Split(' ');
@@ -685,7 +718,7 @@ public static partial class KoreMeshDataIO
             }
         }
         
-        return new KoreMeshMaterial(name, baseColor, metallic, roughness);
+        return new KoreMeshMaterial(name, baseColor, metallic, roughness, textureFilename);
     }
 
     // --------------------------------------------------------------------------------------------

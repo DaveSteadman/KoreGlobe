@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d1c7qq37abaj0"
-path="res://.godot/imported/testcard.png-2f8a8f22c04a04cf1d66dbd9cef881cf.ctex"
+uid="uid://cpodxh1qc8cpl"
+path="res://.godot/imported/dice_cube_uv_clean2.png-49432b9a568ba8fc4d69329223b70f63.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://testcard.png"
-dest_files=["res://.godot/imported/testcard.png-2f8a8f22c04a04cf1d66dbd9cef881cf.ctex"]
+source_file="res://UnitTestArtefacts/dice_cube_uv_clean2.png"
+dest_files=["res://.godot/imported/dice_cube_uv_clean2.png-49432b9a568ba8fc4d69329223b70f63.ctex"]
 
 [params]
 
