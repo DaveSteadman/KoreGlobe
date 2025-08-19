@@ -141,6 +141,9 @@ public static partial class KoreTestMeshUvOps
         var triangleGroup = new KoreMeshTriangleGroup("OilBarrelMaterial", allTriangleIds);
         mesh.NamedTriangleGroups["OilBarrel"] = triangleGroup;
 
+        // Set the normals to a simple flat shading from the triangles
+        mesh.SetNormalsFromTriangles();
+
         return mesh;
     }
 

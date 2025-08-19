@@ -44,13 +44,19 @@ public static partial class KoreMeshDataPrimitives
         mesh.AddLine(v4, v7, linecolor);
         mesh.AddLine(v5, v6, linecolor);
 
-        // Triangles
-        mesh.AddTriangle(v0, v1, v2); mesh.AddTriangle(v0, v2, v3);
-        mesh.AddTriangle(v0, v3, v4); mesh.AddTriangle(v3, v7, v4);
-        mesh.AddTriangle(v4, v7, v6); mesh.AddTriangle(v4, v6, v5);
-        mesh.AddTriangle(v5, v6, v2); mesh.AddTriangle(v5, v2, v1);
-        mesh.AddTriangle(v2, v7, v3); mesh.AddTriangle(v2, v6, v7); // top
-        mesh.AddTriangle(v0, v5, v1); mesh.AddTriangle(v0, v4, v5); // bottom
+        // Triangles - using CCW winding when viewed from outside
+        // Front face (Z = -size) - looking at it from positive Z
+        mesh.AddTriangle(v0, v3, v2); mesh.AddTriangle(v0, v2, v1);
+        // Left face (X = -size) - looking at it from positive X  
+        mesh.AddTriangle(v0, v4, v7); mesh.AddTriangle(v0, v7, v3);
+        // Back face (Z = +size) - looking at it from negative Z
+        mesh.AddTriangle(v5, v6, v7); mesh.AddTriangle(v5, v7, v4);
+        // Right face (X = +size) - looking at it from negative X
+        mesh.AddTriangle(v1, v2, v6); mesh.AddTriangle(v1, v6, v5);
+        // Top face (Y = +size) - looking at it from negative Y
+        mesh.AddTriangle(v3, v7, v6); mesh.AddTriangle(v3, v6, v2);
+        // Bottom face (Y = -size) - looking at it from positive Y
+        mesh.AddTriangle(v0, v1, v5); mesh.AddTriangle(v0, v5, v4);
 
         mesh.AddAllTrianglesToGroup("DefaultMaterial");
         mesh.SetGroupMaterialName("DefaultMaterial", mat.Name);

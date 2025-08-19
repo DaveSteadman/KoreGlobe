@@ -45,8 +45,8 @@ public static class KoreMeshDataGltfIO
         // Create materials first, passing the output directory for texture search
         var gltfMaterials = CreateGltfMaterials(model, mesh.Materials, outputDirectory);
 
-        // Create mesh builder
-        var meshBuilder = new MeshBuilder<VertexPosition, VertexTexture1, VertexEmpty>(meshName);
+        // Create mesh builder with normal support
+        var meshBuilder = new MeshBuilder<VertexPositionNormal, VertexTexture1, VertexEmpty>(meshName);
 
         // Convert mesh data to glTF format
         ConvertKoreMeshToGltf(mesh, meshBuilder, gltfMaterials);
@@ -79,8 +79,12 @@ public static class KoreMeshDataGltfIO
         
         ConvertGltfToKoreMesh(gltfMesh, mesh);
         
-        // Calculate normals from triangles for proper shading
-        KoreMeshDataEditOps.SetNormalsFromTriangles(mesh);
+        // Only calculate normals from triangles if no normals were imported
+        if (mesh.Normals.Count == 0)
+        {
+            // Calculate normals from triangles for proper shading
+            KoreMeshDataEditOps.SetNormalsFromTriangles(mesh);
+        }
         
         return mesh;
     }
@@ -172,7 +176,7 @@ public static class KoreMeshDataGltfIO
     /// </summary>
     private static void ConvertKoreMeshToGltf(
         KoreMeshData koreMesh,
-        MeshBuilder<VertexPosition, VertexTexture1, VertexEmpty> meshBuilder,
+        MeshBuilder<VertexPositionNormal, VertexTexture1, VertexEmpty> meshBuilder,
         Dictionary<string, MaterialBuilder> materials)
     {
         // Group triangles by material
@@ -203,8 +207,8 @@ public static class KoreMeshDataGltfIO
                 var v2 = ConvertToGltfVertex(triangle.B, koreMesh);
                 var v3 = ConvertToGltfVertex(triangle.C, koreMesh);
                 
-                // Flip triangle winding for proper face orientation in glTF
-                primitive.AddTriangle(v1, v3, v2);
+                // Add triangle with CCW winding (no flip needed)
+                primitive.AddTriangle(v1, v2, v3);
             }
         }
     }
@@ -262,20 +266,22 @@ public static class KoreMeshDataGltfIO
     /// <summary>
     /// Converts a KoreMesh vertex to glTF vertex format with coordinate system conversion
     /// </summary>
-    private static (VertexPosition, VertexTexture1) ConvertToGltfVertex(int vertexId, KoreMeshData mesh)
+    private static (VertexPositionNormal, VertexTexture1) ConvertToGltfVertex(int vertexId, KoreMeshData mesh)
     {
         // Get vertex data
         var position = mesh.Vertices[vertexId];
+        var normal = mesh.Normals.ContainsKey(vertexId) ? mesh.Normals[vertexId] : new KoreXYZVector(0, 1, 0);
         var uv = mesh.UVs.ContainsKey(vertexId) ? mesh.UVs[vertexId] : new KoreXYVector(0, 0);
         
         // Convert from Kore coordinate system to glTF (both Y-up)
         var gltfPosition = ConvertPositionToGltf(position);
+        var gltfNormal = ConvertNormalToGltf(normal);
         
         // Convert UV coordinates: flip Y to handle coordinate system differences
         // Kore uses bottom-left origin, glTF uses top-left origin
         var gltfTexCoord = new Vector2((float)uv.X, 1.0f - (float)uv.Y);
         
-        return (new VertexPosition(gltfPosition), new VertexTexture1(gltfTexCoord));
+        return (new VertexPositionNormal(gltfPosition, gltfNormal), new VertexTexture1(gltfTexCoord));
     }
     
 
@@ -295,6 +301,7 @@ public static class KoreMeshDataGltfIO
         {
             // Extract vertex data
             var positions = primitive.GetVertexAccessor("POSITION")?.AsVector3Array();
+            var normals = primitive.GetVertexAccessor("NORMAL")?.AsVector3Array();
             var texCoords = primitive.GetVertexAccessor("TEXCOORD_0")?.AsVector2Array();
             var indices = primitive.GetIndices();
 
@@ -309,28 +316,35 @@ public static class KoreMeshDataGltfIO
             {
                 var position = ConvertPositionFromGltf(positions[i]);
                 
+                // Convert normal if available
+                KoreXYZVector? normal = null;
+                if (normals != null && i < normals.Count)
+                {
+                    normal = ConvertNormalFromGltf(normals[i]);
+                }
+                
                 // Convert UV coordinates back from glTF (top-left origin) to Kore (bottom-left origin)
                 // On import, we need to flip Y again to undo the export flip
                 var uv = texCoords != null && i < texCoords.Count ? 
                     new KoreXYVector(texCoords[i].X, texCoords[i].Y) : 
                     (KoreXYVector?)null;
 
-                var vertexIndex = koreMesh.AddVertex(position, null, null, uv);
+                var vertexIndex = koreMesh.AddVertex(position, normal, null, uv);
                 vertexIndexMap[i] = vertexIndex;
             }
 
             // Track triangles added for this primitive (for NamedTriangleGroup creation)
             var primitiveTriangleIds = new List<int>();
 
-            // Convert triangles (flip winding to undo export flip)
+            // Convert triangles (preserve CCW winding)
             for (int i = 0; i < indices.Count; i += 3)
             {
                 var v1 = vertexIndexMap[(int)indices[i]];
                 var v2 = vertexIndexMap[(int)indices[i + 1]];
                 var v3 = vertexIndexMap[(int)indices[i + 2]];
 
-                // Flip triangle winding to undo the export flip
-                var triangleId = koreMesh.AddTriangle(v1, v3, v2);
+                // Import triangle with original winding (no flip needed)
+                var triangleId = koreMesh.AddTriangle(v1, v2, v3);
                 primitiveTriangleIds.Add(triangleId);
             }
 
@@ -417,6 +431,20 @@ public static class KoreMeshDataGltfIO
     }
     
     /// <summary>
+    /// Converts normal from Kore coordinate system to glTF coordinate system
+    /// Kore: Right-handed Y-up (X=Right, Y=Up, Z=Forward)
+    /// glTF: Right-handed Y-up (X=Right, Y=Up, Z=Forward)
+    /// Conversion: Direct mapping - no conversion needed!
+    /// Note: Normals are already corrected by SetNormalsFromTriangles() inversion
+    /// </summary>
+    private static Vector3 ConvertNormalToGltf(KoreXYZVector koreNormal)
+    {
+        // Direct mapping since both use Y-up, Z-forward
+        // Don't flip normals - they're already corrected during normal calculation
+        return new Vector3((float)koreNormal.X, (float)koreNormal.Y, (float)koreNormal.Z);
+    }
+    
+    /// <summary>
     /// Converts position from glTF coordinate system to Kore coordinate system
     /// glTF: Right-handed Y-up (X=Right, Y=Up, Z=Forward)
     /// Kore: Right-handed Y-up (X=Right, Y=Up, Z=Forward)
@@ -426,5 +454,17 @@ public static class KoreMeshDataGltfIO
     {
         // Direct mapping since both use Y-up, Z-forward
         return new KoreXYZVector(gltfPos.X, gltfPos.Y, gltfPos.Z);
+    }
+    
+    /// <summary>
+    /// Converts normal from glTF coordinate system to Kore coordinate system
+    /// glTF: Right-handed Y-up (X=Right, Y=Up, Z=Forward)
+    /// Kore: Right-handed Y-up (X=Right, Y=Up, Z=Forward)
+    /// Conversion: Direct mapping - no conversion needed!
+    /// </summary>
+    private static KoreXYZVector ConvertNormalFromGltf(Vector3 gltfNormal)
+    {
+        // Direct mapping since both use Y-up, Z-forward
+        return new KoreXYZVector(gltfNormal.X, gltfNormal.Y, gltfNormal.Z);
     }
 }

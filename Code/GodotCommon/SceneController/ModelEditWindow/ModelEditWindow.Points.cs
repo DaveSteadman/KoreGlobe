@@ -522,6 +522,8 @@ public partial class ModelEditWindow
             // Import the glTF using our import functionality
             var meshData = KoreMeshDataGltfIO.LoadFromGltf(gltfPath);
 
+            //meshData.SetNormalsFromTriangles();
+
             // Update the window mesh data and source path
             WindowMeshData = meshData;
             SourceFilePath = gltfPath;

@@ -335,9 +335,8 @@ public static partial class KoreMeshDataEditOps
         KoreXYZVector ac = c - a;  // Vector from A to C
         KoreXYZVector faceNormal = KoreXYZVector.CrossProduct(ab, ac).Normalize();
 
-        // Normalize and invert the face normal
+        // Normalize the face normal (no inversion needed with CCW triangles)
         faceNormal = faceNormal.Normalize();
-        faceNormal = faceNormal.Invert(); // Required Step - no explanation
 
         // Set the normals
         mesh.Normals[triangle.A] = faceNormal;
