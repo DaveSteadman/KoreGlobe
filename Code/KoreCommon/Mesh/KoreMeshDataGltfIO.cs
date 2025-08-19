@@ -203,8 +203,8 @@ public static class KoreMeshDataGltfIO
                 var v2 = ConvertToGltfVertex(triangle.B, koreMesh);
                 var v3 = ConvertToGltfVertex(triangle.C, koreMesh);
                 
-                // Add triangle with same winding (no coordinate system conversion needed)
-                primitive.AddTriangle(v1, v2, v3);
+                // Flip triangle winding for proper face orientation in glTF
+                primitive.AddTriangle(v1, v3, v2);
             }
         }
     }
@@ -322,15 +322,15 @@ public static class KoreMeshDataGltfIO
             // Track triangles added for this primitive (for NamedTriangleGroup creation)
             var primitiveTriangleIds = new List<int>();
 
-            // Convert triangles (preserve winding since no coordinate conversion)
+            // Convert triangles (flip winding to undo export flip)
             for (int i = 0; i < indices.Count; i += 3)
             {
                 var v1 = vertexIndexMap[(int)indices[i]];
                 var v2 = vertexIndexMap[(int)indices[i + 1]];
                 var v3 = vertexIndexMap[(int)indices[i + 2]];
 
-                // Keep original triangle winding (no coordinate system conversion)
-                var triangleId = koreMesh.AddTriangle(v1, v2, v3);
+                // Flip triangle winding to undo the export flip
+                var triangleId = koreMesh.AddTriangle(v1, v3, v2);
                 primitiveTriangleIds.Add(triangleId);
             }
 
