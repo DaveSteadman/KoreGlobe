@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 
 using KoreCommon;
+using KoreCommon.Mesh;
 using System.Collections.Generic;
 using System.IO;
 
@@ -333,8 +334,8 @@ public partial class ModelEditWindow
         var meshInstance = new KoreGodotSurfaceMesh();
         meshInstance.Name = $"MeshGroup_{groupName}";
         
-        // Update the mesh with the group data
-        meshInstance.UpdateMesh(groupMesh, groupName);
+        // Update the mesh with the group data, passing source path for texture resolution
+        meshInstance.UpdateMesh(groupMesh, groupName, SourceFilePath);
         
         // Add to the scene
         MountRoot!.AddChild(meshInstance);
@@ -354,8 +355,8 @@ public partial class ModelEditWindow
         var meshInstance = new KoreGodotSurfaceMesh();
         meshInstance.Name = "MeshGroup_EntireMesh";
         
-        // Update the mesh with all the data
-        meshInstance.UpdateMesh(meshData);
+        // Update the mesh with all the data, passing source path for texture resolution
+        meshInstance.UpdateMesh(meshData, null, SourceFilePath);
         
         // Add to the scene
         MountRoot!.AddChild(meshInstance);
@@ -495,6 +496,72 @@ public partial class ModelEditWindow
         MeshJsonEdit!.SetText(jsonStr);
 
         GD.Print("=== OBJ Import Test Complete ===");
+    }
+
+    // --------------------------------------------------------------------------------------------
+    // MARK: glTF Import Testing
+    // --------------------------------------------------------------------------------------------
+
+    // Usage: ModelEditWindow.TestGltfImport()
+    public void TestGltfImport()
+    {
+        GD.Print("=== glTF Import Test ===");
+
+        try
+        {
+            // Load the glTF file from UnitTestArtefacts
+            string gltfPath = "UnitTestArtefacts/TestOilBarrel.gltf";
+            
+            if (!File.Exists(gltfPath))
+            {
+                GD.PrintErr($"glTF file not found: {gltfPath}");
+                GD.PrintErr("Make sure to run the unit tests first to generate the oil barrel glTF file");
+                return;
+            }
+
+            // Import the glTF using our import functionality
+            var meshData = KoreMeshDataGltfIO.LoadFromGltf(gltfPath);
+
+            // Update the window mesh data and source path
+            WindowMeshData = meshData;
+            SourceFilePath = gltfPath;
+
+            // Debug: Print material count and details
+            GD.Print($"=== glTF Import Results ===");
+            GD.Print($"Vertices count: {meshData.Vertices.Count}");
+            GD.Print($"Triangles count: {meshData.Triangles.Count}");
+            GD.Print($"Materials count: {meshData.Materials.Count}");
+            
+            for (int i = 0; i < meshData.Materials.Count; i++)
+            {
+                var material = meshData.Materials[i];
+                GD.Print($"Material {i}: {material.Name} - Color: {material.BaseColor} - Filename: {material.Filename}");
+            }
+
+            // Convert to JSON and display in editor
+            string jsonStr = KoreMeshDataIO.ToJson(meshData, dense: false);
+            GD.Print($"Imported glTF Mesh Data JSON:\n{jsonStr}");
+
+            // Put the new text in the edit window
+            MeshJsonEdit!.SetText(jsonStr);
+
+            // Clear existing debug visuals
+            DeleteAllDebug();
+
+            // Update the 3D mesh visualization using material groups
+            DrawMeshWithGroups(meshData);
+
+            // Also visualize the points and lines in the 3D scene
+            DrawPoints(meshData);
+            DrawLines(meshData);
+
+            GD.Print("=== glTF Import Test Complete ===");
+        }
+        catch (Exception ex)
+        {
+            GD.PrintErr($"glTF Import failed: {ex.Message}");
+            GD.PrintErr($"Stack trace: {ex.StackTrace}");
+        }
     }
 
 }

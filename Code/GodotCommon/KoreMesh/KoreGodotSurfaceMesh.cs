@@ -37,7 +37,7 @@ public partial class KoreGodotSurfaceMesh : MeshInstance3D
     // MARK: Mesh
     // --------------------------------------------------------------------------------------------
 
-    public void UpdateMesh(KoreMeshData newMeshData, string? groupName = null)
+    public void UpdateMesh(KoreMeshData newMeshData, string? groupName = null, string? basePath = null)
     {
         // Ensure mesh data is complete and valid before processing
         newMeshData.FullyPopulate();
@@ -115,11 +115,20 @@ public partial class KoreGodotSurfaceMesh : MeshInstance3D
         {
             // Handle grouping logic here
             KoreMeshMaterial kMat = newMeshData.MaterialForGroup(groupName);
-            material = KoreGodotMaterialFactory.FromKoreMaterial(kMat);
+            
+            // Use path-aware material factory if base path is provided
+            if (!string.IsNullOrEmpty(basePath))
+            {
+                material = KoreGodotMaterialFactory.FromKoreMaterial(kMat, basePath);
+            }
+            else
+            {
+                material = KoreGodotMaterialFactory.FromKoreMaterial(kMat);
+            }
         }
         else
         {
-            material = KoreGodotMaterialFactory.StandardColoredMaterial(new Color(0.8f, 0.2f, 0.2f));
+            material = KoreGodotMaterialFactory.SimpleColoredMaterial(new Color(0.8f, 0.2f, 0.2f));
         }
         MaterialOverride = material;
 

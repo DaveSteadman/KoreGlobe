@@ -55,6 +55,7 @@ public struct KoreMeshMaterial : IEquatable<KoreMeshMaterial>
     }
 
     // Create a material from a filename with fallback color
+    // Usage: KoreMeshMaterial.FromTexture("MyTexture", "path/to/texture.png", KoreMeshMaterial.White.BaseColor)
     public static KoreMeshMaterial FromTexture(string name, string filename, KoreColorRGB fallbackColor)
     {
         return new KoreMeshMaterial(name, fallbackColor, filename: filename);

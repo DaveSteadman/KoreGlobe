@@ -169,7 +169,7 @@ public partial class KoreSandbox3DScene : Node3D
             childSurfaceMeshNode1.UpdateMesh(surfaceMesh1);
 
             // Set the surface material
-            var surfaceMaterial = KoreGodotMaterialFactory.StandardColoredMaterial(new Color(0.2f, 0.8f, 0.6f));
+            var surfaceMaterial = KoreGodotMaterialFactory.SimpleColoredMaterial(new Color(0.2f, 0.8f, 0.6f));
             childSurfaceMeshNode1.MaterialOverride = surfaceMaterial;
 
             Surface1Node.AddChild(childMeshNode1);
@@ -217,7 +217,7 @@ public partial class KoreSandbox3DScene : Node3D
         childSurfaceMeshNode1.UpdateMesh(koreMeshData1);
 
         // define a material for the surface mesh
-        var surfaceMaterial = KoreGodotMaterialFactory.TransparentColoredMaterial(new Color(0.2f, 0.8f, 0.5f, 0.95f));
+        var surfaceMaterial = KoreGodotMaterialFactory.SimpleColoredMaterial(new Color(0.2f, 0.8f, 0.5f, 0.95f));
         childSurfaceMeshNode1.MaterialOverride = surfaceMaterial;
 
         latheNode.AddChild(childMeshNode1);
@@ -249,7 +249,7 @@ public partial class KoreSandbox3DScene : Node3D
         childSurfaceMeshNode.UpdateMesh(koreMeshData);
 
         // Use a different color to distinguish from lathe
-        var surfaceMaterial = KoreGodotMaterialFactory.StandardColoredMaterial(new Color(0.8f, 0.3f, 0.1f));
+        var surfaceMaterial = KoreGodotMaterialFactory.SimpleColoredMaterial(new Color(0.8f, 0.3f, 0.1f));
         childSurfaceMeshNode.MaterialOverride = surfaceMaterial;
 
         cylinderNode.AddChild(childMeshNode);
@@ -284,7 +284,7 @@ public partial class KoreSandbox3DScene : Node3D
             childSurfaceMeshNode1.UpdateMesh(boxArcMesh);
 
             // Use a different color to distinguish from lathe
-            var surfaceMaterial = KoreGodotMaterialFactory.StandardColoredMaterial(new Color(0.3f, 0.3f, 0.8f));
+            var surfaceMaterial = KoreGodotMaterialFactory.SimpleColoredMaterial(new Color(0.3f, 0.3f, 0.8f));
             childSurfaceMeshNode1.MaterialOverride = surfaceMaterial;
 
 

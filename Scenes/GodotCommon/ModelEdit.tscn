@@ -1,10 +1,11 @@
-[gd_scene load_steps=7 format=3 uid="uid://b2crx7di7xstt"]
+[gd_scene load_steps=8 format=3 uid="uid://b2crx7di7xstt"]
 
 [ext_resource type="Script" uid="uid://bsa7m2r1t33j1" path="res://Code/GodotCommon/SceneController/ModelEditWindow/ModelEditWindow.cs" id="1_1htfu"]
 [ext_resource type="Script" uid="uid://dd6epp0iyhyal" path="res://Code/GodotCommon/Util/KoreViewportAutosize.cs" id="2_4lgcs"]
 [ext_resource type="Theme" uid="uid://p1asdjvj8ece" path="res://Themes/Buttons/GreenButton.tres" id="2_nl10j"]
 [ext_resource type="Script" uid="uid://clnw1arvg2wlq" path="res://Code/GodotCommon/UserInput/KoreNodeMoverPlus.cs" id="2_rb2ut"]
 [ext_resource type="Theme" uid="uid://dmowlcnw0dkpk" path="res://Themes/Buttons/YellowButton.tres" id="3_rb2ut"]
+[ext_resource type="Theme" uid="uid://bpi0wron7m0gq" path="res://Themes/Buttons/BlueButton.tres" id="6_8m6ch"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_4lgcs"]
 size = Vector2(10, 10)
@@ -17,11 +18,9 @@ size = Vector2i(1600, 1000)
 script = ExtResource("1_1htfu")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+anchors_preset = -1
+offset_right = 1615.0
+offset_bottom = 1010.0
 theme_override_constants/margin_left = 5
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
@@ -105,3 +104,15 @@ layout_mode = 2
 focus_mode = 0
 theme = ExtResource("3_rb2ut")
 text = "OBJ To Code"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="ImportOilBarrelButton" type="Button" parent="MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer2"]
+custom_minimum_size = Vector2(140, 50)
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("6_8m6ch")
+text = "Import glTF
+"

@@ -1,0 +1,117 @@
+{
+  "asset": {
+    "copyright": "",
+    "generator": "SharpGLTF 1.0.0\u002B4b28af2b6e5e30c6bade3f8baaf6b5e1a67ceb98",
+    "version": "2.0"
+  },
+  "accessors": [
+    {
+      "name": "POSITION",
+      "bufferView": 0,
+      "componentType": 5126,
+      "count": 68,
+      "max": [
+        1,
+        1,
+        1.5
+      ],
+      "min": [
+        -1,
+        -1,
+        -1.5
+      ],
+      "type": "VEC3"
+    },
+    {
+      "name": "TEXCOORD_0",
+      "bufferView": 0,
+      "byteOffset": 12,
+      "componentType": 5126,
+      "count": 68,
+      "max": [
+        1,
+        1
+      ],
+      "min": [
+        0,
+        0.009999990463256836
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5123,
+      "count": 192,
+      "type": "SCALAR"
+    }
+  ],
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 1360,
+      "byteStride": 20,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 384,
+      "byteOffset": 1360,
+      "target": 34963
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 1744,
+      "uri": "TestOilBarrel.bin"
+    }
+  ],
+  "images": [
+    {
+      "name": "oil_barrel_texture2.png",
+      "uri": "TestOilBarrel.png"
+    }
+  ],
+  "materials": [
+    {
+      "name": "OilBarrelMaterial",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 0
+        }
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "OilBarrel",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 0,
+            "TEXCOORD_0": 1
+          },
+          "indices": 2,
+          "material": 0
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "mesh": 0
+    }
+  ],
+  "scenes": [
+    {
+      "name": "default",
+      "nodes": [
+        0
+      ]
+    }
+  ],
+  "textures": [
+    {
+      "source": 0
+    }
+  ]
+}

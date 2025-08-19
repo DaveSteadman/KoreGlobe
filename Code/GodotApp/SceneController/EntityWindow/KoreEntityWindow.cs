@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using KoreCommon;
 using KoreSim;
+using System.CodeDom;
 
 #nullable enable
 
@@ -12,6 +13,8 @@ public partial class KoreEntityWindow : Window
     // Controls
     public Tree? EntityTreeList = null;
     private Button? CloseButton = null;
+    private KoreEntityWindowPositionTab? PositionTab = null;
+
 
     // UI Timers
     private float UITimer = 0.0f;
@@ -67,9 +70,11 @@ public partial class KoreEntityWindow : Window
     {
         EntityTreeList = (Tree)FindChild("EntityTreeList");
         CloseButton = (Button)FindChild("CloseButton");
+        PositionTab = (KoreEntityWindowPositionTab)FindChild("Position");
 
         if (EntityTreeList == null) GD.PrintErr("ModelEditWindow: EntityTreeList node not found.");
         if (CloseButton == null) GD.PrintErr("ModelEditWindow: CloseButton node not found.");
+        if (PositionTab == null) GD.PrintErr("ModelEditWindow: PositionTab node not found.");
 
         // Connect tree selection events
         if (EntityTreeList != null)
@@ -97,6 +102,14 @@ public partial class KoreEntityWindow : Window
             GD.Print($"Entity selected: {selectedEntity}");
             // TODO: Handle entity selection (show details, etc.)
 
+
+        }
+
+        // Assign the value, even if it is null (as that clears a selection)
+        if (PositionTab != null)
+        {
+            PositionTab.SelectedEntityName = selectedEntity!;
+            PositionTab.UpdateUIValues();
         }
     }
 

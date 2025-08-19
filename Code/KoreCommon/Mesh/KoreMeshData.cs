@@ -14,6 +14,18 @@ public record struct KoreMeshTriangleGroup(string MaterialName, List<int> Triang
 // KoreMeshData: A class to hold mesh data for 3D geometry.
 // - points, lines, triangles, normals, UVs, vertex colors, line colors, and triangle colors.
 // - Information about the larger context, such as the object's name, position, rotation, and scale is handled by a higher level class.
+//
+// COORDINATE SYSTEM SPECIFICATION:
+// - KoreMeshData uses a right-handed coordinate system with Y pointing up (Y-up)
+// - X+: Right, Y+: Up, Z+: Forward
+// - UV coordinates use bottom-left origin (OpenGL style): U: Right (0→1), V: Up (0→1)
+// - Triangle winding: Counter-clockwise when viewed from outside (right-hand rule)
+// 
+// CONVERSION TO OTHER FORMATS:
+// - glTF (Y-up, Z-forward): Direct coordinate mapping, no conversion needed
+// - Godot (Y-up, Z-forward): Direct coordinate mapping, no conversion needed
+// - Blender (Z-up, Y-forward): Coordinate rotation (x,y,z) → (x,z,-y), check materials
+// - OBJ/MTL: Typically direct mapping, depends on target application
 
 public partial class KoreMeshData
 {

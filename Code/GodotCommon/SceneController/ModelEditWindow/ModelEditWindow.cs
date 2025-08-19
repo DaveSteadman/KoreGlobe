@@ -13,12 +13,14 @@ public partial class ModelEditWindow : Window
     public Button? MeshToCodeButton = null;
     public Button? MeshToObjButton = null;
     public Button? ObjToCodeButton = null;
+    public Button? ImportOilBarrelButton = null;
     public SubViewport? ModelViewport = null;
     public Node3D? MountRoot = null;
     public CodeEdit? MeshJsonEdit = null;
 
     // Mesh
     private KoreMeshData? WindowMeshData = null;
+    private string? SourceFilePath = null;  // Track source file path for texture resolution
 
     // UI Timers
     private float UITimer = 0.0f;
@@ -75,11 +77,13 @@ public partial class ModelEditWindow : Window
         MeshToCodeButton = (Button)FindChild("MeshToCodeButton");
         MeshToObjButton = (Button)FindChild("MeshToObjButton");
         ObjToCodeButton = (Button)FindChild("ObjToCodeButton");
+        ImportOilBarrelButton = (Button)FindChild("ImportOilBarrelButton");
 
         if (CodeToMeshButton == null) GD.PrintErr("ModelEditWindow: CodeToMeshButton node not found.");
         if (MeshToCodeButton == null) GD.PrintErr("ModelEditWindow: MeshToCodeButton node not found.");
         if (MeshToObjButton == null) GD.PrintErr("ModelEditWindow: MeshToObjButton node not found.");
         if (ObjToCodeButton == null) GD.PrintErr("ModelEditWindow: ObjToCodeButton node not found.");
+        if (ImportOilBarrelButton == null) GD.PrintErr("ModelEditWindow: ImportOilBarrelButton node not found.");
 
         ModelViewport = (SubViewport)FindChild("ModelViewport");
         MountRoot = (Node3D)FindChild("MountRoot");
@@ -93,6 +97,7 @@ public partial class ModelEditWindow : Window
         MeshToCodeButton?.Connect("pressed", new Callable(this, nameof(OnMeshToCodeRequested)));
         MeshToObjButton?.Connect("pressed", new Callable(this, nameof(OnMeshToObjRequested)));
         ObjToCodeButton?.Connect("pressed", new Callable(this, nameof(OnObjToCodeRequested)));
+        ImportOilBarrelButton?.Connect("pressed", new Callable(this, nameof(OnImportOilBarrelRequested)));
 
         // Link up the X button to close the window
         Connect("close_requested", new Callable(this, nameof(OnCloseRequested)));
@@ -140,6 +145,13 @@ public partial class ModelEditWindow : Window
         GD.Print("ModelEditWindow: OBJ to Code button pressed");
         // Implement the logic to convert OBJ to code
         TestObjImport();
+    }
+
+    private void OnImportOilBarrelRequested()
+    {
+        GD.Print("ModelEditWindow: Import Oil Barrel button pressed");
+        // Implement the logic to import the oil barrel glTF
+        TestGltfImport();
     }
 
 }

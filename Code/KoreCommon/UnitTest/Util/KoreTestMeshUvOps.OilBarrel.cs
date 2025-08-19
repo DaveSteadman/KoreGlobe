@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using KoreCommon;
+using KoreCommon.Mesh;
 using KoreCommon.SkiaSharp;
 
 namespace KoreCommon.UnitTest;
@@ -105,14 +106,14 @@ public static partial class KoreTestMeshUvOps
         for (int i = 0; i < segments; i++)
         {
             int next = (i + 1) % segments;
-            mesh.AddTriangle(topCenterVertex, topRingVertices[next], topRingVertices[i]);
+            mesh.AddTriangle(topCenterVertex, topRingVertices[i], topRingVertices[next]);
         }
 
-        // Create triangles for bottom cap (fan pattern)
+        // Create triangles for bottom cap (fan pattern - consistent winding)
         for (int i = 0; i < segments; i++)
         {
             int next = (i + 1) % segments;
-            mesh.AddTriangle(bottomCenterVertex, bottomRingVertices[i], bottomRingVertices[next]);
+            mesh.AddTriangle(bottomCenterVertex, bottomRingVertices[next], bottomRingVertices[i]);
         }
 
         // Create triangles for cylinder sides
@@ -125,8 +126,9 @@ public static partial class KoreTestMeshUvOps
             mesh.AddTriangle(sideBottomVertices[i], sideTopVertices[next], sideBottomVertices[next]);
         }
 
-        // Add material
+        // Add material with texture
         var barrelMaterial = new KoreMeshMaterial("OilBarrelMaterial", new KoreColorRGB(200, 10, 10));
+        barrelMaterial.Filename = "oil_barrel_texture2.png"; // Use existing test image
         mesh.AddMaterial(barrelMaterial);
 
         // Create named triangle group for all barrel geometry
@@ -171,7 +173,7 @@ public static partial class KoreTestMeshUvOps
             material.BaseColor,
             material.Metallic,
             material.Roughness,
-            "oil_barrel_uv_clean.png"
+            "oil_barrel_texture2.png"
         );
         mesh.AddMaterial(updatedMaterial);
         // }
@@ -181,6 +183,18 @@ public static partial class KoreTestMeshUvOps
         File.WriteAllText("UnitTestArtefacts/TestOilBarrel.obj", objContent);
         File.WriteAllText("UnitTestArtefacts/TestOilBarrelMats.mtl", mtlContent);
         testLog.AddComment("OBJ/MTL files created for oil barrel UV layout with UV texture assignment");
+        
+        // Export glTF file
+        try
+        {
+            KoreMeshDataGltfIO.SaveToGltf(mesh, "UnitTestArtefacts/TestOilBarrel.gltf", "OilBarrel");
+            testLog.AddComment("glTF file created: UnitTestArtefacts/TestOilBarrel.gltf");
+            testLog.AddResult("glTF export", true, "Successfully exported oil barrel to glTF format");
+        }
+        catch (Exception ex)
+        {
+            testLog.AddResult("glTF export", false, $"glTF export failed: {ex.Message}");
+        }
 
         // Export the JSON representation
         string jsonPath = "UnitTestArtefacts/TestOilBarrel.json";
