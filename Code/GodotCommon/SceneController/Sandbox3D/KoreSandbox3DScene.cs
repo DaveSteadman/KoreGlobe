@@ -68,9 +68,9 @@ public partial class KoreSandbox3DScene : Node3D
         AddChild(Cube3Node);
         AddChild(opNode);
 
-        Cube1Node.Position = new Vector3(-1.1f, 0, 0);
-        Cube2Node.Position = new Vector3(0, 0, 0);
-        Cube3Node.Position = new Vector3(1.1f, 0, 0);
+        Cube1Node.Position = new Vector3(-1.5f, 0.3f, 0.2f);
+        Cube2Node.Position = new Vector3(0, 0.5f, 0.2f);
+        Cube3Node.Position = new Vector3(1.5f, 0.7f, 0.2f);
         opNode.Position    = new Vector3(0, 2f, 0);
 
         // 1
@@ -83,8 +83,12 @@ public partial class KoreSandbox3DScene : Node3D
             KoreGodotSurfaceMesh childSurfaceMeshNode1 = new KoreGodotSurfaceMesh();
             childSurfaceMeshNode1.UpdateMesh(cubeMesh1, "All");
 
+            KoreGodotNormalMesh childNormalMeshNode1 = new KoreGodotNormalMesh();
+            childNormalMeshNode1.UpdateMesh(cubeMesh1, 0.15f); // Small normals for cube
+
             Cube1Node.AddChild(childMeshNode1);
             Cube1Node.AddChild(childSurfaceMeshNode1);
+            Cube1Node.AddChild(childNormalMeshNode1);
         }
 
         // 2
@@ -123,21 +127,27 @@ public partial class KoreSandbox3DScene : Node3D
 
             var opMesh = KoreMeshDataPrimitives.BasicPyramidSharpEdges(
                 apexpos,
-                basepos, 
+                basepos,
                 basefwd,
                 0.3f, 0.1f,
                 KoreColorPalette.Find("Orange"),
                 KoreMeshMaterialPalette.Find("MattOrange")
             );
-            
+
+            opMesh.SetNormalsFromTriangles();
+
             KoreGodotLineMesh childMeshOP = new KoreGodotLineMesh();
             childMeshOP.UpdateMesh(opMesh);
 
             KoreGodotSurfaceMesh childSurfaceMeshNodeOP = new KoreGodotSurfaceMesh();
             childSurfaceMeshNodeOP.UpdateMesh(opMesh, "All");
 
+            KoreGodotNormalMesh childNormalMeshNode1 = new KoreGodotNormalMesh();
+            childNormalMeshNode1.UpdateMesh(opMesh, 0.15f); // Small normals for pyramid
+
             opNode.AddChild(childMeshOP);
             opNode.AddChild(childSurfaceMeshNodeOP);
+            opNode.AddChild(childNormalMeshNode1);
         }
     }
 
@@ -194,12 +204,16 @@ public partial class KoreSandbox3DScene : Node3D
             KoreGodotSurfaceMesh childSurfaceMeshNode1 = new KoreGodotSurfaceMesh();
             childSurfaceMeshNode1.UpdateMesh(surfaceMesh1);
 
+            KoreGodotNormalMesh childNormalMeshNode1 = new KoreGodotNormalMesh();
+            childNormalMeshNode1.UpdateMesh(surfaceMesh1, 0.15f); // Small normals for pyramid
+
             // Set the surface material
             var surfaceMaterial = KoreGodotMaterialFactory.SimpleColoredMaterial(new Color(0.2f, 0.8f, 0.6f));
             childSurfaceMeshNode1.MaterialOverride = surfaceMaterial;
 
             Surface1Node.AddChild(childMeshNode1);
             Surface1Node.AddChild(childSurfaceMeshNode1);
+            Surface1Node.AddChild(childNormalMeshNode1);
 
             // Experiment in line visibility, fudging it a fraction higher.
             childMeshNode1.Position = new Vector3(0, 0.001f, 0);
@@ -274,12 +288,16 @@ public partial class KoreSandbox3DScene : Node3D
         KoreGodotSurfaceMesh childSurfaceMeshNode = new KoreGodotSurfaceMesh();
         childSurfaceMeshNode.UpdateMesh(koreMeshData);
 
+        KoreGodotNormalMesh childNormalMeshNode = new KoreGodotNormalMesh();
+        childNormalMeshNode.UpdateMesh(koreMeshData, 0.15f); // Small normals for cylinder
+
         // Use a different color to distinguish from lathe
         var surfaceMaterial = KoreGodotMaterialFactory.SimpleColoredMaterial(new Color(0.8f, 0.3f, 0.1f));
         childSurfaceMeshNode.MaterialOverride = surfaceMaterial;
 
         cylinderNode.AddChild(childMeshNode);
         cylinderNode.AddChild(childSurfaceMeshNode);
+        cylinderNode.AddChild(childNormalMeshNode);
 
         GD.Print("cylinder done");
     }

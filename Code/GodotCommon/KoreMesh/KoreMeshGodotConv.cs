@@ -6,11 +6,11 @@ using Godot;
 
 /// <summary>
 /// Conversion utilities between KoreMeshData coordinate system and Godot coordinate system.
-/// 
+///
 /// COORDINATE SYSTEMS:
 /// - KoreMeshData: X+ right, Y+ up, Z+ forward (right-handed)
 /// - Godot: X+ right, Y+ up, Z+ backward (right-handed, Z flipped)
-/// 
+///
 /// CONVERSIONS NEEDED:
 /// - Position/Normals: Z component needs to be negated
 /// - UVs: Already handled in KoreGodotSurfaceMesh (V flipped from top-left to bottom-left)
@@ -106,13 +106,25 @@ public static class KoreMeshGodotConv
     // MARK: Triangle Winding
     // --------------------------------------------------------------------------------------------
 
-    /// <summary>
-    /// Convert triangle indices for Godot.
-    /// No change needed - both KoreMeshData and Godot use CCW winding when viewed from outside.
-    /// The Z-flip doesn't affect winding direction since we're flipping all vertices uniformly.
-    /// </summary>
-    public static (int, int, int) ConvertTriangleWinding(int a, int b, int c)
+    // /// <summary>
+    // /// Convert triangle indices for Godot.
+    // /// No change needed - both KoreMeshData and Godot use CCW winding when viewed from outside.
+    // /// The Z-flip doesn't affect winding direction since we're flipping all vertices uniformly.
+    // /// </summary>
+    // public static (int, int, int) ConvertTriangleWinding(int a, int b, int c)
+    // {
+    //     return (a, b, c); // No change needed
+    // }
+
+    public static KoreMeshTriangle TriangleKoreToGodot(KoreMeshTriangle tri)
     {
-        return (a, b, c); // No change needed
+        // Flip the 2nd and 3rd vertex indices
+        return new KoreMeshTriangle(tri.A, tri.C, tri.B);
+    }
+
+    public static KoreMeshTriangle TriangleGodotToKore(KoreMeshTriangle tri)
+    {
+        // Flip the 2nd and 3rd vertex indices
+        return new KoreMeshTriangle(tri.A, tri.C, tri.B);
     }
 }

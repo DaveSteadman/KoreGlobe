@@ -37,13 +37,13 @@ public partial class KoreGodotSurfaceMesh : MeshInstance3D
     // MARK: Mesh
     // --------------------------------------------------------------------------------------------
 
-    private static Vector3 VecToV3(KoreXYZVector vec)
-    {
-        float v3X = (float)vec.X;
-        float v3Y = (float)vec.Y;
-        float v3Z = (float)(vec.Z * -1);
-        return new Vector3(v3X, v3Y, v3Z);
-    }
+    // private static Vector3 VecToV3(KoreXYZVector vec)
+    // {
+    //     float v3X = (float)vec.X;
+    //     float v3Y = (float)vec.Y;
+    //     float v3Z = (float)(vec.Z * -1);
+    //     return new Vector3(v3X, v3Y, v3Z);
+    // }
 
     public void UpdateMesh(KoreMeshData newMeshData, string? groupName = null, string? basePath = null)
     {
@@ -100,6 +100,9 @@ public partial class KoreGodotSurfaceMesh : MeshInstance3D
         {
             int triangleId = kvp.Key;
             KoreMeshTriangle triangle = kvp.Value;
+
+            // Apply coordinate system conversion (includes triangle winding adjustment)
+            triangle = KoreMeshGodotConv.TriangleKoreToGodot(triangle);
 
             // Get the SurfaceTool indices for each vertex
             int indexA = vertexIdToSurfaceIndex[triangle.A];

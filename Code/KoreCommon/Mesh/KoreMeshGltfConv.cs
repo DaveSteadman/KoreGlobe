@@ -7,16 +7,16 @@ using KoreCommon;
 
 /// <summary>
 /// Conversion utilities between KoreMeshData coordinate system and glTF coordinate system.
-/// 
+///
 /// COORDINATE SYSTEMS:
 /// - KoreMeshData: X+ right, Y+ up, Z+ forward (right-handed)
 /// - glTF 2.0: X+ right, Y+ up, Z+ forward (right-handed) - SAME AS KOREMESHDATA
-/// 
+///
 /// CONVERSIONS NEEDED:
 /// - Position/Normals: Direct copy (coordinate systems match)
 /// - UVs: V axis flip (KoreMeshData top-left origin → glTF bottom-left origin)
-/// - Triangle winding: Direct copy (both use CCW when viewed from outside)
-/// 
+/// - Triangle winding: Forced 2nd/3rd vertex Ids flipped as consequence of Z axis flip
+///
 /// Reference: glTF 2.0 Specification Section 3.6.2.2 "Coordinate System and Units"
 /// </summary>
 public static class KoreMeshGltfConv
@@ -61,6 +61,8 @@ public static class KoreMeshGltfConv
         return new KoreXYZVector(normal.X, normal.Y, normal.Z);
     }
 
+
+
     // --------------------------------------------------------------------------------------------
     // MARK: UV Conversions
     // --------------------------------------------------------------------------------------------
@@ -85,7 +87,7 @@ public static class KoreMeshGltfConv
     }
 
     // --------------------------------------------------------------------------------------------
-    // MARK: Color Conversions  
+    // MARK: Color Conversions
     // --------------------------------------------------------------------------------------------
 
     /// <summary>
@@ -166,7 +168,7 @@ public static class KoreMeshGltfConv
     {
         return new Vector3(
             emissive.Rf * strength,
-            emissive.Gf * strength, 
+            emissive.Gf * strength,
             emissive.Bf * strength);
     }
 }
