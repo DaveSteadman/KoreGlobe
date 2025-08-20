@@ -73,12 +73,15 @@ public partial class KoreSandbox3DScene : Node3D
         // 1
         {
             var cubeMesh1 = KoreMeshDataPrimitives.BasicCube(0.5f, KoreMeshMaterialPalette.Find("MattRed"));
+            // cubeMesh1.AddMaterial(KoreMeshMaterialPalette.Find("MattBlue"));
+            // cubeMesh1.AddAllTrianglesToGroup("All");
+            // cubeMesh1.SetGroupMaterialName("All", "MattBlue");
 
             KoreGodotLineMesh childMeshNode1 = new KoreGodotLineMesh();
             childMeshNode1.UpdateMesh(cubeMesh1);
 
             KoreGodotSurfaceMesh childSurfaceMeshNode1 = new KoreGodotSurfaceMesh();
-            childSurfaceMeshNode1.UpdateMesh(cubeMesh1);
+            childSurfaceMeshNode1.UpdateMesh(cubeMesh1, "All");
 
             Cube1Node.AddChild(childMeshNode1);
             Cube1Node.AddChild(childSurfaceMeshNode1);
@@ -94,7 +97,7 @@ public partial class KoreSandbox3DScene : Node3D
             childMeshNode2.UpdateMesh(cubeMesh2);
 
             KoreGodotSurfaceMesh childSurfaceMeshNode2 = new KoreGodotSurfaceMesh();
-            childSurfaceMeshNode2.UpdateMesh(cubeMesh2);
+            childSurfaceMeshNode2.UpdateMesh(cubeMesh2, "All");
 
             Cube2Node.AddChild(childMeshNode2);
             Cube2Node.AddChild(childSurfaceMeshNode2);
@@ -108,7 +111,7 @@ public partial class KoreSandbox3DScene : Node3D
             childMeshNode3.UpdateMesh(cubeMesh3);
 
             KoreGodotSurfaceMesh childSurfaceMeshNode3 = new KoreGodotSurfaceMesh();
-            childSurfaceMeshNode3.UpdateMesh(cubeMesh3);
+            childSurfaceMeshNode3.UpdateMesh(cubeMesh3, "All");
 
             Cube3Node.AddChild(childMeshNode3);
             Cube3Node.AddChild(childSurfaceMeshNode3);
@@ -146,14 +149,14 @@ public partial class KoreSandbox3DScene : Node3D
             eleArray[0, 0] += 1.0;
             eleArray[eleSize - 1, 0] -= 1.0;
 
-            // Turn the eleArray into vertices
+            // Turn the eleArray into vertices with [0,0] as top-left
             double horizRange = 5.0; // Controls the horizontal extent of the surface
             for (int i = 0; i < eleSize; i++)
             {
                 for (int j = 0; j < eleSize; j++)
                 {
-                    double currX = i / (eleSize - 1.0) * 2.0 * horizRange - horizRange; // Normalize to [-horizRange, horizRange]
-                    double currZ = j / (eleSize - 1.0) * 2.0 * horizRange - horizRange; // Normalize to [-horizRange, horizRange]
+                    double currX = i / (eleSize - 1.0) * 2.0 * horizRange - horizRange; // X: left to right [-horizRange, +horizRange]
+                    double currZ = horizRange - j / (eleSize - 1.0) * 2.0 * horizRange; // Z: top to bottom [+horizRange, -horizRange]
                     double currY = eleArray[i, j];
                     vertices[i, j] = new KoreXYZVector(currX, currY, currZ);
                 }

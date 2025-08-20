@@ -16,14 +16,14 @@ public static partial class KoreMeshDataPrimitives
         int lonSegments = numLatSegments * 2;
 
         var mesh = new KoreMeshData();
-        
+
         // List of lists to store vertex IDs for each latitude ring
         var latitudeRings = new List<List<int>>();
 
         // Create the top point (singular point at the hemisphere top)
         var topVertex = new KoreXYZVector(0, radius, 0);
         int topVertexId = mesh.AddVertex(topVertex, null, color);
-        
+
         // Add the top point as the first "ring" (single point)
         latitudeRings.Add(new List<int> { topVertexId });
 
@@ -62,23 +62,23 @@ public static partial class KoreMeshDataPrimitives
 
             if (lat == 0)
             {
-                // Special case: connect top point to first ring (triangular fans)
+                // Special case: connect top point to first ring (triangular fans - CCW)
                 for (int lon = 0; lon < lowerRing.Count; lon++)
                 {
                     int nextLon = (lon + 1) % lowerRing.Count;
-                    mesh.AddTriangle(topVertexId, lowerRing[lon], lowerRing[nextLon]);
+                    mesh.AddTriangle(topVertexId, lowerRing[nextLon], lowerRing[lon]);
                 }
             }
             else
             {
-                // Normal case: connect two rings with quads (2 triangles each)
+                // Normal case: connect two rings with quads (2 triangles each - CCW)
                 for (int lon = 0; lon < upperRing.Count; lon++)
                 {
                     int nextLon = (lon + 1) % upperRing.Count;
-                    
-                    // Two triangles forming a quad
-                    mesh.AddTriangle(upperRing[lon], lowerRing[nextLon], upperRing[nextLon]);
-                    mesh.AddTriangle(upperRing[lon], lowerRing[lon], lowerRing[nextLon]);
+
+                    // Two triangles forming a quad (CCW winding)
+                    mesh.AddTriangle(upperRing[lon], upperRing[nextLon], lowerRing[nextLon]);
+                    mesh.AddTriangle(upperRing[lon], lowerRing[nextLon], lowerRing[lon]);
                 }
             }
         }
@@ -100,7 +100,7 @@ public static partial class KoreMeshDataPrimitives
         {
             // Connect from top point down through all rings
             mesh.AddLine(topVertexId, latitudeRings[1][lon], color, color);
-            
+
             for (int lat = 1; lat < latitudeRings.Count - 1; lat++)
             {
                 mesh.AddLine(latitudeRings[lat][lon], latitudeRings[lat + 1][lon], color, color);

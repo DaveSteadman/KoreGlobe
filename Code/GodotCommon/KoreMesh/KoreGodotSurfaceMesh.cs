@@ -115,7 +115,7 @@ public partial class KoreGodotSurfaceMesh : MeshInstance3D
         {
             // Handle grouping logic here
             KoreMeshMaterial kMat = newMeshData.MaterialForGroup(groupName);
-            
+
             // Use path-aware material factory if base path is provided
             if (!string.IsNullOrEmpty(basePath))
             {

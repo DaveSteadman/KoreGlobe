@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://buqq7o2fp8vgm"]
+[gd_scene load_steps=11 format=3 uid="uid://buqq7o2fp8vgm"]
 
 [ext_resource type="Script" uid="uid://dd6epp0iyhyal" path="res://Code/GodotCommon/Util/KoreViewportAutosize.cs" id="1_hlcvn"]
 [ext_resource type="Script" uid="uid://fp7k80n2ou0q" path="res://Code/GodotCommon/SceneController/Sandbox3D/KoreSandbox3DWindow.cs" id="1_s4y37"]
@@ -9,6 +9,8 @@
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_1dpv4"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_6i22l"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_s4y37"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_iflb7"]
 
@@ -66,10 +68,14 @@ shape = SubResource("CapsuleShape3D_6i22l")
 
 [node name="OmniLight3D" type="OmniLight3D" parent="SubViewportContainer/SubViewport/Scene3DRoot"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 4, -1)
+visible = false
 light_color = Color(0.8693259, 0.5112665, 0.3452526, 1)
 light_energy = 4.0
 shadow_enabled = true
 omni_range = 9.460011
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Scene3DRoot/OmniLight3D"]
+mesh = SubResource("SphereMesh_s4y37")
 
 [node name="MeshInstance3D-FloorBox" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Scene3DRoot"]
 transform = Transform3D(10, 0, 0, 0, 1, 0, 0, 0, 10, 0, -3, 0)

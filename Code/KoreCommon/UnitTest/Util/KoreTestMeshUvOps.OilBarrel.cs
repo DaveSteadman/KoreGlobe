@@ -102,26 +102,26 @@ public static partial class KoreTestMeshUvOps
             );
         }
 
-        // Create triangles for top cap (fan pattern)
+        // Create triangles for top cap (fan pattern - CCW winding)
         for (int i = 0; i < segments; i++)
         {
             int next = (i + 1) % segments;
             mesh.AddTriangle(topCenterVertex, topRingVertices[i], topRingVertices[next]);
         }
 
-        // Create triangles for bottom cap (fan pattern - consistent winding)
+        // Create triangles for bottom cap (fan pattern - CCW winding)
         for (int i = 0; i < segments; i++)
         {
             int next = (i + 1) % segments;
             mesh.AddTriangle(bottomCenterVertex, bottomRingVertices[next], bottomRingVertices[i]);
         }
 
-        // Create triangles for cylinder sides
+        // Create triangles for cylinder sides (CCW winding)
         for (int i = 0; i < segments; i++)
         {
             int next = i + 1; // No modulo needed since we have segments+1 vertices
 
-            // Two triangles per side segment
+            // Two triangles per side segment (CCW winding)
             mesh.AddTriangle(sideBottomVertices[i], sideTopVertices[i], sideTopVertices[next]);
             mesh.AddTriangle(sideBottomVertices[i], sideTopVertices[next], sideBottomVertices[next]);
         }
@@ -186,7 +186,7 @@ public static partial class KoreTestMeshUvOps
         File.WriteAllText("UnitTestArtefacts/TestOilBarrel.obj", objContent);
         File.WriteAllText("UnitTestArtefacts/TestOilBarrelMats.mtl", mtlContent);
         testLog.AddComment("OBJ/MTL files created for oil barrel UV layout with UV texture assignment");
-        
+
         // Export glTF file
         try
         {

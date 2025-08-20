@@ -57,20 +57,20 @@ public static partial class KoreMeshDataPrimitives
         pyramidMesh.AddGroupWithMaterial("base", material);
         pyramidMesh.AddGroupWithMaterial("sides", material);
 
-        // Add triangles for the pyramid faces
-        pyramidMesh.AddTriangleToGroup(pyramidMesh.AddTriangle(idxApex, idxBase1, idxBase2), "sides"); // front face
-        pyramidMesh.AddTriangleToGroup(pyramidMesh.AddTriangle(idxApex, idxBase2, idxBase3), "sides"); // left face
-        pyramidMesh.AddTriangleToGroup(pyramidMesh.AddTriangle(idxApex, idxBase3, idxBase4), "sides"); // back face
-        pyramidMesh.AddTriangleToGroup(pyramidMesh.AddTriangle(idxApex, idxBase4, idxBase1), "sides"); // right face
+        // Add triangles for the pyramid faces (CCW winding from outside)
+        pyramidMesh.AddTriangleToGroup(pyramidMesh.AddTriangle(idxApex, idxBase2, idxBase1), "sides"); // front face
+        pyramidMesh.AddTriangleToGroup(pyramidMesh.AddTriangle(idxApex, idxBase3, idxBase2), "sides"); // left face
+        pyramidMesh.AddTriangleToGroup(pyramidMesh.AddTriangle(idxApex, idxBase4, idxBase3), "sides"); // back face
+        pyramidMesh.AddTriangleToGroup(pyramidMesh.AddTriangle(idxApex, idxBase1, idxBase4), "sides"); // right face
 
-        pyramidMesh.AddTriangleToGroup(pyramidMesh.AddTriangle(idxBase1, idxBase4, idxBase3), "base"); // base triangle 1
-        pyramidMesh.AddTriangleToGroup(pyramidMesh.AddTriangle(idxBase1, idxBase3, idxBase2), "base"); // base triangle 2
+        pyramidMesh.AddTriangleToGroup(pyramidMesh.AddTriangle(idxBase1, idxBase2, idxBase3), "base"); // base triangle 1
+        pyramidMesh.AddTriangleToGroup(pyramidMesh.AddTriangle(idxBase1, idxBase3, idxBase4), "base"); // base triangle 2
 
-        // Add wireframe lines
-        pyramidMesh.OutlineTriangle(idxApex, idxBase1, idxBase2, linecolor);
-        pyramidMesh.OutlineTriangle(idxApex, idxBase2, idxBase3, linecolor);
-        pyramidMesh.OutlineTriangle(idxApex, idxBase3, idxBase4, linecolor);
-        pyramidMesh.OutlineTriangle(idxApex, idxBase4, idxBase1, linecolor);
+        // Add wireframe lines (match the CCW triangle winding)
+        pyramidMesh.OutlineTriangle(idxApex, idxBase2, idxBase1, linecolor);
+        pyramidMesh.OutlineTriangle(idxApex, idxBase3, idxBase2, linecolor);
+        pyramidMesh.OutlineTriangle(idxApex, idxBase4, idxBase3, linecolor);
+        pyramidMesh.OutlineTriangle(idxApex, idxBase1, idxBase4, linecolor);
 
         return pyramidMesh;
     }

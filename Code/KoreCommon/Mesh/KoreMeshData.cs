@@ -20,7 +20,7 @@ public record struct KoreMeshTriangleGroup(string MaterialName, List<int> Triang
 // - X+: Right, Y+: Up, Z+: Forward
 // - UV coordinates use bottom-left origin (OpenGL style): U: Right (0→1), V: Up (0→1)
 // - Triangle winding: Counter-clockwise when viewed from outside (right-hand rule)
-// 
+//
 // CONVERSION TO OTHER FORMATS:
 // - glTF (Y-up, Z-forward): Direct coordinate mapping, no conversion needed
 // - Godot (Y-up, Z-forward): Direct coordinate mapping, no conversion needed
@@ -382,6 +382,8 @@ public partial class KoreMeshData
     // MARK: Triangle
     // --------------------------------------------------------------------------------------------
 
+    // Triangles wind CCW
+
     // Add a triangle and return its ID
     public int AddTriangle(int vertexIdA, int vertexIdB, int vertexIdC)
     {
@@ -437,16 +439,16 @@ public partial class KoreMeshData
         int idxC = AddVertex(c, faceNormal);
         int idxD = AddVertex(d, faceNormal);
 
-        // Add the triangle
-        int triId1 = AddTriangle(idxA, idxB, idxC);
-        int triId2 = AddTriangle(idxA, idxC, idxD);
+        // Add the triangles with CCW winding
+        int triId1 = AddTriangle(idxA, idxC, idxB);
+        int triId2 = AddTriangle(idxA, idxD, idxC);
     }
 
     public void AddFace(int aId, int bId, int cId, int dId)
     {
-        // Create two triangles from the face
-        AddTriangle(aId, bId, cId);
-        AddTriangle(aId, cId, dId);
+        // Create two triangles from the face with CCW winding
+        AddTriangle(aId, cId, bId);
+        AddTriangle(aId, dId, cId);
     }
 
 
@@ -459,10 +461,10 @@ public partial class KoreMeshData
 
     public void AddMaterial(KoreMeshMaterial material)
     {
-        // Search the Materials list for a matching material
+        // Search the Materials list for a matching material (case insensitive)
         foreach (KoreMeshMaterial existingMaterial in Materials)
         {
-            if (existingMaterial.Name == material.Name)
+            if (string.Equals(existingMaterial.Name, material.Name, StringComparison.OrdinalIgnoreCase))
             {
                 // remove the material
                 Materials.Remove(existingMaterial);
@@ -477,10 +479,10 @@ public partial class KoreMeshData
     // Get the material, or return the default material if not setup
     public KoreMeshMaterial GetMaterial(string materialName)
     {
-        // Loop through the existing materials, and return if we find one with a matching name
+        // Loop through the existing materials, and return if we find one with a matching name (case insensitive)
         foreach (KoreMeshMaterial existingMaterial in Materials)
         {
-            if (existingMaterial.Name == materialName)
+            if (string.Equals(existingMaterial.Name, materialName, StringComparison.OrdinalIgnoreCase))
                 return existingMaterial;
         }
         return KoreMeshMaterialPalette.DefaultMaterial;

@@ -44,7 +44,11 @@ App Outline
 Immeditate Task:
 ================
 
-- Draw the tile edges
+- check the object winding, of all primitives
+- draw normals in the debug mesh
+
+
+- Draw the tile drop edges
 
 
 

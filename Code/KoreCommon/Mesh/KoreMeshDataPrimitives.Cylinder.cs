@@ -49,7 +49,7 @@ public static partial class KoreMeshDataPrimitives
         }
 
         // Create the cylindrical surface using Ribbon
-        KoreMeshData ribbonMesh = Ribbon(p1Circle, leftUVs, p2Circle, rightUVs, true);
+        KoreMeshData ribbonMesh = Ribbon(p2Circle, leftUVs, p1Circle, rightUVs, true);
         ribbonMesh.AddAllTrianglesToGroup("cylinder");
         mesh = KoreMeshData.BasicAppendMesh(mesh, ribbonMesh);
 

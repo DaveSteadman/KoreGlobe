@@ -11,7 +11,7 @@ namespace KoreCommon;
 public static partial class KoreMeshDataPrimitives
 {
 
-    // Box Arc: A box section describing an arc. 
+    // Box Arc: A box section describing an arc.
     // - inner and outer radius.
     // - vertical angle of the section - half applied above and below the horizontal plane.
     // - horizontal start of the arc and an angle delta (wrapping issues).
@@ -113,17 +113,17 @@ public static partial class KoreMeshDataPrimitives
         //mesh.UpdateNormals();
 
         combiningMesh.AddFace(
-            pointInnerUpperList[0],
             pointOuterUpperList[0],
-            pointOuterLowerList[0],
-            pointInnerLowerList[0]);
+            pointInnerUpperList[0],
+            pointInnerLowerList[0],
+            pointOuterLowerList[0]);
 
         int endId = pointInnerLowerList.Count - 1;
         combiningMesh.AddFace(
-            pointOuterUpperList[endId],
             pointInnerUpperList[endId],
-            pointInnerLowerList[endId],
-            pointOuterLowerList[endId]);
+            pointOuterUpperList[endId],
+            pointOuterLowerList[endId],
+            pointInnerLowerList[endId]);
 
 
         // // Add the end-caps to the box.

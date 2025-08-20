@@ -11,7 +11,30 @@ namespace KoreCommon;
 
 public static partial class KoreMeshDataPrimitives
 {
-    // Usage: var cubeMesh = KoreMeshDataPrimitives.Surface(1.0f, new KoreColorRGB(255, 0, 0));
+    /// <summary>
+    /// Creates a surface mesh from a 2D grid of vertices.
+    ///
+    /// COORDINATE SYSTEM:
+    /// - vertices[0,0] represents the TOP-LEFT corner of the surface
+    /// - vertices[width-1,0] represents the TOP-RIGHT corner
+    /// - vertices[0,height-1] represents the BOTTOM-LEFT corner
+    /// - vertices[width-1,height-1] represents the BOTTOM-RIGHT corner
+    ///
+    /// The first array index (i) corresponds to X-axis (left-to-right)
+    /// The second array index (j) corresponds to Z-axis (top-to-bottom when viewed from above)
+    ///
+    /// TRIANGLE WINDING:
+    /// - Triangles are wound counter-clockwise when viewed from positive Y (looking down at XZ plane)
+    /// - Surface normals point upward in positive Y direction for flat surfaces
+    ///
+    /// USAGE:
+    /// var vertices = new KoreXYZVector[width, height];
+    /// // Populate vertices where [0,0] is top-left corner
+    /// var surfaceMesh = KoreMeshDataPrimitives.Surface(vertices, KoreUVBox.Full);
+    /// </summary>
+    /// <param name="vertices">2D array of vertices where [0,0] is top-left corner</param>
+    /// <param name="uvBox">UV mapping coordinates for the surface</param>
+    /// <returns>KoreMeshData representing the surface with proper CCW triangle winding</returns>
     public static KoreMeshData Surface(KoreXYZVector[,] vertices, KoreUVBox uvBox)
     {
         var mesh = new KoreMeshData();
@@ -40,14 +63,14 @@ public static partial class KoreMeshDataPrimitives
         {
             for (int iY = 0; iY < height - 1; iY++)
             {
-                // Create two triangles for each quad
+                // Create two triangles for each quad (CCW winding)
                 int p00 = pointIds[iX, iY];
                 int p01 = pointIds[iX, iY + 1];
                 int p10 = pointIds[iX + 1, iY];
                 int p11 = pointIds[iX + 1, iY + 1];
 
-                mesh.AddTriangle(p00, p10, p01);
-                mesh.AddTriangle(p01, p10, p11);
+                mesh.AddTriangle(p00, p01, p10);
+                mesh.AddTriangle(p01, p11, p10);
 
                 // Always add top and left edges
                 mesh.AddLine(p00, p10);  // Left edge

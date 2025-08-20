@@ -36,7 +36,7 @@ public partial class KoreZeroNodeMapTile : Node3D
         // Setup the loop control values
         int pointCountLon = TileEleData.Width;
         int pointCountLat = TileEleData.Height;
-        List<double> lonZeroListRads = KoreValueUtils.CreateRangeList(pointCountLon, RwTileLLBox.HalfDeltaLonRads, -RwTileLLBox.HalfDeltaLonRads); // Relative azimuth
+        List<double> lonZeroListRads = KoreValueUtils.CreateRangeList(pointCountLon, -RwTileLLBox.HalfDeltaLonRads, RwTileLLBox.HalfDeltaLonRads); // Relative azimuth
         List<double> latListRads     = KoreValueUtils.CreateRangeList(pointCountLat, RwTileLLBox.MaxLatRads, RwTileLLBox.MinLatRads);
 
         // NOTE: The ranges mean the [0,0] is TOP LEFT

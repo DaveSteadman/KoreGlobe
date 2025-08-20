@@ -35,7 +35,7 @@ public static partial class KoreMeshDataPrimitives
         {
             int leftId = mesh.AddVertex(leftPoints[i], null, null, leftUVs[i]);
             int rightId = mesh.AddVertex(rightPoints[i], null, null, rightUVs[i]);
-            
+
             leftVertexIds.Add(leftId);
             rightVertexIds.Add(rightId);
         }
@@ -69,7 +69,7 @@ public static partial class KoreMeshDataPrimitives
             int rightCurrent = rightVertexIds[i];
             int rightNext = rightVertexIds[i + 1];
 
-            // Create two triangles for the current segment
+            // Create two triangles for the current segment - CCW winding
             mesh.AddTriangle(leftCurrent, rightCurrent, rightNext);
             mesh.AddTriangle(leftCurrent, rightNext, leftNext);
         }

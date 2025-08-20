@@ -47,7 +47,7 @@ public static partial class KoreMeshDataPrimitives
         // Triangles - using CCW winding when viewed from outside
         // Front face (Z = -size) - looking at it from positive Z
         mesh.AddTriangle(v0, v3, v2); mesh.AddTriangle(v0, v2, v1);
-        // Left face (X = -size) - looking at it from positive X  
+        // Left face (X = -size) - looking at it from positive X
         mesh.AddTriangle(v0, v4, v7); mesh.AddTriangle(v0, v7, v3);
         // Back face (Z = +size) - looking at it from negative Z
         mesh.AddTriangle(v5, v6, v7); mesh.AddTriangle(v5, v7, v4);
@@ -58,8 +58,8 @@ public static partial class KoreMeshDataPrimitives
         // Bottom face (Y = -size) - looking at it from positive Y
         mesh.AddTriangle(v0, v1, v5); mesh.AddTriangle(v0, v5, v4);
 
-        mesh.AddAllTrianglesToGroup("DefaultMaterial");
-        mesh.SetGroupMaterialName("DefaultMaterial", mat.Name);
+        mesh.AddAllTrianglesToGroup("All");
+        mesh.SetGroupMaterialName("All", mat.Name);
 
         mesh.MakeValid();
         return mesh;

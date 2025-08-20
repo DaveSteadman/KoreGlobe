@@ -67,21 +67,22 @@ public static partial class KoreMeshDataPrimitives
 
             for (int i = 0; i < horizSegments; i++)
             {
-                int i1 = vertexIndices[rowStart + i];
-                int i2 = vertexIndices[rowStart + (i + 1) % horizSegments];
-                int i3 = vertexIndices[nextRowStart + i];
-                int i4 = vertexIndices[nextRowStart + (i + 1) % horizSegments];
+                int i00 = vertexIndices[rowStart + i];
+                int i10 = vertexIndices[rowStart + (i + 1) % horizSegments];
+                int i01 = vertexIndices[nextRowStart + i];
+                int i11 = vertexIndices[nextRowStart + (i + 1) % horizSegments];
 
-                mesh.AddTriangle(i1, i4, i2);
-                mesh.AddTriangle(i1, i3, i4);
+                // CCW winding
+                mesh.AddTriangle(i00, i11, i10);
+                mesh.AddTriangle(i00, i01, i11);
 
-                var c1 = mesh.VertexColors[i1];
-                var c2 = mesh.VertexColors[i2];
-                var c3 = mesh.VertexColors[i3];
-                var c4 = mesh.VertexColors[i4];
+                var c1 = mesh.VertexColors[i00];
+                var c2 = mesh.VertexColors[i10];
+                var c3 = mesh.VertexColors[i01];
+                var c4 = mesh.VertexColors[i11];
 
-                mesh.AddLine(i1, i2, c1, c2);
-                mesh.AddLine(i1, i3, c1, c3);
+                mesh.AddLine(i00, i10, c1, c2);
+                mesh.AddLine(i00, i01, c1, c3);
 
                 // Optionally:
                 // mesh.AddLine(i1, i4, c1, c4);
