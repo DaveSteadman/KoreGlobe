@@ -37,10 +37,18 @@ public partial class KoreGodotSurfaceMesh : MeshInstance3D
     // MARK: Mesh
     // --------------------------------------------------------------------------------------------
 
+    private static Vector3 VecToV3(KoreXYZVector vec)
+    {
+        float v3X = (float)vec.X;
+        float v3Y = (float)vec.Y;
+        float v3Z = (float)(vec.Z * -1);
+        return new Vector3(v3X, v3Y, v3Z);
+    }
+
     public void UpdateMesh(KoreMeshData newMeshData, string? groupName = null, string? basePath = null)
     {
         // Ensure mesh data is complete and valid before processing
-        newMeshData.FullyPopulate();
+        // newMeshData.FullyPopulate();
 
         _surfaceTool = new SurfaceTool();
 
@@ -58,7 +66,7 @@ public partial class KoreGodotSurfaceMesh : MeshInstance3D
             KoreXYZVector vertex = kvp.Value;
 
             // Convert to Godot format
-            Vector3 godotPos = KoreConvPos.VecToV3(vertex);
+            Vector3 godotPos = KoreMeshGodotConv.PositionKoreToGodot(vertex);
 
             // Set vertex color if available
             if (newMeshData.VertexColors.ContainsKey(vertexId))
@@ -70,14 +78,16 @@ public partial class KoreGodotSurfaceMesh : MeshInstance3D
             // Set normal if available
             if (newMeshData.Normals.ContainsKey(vertexId))
             {
-                Vector3 normal = KoreConvPos.VecToV3(newMeshData.Normals[vertexId]);
+                Vector3 normal = KoreMeshGodotConv.NormalKoreToGodot(newMeshData.Normals[vertexId]);
                 _surfaceTool.SetNormal(normal);
             }
 
             // Set UV if available
             if (newMeshData.UVs.ContainsKey(vertexId))
             {
-                Vector2 uv = new Vector2((float)newMeshData.UVs[vertexId].X, (float)newMeshData.UVs[vertexId].Y);
+                // Convert from internal top-left UV system to Godot's bottom-left UV system
+                Vector2 uv = KoreMeshGodotConv.UVKoreToGodot(newMeshData.UVs[vertexId]);
+
                 _surfaceTool.SetUV(uv);
             }
 

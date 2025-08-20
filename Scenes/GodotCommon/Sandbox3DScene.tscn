@@ -58,6 +58,7 @@ fov = 38.8
 
 [node name="Mesh-Capsule" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Scene3DRoot"]
 physics_interpolation_mode = 1
+visible = false
 mesh = SubResource("CapsuleMesh_1dpv4")
 
 [node name="RigidBody3D" type="RigidBody3D" parent="SubViewportContainer/SubViewport/Scene3DRoot/Mesh-Capsule"]
@@ -67,12 +68,13 @@ physics_interpolation_mode = 1
 shape = SubResource("CapsuleShape3D_6i22l")
 
 [node name="OmniLight3D" type="OmniLight3D" parent="SubViewportContainer/SubViewport/Scene3DRoot"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 4, -1)
-visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.435, 2.51, -0.885)
 light_color = Color(0.8693259, 0.5112665, 0.3452526, 1)
-light_energy = 4.0
+light_energy = 11.553
+light_indirect_energy = 1.406
 shadow_enabled = true
-omni_range = 9.460011
+omni_range = 830.993
+omni_attenuation = 1.203
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Scene3DRoot/OmniLight3D"]
 mesh = SubResource("SphereMesh_s4y37")

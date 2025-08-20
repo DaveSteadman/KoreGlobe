@@ -57,14 +57,17 @@ public struct KoreUVBox
 
     // Get a 2D grid of UV coordinates based on the dimensions of a destination point grid
     // Quick UV generation method.
+    // Top 
+
     // Usage: KoreXYVector[,] uvGrid = uvBox.GetUVGrid(10, 10);
+
     public KoreXYVector[,] GetUVGrid(int horizSize, int vertSize)
     {
         var uvGrid = new KoreXYVector[horizSize, vertSize];
 
         // Get 2 1D arrays to define the values in the range
         KoreNumeric1DArray<double> uRange = KoreNumeric1DArrayOps<double>.ListForRange(TopLeft.X, BottomRight.X, horizSize);
-        KoreNumeric1DArray<double> vRange = KoreNumeric1DArrayOps<double>.ListForRange(TopLeft.Y, BottomRight.Y, vertSize);
+        KoreNumeric1DArray<double> vRange = KoreNumeric1DArrayOps<double>.ListForRange(BottomRight.Y, TopLeft.Y, vertSize);
 
         if (TopLeft.X > BottomRight.X)
             KoreCentralLog.AddEntry($"ERROR: UVBox X backwards");

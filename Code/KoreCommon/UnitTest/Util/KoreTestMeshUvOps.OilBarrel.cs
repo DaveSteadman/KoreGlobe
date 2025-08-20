@@ -122,8 +122,8 @@ public static partial class KoreTestMeshUvOps
             int next = i + 1; // No modulo needed since we have segments+1 vertices
 
             // Two triangles per side segment (CCW winding)
-            mesh.AddTriangle(sideBottomVertices[i], sideTopVertices[i], sideTopVertices[next]);
-            mesh.AddTriangle(sideBottomVertices[i], sideTopVertices[next], sideBottomVertices[next]);
+            mesh.AddTriangle(sideBottomVertices[i], sideTopVertices[next], sideTopVertices[i]);
+            mesh.AddTriangle(sideBottomVertices[i], sideBottomVertices[next], sideTopVertices[next]);
         }
 
         // Add material with texture

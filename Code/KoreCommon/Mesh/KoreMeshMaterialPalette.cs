@@ -29,6 +29,7 @@ public static class KoreMeshMaterialPalette
         new ("MattYellow", new KoreColorRGB(255, 255, 0), 0f, 1f),
         new ("MattMagenta", new KoreColorRGB(255, 0, 255), 0f, 1f),
         new ("MattCyan", new KoreColorRGB(0, 255, 255), 0f, 1f),
+        new ("MattOrange", new KoreColorRGB(255, 165, 0), 0f, 1f),
 
         new ("MattDarkRed", new KoreColorRGB(130, 0, 0), 0f, 1f),
 

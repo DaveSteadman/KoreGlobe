@@ -10,7 +10,7 @@ public static partial class KoreTestMeshUvOps
     public static void RunTests(KoreTestLog testLog)
     {
         testLog.AddComment("=== Testing KoreMeshDataUvOps ===");
-        
+
         TestDiceCubeUVLayout(testLog);
         TestSimpleQuadUVs(testLog);
         TestOilBarrelUVLayout(testLog);

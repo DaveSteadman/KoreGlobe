@@ -18,11 +18,12 @@ public record struct KoreMeshTriangleGroup(string MaterialName, List<int> Triang
 // COORDINATE SYSTEM SPECIFICATION:
 // - KoreMeshData uses a right-handed coordinate system with Y pointing up (Y-up)
 // - X+: Right, Y+: Up, Z+: Forward
-// - UV coordinates use bottom-left origin (OpenGL style): U: Right (0→1), V: Up (0→1)
+// - UV coordinates use top-left origin (glTF style): U incrementing across and down to a 1,1 bottom right.
 // - Triangle winding: Counter-clockwise when viewed from outside (right-hand rule)
 //
 // CONVERSION TO OTHER FORMATS:
 // - glTF (Y-up, Z-forward): Direct coordinate mapping, no conversion needed
+// - Godot (Y-up, Z-backward): Z component needs to be negated
 // - Godot (Y-up, Z-forward): Direct coordinate mapping, no conversion needed
 // - Blender (Z-up, Y-forward): Coordinate rotation (x,y,z) → (x,z,-y), check materials
 // - OBJ/MTL: Typically direct mapping, depends on target application
@@ -123,9 +124,9 @@ public partial class KoreMeshData
         int id = NextVertexId++;
         Vertices[id] = vertex;
 
-        if (normal.HasValue) Normals[id] = normal.Value;
-        if (color.HasValue) VertexColors[id] = color.Value;
-        if (uv.HasValue) UVs[id] = uv.Value;
+        if (normal.HasValue) Normals[id]      = normal.Value;
+        if (color.HasValue)  VertexColors[id] = color.Value;
+        if (uv.HasValue)     UVs[id]          = uv.Value;
 
         return id;
     }
@@ -135,9 +136,9 @@ public partial class KoreMeshData
     {
         Vertices[vertexId] = vertex;
 
-        if (normal.HasValue) Normals[vertexId] = normal.Value;
-        if (color.HasValue) VertexColors[vertexId] = color.Value;
-        if (uv.HasValue) UVs[vertexId] = uv.Value;
+        if (normal.HasValue) Normals[vertexId]      = normal.Value;
+        if (color.HasValue)  VertexColors[vertexId] = color.Value;
+        if (uv.HasValue)     UVs[vertexId]          = uv.Value;
     }
 
     // --------------------------------------------------------------------------------------------
@@ -430,8 +431,8 @@ public partial class KoreMeshData
         KoreXYZVector faceNormal = KoreXYZVector.CrossProduct(ab, ac);
 
         // Normalize the face normal using the built-in method
-        faceNormal = faceNormal.Normalize();
-        faceNormal = faceNormal.Invert();
+        //faceNormal = faceNormal.Normalize();
+        //faceNormal = faceNormal.Invert();
 
         // Add three separate vertices with the same face normal for sharp edges
         int idxA = AddVertex(a, faceNormal);
@@ -442,6 +443,9 @@ public partial class KoreMeshData
         // Add the triangles with CCW winding
         int triId1 = AddTriangle(idxA, idxC, idxB);
         int triId2 = AddTriangle(idxA, idxD, idxC);
+
+        Normals[triId1] = NormalForTriangle(triId1);
+        Normals[triId2] = NormalForTriangle(triId2);
     }
 
     public void AddFace(int aId, int bId, int cId, int dId)

@@ -93,9 +93,6 @@ Networking:
 Bugs:
 =====
 
-Tile Longitude:
-- Something wrong with the longitude calculations of a tile.
-
 
 
 Future Ideas:
@@ -103,6 +100,8 @@ Future Ideas:
 - OSM Data:
     - https://github.com/OsmSharp/core
 
+- AutoUV development:
+    - put into a separate project (like the mesh decimation) to progress.
 
 
 Comparable Apps/Frameworks:

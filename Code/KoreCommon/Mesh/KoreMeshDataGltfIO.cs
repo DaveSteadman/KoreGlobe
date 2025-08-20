@@ -275,11 +275,13 @@ public static class KoreMeshDataGltfIO
         
         // Convert from Kore coordinate system to glTF (both Y-up)
         var gltfPosition = ConvertPositionToGltf(position);
-        var gltfNormal = ConvertNormalToGltf(normal);
-        
-        // Convert UV coordinates: flip Y to handle coordinate system differences
-        // Kore uses bottom-left origin, glTF uses top-left origin
-        var gltfTexCoord = new Vector2((float)uv.X, 1.0f - (float)uv.Y);
+        var gltfNormal   = ConvertNormalToGltf(normal);
+
+        // UV coordinates: 
+        // - KoreMeshData uses top-left origin
+        // - glTF uses bottom left.
+        // - flip Y
+        var gltfTexCoord = new Vector2((float)uv.X, 1 - (float)uv.Y);
         
         return (new VertexPositionNormal(gltfPosition, gltfNormal), new VertexTexture1(gltfTexCoord));
     }
@@ -322,11 +324,13 @@ public static class KoreMeshDataGltfIO
                 {
                     normal = ConvertNormalFromGltf(normals[i]);
                 }
-                
-                // Convert UV coordinates back from glTF (top-left origin) to Kore (bottom-left origin)
-                // On import, we need to flip Y again to undo the export flip
+
+                // UV coordinates: 
+                // - KoreMeshData uses top-left origin
+                // - glTF uses bottom left.
+                // - flip Y
                 var uv = texCoords != null && i < texCoords.Count ? 
-                    new KoreXYVector(texCoords[i].X, texCoords[i].Y) : 
+                    new KoreXYVector(texCoords[i].X, 1 - texCoords[i].Y) : 
                     (KoreXYVector?)null;
 
                 var vertexIndex = koreMesh.AddVertex(position, normal, null, uv);

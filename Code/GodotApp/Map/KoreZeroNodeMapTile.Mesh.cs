@@ -36,7 +36,7 @@ public partial class KoreZeroNodeMapTile : Node3D
         // Setup the loop control values
         int pointCountLon = TileEleData.Width;
         int pointCountLat = TileEleData.Height;
-        List<double> lonZeroListRads = KoreValueUtils.CreateRangeList(pointCountLon, -RwTileLLBox.HalfDeltaLonRads, RwTileLLBox.HalfDeltaLonRads); // Relative azimuth
+        List<double> lonZeroListRads = KoreValueUtils.CreateRangeList(pointCountLon, -RwTileLLBox.HalfDeltaLonRads, RwTileLLBox.HalfDeltaLonRads); // Relative azimuth - left to right (low to high longitude)
         List<double> latListRads     = KoreValueUtils.CreateRangeList(pointCountLat, RwTileLLBox.MaxLatRads, RwTileLLBox.MinLatRads);
 
         // NOTE: The ranges mean the [0,0] is TOP LEFT
@@ -89,51 +89,8 @@ public partial class KoreZeroNodeMapTile : Node3D
                 else
                     v3DataBottom[ix, jy] = KoreXYZVector.Zero; // No bottom point for the middle of the tile.
             }
+
         }
-
-        // // Determine the LABEL POSITION while we're still in background processing functions, and then
-        // // consume it when in the _process loop.
-        // {
-        //     // Determine the tile label elevation as 100m above the highest elevation in the tile.
-        //     double tileMaxAlt = TileEleData.MaxVal();
-        //     if (tileMaxAlt < 100) tileMaxAlt = 100;
-
-        //     // Determine the label position in the RW world, and then as an offset from the tile centre
-        //     KoreLLAPoint rwLLATileLabel = new KoreLLAPoint() { LatDegs = rwLLAZeroLonCenter.LatDegs, LonDegs = rwLLAZeroLonCenter.LonDegs, AltMslM = tileMaxAlt + 50 };
-
-        //     //KoreLLAPoint  rwLLATileLabel       = new KoreLLAPoint() { LatDegs = RwTileCenterLLA.LatDegs, LonDegs = 0, RadiusM = KoreWorldConsts.EarthRadiusM - 1000 };
-        //     KoreXYZVector rwXYZTileLabel = rwLLATileLabel.ToXYZ();
-        //     KoreXYZVector rwXYZTileLabelOffset = rwXYZZeroLonCenter.XYZTo(rwXYZTileLabel);
-        //     //KoreXYZVector rwXYZTileLabelOffset = RwTileCenterXYZ.XYZTo(rwXYZTileLabel);
-
-        //     // Convert the Real-World position to the Game Engine position.
-        //     TileLabelOffset = new Vector3(
-        //         (float)(rwXYZTileLabelOffset.X * KoreZeroOffset.RwToGeDistanceMultiplier),
-        //         (float)(rwXYZTileLabelOffset.Y * KoreZeroOffset.RwToGeDistanceMultiplier),
-        //         (float)(rwXYZTileLabelOffset.Z * KoreZeroOffset.RwToGeDistanceMultiplier));
-
-        //     // - - - -
-
-        //     KoreLLAPoint rwLLATileLabelN = rwLLATileLabel;
-        //     rwLLATileLabelN.LatDegs = RwTileCenterLLA.LatDegs + 0.01;
-        //     KoreXYZVector rwXYZTileLabelN = rwLLATileLabelN.ToXYZ();
-        //     KoreXYZVector rwXYZTileLabelNOffset = rwXYZZeroLonCenter.XYZTo(rwXYZTileLabelN);
-
-        //     TileLabelOffsetN = new Vector3(
-        //         (float)(rwXYZTileLabelNOffset.X * KoreZeroOffset.RwToGeDistanceMultiplier),
-        //         (float)(rwXYZTileLabelNOffset.Y * KoreZeroOffset.RwToGeDistanceMultiplier),
-        //         (float)(rwXYZTileLabelNOffset.Z * KoreZeroOffset.RwToGeDistanceMultiplier));
-
-        //     KoreLLAPoint rwLLATileLabelBelow = rwLLATileLabel;
-        //     rwLLATileLabelN.RadiusM = RwTileCenterLLA.RadiusM - 1000;
-        //     KoreXYZVector rwXYZTileLabelBelow = rwLLATileLabelN.ToXYZ();
-        //     KoreXYZVector rwXYZTileLabelBelowOffset = rwXYZZeroLonCenter.XYZTo(rwXYZTileLabelBelow);
-
-        //     TileLabelOffsetBelow = new Vector3(
-        //         (float)(rwXYZTileLabelBelowOffset.X * KoreZeroOffset.RwToGeDistanceMultiplier),
-        //         (float)(rwXYZTileLabelBelowOffset.Y * KoreZeroOffset.RwToGeDistanceMultiplier),
-        //         (float)(rwXYZTileLabelBelowOffset.Z * KoreZeroOffset.RwToGeDistanceMultiplier));
-        // }
     }
 
     // --------------------------------------------------------------------------------------------

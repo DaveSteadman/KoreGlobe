@@ -21,14 +21,15 @@ public static partial class KoreMeshDataPrimitives
         KoreColorRGB linecolor = KoreColorRGB.White;
 
         // Define the vertices of the cube
-        int v0 = mesh.AddVertex(new KoreXYZVector(-size, -size, -size), null, color);
-        int v1 = mesh.AddVertex(new KoreXYZVector(size, -size, -size), null, color);
-        int v2 = mesh.AddVertex(new KoreXYZVector(size, size, -size), null, color);
-        int v3 = mesh.AddVertex(new KoreXYZVector(-size, size, -size), null, color);
-        int v4 = mesh.AddVertex(new KoreXYZVector(-size, -size, size), null, color);
-        int v5 = mesh.AddVertex(new KoreXYZVector(size, -size, size), null, color);
-        int v6 = mesh.AddVertex(new KoreXYZVector(size, size, size), null, color);
-        int v7 = mesh.AddVertex(new KoreXYZVector(-size, size, size), null, color);
+        int v0 = mesh.AddVertex(new KoreXYZVector(-size, -size, -size), null, color); // bottom right
+        int v1 = mesh.AddVertex(new KoreXYZVector(size, -size, -size), null, color); // bottom left
+        int v2 = mesh.AddVertex(new KoreXYZVector(size, size, -size), null, color); // top left
+        int v3 = mesh.AddVertex(new KoreXYZVector(-size, size, -size), null, color); // top right
+
+        int v4 = mesh.AddVertex(new KoreXYZVector(-size, -size, size), null, color); // bottom right
+        int v5 = mesh.AddVertex(new KoreXYZVector(size, -size, size), null, color); // bottom left
+        int v6 = mesh.AddVertex(new KoreXYZVector(size, size, size), null, color); // top left
+        int v7 = mesh.AddVertex(new KoreXYZVector(-size, size, size), null, color); // top right
 
         // Lines
         mesh.AddLine(v0, v1, linecolor);
@@ -46,22 +47,31 @@ public static partial class KoreMeshDataPrimitives
 
         // Triangles - using CCW winding when viewed from outside
         // Front face (Z = -size) - looking at it from positive Z
-        mesh.AddTriangle(v0, v3, v2); mesh.AddTriangle(v0, v2, v1);
-        // Left face (X = -size) - looking at it from positive X
-        mesh.AddTriangle(v0, v4, v7); mesh.AddTriangle(v0, v7, v3);
-        // Back face (Z = +size) - looking at it from negative Z
-        mesh.AddTriangle(v5, v6, v7); mesh.AddTriangle(v5, v7, v4);
-        // Right face (X = +size) - looking at it from negative X
-        mesh.AddTriangle(v1, v2, v6); mesh.AddTriangle(v1, v6, v5);
-        // Top face (Y = +size) - looking at it from negative Y
-        mesh.AddTriangle(v3, v7, v6); mesh.AddTriangle(v3, v6, v2);
-        // Bottom face (Y = -size) - looking at it from positive Y
-        mesh.AddTriangle(v0, v1, v5); mesh.AddTriangle(v0, v5, v4);
+        // For CCW: v0 (bottom-left) → v1 (bottom-right) → v2 (top-right)
+        //          v0 (bottom-left) → v2 (top-right) → v3 (top-left)
+        mesh.AddTriangle(v0, v1, v2); mesh.AddTriangle(v0, v2, v3);
+
+        // // Left face (X = -size) - looking at it from positive X
+        // mesh.AddTriangle(v0, v7, v4); mesh.AddTriangle(v0, v3, v7);
+
+        // // Back face (Z = +size) - looking at it from negative Z
+        // mesh.AddTriangle(v5, v7, v6); mesh.AddTriangle(v5, v4, v7);
+
+        // // Right face (X = +size) - looking at it from negative X
+        // mesh.AddTriangle(v1, v6, v2); mesh.AddTriangle(v1, v5, v6);
+
+        // // Top face (Y = +size) - looking at it from negative Y
+        // mesh.AddTriangle(v3, v6, v7); mesh.AddTriangle(v3, v2, v6);
+
+        // // Bottom face (Y = -size) - looking at it from positive Y
+        // mesh.AddTriangle(v0, v5, v1); mesh.AddTriangle(v0, v4, v5);
 
         mesh.AddAllTrianglesToGroup("All");
         mesh.SetGroupMaterialName("All", mat.Name);
+        
+        //mesh.SetNormalsFromTriangles();
 
-        mesh.MakeValid();
+        //mesh.MakeValid();
         return mesh;
     }
 
@@ -74,7 +84,8 @@ public static partial class KoreMeshDataPrimitives
         KoreMeshDataEditOps.IsolateAllTriangles(mesh);
 
         // Call each now-isolated triangle to calc its normals
-        KoreMeshDataEditOps.CalcNormalsForAllTriangles(mesh);
+        //KoreMeshDataEditOps.CalcNormalsForAllTriangles(mesh);
+        mesh.SetNormalsFromTriangles();
 
         // Modify the mesh for the second cube variant if needed
         return mesh;

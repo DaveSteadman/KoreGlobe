@@ -67,10 +67,10 @@ public partial class KoreGodotLineMesh : MeshInstance3D
             }
 
             // Convert the line details to Godot terms
-            Vector3 godotPosA = KoreConvPos.VecToV3(vecA);
-            Vector3 godotPosB = KoreConvPos.VecToV3(vecB);
-            Color colStart = KoreConvColor.ToGodotColor(lineColour.StartColor);
-            Color colEnd = KoreConvColor.ToGodotColor(lineColour.EndColor);
+            Vector3 godotPosA = KoreMeshGodotConv.PositionKoreToGodot(vecA);
+            Vector3 godotPosB = KoreMeshGodotConv.PositionKoreToGodot(vecB);
+            Color colStart = KoreMeshGodotConv.ColorKoreToGodot(lineColour.StartColor);
+            Color colEnd = KoreMeshGodotConv.ColorKoreToGodot(lineColour.EndColor);
 
             // Add the vertices to the SurfaceTool
             _surfaceTool.SetColor(colStart);

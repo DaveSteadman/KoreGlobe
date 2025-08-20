@@ -31,7 +31,7 @@ public partial class KoreSandbox3DScene : Node3D
         GD.Print("KoreSandbox3DScene _Ready");
         CreateTestMeshData_Box();
         CreateTestMeshData_Surface();
-        CreateTestMeshData_Lathe();
+        //CreateTestMeshData_Lathe();
         CreateTestMeshData_Cylinder();
         AddTestMeshData_BoxArc();
     }
@@ -62,20 +62,20 @@ public partial class KoreSandbox3DScene : Node3D
         Node3D Cube1Node = new Node3D() { Name = "Cube1Node" };
         Node3D Cube2Node = new Node3D() { Name = "Cube2Node" };
         Node3D Cube3Node = new Node3D() { Name = "Cube3Node" };
+        Node3D opNode    = new Node3D() { Name = "OPNode" };
         AddChild(Cube1Node);
         AddChild(Cube2Node);
         AddChild(Cube3Node);
+        AddChild(opNode);
 
         Cube1Node.Position = new Vector3(-1.1f, 0, 0);
         Cube2Node.Position = new Vector3(0, 0, 0);
         Cube3Node.Position = new Vector3(1.1f, 0, 0);
+        opNode.Position    = new Vector3(0, 2f, 0);
 
         // 1
         {
-            var cubeMesh1 = KoreMeshDataPrimitives.BasicCube(0.5f, KoreMeshMaterialPalette.Find("MattRed"));
-            // cubeMesh1.AddMaterial(KoreMeshMaterialPalette.Find("MattBlue"));
-            // cubeMesh1.AddAllTrianglesToGroup("All");
-            // cubeMesh1.SetGroupMaterialName("All", "MattBlue");
+            var cubeMesh1 = KoreMeshDataPrimitives.IsolatedCube(0.5f, KoreMeshMaterialPalette.Find("MattRed"));
 
             KoreGodotLineMesh childMeshNode1 = new KoreGodotLineMesh();
             childMeshNode1.UpdateMesh(cubeMesh1);
@@ -85,8 +85,6 @@ public partial class KoreSandbox3DScene : Node3D
 
             Cube1Node.AddChild(childMeshNode1);
             Cube1Node.AddChild(childSurfaceMeshNode1);
-
-            GD.Print("kk");
         }
 
         // 2
@@ -115,6 +113,31 @@ public partial class KoreSandbox3DScene : Node3D
 
             Cube3Node.AddChild(childMeshNode3);
             Cube3Node.AddChild(childSurfaceMeshNode3);
+        }
+
+        // test orientation pyramid
+        {
+            var apexpos = new KoreXYZVector(0, 0, 0);
+            var basepos = new KoreXYZVector(0, 0, 1);
+            var basefwd = new KoreXYZVector(0, 1, 0);
+
+            var opMesh = KoreMeshDataPrimitives.BasicPyramidSharpEdges(
+                apexpos,
+                basepos, 
+                basefwd,
+                0.3f, 0.1f,
+                KoreColorPalette.Find("Orange"),
+                KoreMeshMaterialPalette.Find("MattOrange")
+            );
+            
+            KoreGodotLineMesh childMeshOP = new KoreGodotLineMesh();
+            childMeshOP.UpdateMesh(opMesh);
+
+            KoreGodotSurfaceMesh childSurfaceMeshNodeOP = new KoreGodotSurfaceMesh();
+            childSurfaceMeshNodeOP.UpdateMesh(opMesh, "All");
+
+            opNode.AddChild(childMeshOP);
+            opNode.AddChild(childSurfaceMeshNodeOP);
         }
     }
 
@@ -194,10 +217,10 @@ public partial class KoreSandbox3DScene : Node3D
 
         Node3D latheNode = new Node3D() { Name = "latheNode" };
         AddChild(latheNode);
-        latheNode.Position = new Vector3(0, 1.5f, 0);
+        latheNode.Position = new Vector3(-2, 1.5f, 0);
 
         KoreXYZVector p1 = new KoreXYZVector(0, 0, 0);
-        KoreXYZVector p2 = new KoreXYZVector(0, 1, 1);
+        KoreXYZVector p2 = new KoreXYZVector(-0.2, 1, 1);
 
         List<LathePoint> lathePoints = new List<LathePoint>
         {
@@ -280,15 +303,20 @@ public partial class KoreSandbox3DScene : Node3D
                 40.0f, 120.0f // Horizontal start and delta angles in degrees
             );
 
+            // Setup the material
+            var material = KoreMeshMaterialPalette.Find("MattYellow");
+            boxArcMesh.AddGroupWithMaterial("All", material);
+            boxArcMesh.AddAllTrianglesToGroup("All");
+
             KoreGodotLineMesh childMeshNode1 = new KoreGodotLineMesh();
             childMeshNode1.UpdateMesh(boxArcMesh);
 
             KoreGodotSurfaceMesh childSurfaceMeshNode1 = new KoreGodotSurfaceMesh();
-            childSurfaceMeshNode1.UpdateMesh(boxArcMesh);
+            childSurfaceMeshNode1.UpdateMesh(boxArcMesh, "All");
 
             // Use a different color to distinguish from lathe
-            var surfaceMaterial = KoreGodotMaterialFactory.SimpleColoredMaterial(new Color(0.3f, 0.3f, 0.8f));
-            childSurfaceMeshNode1.MaterialOverride = surfaceMaterial;
+            // var surfaceMaterial = KoreGodotMaterialFactory.SimpleColoredMaterial(new Color(0.3f, 0.3f, 0.8f));
+            // childSurfaceMeshNode1.MaterialOverride = surfaceMaterial;
 
 
             BoxArcNode.AddChild(childMeshNode1);

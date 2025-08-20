@@ -7,6 +7,8 @@ namespace KoreCommon;
 
 public static class KoreColorPalette
 {
+    public static KoreColorRGB DefaultColor = new KoreColorRGB(255, 255, 255);
+
     public static readonly Dictionary<string, KoreColorRGB> Colors = new Dictionary<string, KoreColorRGB>
     {
         // Primary colors (1s & 0s)
@@ -109,4 +111,13 @@ public static class KoreColorPalette
         { "MutedSilver", new KoreColorRGB(153, 153, 153) },
         { "MutedBronze", new KoreColorRGB(179, 128,  77) }
     };
+
+    public static KoreColorRGB Find(string name)
+    {
+        if (Colors.TryGetValue(name, out var color))
+        {
+            return color;
+        }
+        return DefaultColor; // Default color
+    }
 }

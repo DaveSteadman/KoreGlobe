@@ -43,6 +43,9 @@ public static partial class KoreMeshDataPrimitives
         int width  = vertices.GetLength(0);
         int height = vertices.GetLength(1);
         KoreXYVector[,] uvGrid = uvBox.GetUVGrid(width, height);
+        
+        KoreCentralLog.AddEntry($"Creating surface mesh with dimensions {width}x{height} and UV box {uvBox}");
+        KoreCentralLog.AddEntry($"UV00 = {uvGrid[0, 0]:F3}");
 
         // Loop through the grid, adding points and UVs. Create a corresponding output grid of the point IDs
         int[,] pointIds = new int[width, height];
@@ -54,7 +57,9 @@ public static partial class KoreMeshDataPrimitives
                 // Add vertex with position and UV
                 pointIds[iX, iY] = mesh.AddVertex(
                     vertices[iX, iY],
-                    null, null, uvGrid[iX, iY]);
+                    null, // normal
+                    null, // color
+                    uvGrid[iX, iY]);
             }
         }
 

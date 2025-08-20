@@ -233,6 +233,7 @@ public partial class KoreMeshData
 
         // Normalize the face normal (no inversion needed with CCW triangles)
         faceNormal = faceNormal.Normalize();
+        //faceNormal = faceNormal.Invert();
 
         return faceNormal;
     }
