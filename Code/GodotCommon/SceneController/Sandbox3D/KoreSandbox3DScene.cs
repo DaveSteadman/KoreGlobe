@@ -2,6 +2,7 @@ using Godot;
 using System;
 
 using KoreCommon;
+using KoreCommon.UnitTest;
 using System.Collections.Generic;
 
 #nullable enable
@@ -273,8 +274,13 @@ public partial class KoreSandbox3DScene : Node3D
     private void CreateTestMeshData_Cylinder()
     {
         Node3D cylinderNode = new Node3D() { Name = "cylinderNode" };
+        Node3D oilBarrelNode = new Node3D() { Name = "oilBarrelNode" };
+
         AddChild(cylinderNode);
         cylinderNode.Position = new Vector3(3, 1.5f, 0); // Position to the right of lathe
+
+        AddChild(oilBarrelNode);
+        oilBarrelNode.Position = new Vector3(-3, 1.5f, 0); // Position to the right of cylinder
 
         KoreXYZVector p1 = new KoreXYZVector(0, 0, 0);
         KoreXYZVector p2 = new KoreXYZVector(0, 2, 0);
@@ -299,7 +305,31 @@ public partial class KoreSandbox3DScene : Node3D
         cylinderNode.AddChild(childSurfaceMeshNode);
         cylinderNode.AddChild(childNormalMeshNode);
 
+ 
+        {
+            KoreMeshData oilBarrelMesh = KoreTestMeshUvOps.CreateOilBarrelWithUV(16, 0.4, 1.2);
+
+            // Dump the mesh to JSON for debugging
+            string json = KoreMeshDataIO.ToJson(oilBarrelMesh, dense: false);
+            GD.Print("Oil Barrel Mesh JSON:", json);
+
+            KoreGodotLineMesh childMeshNode1 = new KoreGodotLineMesh();
+            childMeshNode1.UpdateMesh(oilBarrelMesh);
+
+            KoreGodotSurfaceMesh childSurfaceMeshNode1 = new KoreGodotSurfaceMesh();
+            childSurfaceMeshNode1.UpdateMesh(oilBarrelMesh, "OilBarrel", "UnitTestArtefacts"); 
+
+            KoreGodotNormalMesh childNormalMeshNode1 = new KoreGodotNormalMesh();
+            childNormalMeshNode1.UpdateMesh(oilBarrelMesh, 0.15f); // Small normals for cube
+
+            oilBarrelNode.AddChild(childMeshNode1);
+            oilBarrelNode.AddChild(childSurfaceMeshNode1);
+            oilBarrelNode.AddChild(childNormalMeshNode1);
+        }
+
+
         GD.Print("cylinder done");
+
     }
 
     // ---------------------------------------------------------------------------------------------

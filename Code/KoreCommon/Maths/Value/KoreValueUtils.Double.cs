@@ -195,6 +195,7 @@ public static partial class KoreValueUtils
     // --------------------------------------------------------------------------------------------
 
     // Create a list of floats from start to end
+    // Usage: List<double> myList = KoreValueUtils.CreateRangeList(5, 0, 1);
     public static List<double> CreateRangeList(int length, double start, double end)
     {
         List<double> rangeList = new List<double>();

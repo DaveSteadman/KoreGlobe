@@ -108,18 +108,20 @@ public partial class KoreGodotNormalMesh : MeshInstance3D
             int vertexId = vertexKvp.Key;
             KoreXYZVector vertex = vertexKvp.Value;
 
+            Vector3 godotVertex = KoreMeshGodotConv.PositionKoreToGodot(vertex);
+
             // Check if this vertex has a normal
             if (!meshData.Normals.ContainsKey(vertexId))
                 continue;
 
             KoreXYZVector normal = meshData.Normals[vertexId];
-
-            // Calculate end point of normal line
-            KoreXYZVector normalEnd = vertex + (normal * _normalLength);
+            Vector3 godotNormal = KoreMeshGodotConv.NormalKoreToGodot(normal);
+            godotNormal = godotNormal.Normalized();
+            godotNormal *= _normalLength;
 
             // Convert to Godot coordinates
             Vector3 godotStart = KoreMeshGodotConv.PositionKoreToGodot(vertex);
-            Vector3 godotEnd = KoreMeshGodotConv.PositionKoreToGodot(normalEnd);
+            Vector3 godotEnd = godotStart + godotNormal;
 
             // Choose color based on normal direction
             Color normalColor = GetNormalColor(normal);

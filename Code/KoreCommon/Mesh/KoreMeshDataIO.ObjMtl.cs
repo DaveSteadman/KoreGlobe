@@ -78,7 +78,7 @@ public static partial class KoreMeshDataIO
             }
             sb.AppendLine();
         }
-        
+
         // Export texture coordinates if they exist (vt u v)
         var hasUVs = mesh.UVs.Count > 0;
         if (hasUVs)

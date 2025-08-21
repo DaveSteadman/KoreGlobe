@@ -138,11 +138,11 @@ public static class KoreMeshDataUvOps
         {
             int vertexId = kvp.Key;
             var uv = kvp.Value;
-            
-            // Convert UV (0-1) to screen coordinates
-            // Note: UV coordinates are typically bottom-left origin, screen is top-left
+
+            // Note: KoreMeshdata UV coordinates are top-left zero - no conversion as this should align with 
+            //       SKiaSharp top left zero
             float x = (float)(uv.X * imageWidth);
-            float y = (float)((1.0 - uv.Y) * imageHeight); // Flip Y for screen coordinates
+            float y = (float)(uv.Y * imageHeight); // Flip Y for screen coordinates
             
             uvToScreen[vertexId] = new SKPoint(x, y);
         }

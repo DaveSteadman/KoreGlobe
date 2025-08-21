@@ -492,6 +492,16 @@ public partial class KoreMeshData
         return KoreMeshMaterialPalette.DefaultMaterial;
     }
 
+    public List<string> AllMaterialNames()
+    {
+        List<string> materialNames = new List<string>();
+        foreach (KoreMeshMaterial material in Materials)
+        {
+            materialNames.Add(material.Name);
+        }
+        return materialNames;
+    }
+
     // --------------------------------------------------------------------------------------------
     // MARK: Groups
     // --------------------------------------------------------------------------------------------

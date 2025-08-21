@@ -5,58 +5,51 @@ using KoreCommon;
 
 #nullable enable
 
-/// <summary>
-/// Conversion utilities between KoreMeshData coordinate system and glTF coordinate system.
-///
-/// COORDINATE SYSTEMS:
-/// - KoreMeshData: X+ right, Y+ up, Z+ forward (right-handed)
-/// - glTF 2.0: X+ right, Y+ up, Z+ forward (right-handed) - SAME AS KOREMESHDATA
-///
-/// CONVERSIONS NEEDED:
-/// - Position/Normals: Direct copy (coordinate systems match)
-/// - UVs: V axis flip (KoreMeshData top-left origin → glTF bottom-left origin)
-/// - Triangle winding: Forced 2nd/3rd vertex Ids flipped as consequence of Z axis flip
-///
-/// Reference: glTF 2.0 Specification Section 3.6.2.2 "Coordinate System and Units"
-/// </summary>
+// Conversion utilities between KoreMeshData coordinate system and glTF coordinate system.
+//
+// COORDINATE SYSTEMS:
+// - KoreMeshData: X+ right, Y+ up, Z+ forward (right-handed)
+// - glTF 2.0: X+ right, Y+ up, Z+ forward (right-handed) - SAME AS KOREMESHDATA
+//
+// CONVERSIONS NEEDED:
+// - Position/Normals: Direct copy (coordinate systems match)
+// - UVs: V axis flip (KoreMeshData top-left origin → glTF bottom-left origin)
+// - Triangle winding: Forced 2nd/3rd vertex Ids flipped as consequence of Z axis flip
+//
+// Reference: glTF 2.0 Specification Section 3.6.2.2 "Coordinate System and Units"
 public static class KoreMeshGltfConv
 {
     // --------------------------------------------------------------------------------------------
-    // MARK: Position & Vector Conversions
+    // MARK: Position 
     // --------------------------------------------------------------------------------------------
 
-    /// <summary>
-    /// Convert KoreXYZVector position to glTF Vector3.
-    /// Direct conversion - coordinate systems are identical.
-    /// </summary>
+    // Convert KoreXYZVector position to glTF Vector3.
+    // Direct conversion - coordinate systems are identical.
     public static Vector3 PositionKoreToGltf(KoreXYZVector pos)
     {
         return new Vector3((float)pos.X, (float)pos.Y, (float)pos.Z);
     }
 
-    /// <summary>
-    /// Convert glTF Vector3 position back to KoreXYZVector.
-    /// Direct conversion - coordinate systems are identical.
-    /// </summary>
+    // Convert glTF Vector3 position back to KoreXYZVector.
+    // Direct conversion - coordinate systems are identical.
     public static KoreXYZVector PositionGltfToKore(Vector3 pos)
     {
         return new KoreXYZVector(pos.X, pos.Y, pos.Z);
     }
 
+    // --------------------------------------------------------------------------------------------
+    // MARK: Normal
+    // --------------------------------------------------------------------------------------------
 
-    /// <summary>
-    /// Convert KoreXYZVector normal to glTF Vector3.
-    /// Direct conversion - coordinate systems are identical.
-    /// </summary>
+    // Convert KoreXYZVector normal to glTF Vector3.
+    // Direct conversion - coordinate systems are identical.
     public static Vector3 NormalKoreToGltf(KoreXYZVector normal)
     {
         return new Vector3((float)normal.X, (float)normal.Y, (float)normal.Z);
     }
 
-    /// <summary>
-    /// Convert glTF Vector3 normal back to KoreXYZVector.
-    /// Direct conversion - coordinate systems are identical.
-    /// </summary>
+    // Convert glTF Vector3 normal back to KoreXYZVector.
+    // Direct conversion - coordinate systems are identical.
     public static KoreXYZVector NormalGltfToKore(Vector3 normal)
     {
         return new KoreXYZVector(normal.X, normal.Y, normal.Z);
@@ -66,59 +59,49 @@ public static class KoreMeshGltfConv
     // MARK: UV Conversions
     // --------------------------------------------------------------------------------------------
 
-    /// <summary>
-    /// Convert KoreXYVector UV to glTF Vector2.
-    /// Flips V axis: KoreMeshData top-left (0,0) → glTF bottom-left (0,0)
-    /// Note: glTF uses bottom-left UV origin, same as OpenGL
-    /// </summary>
+    // Convert KoreXYVector UV to glTF Vector2.
+    // Flips V axis: KoreMeshData top-left (0,0) → glTF bottom-left (0,0)
+    // Note: glTF uses bottom-left UV origin, same as OpenGL
     public static Vector2 UVKoreToGltf(KoreXYVector uv)
     {
-        return new Vector2((float)uv.X, 1.0f - (float)uv.Y);
+        return new Vector2((float)uv.X, (float)uv.Y);
+        //return new Vector2((float)uv.X, 1.0f - (float)uv.Y);
     }
 
-    /// <summary>
-    /// Convert glTF Vector2 UV back to KoreXYVector.
-    /// Flips V axis: glTF bottom-left (0,0) → KoreMeshData top-left (0,0)
-    /// </summary>
+    // Convert glTF Vector2 UV back to KoreXYVector.
+    // Flips V axis: glTF bottom-left (0,0) → KoreMeshData top-left (0,0)
     public static KoreXYVector UVGltfToKore(Vector2 uv)
     {
-        return new KoreXYVector(uv.X, 1.0f - uv.Y);
+        return new KoreXYVector(uv.X, uv.Y);
+        //return new KoreXYVector(uv.X, 1.0f - uv.Y);
     }
 
     // --------------------------------------------------------------------------------------------
     // MARK: Color Conversions
     // --------------------------------------------------------------------------------------------
 
-    /// <summary>
-    /// Convert KoreColorRGB to glTF color components.
-    /// Returns RGB values in 0-1 range for glTF materials.
-    /// </summary>
+    // Convert KoreColorRGB to glTF color components.
+    // Returns RGB values in 0-1 range for glTF materials.
     public static Vector3 ColorKoreToGltfRGB(KoreColorRGB color)
     {
         return new Vector3(color.Rf, color.Gf, color.Bf);
     }
 
-    /// <summary>
-    /// Convert KoreColorRGB to glTF color components with alpha.
-    /// Returns RGBA values in 0-1 range for glTF materials.
-    /// </summary>
+    // Convert KoreColorRGB to glTF color components with alpha.
+    // Returns RGBA values in 0-1 range for glTF materials.
     public static Vector4 ColorKoreToGltfRGBA(KoreColorRGB color)
     {
         return new Vector4(color.Rf, color.Gf, color.Bf, color.Af);
     }
 
-    /// <summary>
-    /// Convert glTF RGB color back to KoreColorRGB.
-    /// Assumes full alpha (1.0).
-    /// </summary>
+    // Convert glTF RGB color back to KoreColorRGB.
+    // Assumes full alpha (1.0).
     public static KoreColorRGB ColorGltfToKoreRGB(Vector3 rgb)
     {
         return new KoreColorRGB(rgb.X, rgb.Y, rgb.Z, 1.0f);
     }
 
-    /// <summary>
-    /// Convert glTF RGBA color back to KoreColorRGB.
-    /// </summary>
+    // Convert glTF RGBA color back to KoreColorRGB.
     public static KoreColorRGB ColorGltfToKoreRGBA(Vector4 rgba)
     {
         return new KoreColorRGB(rgba.X, rgba.Y, rgba.Z, rgba.W);
@@ -128,10 +111,8 @@ public static class KoreMeshGltfConv
     // MARK: Triangle Winding
     // --------------------------------------------------------------------------------------------
 
-    /// <summary>
-    /// Convert triangle indices for glTF.
-    /// Direct conversion - both use CCW winding when viewed from outside.
-    /// </summary>
+    // Convert triangle indices for glTF.
+    // Direct conversion - both use CCW winding when viewed from outside.
     public static (int, int, int) ConvertTriangleWinding(int a, int b, int c)
     {
         return (a, b, c); // No change needed
@@ -141,28 +122,22 @@ public static class KoreMeshGltfConv
     // MARK: Material Properties
     // --------------------------------------------------------------------------------------------
 
-    /// <summary>
-    /// Convert material roughness value for glTF PBR.
-    /// glTF uses roughness (0=mirror, 1=rough), some systems use smoothness.
-    /// </summary>
+    // Convert material roughness value for glTF PBR.
+    // glTF uses roughness (0=mirror, 1=rough), some systems use smoothness.
     public static float RoughnessToGltf(float roughness)
     {
         return Math.Clamp(roughness, 0.0f, 1.0f);
     }
 
-    /// <summary>
-    /// Convert material metallic value for glTF PBR.
-    /// glTF metallic: 0=dielectric, 1=metallic
-    /// </summary>
+    // Convert material metallic value for glTF PBR.
+    // glTF metallic: 0=dielectric, 1=metallic
     public static float MetallicToGltf(float metallic)
     {
         return Math.Clamp(metallic, 0.0f, 1.0f);
     }
 
-    /// <summary>
-    /// Convert emissive strength for glTF.
-    /// glTF emissive factor is RGB multiplier, typically 0-1 but can exceed for HDR.
-    /// </summary>
+    // Convert emissive strength for glTF.
+    // glTF emissive factor is RGB multiplier, typically 0-1 but can exceed for HDR.
     public static Vector3 EmissiveKoreToGltf(KoreColorRGB emissive, float strength = 1.0f)
     {
         return new Vector3(
@@ -171,3 +146,6 @@ public static class KoreMeshGltfConv
             emissive.Bf * strength);
     }
 }
+
+
+

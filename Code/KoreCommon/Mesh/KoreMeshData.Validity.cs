@@ -18,8 +18,8 @@ public partial class KoreMeshData
     public void ResetMaxIDs()
     {
         // Reset the next IDs based on the current max values in the dictionaries
-        NextVertexId   = Vertices.Count  > 0 ? Vertices.Keys.Max()  + 1 : 0;
-        NextLineId     = Lines.Count     > 0 ? Lines.Keys.Max()     + 1 : 0;
+        NextVertexId = Vertices.Count > 0 ? Vertices.Keys.Max() + 1 : 0;
+        NextLineId = Lines.Count > 0 ? Lines.Keys.Max() + 1 : 0;
         NextTriangleId = Triangles.Count > 0 ? Triangles.Keys.Max() + 1 : 0;
     }
 
@@ -233,7 +233,7 @@ public partial class KoreMeshData
 
         // Normalize the face normal
         faceNormal = faceNormal.Normalize();
-        faceNormal = faceNormal.Invert();
+        //faceNormal = faceNormal.Invert();
 
         return faceNormal;
     }
@@ -290,6 +290,19 @@ public partial class KoreMeshData
             int vertexId = kvp.Key;
             int triangleId = kvp.Value;
             Normals[vertexId] = NormalForTriangle(triangleId);
+        }
+    }
+
+    public void FlipAllNormals()
+    {
+        // Loop through all the normals and flip their direction
+        foreach (var kvp in Normals)
+        {
+            int vertexId = kvp.Key;
+            KoreXYZVector normal = kvp.Value;
+
+            // Flip the normal by inverting its direction
+            Normals[vertexId] = normal.Invert();
         }
     }
 
@@ -486,6 +499,85 @@ public partial class KoreMeshData
         foreach (var key in keysToRemove)
             Triangles.Remove(key);
     }
+
+    public void FlipTriangleWinding(int triId)
+    {
+        if (!Triangles.ContainsKey(triId))
+            return;
+
+        KoreMeshTriangle triangle = Triangles[triId];
+        // Swap the vertices to flip the winding
+        int temp = triangle.B;
+        triangle.B = triangle.C;
+        triangle.C = temp;
+
+        // Update the triangle in the dictionary
+        Triangles[triId] = triangle;
+    }
+
+    public void FlipAllTriangleWindings()
+    {
+        // Loop through all triangles and flip their winding
+        foreach (var kvp in Triangles.ToList())
+        {
+            int triangleId = kvp.Key;
+            FlipTriangleWinding(triangleId);
+        }
+    }
+
+    /// <summary>
+    /// Ensure triangle winding and vertex normals are consistent and face outward.
+    /// Heuristic: compute mesh center (bounding box center). For each triangle, compute
+    /// face normal from current winding and the triangle centroid. If the face normal
+    /// points toward the mesh center (dot < 0) we flip the triangle winding so the
+    /// face normal points outward. Finally, recalc vertex normals from triangles.
+    // /// This produces a canonical outward-facing mesh suitable for exports (glTF) and
+    // /// consistent imports (Godot conversion will handle coordinate flips).
+    // /// </summary>
+    // public void EnsureOutwardFacingNormalsAndWinding()
+    // {
+    //     if (Triangles.Count == 0 || Vertices.Count == 0)
+    //         return;
+
+    //     var bbox = GetBoundingBox();
+    //     var center = bbox.Center;
+
+    //     foreach (var kvp in Triangles.ToList())
+    //     {
+    //         int triId = kvp.Key;
+    //         var tri = kvp.Value;
+
+    //         if (!Vertices.ContainsKey(tri.A) || !Vertices.ContainsKey(tri.B) || !Vertices.ContainsKey(tri.C))
+    //             continue;
+
+    //         var a = Vertices[tri.A];
+    //         var b = Vertices[tri.B];
+    //         var c = Vertices[tri.C];
+
+    //         var ab = b - a;
+    //         var ac = c - a;
+
+    //         var faceNormal = KoreXYZVector.CrossProduct(ab, ac);
+    //         faceNormal = faceNormal.Normalize();
+
+    //         var centroid = new KoreXYZVector((a.X + b.X + c.X) / 3.0, (a.Y + b.Y + c.Y) / 3.0, (a.Z + b.Z + c.Z) / 3.0);
+    //         var toCentroid = centroid - center;
+
+    //         // If face normal points toward the center (dot < 0), flip winding
+    //         double dot = KoreXYZVector.DotProduct(faceNormal, toCentroid);
+    //         if (dot < 0)
+    //         {
+    //             // Swap B and C to flip winding
+    //             int temp = tri.B;
+    //             tri.B = tri.C;
+    //             tri.C = temp;
+    //             Triangles[triId] = tri;
+    //         }
+    //     }
+
+    //     // Recompute normals from the (now canonical) triangles
+    //     SetNormalsFromTriangles();
+    // }
 
     // --------------------------------------------------------------------------------------------
     // MARK: Materials

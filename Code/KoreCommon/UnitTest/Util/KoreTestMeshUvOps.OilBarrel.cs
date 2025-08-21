@@ -20,16 +20,31 @@ public static partial class KoreTestMeshUvOps
     /// <param name="radius">Radius of the barrel (default 1.0)</param>
     /// <param name="height">Height of the barrel (default 2.0)</param>
     /// <returns>KoreMeshData representing the oil barrel</returns>
-    public static KoreMeshData CreateOilBarrelWithUV(int segments = 16, double radius = 1.0, double height = 2.0)
+    public static KoreMeshData CreateOilBarrelWithUV(int segments = 16, double radius = 1.0, double height = 3.0)
     {
         var mesh = new KoreMeshData();
 
-        // UV layout parameters matching the example image
+        // UV layout parameters: Square image, 2 circles in top half, 2:1 barrel wrap in the bottom half
+        // UV 0,0 is top left, u is x, v is y
         var topCenterU = 0.25;
-        var topCenterV = 0.75;  // Top of image
+        var topCenterV = 0.25;
         var bottomCenterU = 0.75;
-        var bottomCenterV = 0.75;  // Top of image
+        var bottomCenterV = 0.25;
         var uvRadius = 0.24;  // Slightly smaller than 0.25 to avoid edge bleeding
+
+        var wrapTLU = 0;
+        var wrapTLV = 0.5;
+        var wrapBRU = 1;
+        var wrapBRV = 1;
+
+        // Create ring vertices for top and bottom caps
+        var topRingVertices = new int[segments];
+        var bottomRingVertices = new int[segments];
+
+        // So we want an increasing list
+        List<double> anglesRads = KoreValueUtils.CreateRangeList(segments, 0, Math.PI * 2);
+
+        // --- TOP ---
 
         // Create center vertices for top and bottom caps
         int topCenterVertex = mesh.AddVertex(
@@ -38,67 +53,22 @@ public static partial class KoreTestMeshUvOps
             new KoreXYVector(topCenterU, topCenterV)
         );
 
-        int bottomCenterVertex = mesh.AddVertex(
-            new KoreXYZVector(0, -height/2, 0),
-            null, null,
-            new KoreXYVector(bottomCenterU, bottomCenterV)
-        );
-
-        // Create ring vertices for top and bottom caps
-        var topRingVertices = new int[segments];
-        var bottomRingVertices = new int[segments];
-
         for (int i = 0; i < segments; i++)
         {
-            double angle = (double)i / segments * Math.PI * 2;
-            double x = Math.Cos(angle) * radius;
-            double z = Math.Sin(angle) * radius;
+            // So the angle starts at 0 - where Cos increases X and Z starts at 0 and increases.
+            // So from the top down, we're at 3, going CCW.
+            double x = Math.Cos(anglesRads[i]) * radius;
+            double z = Math.Sin(anglesRads[i]) * radius;
 
             // UV coordinates for circular caps
-            double topU = topCenterU + Math.Cos(angle) * uvRadius;
-            double topV = topCenterV + Math.Sin(angle) * uvRadius;
-            double bottomU = bottomCenterU + Math.Cos(angle) * uvRadius;
-            double bottomV = bottomCenterV + Math.Sin(angle) * uvRadius;
+            double topU = topCenterU + Math.Cos(anglesRads[i]) * uvRadius;
+            double topV = topCenterV - Math.Sin(anglesRads[i]) * uvRadius; // - = go up the UV image
 
-            // Top ring vertex
+            // Top ring vertex - CCW from above
             topRingVertices[i] = mesh.AddVertex(
-                new KoreXYZVector(x, height/2, z),
+                new KoreXYZVector(x, height / 2, z),
                 null, null,
                 new KoreXYVector(topU, topV)
-            );
-
-            // Bottom ring vertex
-            bottomRingVertices[i] = mesh.AddVertex(
-                new KoreXYZVector(x, -height/2, z),
-                null, null,
-                new KoreXYVector(bottomU, bottomV)
-            );
-        }
-
-        // Create cylinder side vertices (duplicate positions but different UVs)
-        var sideTopVertices = new int[segments + 1]; // +1 for closing the seam
-        var sideBottomVertices = new int[segments + 1]; // +1 for closing the seam
-
-        for (int i = 0; i <= segments; i++) // <= to include the closing vertex
-        {
-            double angle = (double)(i % segments) / segments * Math.PI * 2; // Wrap the angle for last vertex
-            double x = Math.Cos(angle) * radius;
-            double z = -1 * Math.Sin(angle) * radius;
-
-            // UV coordinates for cylinder sides - wrap horizontally, span vertically
-            double u = (double)i / segments; // This will go from 0 to 1 (including 1.0 for closing)
-
-            // Side vertices (same 3D position as ring vertices but different UV)
-            sideTopVertices[i] = mesh.AddVertex(
-                new KoreXYZVector(x, height/2, z),
-                null, null,
-                new KoreXYVector(u, 0.5) // Top of cylinder rectangle
-            );
-
-            sideBottomVertices[i] = mesh.AddVertex(
-                new KoreXYZVector(x, -height/2, z),
-                null, null,
-                new KoreXYVector(u, 0.0) // Bottom of cylinder rectangle
             );
         }
 
@@ -106,24 +76,96 @@ public static partial class KoreTestMeshUvOps
         for (int i = 0; i < segments; i++)
         {
             int next = (i + 1) % segments;
-            mesh.AddTriangle(topCenterVertex, topRingVertices[i], topRingVertices[next]);
+            mesh.AddTriangle(topCenterVertex, topRingVertices[next], topRingVertices[i]);
+        }
+
+
+        // --- BOTTOM ---
+
+        int bottomCenterVertex = mesh.AddVertex(
+            new KoreXYZVector(0, -height/2, 0),
+            null, null,
+            new KoreXYVector(bottomCenterU, bottomCenterV)
+        );
+        for (int i = 0; i < segments; i++)
+        {
+            // So the angle starts at 0 - where Cos increases X and Z starts at 0 and increases.
+            // So from the top down, we're at 3, going CCW.
+            double x = Math.Cos(anglesRads[i]) * radius;
+            double z = Math.Sin(anglesRads[i]) * radius;
+
+            // UV coordinates for circular caps
+
+            double bottomU = bottomCenterU + Math.Cos(anglesRads[i]) * uvRadius;
+            double bottomV = bottomCenterV + Math.Sin(anglesRads[i]) * uvRadius;
+
+            // Bottom ring vertex - CW from below
+            bottomRingVertices[i] = mesh.AddVertex(
+                new KoreXYZVector(x, -height / 2, z),
+                null, null,
+                new KoreXYVector(bottomU, bottomV)
+            );
         }
 
         // Create triangles for bottom cap (fan pattern - CCW winding)
         for (int i = 0; i < segments; i++)
         {
             int next = (i + 1) % segments;
-            mesh.AddTriangle(bottomCenterVertex, bottomRingVertices[next], bottomRingVertices[i]);
+            mesh.AddTriangle(bottomCenterVertex, bottomRingVertices[i], bottomRingVertices[next]);
         }
+
+        // --- WRAP ---
+
+        // Create cylinder side vertices (duplicate positions but different UVs)
+        var sideTopVertices = new int[segments]; // +1 for closing the seam
+        var sideBottomVertices = new int[segments]; // +1 for closing the seam
+
+        List<double> textureU = KoreValueUtils.CreateRangeList(segments, 0, 1);
+
+        for (int i = 0; i < segments; i++) // <= to include the closing vertex
+        {
+            int angleindex = i % segments;
+            //double angle = (double)(i % segments) / segments * Math.PI * 2; // Wrap the angle for last vertex
+            double x = Math.Cos(anglesRads[angleindex]) * radius;
+            double z = Math.Sin(anglesRads[angleindex]) * radius;
+
+            // UV coordinates for cylinder sides - wrap horizontally, span vertically
+            double u = textureU[i];
+            
+            //double u = (double)i / segments;              // 0..1
+            //if (i == segments) u = 0.0;
+
+            // Side vertices (same 3D position as ring vertices but different UV)
+            sideTopVertices[i] = mesh.AddVertex(
+                new KoreXYZVector(x, height / 2, z),
+                null, null,
+                new KoreXYVector(u, wrapTLV) // Top of cylinder rectangle
+            );
+
+            sideBottomVertices[i] = mesh.AddVertex(
+                new KoreXYZVector(x, -height / 2, z),
+                null, null,
+                new KoreXYVector(u, wrapBRV) // Bottom of cylinder rectangle
+            );
+        }
+
+
 
         // Create triangles for cylinder sides (CCW winding)
         for (int i = 0; i < segments; i++)
         {
             int next = i + 1; // No modulo needed since we have segments+1 vertices
 
-            // Two triangles per side segment (CCW winding)
-            mesh.AddTriangle(sideBottomVertices[i], sideTopVertices[next], sideTopVertices[i]);
-            mesh.AddTriangle(sideBottomVertices[i], sideBottomVertices[next], sideTopVertices[next]);
+            next = next % segments; // Wrap around to first vertex
+            // // Two triangles per side segment (CCW winding)
+            // mesh.AddTriangle(sideBottomVertices[i], sideTopVertices[next], sideTopVertices[i]);
+            // mesh.AddTriangle(sideBottomVertices[i], sideBottomVertices[next], sideTopVertices[next]);
+
+
+            // replace your two AddTriangle calls in the WRAP loop with:
+            mesh.AddTriangle(sideTopVertices[i],    sideTopVertices[next],    sideBottomVertices[next]); // upper-left tri
+            mesh.AddTriangle(sideTopVertices[i],    sideBottomVertices[next], sideBottomVertices[i]);    // lower-right tri
+            
         }
 
         // Add material with texture
@@ -143,6 +185,8 @@ public static partial class KoreTestMeshUvOps
 
         // Set the normals to a simple flat shading from the triangles
         mesh.SetNormalsFromTriangles();
+        mesh.FlipAllNormals(); 
+        mesh.FlipAllTriangleWindings();
 
         return mesh;
     }

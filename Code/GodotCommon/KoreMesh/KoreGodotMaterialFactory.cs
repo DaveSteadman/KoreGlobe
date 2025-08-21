@@ -90,21 +90,21 @@ public static class KoreGodotMaterialFactory
         string? resolvedPath = ResolveTexturePath(filename, searchPath);
         if (string.IsNullOrEmpty(resolvedPath))
         {
-            KoreCentralLog.AddEntry($"Failed to find texture: {filename}");
+            GD.Print($"Failed to find texture: {filename}");
             return null;
         }
 
         var material = KoreGodotImageOps.LoadMaterial2(resolvedPath);
         if (material != null)
         {
-            KoreCentralLog.AddEntry($"Successfully loaded texture material: {resolvedPath}");
+            GD.Print($"Successfully loaded texture material: {resolvedPath}");
             return material;
         }
 
-        KoreCentralLog.AddEntry($"Failed to load texture: {resolvedPath}");
+        GD.Print($"Failed to load texture: {resolvedPath}");
         return null;
     }
-
+ 
     // --------------------------------------------------------------------------------------------
     // MARK: Kore Mesh Material 
     // --------------------------------------------------------------------------------------------

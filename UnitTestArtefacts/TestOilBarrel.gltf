@@ -9,16 +9,16 @@
       "name": "POSITION",
       "bufferView": 0,
       "componentType": 5126,
-      "count": 68,
+      "count": 66,
       "max": [
         1,
         1.5,
-        1
+        0.9945219159126282
       ],
       "min": [
-        -1,
+        -0.9781476259231567,
         -1.5,
-        -1
+        -0.9945219159126282
       ],
       "type": "VEC3"
     },
@@ -27,16 +27,16 @@
       "bufferView": 0,
       "byteOffset": 12,
       "componentType": 5126,
-      "count": 68,
+      "count": 66,
       "max": [
-        0.9807852506637573,
         1,
-        0.9807852506637573
+        1,
+        0.9945219159126282
       ],
       "min": [
-        -0.9807852506637573,
+        -0.9781476259231567,
         -1,
-        -0.9807852506637573
+        -0.9945219159126282
       ],
       "type": "VEC3"
     },
@@ -45,14 +45,14 @@
       "bufferView": 0,
       "byteOffset": 24,
       "componentType": 5126,
-      "count": 68,
+      "count": 66,
       "max": [
         1,
         1
       ],
       "min": [
         0,
-        0.009999990463256836
+        0.01131474506109953
       ],
       "type": "VEC2"
     },
@@ -66,20 +66,20 @@
   "bufferViews": [
     {
       "buffer": 0,
-      "byteLength": 2176,
+      "byteLength": 2112,
       "byteStride": 32,
       "target": 34962
     },
     {
       "buffer": 0,
       "byteLength": 384,
-      "byteOffset": 2176,
+      "byteOffset": 2112,
       "target": 34963
     }
   ],
   "buffers": [
     {
-      "byteLength": 2560,
+      "byteLength": 2496,
       "uri": "TestOilBarrel.bin"
     }
   ],

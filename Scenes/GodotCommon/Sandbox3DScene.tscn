@@ -68,7 +68,7 @@ physics_interpolation_mode = 1
 shape = SubResource("CapsuleShape3D_6i22l")
 
 [node name="OmniLight3D" type="OmniLight3D" parent="SubViewportContainer/SubViewport/Scene3DRoot"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.435, 2.015, 2.995)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.81, 3.34, 3.415)
 light_color = Color(0.8693259, 0.5112665, 0.3452526, 1)
 light_energy = 11.553
 light_indirect_energy = 1.406
