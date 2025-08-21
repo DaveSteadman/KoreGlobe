@@ -35,21 +35,22 @@ public static class KoreMeshGltfConv
     }
 
     /// <summary>
-    /// Convert KoreXYZVector normal to glTF Vector3.
-    /// Direct conversion - coordinate systems are identical.
-    /// </summary>
-    public static Vector3 NormalKoreToGltf(KoreXYZVector normal)
-    {
-        return new Vector3((float)normal.X, (float)normal.Y, (float)normal.Z);
-    }
-
-    /// <summary>
     /// Convert glTF Vector3 position back to KoreXYZVector.
     /// Direct conversion - coordinate systems are identical.
     /// </summary>
     public static KoreXYZVector PositionGltfToKore(Vector3 pos)
     {
         return new KoreXYZVector(pos.X, pos.Y, pos.Z);
+    }
+
+
+    /// <summary>
+    /// Convert KoreXYZVector normal to glTF Vector3.
+    /// Direct conversion - coordinate systems are identical.
+    /// </summary>
+    public static Vector3 NormalKoreToGltf(KoreXYZVector normal)
+    {
+        return new Vector3((float)normal.X, (float)normal.Y, (float)normal.Z);
     }
 
     /// <summary>
@@ -60,8 +61,6 @@ public static class KoreMeshGltfConv
     {
         return new KoreXYZVector(normal.X, normal.Y, normal.Z);
     }
-
-
 
     // --------------------------------------------------------------------------------------------
     // MARK: UV Conversions

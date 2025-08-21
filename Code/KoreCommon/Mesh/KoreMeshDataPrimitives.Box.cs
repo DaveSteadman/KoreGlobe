@@ -51,24 +51,24 @@ public static partial class KoreMeshDataPrimitives
         //          v0 (bottom-left) → v2 (top-right) → v3 (top-left)
         mesh.AddTriangle(v0, v1, v2); mesh.AddTriangle(v0, v2, v3);
 
-        // // Left face (X = -size) - looking at it from positive X
-        // mesh.AddTriangle(v0, v7, v4); mesh.AddTriangle(v0, v3, v7);
+        // Left face (X = -size) - looking at it from positive X
+        mesh.AddTriangle(v0, v7, v4); mesh.AddTriangle(v0, v3, v7);
 
-        // // Back face (Z = +size) - looking at it from negative Z
-        // mesh.AddTriangle(v5, v7, v6); mesh.AddTriangle(v5, v4, v7);
+        // Back face (Z = +size) - looking at it from negative Z
+        mesh.AddTriangle(v5, v7, v6); mesh.AddTriangle(v5, v4, v7);
 
-        // // Right face (X = +size) - looking at it from negative X
-        // mesh.AddTriangle(v1, v6, v2); mesh.AddTriangle(v1, v5, v6);
+        // Right face (X = +size) - looking at it from negative X
+        mesh.AddTriangle(v1, v6, v2); mesh.AddTriangle(v1, v5, v6);
 
-        // // Top face (Y = +size) - looking at it from negative Y
-        // mesh.AddTriangle(v3, v6, v7); mesh.AddTriangle(v3, v2, v6);
+        // Top face (Y = +size) - looking at it from negative Y
+        mesh.AddTriangle(v3, v6, v7); mesh.AddTriangle(v3, v2, v6);
 
-        // // Bottom face (Y = -size) - looking at it from positive Y
-        // mesh.AddTriangle(v0, v5, v1); mesh.AddTriangle(v0, v4, v5);
+        // Bottom face (Y = -size) - looking at it from positive Y
+        mesh.AddTriangle(v0, v5, v1); mesh.AddTriangle(v0, v4, v5);
 
         mesh.AddAllTrianglesToGroup("All");
         mesh.SetGroupMaterialName("All", mat.Name);
-        
+
         //mesh.SetNormalsFromTriangles();
 
         //mesh.MakeValid();
