@@ -17,8 +17,11 @@ public static partial class KoreMeshDataPrimitives
 
         mesh.AddMaterial(mat);
         KoreColorRGB color = mat.BaseColor;
-
         KoreColorRGB linecolor = KoreColorRGB.White;
+
+        // defines a 3x3 grid of squares for the UV elements of a texture. Centre square is front, sides are sides, top is up, bottom is down.
+        // top left square is the back face
+
 
         // Define the vertices of the cube
         int v0 = mesh.AddVertex(new KoreXYZVector(-size, -size, -size), null, color); // bottom right

@@ -455,6 +455,22 @@ public partial class KoreMeshData
         AddTriangle(aId, dId, cId);
     }
 
+    public void AddFace(KoreXYZVector a, KoreXYZVector b, KoreXYZVector c, KoreXYZVector d, KoreUVBox uvBox)
+    {
+        int idxA = AddVertex(a);
+        int idxB = AddVertex(b);
+        int idxC = AddVertex(c);
+        int idxD = AddVertex(d);
+
+        SetUV(idxA, uvBox.TopLeft);
+        SetUV(idxB, uvBox.TopRight);
+        SetUV(idxC, uvBox.BottomRight);
+        SetUV(idxD, uvBox.BottomLeft);
+        
+        // Create two triangles from the face with CCW winding
+        AddTriangle(idxA, idxC, idxB);
+        AddTriangle(idxA, idxD, idxC);
+    }
 
     // --------------------------------------------------------------------------------------------
     // MARK: Materials

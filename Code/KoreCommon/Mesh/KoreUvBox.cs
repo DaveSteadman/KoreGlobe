@@ -4,26 +4,29 @@
 
 namespace KoreCommon;
 
-
 // KoreUVBox: A struct to hold the UV co-oridnates of a box in a texture
 // Also includes the functionality of a UV box within a larger texture.
 
-
+// DESIGN: TOP LEFT is 0,0, BOTTOM RIGHT is 1,1 (or some fraction, increasing U rightwards an V downwards)
 
 public struct KoreUVBox
 {
     public KoreXYVector TopLeft;
     public KoreXYVector BottomRight;
 
+    // Derived Corners
+    public KoreXYVector TopRight { get { return new KoreXYVector(BottomRight.X, TopLeft.Y); } }
+    public KoreXYVector BottomLeft { get { return new KoreXYVector(TopLeft.X, BottomRight.Y); } }
+
     public KoreUVBox(KoreXYVector topLeft, KoreXYVector bottomRight)
     {
-        TopLeft     = topLeft;
+        TopLeft = topLeft;
         BottomRight = bottomRight;
     }
 
     public KoreUVBox(double topLeftX, double topLeftY, double bottomRightX, double bottomRightY)
     {
-        TopLeft     = new KoreXYVector(topLeftX, topLeftY);
+        TopLeft = new KoreXYVector(topLeftX, topLeftY);
         BottomRight = new KoreXYVector(bottomRightX, bottomRightY);
     }
 
@@ -94,12 +97,12 @@ public struct KoreUVBox
     public static KoreUVBox BoxFromGrid(KoreXYVector topLeft, KoreXYVector bottomRight, int horizSize, int vertSize, int horizIndex, int vertIndex)
     {
         double horizStep = 1.0f / horizSize;
-        double vertStep  = 1.0f / vertSize;
+        double vertStep = 1.0f / vertSize;
 
-        double leftValue  = topLeft.X + horizIndex * horizStep * (bottomRight.X - topLeft.X);
+        double leftValue = topLeft.X + horizIndex * horizStep * (bottomRight.X - topLeft.X);
         double rightValue = topLeft.X + (horizIndex + 1) * horizStep * (bottomRight.X - topLeft.X);
-        double topValue   = topLeft.Y + vertIndex * vertStep * (bottomRight.Y - topLeft.Y);
-        double botValue   = topLeft.Y + (vertIndex + 1) * vertStep * (bottomRight.Y - topLeft.Y);
+        double topValue = topLeft.Y + vertIndex * vertStep * (bottomRight.Y - topLeft.Y);
+        double botValue = topLeft.Y + (vertIndex + 1) * vertStep * (bottomRight.Y - topLeft.Y);
 
         return new KoreUVBox(new KoreXYVector(leftValue, topValue), new KoreXYVector(rightValue, botValue));
     }
@@ -108,12 +111,12 @@ public struct KoreUVBox
     {
         // Calculate the horizontal and vertical step sizes
         double horizStep = (BottomRight.X - TopLeft.X) / innerBoxPos.ExtentX;
-        double vertStep  = (BottomRight.Y - TopLeft.Y) / innerBoxPos.ExtentY;
+        double vertStep = (BottomRight.Y - TopLeft.Y) / innerBoxPos.ExtentY;
 
         // Calculate the UV coordinates for the top-left corner of the inner box
-        double leftValue   = TopLeft.X + innerBoxPos.PosX * horizStep;
-        double rightValue  = TopLeft.X + (innerBoxPos.PosX + 1) * horizStep;
-        double topValue    = TopLeft.Y + innerBoxPos.PosY * vertStep;
+        double leftValue = TopLeft.X + innerBoxPos.PosX * horizStep;
+        double rightValue = TopLeft.X + (innerBoxPos.PosX + 1) * horizStep;
+        double topValue = TopLeft.Y + innerBoxPos.PosY * vertStep;
         double bottomValue = TopLeft.Y + (innerBoxPos.PosY + 1) * vertStep;
 
         // Return a new KoreUVBox using the calculated values
