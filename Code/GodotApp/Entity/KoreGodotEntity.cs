@@ -1,54 +1,60 @@
-// using System;
-// using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 
-// using Godot;
+using Godot;
 
-// using KoreCommon;
-// using KoreSim;
+using KoreCommon;
+using KoreSim;
 
-// #nullable enable
+#nullable enable
 
-// public partial class KoreGodotEntity : Node3D
-// {
-//     public string EntityName { get; set; }
+public partial class KoreGodotEntity : Node3D
+{
+    public string EntityName { get; set; }
 
 //     // Setup default model info, so we always have something to work with.
 //     public Kore3DModelInfo ModelInfo { get; set; } = Kore3DModelInfo.Default();
 
-//     public Node3D AttitudeNode = new Node3D() { Name = "Attitude" };
+    public Node3D AttitudeNode = new Node3D() { Name = "Attitude" };
 
 //     private KoreElementContrail ElementContrail;
 
-//     // private KoreAttitude CurrentAttitude = new KoreAttitude();
-//     private KoreLLAPoint CurrentPosition = new KoreLLAPoint();
-//     private KoreCameraPolarOffset ChaseCam = new KoreCameraPolarOffset();
+    private KoreLLAPoint CurrentPosition = new KoreLLAPoint();
+    private KoreAttitude CurrentModelAttitude = new KoreAttitude();
+    private KoreCourse   CurrentCourse   = new KoreCourse();
+    //     private KoreCameraPolarOffset ChaseCam = new KoreCameraPolarOffset();
 
-//     private float Timer1Hz = 0.0f;
+    private KoreAttitude CurrentSmoothedAttitude = new KoreAttitude();
 
-//     // --------------------------------------------------------------------------------------------
-//     // MARK: Node Functions
-//     // --------------------------------------------------------------------------------------------
 
-//     // Called when the node enters the scene tree for the first time.
-//     public override void _Ready()
-//     {
-//         CreateEntity();
+    private float TimerPollModel = 0.0f;
+    private float TimerPollModelInterval = 0.05f;
 
-//         AddChild(AttitudeNode);
+    // --------------------------------------------------------------------------------------------
+    // MARK: Node Functions
+    // --------------------------------------------------------------------------------------------
 
-//         // ElementContrail = new KoreElementContrail();
-//         // ElementContrail.InitElement(EntityName);
-//         // ElementContrail.SetModel(EntityName);
-//         // KoreGodotFactory.Instance.GodotEntityManager.ElementRootNode.AddChild(ElementContrail);
-//     }
+    // Called when the node enters the scene tree for the first time.
+    public override void _Ready()
+    {
+        //         CreateEntity();
 
-//     // Called every frame. 'delta' is the elapsed time since the previous frame.
-//     public override void _Process(double delta)
-//     {
-//         UpdateEntityPosition();
+                AddChild(AttitudeNode);
 
-//         if (KoreCentralTime.CheckTimer(ref Timer1Hz, 1.0f))
-//         {
+        //         // ElementContrail = new KoreElementContrail();
+        //         // ElementContrail.InitElement(EntityName);
+        //         // ElementContrail.SetModel(EntityName);
+        //         // KoreGodotFactory.Instance.GodotEntityManager.ElementRootNode.AddChild(ElementContrail);
+    }
+
+    // Called every frame. 'delta' is the elapsed time since the previous frame.
+    public override void _Process(double delta)
+    {
+
+        if (KoreCentralTime.CheckTimer(ref TimerPollModel, TimerPollModelInterval))
+        {
+            UpdateModelData();
+            UpdateEntityPosition();
 //             UpdateZeroNode();
 
 //             if (ChaseCam.IsCurrent())
@@ -70,15 +76,15 @@
 //                 string strCamLLA = chaseCamLLA.ToString();
 //                 GD.Print($"Camera LLA: Lat:{chaseCamLLA.LatDegs:F6} Lon:{chaseCamLLA.LonDegs:F6} Alt:{chaseCamLLA.AltMslM:F2}");
 //             }
-//         }
-//     }
+        }
+    }
 
-//     // --------------------------------------------------------------------------------------------
-//     // MARK: Create
-//     // --------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
+    // MARK: Create
+    // --------------------------------------------------------------------------------------------
 
-//     public void CreateEntity()
-//     {
+    public void CreateEntity()
+    {
 //         // Set this node name. - This gets the position and earth orinetation set on it.
 //         Name = EntityName;
 
@@ -91,84 +97,83 @@
 //         ChaseCam.Name = "ChaseCam";
 //         AddChild(ChaseCam);
 //         ChaseCam.SetCameraPosition(300, 20, 20); // 300m, 20 degs up, 20 degs right
-//     }
+    }
 
-//     // --------------------------------------------------------------------------------------------
-//     // MARK: Chase Cam
-//     // --------------------------------------------------------------------------------------------
+    //     // --------------------------------------------------------------------------------------------
+    //     // MARK: Chase Cam
+    //     // --------------------------------------------------------------------------------------------
 
-//     public void EnableChaseCam()
-//     {
-//         ChaseCam.CamNode.Current = true;
-//     }
+    //     public void EnableChaseCam()
+    //     {
+    //         ChaseCam.CamNode.Current = true;
+    //     }
 
-//     // Report the current state of the camer
+    //     // Report the current state of the camer
 
-//     public void UpdateZeroNode()
-//     {
-//         // GD.Print("EntityName:{EntityName}");
+    //     public void UpdateZeroNode()
+    //     {
+    //         // GD.Print("EntityName:{EntityName}");
 
-//         // Only drive the zero node to match the entity position if the chase cam is the current camera
-//         if (ChaseCam.IsCurrent())
-//         {
-//             KoreZeroNode.SetZeroNodePosition(CurrentPosition);
-//             // GD.Print($"ZERO NODE UPDATE: EntityName:{EntityName} CurrentPosition:{CurrentPosition}");
-//         }
-//     }
+    //         // Only drive the zero node to match the entity position if the chase cam is the current camera
+    //         if (ChaseCam.IsCurrent())
+    //         {
+    //             KoreZeroNode.SetZeroNodePosition(CurrentPosition);
+    //             // GD.Print($"ZERO NODE UPDATE: EntityName:{EntityName} CurrentPosition:{CurrentPosition}");
+    //         }
+    //     }
 
-//     // --------------------------------------------------------------------------------------------
-//     // MARK: Position and Attitude
-//     // --------------------------------------------------------------------------------------------
+    //     // --------------------------------------------------------------------------------------------
+    //     // MARK: Position and Attitude
+    //     // --------------------------------------------------------------------------------------------
 
-//     // Note that position here is a polar offset for the rotating chase cam
+    //     // Note that position here is a polar offset for the rotating chase cam
 
-//     public void UpdateEntityPosition()
-//     {
-//         // Update the position and orientation of the entity.
-//         // This is done by the parent node.
+    public void UpdateModelData()
+    {
+        // Get the entity positional info, and update if valid
+        KoreLLAPoint? pos = KoreEventDriver.GetEntityPosition(EntityName);
+        KoreCourse? course = KoreEventDriver.GetEntityCourse(EntityName);
+        KoreAttitude? att = KoreEventDriver.GetEntityAttitude(EntityName);
+        if (pos != null) CurrentPosition = pos.Value;
+        if (course != null) CurrentCourse = course.Value;
+        if (att != null) CurrentModelAttitude = att.Value;
 
-//         KoreLLAPoint? pos = KoreAppFactory.Instance.EventDriver.GetPlatformPosition(EntityName);
-//         KoreCourse? course = KoreAppFactory.Instance.EventDriver.PlatformCurrCourse(EntityName);
+        if (pos == null || course == null)
+        {
+            GD.Print($"EC0-0025: Platform {EntityName} not found.");
+            return;
+        }
 
-//         if (pos != null)
-//             CurrentPosition = (KoreLLAPoint)pos;
+    }
 
-//         if (pos == null || course == null)
-//         {
-//             GD.Print($"EC0-0025: Platform {EntityName} not found.");
-//             return;
-//         }
+    public void UpdateEntityPosition()
+    {
+        // Convert the position
+        KoreEntityV3 entityVecs = KoreGeoConvOps.RwToGeStruct(CurrentPosition, CurrentCourse);
 
-//         KoreEntityV3 entityVecs = KoreGeoConvOperations.RwToGeStruct((KoreLLAPoint)pos, (KoreCourse)course);
+        // Position
+        Position = entityVecs.Pos;
+        LookAt(entityVecs.PosAhead, entityVecs.VecUp);
 
-//         //GD.Print($"Name: {EntityName} PosLLA:{pos} Ahead:{entityVecs.PosAhead} up:{entityVecs.VecUp}");
+        // Attitude smoothing - 1 degree per frame
+        CurrentSmoothedAttitude.PitchUpDegs =
+            KoreValueUtils.AdjustWithinBounds(CurrentSmoothedAttitude.PitchUpDegs, CurrentModelAttitude.PitchUpDegs, 1);
+        CurrentSmoothedAttitude.RollClockwiseDegs =
+            KoreValueUtils.AdjustWithinBounds(CurrentSmoothedAttitude.RollClockwiseDegs, CurrentModelAttitude.RollClockwiseDegs, 1);
+        CurrentSmoothedAttitude.YawClockwiseDegs =
+            KoreValueUtils.AdjustWithinBounds(CurrentSmoothedAttitude.YawClockwiseDegs, CurrentModelAttitude.YawClockwiseDegs, 1);
 
-//         Position = entityVecs.Pos;
-//         //LookAtFromPosition(entityVecs.Pos, entityVecs.PosAhead, entityVecs.VecUp, true);
+        double pitchUpRads = CurrentSmoothedAttitude.PitchUpRads;
+        double rollClockwiseRads = CurrentSmoothedAttitude.RollClockwiseRads;
+        double yawClockwiseRads = CurrentSmoothedAttitude.YawClockwiseRads;
 
-//         LookAt(entityVecs.PosAhead, entityVecs.VecUp);
+        float gePitchRads = (float)pitchUpRads;
+        float geRollRads = (float)rollClockwiseRads;
+        float geYawRads = (float)yawClockwiseRads;
 
-//         KoreAttitude? att = KoreAppFactory.Instance.EventDriver.GetPlatformAttitude(EntityName);
-//         if (att != null)
-//             UpdateAttitude((KoreAttitude)att);
-//     }
+        AttitudeNode.Rotation = new Vector3(gePitchRads, geYawRads, geRollRads);
+    }
 
-//     public void UpdateAttitude(KoreAttitude attitude)
-//     {
-//         CurrentAttitude.PitchUpDegs = KoreValueUtils.AdjustWithinBounds(CurrentAttitude.PitchUpDegs, attitude.PitchUpDegs, 1);
-//         CurrentAttitude.RollClockwiseDegs = KoreValueUtils.AdjustWithinBounds(CurrentAttitude.RollClockwiseDegs, attitude.RollClockwiseDegs, 1);
-//         CurrentAttitude.YawClockwiseDegs = KoreValueUtils.AdjustWithinBounds(CurrentAttitude.YawClockwiseDegs, attitude.YawClockwiseDegs, 1);
-
-//         double pitchUpRads = CurrentAttitude.PitchUpRads;
-//         double rollClockwiseRads = CurrentAttitude.RollClockwiseRads;
-//         double yawClockwiseRads = CurrentAttitude.YawClockwiseRads;
-
-//         float gePitchRads = (float)pitchUpRads;
-//         float geRollRads = (float)rollClockwiseRads;
-//         float geYawRads = (float)yawClockwiseRads;
-
-//         AttitudeNode.Rotation = new Vector3(gePitchRads, geYawRads, geRollRads);
-//     }
 
 //     // --------------------------------------------------------------------------------------------
 //     // MARK: Update Elements: Route
@@ -200,6 +205,6 @@
 
 
 
-// }
+}
 
 

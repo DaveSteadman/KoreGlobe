@@ -1,15 +1,15 @@
-// using System;
-// using System.Collections.Generic;
-// using System.Text;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
-// using Godot;
+using Godot;
 
-// using KoreCommon;
+using KoreCommon;
 
-// #nullable enable
+#nullable enable
 
-// public partial class KoreGodotEntityManager : Node3D
-// {
+public partial class KoreGodotEntityManager : Node3D
+{
 //     // List<KoreGodotEntity> EntityList = new List<KoreGodotEntity>();
 
 //     public Node3D EntityRootNode = new Node3D() { Name = "EntityRootNode" };
@@ -517,6 +517,6 @@
 //     // MARK: Update - Delete
 //     // --------------------------------------------------------------------------------------------
 
-// }
+}
 
 
