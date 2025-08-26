@@ -13,6 +13,9 @@ public struct KoreXYPolarOffset
     // Main attributes
     public double AngleRads { get; }
     public double Distance { get; }
+    
+    public double Radius => Distance; // Alias for clarity in some contexts
+    public double Magnitude => Distance;
 
     // Derived attributes
     public double AngleDegs => AngleRads * KoreConsts.RadsToDegsMultiplier;

@@ -44,12 +44,13 @@ App Outline
 Immeditate Task:
 ================
 
-- check the object winding, of all primitives
-- draw normals in the debug mesh
-
-
-- Draw the tile drop edges
-
+- Draw a basic entity and have it move around with the model position
+    - Lines up with the new entity dialog 
+    
+- Get some consistency on the modelling.
+    - Align KoreMesh with Godot?
+    - Abandon UVs for anything but map tiles? Too complex to be done manually?
+        - Gets us back to the older colors ideas, but not great.
 
 
 Short Term Todo List:
@@ -68,7 +69,7 @@ Short Term Todo List:
     - determine an angle to the tile based from the camera position and direction.
 
     - Create a distance-resolution score of draw priority and resolution, that we can judge against. ie (anything above 50, add the child tiles or next LOD)
-`
+
 
 - At least add and display a child
     - Make sure the core mechanics of it are working okay
@@ -100,8 +101,14 @@ Future Ideas:
 - OSM Data:
     - https://github.com/OsmSharp/core
 
-- AutoUV development:
-    - put into a separate project (like the mesh decimation) to progress.
+- FullMesh:
+    - Lots of tools and a whole CAD/Blender like app to manage points, lines, surfaces.
+
+    - AutoUV development:
+        - put into a separate project (like the mesh decimation) to progress.
+
+- Coperniucus:
+    - Start reading elevation data from the service in the same way that we read images.
 
 
 Comparable Apps/Frameworks:
@@ -116,7 +123,8 @@ Comparable Apps/Frameworks:
 - Caesium
     Expansive 3D world framework and community
 
-
+- Global Mapper Desktop
+    - Map data preparation tool.
 
 
 

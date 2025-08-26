@@ -5,7 +5,7 @@ namespace KoreCommon;
 public struct KoreXYZPlane
 {
     // Three points defining the plane
-    public KoreXYZVector  PntOrigin { get; }
+    public KoreXYZVector PntOrigin { get; }
     public KoreXYZVector VecNormal { get; }
     public KoreXYZVector VecX { get; }
     public KoreXYZVector VecY { get; }
@@ -19,8 +19,8 @@ public struct KoreXYZPlane
     {
         PntOrigin = pO;
         VecNormal = vN;
-        VecX      = vX;
-        VecY      = vY;
+        VecX = vX;
+        VecY = vY;
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -93,6 +93,32 @@ public struct KoreXYZPlane
         double y = KoreXYZVector.DotProduct(vecToPoint, VecY);
 
         return new KoreXYVector(x, y);
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // MARK: 2D Polar Projection
+    // ---------------------------------------------------------------------------------------------
+
+    public KoreXYZVector Project2DPolarTo3D(KoreXYPolarOffset pnt2DPolar)
+    {
+        // Convert the polar coordinates to Cartesian coordinates
+        double x = pnt2DPolar.Radius * Math.Cos(pnt2DPolar.AngleRads);
+        double y = pnt2DPolar.Radius * Math.Sin(pnt2DPolar.AngleRads);
+
+        // Now project the 2D Cartesian point to 3D
+        return Project2DTo3D(new KoreXYVector(x, y));
+    }
+
+    public KoreXYPolarOffset Project3DTo2DPolar(KoreXYZVector pnt3D)
+    {
+        // First project the 3D point to 2D Cartesian coordinates
+        KoreXYVector pnt2D = Project3DTo2D(pnt3D);
+
+        // Now convert the 2D Cartesian coordinates to polar coordinates
+        double angleRads = Math.Atan2(pnt2D.Y, pnt2D.X);
+        double distance = Math.Sqrt(pnt2D.X * pnt2D.X + pnt2D.Y * pnt2D.Y);
+
+        return new KoreXYPolarOffset(angleRads, distance);
     }
 
 }
