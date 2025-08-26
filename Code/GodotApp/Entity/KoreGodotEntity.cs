@@ -5,6 +5,7 @@ using Godot;
 
 using KoreCommon;
 using KoreSim;
+using SharpGLTF.Geometry.VertexTypes;
 
 #nullable enable
 
@@ -12,16 +13,16 @@ public partial class KoreGodotEntity : Node3D
 {
     public string EntityName { get; set; }
 
-//     // Setup default model info, so we always have something to work with.
-//     public Kore3DModelInfo ModelInfo { get; set; } = Kore3DModelInfo.Default();
+    //     // Setup default model info, so we always have something to work with.
+    //     public Kore3DModelInfo ModelInfo { get; set; } = Kore3DModelInfo.Default();
 
     public Node3D AttitudeNode = new Node3D() { Name = "Attitude" };
 
-//     private KoreElementContrail ElementContrail;
+    //     private KoreElementContrail ElementContrail;
 
     private KoreLLAPoint CurrentPosition = new KoreLLAPoint();
     private KoreAttitude CurrentModelAttitude = new KoreAttitude();
-    private KoreCourse   CurrentCourse   = new KoreCourse();
+    private KoreCourse CurrentCourse = new KoreCourse();
     //     private KoreCameraPolarOffset ChaseCam = new KoreCameraPolarOffset();
 
     private KoreAttitude CurrentSmoothedAttitude = new KoreAttitude();
@@ -39,7 +40,9 @@ public partial class KoreGodotEntity : Node3D
     {
         //         CreateEntity();
 
-                AddChild(AttitudeNode);
+        AddChild(AttitudeNode);
+
+        AddDebugSphere();
 
         //         // ElementContrail = new KoreElementContrail();
         //         // ElementContrail.InitElement(EntityName);
@@ -50,32 +53,36 @@ public partial class KoreGodotEntity : Node3D
     // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(double delta)
     {
-
-        if (KoreCentralTime.CheckTimer(ref TimerPollModel, TimerPollModelInterval))
+        if (!KoreEventDriver.HasEntity(EntityName))
+            return;
+            
+        if (KoreCentralTime.CheckTimer(ref TimerPollModel, TimerPollModelInterval) || KoreZeroOffset.IsPosChangeCycle)
         {
+
             UpdateModelData();
             UpdateEntityPosition();
-//             UpdateZeroNode();
 
-//             if (ChaseCam.IsCurrent())
-//             {
-//                 // Get the Camera Polar Offset - flip the azimuth so we create the LLA correctly.
-//                 KorePolarOffset camPO = ChaseCam.RwCamOffset;
+            //             UpdateZeroNode();
 
-//                 // Get the platform heading and add the camera offset to get the chase cam LLA
-//                 //KoreLLAPoint? pos    = KoreAppFactory.Instance.EventDriver.GetPlatformPosition(EntityName);
-//                 KoreCourse? course = KoreAppFactory.Instance.EventDriver.PlatformCurrCourse(EntityName);
+            //             if (ChaseCam.IsCurrent())
+            //             {
+            //                 // Get the Camera Polar Offset - flip the azimuth so we create the LLA correctly.
+            //                 KorePolarOffset camPO = ChaseCam.RwCamOffset;
 
-//                 if (course != null)
-//                     camPO.AzDegs += course?.HeadingDegs ?? 0.0;
+            //                 // Get the platform heading and add the camera offset to get the chase cam LLA
+            //                 //KoreLLAPoint? pos    = KoreAppFactory.Instance.EventDriver.GetPlatformPosition(EntityName);
+            //                 KoreCourse? course = KoreAppFactory.Instance.EventDriver.PlatformCurrCourse(EntityName);
 
-//                 KoreLLAPoint chaseCamLLA = CurrentPosition.PlusPolarOffset(camPO);
+            //                 if (course != null)
+            //                     camPO.AzDegs += course?.HeadingDegs ?? 0.0;
 
-//                 KoreZeroNodeMapManager.SetLoadRefLLA(chaseCamLLA);
+            //                 KoreLLAPoint chaseCamLLA = CurrentPosition.PlusPolarOffset(camPO);
 
-//                 string strCamLLA = chaseCamLLA.ToString();
-//                 GD.Print($"Camera LLA: Lat:{chaseCamLLA.LatDegs:F6} Lon:{chaseCamLLA.LonDegs:F6} Alt:{chaseCamLLA.AltMslM:F2}");
-//             }
+            //                 KoreZeroNodeMapManager.SetLoadRefLLA(chaseCamLLA);
+
+            //                 string strCamLLA = chaseCamLLA.ToString();
+            //                 GD.Print($"Camera LLA: Lat:{chaseCamLLA.LatDegs:F6} Lon:{chaseCamLLA.LonDegs:F6} Alt:{chaseCamLLA.AltMslM:F2}");
+            //             }
         }
     }
 
@@ -85,18 +92,18 @@ public partial class KoreGodotEntity : Node3D
 
     public void CreateEntity()
     {
-//         // Set this node name. - This gets the position and earth orinetation set on it.
-//         Name = EntityName;
+        //         // Set this node name. - This gets the position and earth orinetation set on it.
+        //         Name = EntityName;
 
-//         // Create a marker for the entity
-//         Node3D marker = new Node3D() { Name = "AxisMarker" };
-//         AddChild(marker);
-//         //KorePrimitiveFactory.AddAxisMarkers(marker, 0.003f, 0.001f);
+        //         // Create a marker for the entity
+        //         Node3D marker = new Node3D() { Name = "AxisMarker" };
+        //         AddChild(marker);
+        //         //KorePrimitiveFactory.AddAxisMarkers(marker, 0.003f, 0.001f);
 
-//         // Setup the chase camera and default position
-//         ChaseCam.Name = "ChaseCam";
-//         AddChild(ChaseCam);
-//         ChaseCam.SetCameraPosition(300, 20, 20); // 300m, 20 degs up, 20 degs right
+        //         // Setup the chase camera and default position
+        //         ChaseCam.Name = "ChaseCam";
+        //         AddChild(ChaseCam);
+        //         ChaseCam.SetCameraPosition(300, 20, 20); // 300m, 20 degs up, 20 degs right
     }
 
     //     // --------------------------------------------------------------------------------------------
@@ -175,33 +182,54 @@ public partial class KoreGodotEntity : Node3D
     }
 
 
-//     // --------------------------------------------------------------------------------------------
-//     // MARK: Update Elements: Route
-//     // --------------------------------------------------------------------------------------------
+    //     // --------------------------------------------------------------------------------------------
+    //     // MARK: Update Elements: Route
+    //     // --------------------------------------------------------------------------------------------
 
-//     // Function to check if the entity has a route, and update the game-engine route to match.
+    //     // Function to check if the entity has a route, and update the game-engine route to match.
 
-//     public void UpdateRoute()
-//     {
-//         // Get the route
-//         List<KoreLLAPoint> routePoints = KoreAppFactory.Instance.EventDriver.PlatformGetRoutePoints(EntityName);
+    //     public void UpdateRoute()
+    //     {
+    //         // Get the route
+    //         List<KoreLLAPoint> routePoints = KoreAppFactory.Instance.EventDriver.PlatformGetRoutePoints(EntityName);
 
-//         if (routePoints.Count > 0)
-//         {
-//             return;
-//         }
+    //         if (routePoints.Count > 0)
+    //         {
+    //             return;
+    //         }
 
-//         // Update the route
-//     }
+    //         // Update the route
+    //     }
 
-//     // --------------------------------------------------------------------------------------------
-//     // MARK: Update Elements: Contrail
-//     // --------------------------------------------------------------------------------------------
+    //     // --------------------------------------------------------------------------------------------
+    //     // MARK: Update Elements: Contrail
+    //     // --------------------------------------------------------------------------------------------
 
-//     public void UpdateContrail()
-//     {
-//         //ElementContrail.UpdateElement();
-//     }
+    //     public void UpdateContrail()
+    //     {
+    //         //ElementContrail.UpdateElement();
+    //     }
+
+
+    private void AddDebugSphere()
+    {
+        // Create a simple sphere mesh for debugging
+        SphereMesh sphereMesh = new SphereMesh
+        {
+            Radius = 0.3f,
+            Height = 0.6f,
+            RadialSegments = 16,
+            Rings = 8
+        };
+
+        MeshInstance3D sphereInstance = new MeshInstance3D
+        {
+            Mesh = sphereMesh,
+            Name = "DebugSphere"
+        };
+
+        AttitudeNode.AddChild(sphereInstance);
+    }
 
 
 

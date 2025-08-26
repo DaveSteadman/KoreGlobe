@@ -82,7 +82,7 @@ Tasks:
 3D Models:
     - Get the loading running again
         - Improve the scaling, maybe in a loader scene with rulers etc.
-        - Load dummy elements to check for awkward presentatino cases.
+        - Load dummy elements to check for awkward presentation cases.
 
 Networking:
     - Get a dummy program from KoreSim injecting JSON messages
@@ -103,9 +103,10 @@ Future Ideas:
 
 - FullMesh:
     - Lots of tools and a whole CAD/Blender like app to manage points, lines, surfaces.
-
     - AutoUV development:
         - put into a separate project (like the mesh decimation) to progress.
+    - Primitives:
+        - Some ideas, but plan into a test project in the future.
 
 - Coperniucus:
     - Start reading elevation data from the service in the same way that we read images.
