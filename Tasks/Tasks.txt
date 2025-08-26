@@ -44,9 +44,6 @@ App Outline
 Immeditate Task:
 ================
 
-- Draw a basic entity and have it move around with the model position
-    - Lines up with the new entity dialog 
-    
 - Get some consistency on the modelling.
     - Align KoreMesh with Godot?
     - Abandon UVs for anything but map tiles? Too complex to be done manually?

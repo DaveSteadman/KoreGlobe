@@ -38,21 +38,16 @@ public partial class KoreGodotEntity : Node3D
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
-        //         CreateEntity();
-
         AddChild(AttitudeNode);
 
         AddDebugSphere();
-
-        //         // ElementContrail = new KoreElementContrail();
-        //         // ElementContrail.InitElement(EntityName);
-        //         // ElementContrail.SetModel(EntityName);
-        //         // KoreGodotFactory.Instance.GodotEntityManager.ElementRootNode.AddChild(ElementContrail);
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(double delta)
     {
+        // The model can be updated asynchronously, so check before updating.
+        // Other nodes can QueueFree the node, but will do so once the model is deleted and on the same main-thread, so conflict is avoided there.
         if (!KoreEventDriver.HasEntity(EntityName))
             return;
             
