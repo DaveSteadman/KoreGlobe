@@ -29,23 +29,46 @@ size_flags_vertical = 3
 theme_override_constants/separation = 5
 
 [node name="EntityTreeList" type="Tree" parent="MarginContainer/VBoxContainer/HBoxContainer"]
-custom_minimum_size = Vector2(250, 0)
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 
 [node name="TabContainer" type="TabContainer" parent="MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-current_tab = 0
+current_tab = 1
 
 [node name="Position" type="Panel" parent="MarginContainer/VBoxContainer/HBoxContainer/TabContainer"]
+visible = false
 layout_mode = 2
 script = ExtResource("2_nptfu")
 metadata/_tab_index = 0
 
-[node name="Panel" type="Panel" parent="MarginContainer/VBoxContainer/HBoxContainer/TabContainer"]
-visible = false
+[node name="Elements" type="Panel" parent="MarginContainer/VBoxContainer/HBoxContainer/TabContainer"]
 layout_mode = 2
 metadata/_tab_index = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/TabContainer/Elements"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/TabContainer/Elements/MarginContainer"]
+layout_mode = 2
+
+[node name="ElementTreeList" type="Tree" parent="MarginContainer/VBoxContainer/HBoxContainer/TabContainer/Elements/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/TabContainer/Elements/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 60)

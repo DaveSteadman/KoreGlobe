@@ -15,6 +15,9 @@ public partial class KoreEntityWindow : Window
     private Button? CloseButton = null;
     private KoreEntityWindowPositionTab? PositionTab = null;
 
+    public Tree? ElementTreeList = null;
+
+
 
     // UI Timers
     private float UITimer = 0.0f;
@@ -55,7 +58,7 @@ public partial class KoreEntityWindow : Window
 
         if (KoreCentralTime.CheckTimer(ref UISlowTimer, UISlowTimerInterval))
         {
-            UpdateTreeView();
+            UpdateEntityTreeView();
         }
     }
 
@@ -76,6 +79,11 @@ public partial class KoreEntityWindow : Window
         if (CloseButton == null) GD.PrintErr("ModelEditWindow: CloseButton node not found.");
         if (PositionTab == null) GD.PrintErr("ModelEditWindow: PositionTab node not found.");
 
+        ElementTreeList = (Tree)FindChild("ElementTreeList");
+
+        if (ElementTreeList == null) GD.PrintErr("ModelEditWindow: ElementTreeList node not found.");
+
+
         // Connect tree selection events
         if (EntityTreeList != null)
         {
@@ -83,7 +91,11 @@ public partial class KoreEntityWindow : Window
             EntityTreeList.Connect("item_activated", new Callable(this, nameof(OnTreeItemActivated))); // Double-click
         }
 
-        // Link up the X button to close the window
+        // Connect close button to OnCloseRequested
+        if (CloseButton != null)
+            CloseButton.Connect("pressed", new Callable(this, nameof(OnCloseRequested)));
+
+        // Connect window's X button to OnCloseRequested
         Connect("close_requested", new Callable(this, nameof(OnCloseRequested)));
     }
 
@@ -142,11 +154,15 @@ public partial class KoreEntityWindow : Window
         return name;
     }
 
-    // UpdateTreeView
+    // --------------------------------------------------------------------------------------------
+    // MARK: Entity
+    // --------------------------------------------------------------------------------------------
+
+    // UpdateEntityTreeView
     // - endeavours to maintain any selected item by adding and removing changes without
     //   disrupting unchanging items
 
-    private void UpdateTreeView()
+    private void UpdateEntityTreeView()
     {
         if (EntityTreeList == null) return;
 
@@ -195,7 +211,66 @@ public partial class KoreEntityWindow : Window
                 item.SetText(0, name);
             }
         }
-
     }
 
+
+    // --------------------------------------------------------------------------------------------
+    // MARK: Element
+    // --------------------------------------------------------------------------------------------
+
+    private void UpdateElementTreeView()
+    {
+        if (ElementTreeList == null) return;
+
+        string? selectedEntity = GetSelectedEntityName();
+        if (!string.IsNullOrEmpty(selectedEntity))
+        {
+            List<string> elementNames = KoreEventDriver.ElementNameList(selectedEntity);
+
+            // refresh the tree view with the string list, and allow for a selection
+
+            // Get or create root
+            TreeItem? root = ElementTreeList.GetRoot();
+            if (root == null)
+            {
+                root = ElementTreeList.CreateItem();
+                root.SetText(0, "Elements");
+                root.SetCollapsed(false);
+            }
+
+            // Collect existing items
+            var existingItems = new Dictionary<string, TreeItem>();
+            TreeItem? child = root.GetFirstChild();
+            while (child != null)
+            {
+                string name = child.GetText(0);
+                existingItems[name] = child;
+                child = child.GetNext();
+            }
+
+            // Remove items that no longer exist
+            var itemsToRemove = new List<TreeItem>();
+            foreach (var kvp in existingItems)
+            {
+                if (!elementNames.Contains(kvp.Key))
+                {
+                    itemsToRemove.Add(kvp.Value);
+                }
+            }
+            foreach (var item in itemsToRemove)
+            {
+                item.Free(); // Remove from tree
+            }
+
+            // Add new items
+            foreach (var name in elementNames)
+            {
+                if (!existingItems.ContainsKey(name))
+                {
+                    TreeItem item = root.CreateChild();
+                    item.SetText(0, name);
+                }
+            }
+        }
+    }
 }
