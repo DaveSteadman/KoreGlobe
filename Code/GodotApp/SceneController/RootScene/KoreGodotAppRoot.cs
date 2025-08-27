@@ -41,6 +41,19 @@ public partial class KoreGodotAppRoot : Node
         Node uiTop = uiTopScene.Instantiate();
         RootUI!.AddChild(uiTop);
 
+        // Load the mini panel for status display
+        PackedScene miniPanelScene = GD.Load<PackedScene>("res://Scenes/GodotCommon/UiMiniPanel.tscn");
+        if (miniPanelScene != null)
+        {
+            Node miniPanel = miniPanelScene.Instantiate();
+            RootUI!.AddChild(miniPanel);
+            GD.Print("KoreAppRoot: UiMiniPanel loaded successfully.");
+        }
+        else
+        {
+            GD.PrintErr("KoreAppRoot: Failed to load UiMiniPanel.");
+        }
+
         var splashScene = GD.Load<PackedScene>("res://Scenes/GodotCommon/SplashScreen.tscn");
         if (splashScene == null)
         {

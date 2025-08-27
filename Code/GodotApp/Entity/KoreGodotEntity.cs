@@ -140,12 +140,11 @@ public partial class KoreGodotEntity : Node3D
         if (course != null) CurrentCourse = course.Value;
         if (att != null) CurrentModelAttitude = att.Value;
 
-        if (pos == null || course == null)
+        if (pos == null || course == null || att == null)
         {
-            GD.Print($"EC0-0025: Platform {EntityName} not found.");
+            KoreCentralLog.AddEntry($"EC0-0025: Entity data {EntityName} not found.");
             return;
         }
-
     }
 
     public void UpdateEntityPosition()

@@ -1,8 +1,9 @@
-dotnet add package SharpGLTF.Toolkit
+
 
 Vision:
 =======
-A 3D world to explore, and visualise customer data.
+A 3D world to explore and visualise customer data.
+
 
 Target of current iteration:
 ============================
@@ -49,6 +50,7 @@ Immeditate Task:
     - Abandon UVs for anything but map tiles? Too complex to be done manually?
         - Gets us back to the older colors ideas, but not great.
 
+- Get the attitude node working
 
 Short Term Todo List:
 =====================
@@ -108,6 +110,14 @@ Future Ideas:
 - Coperniucus:
     - Start reading elevation data from the service in the same way that we read images.
 
+- Add messages to be used at a specific simtime, or runtime?
+    - A queue within the messaging system (or consumer of it)
+        injectat simtime 10 "entity add one"
+        injectat runtume 10 "help"
+    - Any "injectat runtime" message goes into a time ordered queue/thread, and process the latest one when a time passes.
+    - Use a cencptually simple "greater than" rule on the timestamp.
+
+
 
 Comparable Apps/Frameworks:
 ===========================
@@ -128,3 +138,7 @@ Comparable Apps/Frameworks:
 
 
 
+Setup
+=====
+
+    dotnet add package SharpGLTF.Toolkit

@@ -63,11 +63,11 @@ public struct KoreLLAPoint
     // Note that fields can be set:
     //   KoreLLAPoint pos = new KoreLLAPoint() { latDegs = X, LonDegs = Y, AltMslM = Z };
 
-    public KoreLLAPoint(double laRads, double loRads, double altM)
+    public KoreLLAPoint(double laRads, double loRads, double radiusM)
     {
         this.LatRads = laRads;
         this.LonRads = loRads;
-        this.RadiusM = altM;
+        this.RadiusM = radiusM;
     }
 
     public KoreLLAPoint(double laRads, double loRads)
@@ -109,6 +109,15 @@ public struct KoreLLAPoint
         double retElev = Math.Max(KoreWorldConsts.EarthRadiusM + minAltMslM, AltMslM);
         return new KoreLLAPoint(LatRads, LonRads, retElev);
     }
+
+    // Currently consider the wrapping of latitude and longitude values to be done by the caller, in case consistency over the dateline is desired.
+    public KoreLLAPoint WrapValues()
+    {
+        double newLonRads = KoreNumericRange<double>.MinusPiToPiRadians.Apply(LonRads);
+        
+        return new KoreLLAPoint(LatRads, newLonRads, RadiusM);
+    }
+
 
     // --------------------------------------------------------------------------------------------
     // MARK: Conversion

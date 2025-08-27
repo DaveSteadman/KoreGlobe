@@ -1,0 +1,78 @@
+[gd_scene load_steps=4 format=3 uid="uid://77ujlmrup87n"]
+
+[ext_resource type="Script" uid="uid://qw6xkljlmlbn" path="res://Code/GodotCommon/SceneController/UIMiniPanel/UiMiniPanel.cs" id="1_ltpes"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ltpes"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0.101960786, 0.101960786, 0.101960786, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="Theme" id="Theme_2mcef"]
+Panel/styles/panel = SubResource("StyleBoxFlat_ltpes")
+
+[node name="UiMiniPanel" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ltpes")
+
+[node name="Panel" type="Panel" parent="."]
+custom_minimum_size = Vector2(70, 150)
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -70.0
+offset_top = -190.0
+offset_bottom = -40.0
+grow_horizontal = 0
+grow_vertical = 0
+theme = SubResource("Theme_2mcef")
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="LabelError" type="Label" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "❌ ---"
+
+[node name="LabelWarn" type="Label" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "⚠️ ---"
+
+[node name="LabelInfo" type="Label" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "ℹ️ ---"
+
+[node name="LabelUPS" type="Label" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "⚡ ---"

@@ -29,7 +29,6 @@ public struct KoreNumericAngle<T> where T : INumber<T>
 
     // --------------------------------------------------------------------------------------------
 
-
     public static T DiffWrappedDegs(T deg1, T deg2)
     {
         T diff = KoreNumericUtils.Modulo(deg1 - deg2, T.CreateChecked(360));
