@@ -44,19 +44,9 @@ App Outline
 Immeditate Task:
 ================
 
-- Get some consistency on the modelling.
-    - Need some new core idea to guide the KoreMeshData
-        - Options:
-            - Keep it "conceptual" - Z+ve, fudge things to display with Godot.
-            - Be Godot-aligned: Its the main consumer, other formats are always just a nice to have. Import and convert to this.
-            - Primitives and create mesh formats from it: Huge area of work, no guaranteed success.
-            
-        - Thoughts:
-            - Man I just hate Z-ve in my gut. Would be way easier to get over this.
-            
-    - Align KoreMesh with Godot?
-    - Abandon UVs for anything but map tiles? Too complex to be done manually?
-        - Gets us back to the older colors ideas, but not great.
+- Consolidate the mesh editor window,
+    - adding toggles on the points, lines, normals etc.
+    - import/export gltf and obj/mtl - with file select.
 
 Short Term Todo List:
 =====================
@@ -74,13 +64,13 @@ Short Term Todo List:
     - Slow down at lower altitudes
     - Don't intersect terrain
     - maybe a better forwards control
-  
+
 - Add some element to an entity
     - the 3D model as an element would be ideal (on the attitude node)
     - Route also.
     - Add an xbox controller input as an element.
     - Have a facility to add and remove them
-  
+
 - CLI message inject
     - Exercise the network handling, at least internally.
 
