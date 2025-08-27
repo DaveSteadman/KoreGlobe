@@ -231,9 +231,11 @@ public partial class KoreMeshData
         KoreXYZVector ac = c - a;  // Vector from A to C
         KoreXYZVector faceNormal = KoreXYZVector.CrossProduct(ab, ac).Normalize();
 
-        // Normalize the face normal
-        faceNormal = faceNormal.Normalize();
-        //faceNormal = faceNormal.Invert();
+        // COORDINATE SYSTEM ADJUSTMENT:
+        // When we switched from Z+ to Z- forward, all existing triangle winding 
+        // (which was CCW in Z+) became effectively CW in Z-, making normals point inward.
+        // Inverting the normal compensates for this without requiring changes to all primitives.
+        faceNormal = faceNormal.Invert();
 
         return faceNormal;
     }

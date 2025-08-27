@@ -17,16 +17,15 @@ public record struct KoreMeshTriangleGroup(string MaterialName, List<int> Triang
 //
 // COORDINATE SYSTEM SPECIFICATION:
 // - KoreMeshData uses a right-handed coordinate system with Y pointing up (Y-up)
-// - X+: Right, Y+: Up, Z+: Forward
-// - UV coordinates use top-left origin (glTF style): U incrementing across and down to a 1,1 bottom right.
+// - X+: Right, Y+: Up, Z-: Forward (Godot native)
+// - UV coordinates use top-left origin (Godot/OpenGL style): U (X) incrementing right, V (Y) incrementing down to a 1,1 bottom right
 // - Triangle winding: Counter-clockwise when viewed from outside (right-hand rule)
 //
 // CONVERSION TO OTHER FORMATS:
-// - glTF (Y-up, Z-forward): Direct coordinate mapping, no conversion needed
-// - Godot (Y-up, Z-backward): Z component needs to be negated
-// - Godot (Y-up, Z-forward): Direct coordinate mapping, no conversion needed
+// - Godot (Y-up, Z-backward, UV bottom-left): Direct coordinate mapping, no conversion needed
+// - glTF (Y-up, Z-forward, UV top-left): Z component negated, triangle winding flipped, V axis flipped
 // - Blender (Z-up, Y-forward): Coordinate rotation (x,y,z) → (x,z,-y), check materials
-// - OBJ/MTL: Typically direct mapping, depends on target application
+// - OBJ/MTL: Depends on target application, typically needs coordinate and UV conversion
 
 public partial class KoreMeshData
 {

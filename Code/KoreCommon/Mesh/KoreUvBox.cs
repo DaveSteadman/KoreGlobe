@@ -70,7 +70,7 @@ public struct KoreUVBox
 
         // Get 2 1D arrays to define the values in the range
         KoreNumeric1DArray<double> uRange = KoreNumeric1DArrayOps<double>.ListForRange(TopLeft.X, BottomRight.X, horizSize);
-        KoreNumeric1DArray<double> vRange = KoreNumeric1DArrayOps<double>.ListForRange(BottomRight.Y, TopLeft.Y, vertSize);
+        KoreNumeric1DArray<double> vRange = KoreNumeric1DArrayOps<double>.ListForRange(TopLeft.Y, BottomRight.Y, vertSize); 
 
         if (TopLeft.X > BottomRight.X)
             KoreCentralLog.AddEntry($"ERROR: UVBox X backwards");

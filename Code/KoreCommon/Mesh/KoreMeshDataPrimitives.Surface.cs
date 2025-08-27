@@ -69,25 +69,22 @@ public static partial class KoreMeshDataPrimitives
             for (int iY = 0; iY < height - 1; iY++)
             {
                 // Create two triangles for each quad (CCW winding)
-                int p00 = pointIds[iX, iY];
-                int p01 = pointIds[iX, iY + 1];
-                int p10 = pointIds[iX + 1, iY];
-                int p11 = pointIds[iX + 1, iY + 1];
+                int p00 = pointIds[iX, iY];           // Top-left
+                int p01 = pointIds[iX, iY + 1];       // Bottom-left  
+                int p10 = pointIds[iX + 1, iY];       // Top-right
+                int p11 = pointIds[iX + 1, iY + 1];   // Bottom-right
 
-                mesh.AddTriangle(p00, p01, p10);
-                mesh.AddTriangle(p01, p11, p10);
+                mesh.AddTriangle(p00, p11, p01);
+                mesh.AddTriangle(p00, p10, p11);
 
                 // Always add top and left edges
                 mesh.AddLine(p00, p10);  // Left edge
                 mesh.AddLine(p01, p00);  // Top edge
 
                 // Add right edge only for last column
-                if (iX == width - 2)
-                    mesh.AddLine(p10, p11);  // Right edge
-
+                if (iX == width - 2) mesh.AddLine(p10, p11);  // Right edge
                 // Add bottom edge only for last row
-                if (iY == height - 2)
-                    mesh.AddLine(p11, p01);  // Bottom edge
+                if (iY == height - 2) mesh.AddLine(p11, p01);  // Bottom edge
             }
         }
 

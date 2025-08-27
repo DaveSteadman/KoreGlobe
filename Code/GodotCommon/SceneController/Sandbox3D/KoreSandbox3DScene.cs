@@ -32,7 +32,7 @@ public partial class KoreSandbox3DScene : Node3D
         GD.Print("KoreSandbox3DScene _Ready");
         CreateTestMeshData_Box();
         CreateTestMeshData_Surface();
-        //CreateTestMeshData_Lathe();
+        CreateTestMeshData_Lathe();
         CreateTestMeshData_Cylinder();
         AddTestMeshData_BoxArc();
     }
@@ -193,24 +193,40 @@ public partial class KoreSandbox3DScene : Node3D
                     double currZ = horizRange - j / (eleSize - 1.0) * 2.0 * horizRange; // Z: top to bottom [+horizRange, -horizRange]
                     double currY = eleArray[i, j];
                     vertices[i, j] = new KoreXYZVector(currX, currY, currZ);
+
+                    vertices[i, j] = vertices[i, j].FlipZ(); 
                 }
             }
+            
+  
+            
+            
+            
 
             // Create surface
             KoreMeshData surfaceMesh1 = KoreMeshDataPrimitives.Surface(vertices, KoreUVBox.Full);
+
+
+            // Add material with texture
+            var MiscTriMaterial = new KoreMeshMaterial("MiscTriMaterial", new KoreColorRGB(200, 10, 10));
+            MiscTriMaterial.Filename = "MiscTriTex.png"; // Use existing test image
+            surfaceMesh1.AddMaterial(MiscTriMaterial);
+            surfaceMesh1.AddAllTrianglesToGroup("MiscTriGroup");
+            surfaceMesh1.SetGroupMaterialName("MiscTriGroup", "MiscTriMaterial");
+
 
             KoreGodotLineMesh childMeshNode1 = new KoreGodotLineMesh();
             childMeshNode1.UpdateMesh(surfaceMesh1);
 
             KoreGodotSurfaceMesh childSurfaceMeshNode1 = new KoreGodotSurfaceMesh();
-            childSurfaceMeshNode1.UpdateMesh(surfaceMesh1);
+            childSurfaceMeshNode1.UpdateMesh(surfaceMesh1, "MiscTriGroup", "UnitTestArtefacts");
 
             KoreGodotNormalMesh childNormalMeshNode1 = new KoreGodotNormalMesh();
             childNormalMeshNode1.UpdateMesh(surfaceMesh1, 0.15f); // Small normals for pyramid
 
             // Set the surface material
-            var surfaceMaterial = KoreGodotMaterialFactory.SimpleColoredMaterial(new Color(0.2f, 0.8f, 0.6f));
-            childSurfaceMeshNode1.MaterialOverride = surfaceMaterial;
+            // var surfaceMaterial = KoreGodotMaterialFactory.SimpleColoredMaterial(new Color(0.2f, 0.8f, 0.6f));
+            // childSurfaceMeshNode1.MaterialOverride = surfaceMaterial;
 
             Surface1Node.AddChild(childMeshNode1);
             Surface1Node.AddChild(childSurfaceMeshNode1);
@@ -257,12 +273,16 @@ public partial class KoreSandbox3DScene : Node3D
         KoreGodotSurfaceMesh childSurfaceMeshNode1 = new KoreGodotSurfaceMesh();
         childSurfaceMeshNode1.UpdateMesh(koreMeshData1);
 
+        KoreGodotNormalMesh childNormalMeshNode = new KoreGodotNormalMesh();
+        childNormalMeshNode.UpdateMesh(koreMeshData1, 0.15f); // Small normals for cylinder
+
         // define a material for the surface mesh
         var surfaceMaterial = KoreGodotMaterialFactory.SimpleColoredMaterial(new Color(0.2f, 0.8f, 0.5f, 0.95f));
         childSurfaceMeshNode1.MaterialOverride = surfaceMaterial;
 
         latheNode.AddChild(childMeshNode1);
         latheNode.AddChild(childSurfaceMeshNode1);
+        latheNode.AddChild(childNormalMeshNode);
 
         GD.Print("lathe done");
     }

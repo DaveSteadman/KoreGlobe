@@ -99,6 +99,12 @@ public struct KoreXYZVector
                Math.Abs(Y - other.Y) < tolerance &&
                Math.Abs(Z - other.Z) < tolerance;
     }
+    
+    
+    public KoreXYZVector FlipX() { return new KoreXYZVector(-X, Y, Z); }
+    public KoreXYZVector FlipY() { return new KoreXYZVector(X, -Y, Z); }
+    public KoreXYZVector FlipZ() { return new KoreXYZVector(X, Y, -Z); }
+    
 
     // --------------------------------------------------------------------------------------------
 

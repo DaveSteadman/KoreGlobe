@@ -8,13 +8,15 @@ using KoreCommon;
 // Conversion utilities between KoreMeshData coordinate system and glTF coordinate system.
 //
 // COORDINATE SYSTEMS:
-// - KoreMeshData: X+ right, Y+ up, Z+ forward (right-handed)
-// - glTF 2.0: X+ right, Y+ up, Z+ forward (right-handed) - SAME AS KOREMESHDATA
+// - KoreMeshData: X+ right, Y+ up, Z+ forward (right-handed, traditional RW)
+//   UV: bottom-left origin (0,0), top-right (1,1), V+ goes up
+// - glTF 2.0: X+ right, Y+ up, Z+ forward (right-handed)
+//   UV: top-left origin (0,0), bottom-right (1,1), V+ goes down
 //
 // CONVERSIONS NEEDED:
-// - Position/Normals: Direct copy (coordinate systems match)
-// - UVs: V axis flip (KoreMeshData top-left origin → glTF bottom-left origin)
-// - Triangle winding: Forced 2nd/3rd vertex Ids flipped as consequence of Z axis flip
+// - Position/Normals: No coordinate flip needed (both Z+ forward)
+// - UVs: V axis flip (KoreMeshData bottom-left origin → glTF top-left origin)
+// - Triangle winding: No change needed
 //
 // Reference: glTF 2.0 Specification Section 3.6.2.2 "Coordinate System and Units"
 public static class KoreMeshGltfConv
@@ -24,14 +26,14 @@ public static class KoreMeshGltfConv
     // --------------------------------------------------------------------------------------------
 
     // Convert KoreXYZVector position to glTF Vector3.
-    // Direct conversion - coordinate systems are identical.
+    // Direct conversion - both coordinate systems are Z+ forward
     public static Vector3 PositionKoreToGltf(KoreXYZVector pos)
     {
         return new Vector3((float)pos.X, (float)pos.Y, (float)pos.Z);
     }
 
     // Convert glTF Vector3 position back to KoreXYZVector.
-    // Direct conversion - coordinate systems are identical.
+    // Direct conversion - both coordinate systems are Z+ forward
     public static KoreXYZVector PositionGltfToKore(Vector3 pos)
     {
         return new KoreXYZVector(pos.X, pos.Y, pos.Z);
@@ -42,14 +44,14 @@ public static class KoreMeshGltfConv
     // --------------------------------------------------------------------------------------------
 
     // Convert KoreXYZVector normal to glTF Vector3.
-    // Direct conversion - coordinate systems are identical.
+    // Direct conversion - both coordinate systems are Z+ forward
     public static Vector3 NormalKoreToGltf(KoreXYZVector normal)
     {
         return new Vector3((float)normal.X, (float)normal.Y, (float)normal.Z);
     }
 
     // Convert glTF Vector3 normal back to KoreXYZVector.
-    // Direct conversion - coordinate systems are identical.
+    // Direct conversion - both coordinate systems are Z+ forward
     public static KoreXYZVector NormalGltfToKore(Vector3 normal)
     {
         return new KoreXYZVector(normal.X, normal.Y, normal.Z);
@@ -60,20 +62,17 @@ public static class KoreMeshGltfConv
     // --------------------------------------------------------------------------------------------
 
     // Convert KoreXYVector UV to glTF Vector2.
-    // Flips V axis: KoreMeshData top-left (0,0) → glTF bottom-left (0,0)
-    // Note: glTF uses bottom-left UV origin, same as OpenGL
+    // Flip V axis: KoreMeshData bottom-left (0,0) → glTF top-left (0,0)
     public static Vector2 UVKoreToGltf(KoreXYVector uv)
     {
-        return new Vector2((float)uv.X, (float)uv.Y);
-        //return new Vector2((float)uv.X, 1.0f - (float)uv.Y);
+        return new Vector2((float)uv.X, 1.0f - (float)uv.Y);
     }
 
     // Convert glTF Vector2 UV back to KoreXYVector.
-    // Flips V axis: glTF bottom-left (0,0) → KoreMeshData top-left (0,0)
+    // Flip V axis: glTF top-left (0,0) → KoreMeshData bottom-left (0,0)
     public static KoreXYVector UVGltfToKore(Vector2 uv)
     {
-        return new KoreXYVector(uv.X, uv.Y);
-        //return new KoreXYVector(uv.X, 1.0f - uv.Y);
+        return new KoreXYVector(uv.X, 1.0f - uv.Y);
     }
 
     // --------------------------------------------------------------------------------------------
@@ -112,10 +111,11 @@ public static class KoreMeshGltfConv
     // --------------------------------------------------------------------------------------------
 
     // Convert triangle indices for glTF.
-    // Direct conversion - both use CCW winding when viewed from outside.
+    // Flip winding order to maintain correct normals after Z axis flip
+    // KoreMeshData CCW (A,B,C) → glTF CCW (A,C,B) after Z flip
     public static (int, int, int) ConvertTriangleWinding(int a, int b, int c)
     {
-        return (a, b, c); // No change needed
+        return (a, c, b); // Swap B and C to maintain CCW after Z flip
     }
 
     // --------------------------------------------------------------------------------------------

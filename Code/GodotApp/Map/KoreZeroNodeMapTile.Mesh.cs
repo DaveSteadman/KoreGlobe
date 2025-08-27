@@ -21,6 +21,7 @@ public partial class KoreZeroNodeMapTile : Node3D
     // Inputs being the RwAzElBox and TileEleData, we create a mesh that represents the tile.
     // Context being the RwtoGe scaling factor.
 
+    // KoreZeroNodeMapTile.CreateMeshPoints
     public void CreateMeshPoints()
     {
         // Define zero longitude center, so we can create the tile from relative (not absolute) angles and
@@ -37,12 +38,14 @@ public partial class KoreZeroNodeMapTile : Node3D
         int pointCountLon = TileEleData.Width;
         int pointCountLat = TileEleData.Height;
         List<double> lonZeroListRads = KoreValueUtils.CreateRangeList(pointCountLon, -RwTileLLBox.HalfDeltaLonRads, RwTileLLBox.HalfDeltaLonRads); // Relative azimuth - left to right (low to high longitude)
-        List<double> latListRads     = KoreValueUtils.CreateRangeList(pointCountLat, RwTileLLBox.MaxLatRads, RwTileLLBox.MinLatRads);
+        List<double> latListRads = KoreValueUtils.CreateRangeList(pointCountLat, RwTileLLBox.MaxLatRads, RwTileLLBox.MinLatRads); // Max to min +90 -> -90. Start at top of tile
 
-        // NOTE: The ranges mean the [0,0] is TOP LEFT
+        // NOTE: The tile is constructed from the top-left.
+        // - EleData [0,0] is TL.
+        // - UV [0,0] is TL.
 
         // Simplicity: Create 2 x 2D arrays for the top and bottom of the tile. We'll only use the edges of the bottom.
-        v3Data       = new KoreXYZVector[pointCountLon, pointCountLat];
+        v3Data = new KoreXYZVector[pointCountLon, pointCountLat];
         v3DataBottom = new KoreXYZVector[pointCountLon, pointCountLat];
 
         for (int ix = 0; ix < pointCountLon; ix++)
@@ -63,6 +66,7 @@ public partial class KoreZeroNodeMapTile : Node3D
                 KoreLLAPoint rwLLAPointPos = new KoreLLAPoint() { LatRads = latRads, LonRads = lonRads, AltMslM = ele };
                 KoreXYZVector rwXYZPointPos = rwLLAPointPos.ToXYZ();
                 KoreXYZVector rwXYZCenterOffset = rwXYZZeroLonCenter.XYZTo(rwXYZPointPos);
+            
 
                 // GD Print the tilecode and LLA of the TL point
                 if (ix == 0 && jy == 0)
@@ -70,9 +74,9 @@ public partial class KoreZeroNodeMapTile : Node3D
                     GD.Print($"KoreZeroNodeMapTile: {TileCode} // ele: {ele:F2} / TL LLA: {rwLLAPointPos}");
                 }
 
-
-
+                // Convert from RW coordinates to Godot ones.
                 rwXYZCenterOffset = rwXYZCenterOffset.Scale(KoreZeroOffset.RwToGeDistanceMultiplier);
+                rwXYZCenterOffset = rwXYZCenterOffset.FlipZ();
 
                 // Convert the Real-World position to the Game Engine position.
                 v3Data[ix, jy] = rwXYZCenterOffset;  // new KoreXYZVector(rwXYZPointPos);

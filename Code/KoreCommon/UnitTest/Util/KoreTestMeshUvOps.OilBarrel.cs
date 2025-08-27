@@ -25,11 +25,11 @@ public static partial class KoreTestMeshUvOps
         var mesh = new KoreMeshData();
 
         // UV layout parameters: Square image, 2 circles in top half, 2:1 barrel wrap in the bottom half
-        // UV 0,0 is top left, u is x, v is y
+        // UV 0,0 is bottom left (Godot/OpenGL native), u is x, v is y
         var topCenterU = 0.25;
-        var topCenterV = 0.25;
+        var topCenterV = 0.25;  // Flipped: was 0.25, now 0.75 (top of image in bottom-left coordinate system)
         var bottomCenterU = 0.75;
-        var bottomCenterV = 0.25;
+        var bottomCenterV = 0.25; // Flipped: was 0.25, now 0.75 (top of image in bottom-left coordinate system)
         var uvRadius = 0.24;  // Slightly smaller than 0.25 to avoid edge bleeding
 
         var wrapTLU = 0;
@@ -41,8 +41,8 @@ public static partial class KoreTestMeshUvOps
         var topRingVertices = new int[segments];
         var bottomRingVertices = new int[segments];
 
-        // So we want an increasing list
-        List<double> anglesRads = KoreValueUtils.CreateRangeList(segments, 0, Math.PI * 2);
+        // So we want a decreasing list (clockwise progression for proper texture orientation in Z- forward system)
+        List<double> anglesRads = KoreValueUtils.CreateRangeList(segments, 0, -Math.PI * 2);
 
         // --- TOP ---
 
@@ -62,7 +62,7 @@ public static partial class KoreTestMeshUvOps
 
             // UV coordinates for circular caps
             double topU = topCenterU + Math.Cos(anglesRads[i]) * uvRadius;
-            double topV = topCenterV - Math.Sin(anglesRads[i]) * uvRadius; // - = go up the UV image
+            double topV = topCenterV + Math.Sin(anglesRads[i]) * uvRadius; // + = go up in bottom-left coordinate system
 
             // Top ring vertex - CCW from above
             topRingVertices[i] = mesh.AddVertex(
@@ -97,7 +97,7 @@ public static partial class KoreTestMeshUvOps
             // UV coordinates for circular caps
 
             double bottomU = bottomCenterU + Math.Cos(anglesRads[i]) * uvRadius;
-            double bottomV = bottomCenterV + Math.Sin(anglesRads[i]) * uvRadius;
+            double bottomV = bottomCenterV - Math.Sin(anglesRads[i]) * uvRadius; // Bottom cap viewed from below, so invert V
 
             // Bottom ring vertex - CW from below
             bottomRingVertices[i] = mesh.AddVertex(
@@ -185,8 +185,8 @@ public static partial class KoreTestMeshUvOps
 
         // Set the normals to a simple flat shading from the triangles
         mesh.SetNormalsFromTriangles();
-        mesh.FlipAllNormals(); 
-        mesh.FlipAllTriangleWindings();
+        // mesh.FlipAllNormals(); 
+        // mesh.FlipAllTriangleWindings();
 
         return mesh;
     }
