@@ -65,14 +65,14 @@ public static class KoreMeshGltfConv
     // Flip V axis: KoreMeshData bottom-left (0,0) → glTF top-left (0,0)
     public static Vector2 UVKoreToGltf(KoreXYVector uv)
     {
-        return new Vector2((float)uv.X, 1.0f - (float)uv.Y);
+        return new Vector2((float)uv.X, (float)uv.Y);
     }
 
     // Convert glTF Vector2 UV back to KoreXYVector.
     // Flip V axis: glTF top-left (0,0) → KoreMeshData bottom-left (0,0)
     public static KoreXYVector UVGltfToKore(Vector2 uv)
     {
-        return new KoreXYVector(uv.X, 1.0f - uv.Y);
+        return new KoreXYVector(uv.X, uv.Y);
     }
 
     // --------------------------------------------------------------------------------------------
