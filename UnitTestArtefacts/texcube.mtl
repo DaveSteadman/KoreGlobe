@@ -1,22 +1,18 @@
-# Blender 4.5.0 MTL File: 'None'
-# www.blender.org
+# MTL file exported from KoreMeshData
 
 newmtl DefaultMaterial
-Ns 40.800011
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
-Ke 0.000000 0.000000 0.000000
-Ni 1.500000
-d 1.000000
-illum 1
+Ns 40.80
+illum 2
 
 newmtl texBoxMaterial
-Ns 60.700008
-Ka 1.000000 1.000000 1.000000
+Ka 0.784314 0.039216 0.039216
+Kd 0.784314 0.039216 0.039216
 Ks 0.000000 0.000000 0.000000
-Ke 0.000000 0.000000 0.000000
-Ni 1.500000
-d 1.000000
-illum 1
+Ns 60.70
 map_Kd texbox2.png
+illum 2
+
+
