@@ -44,19 +44,15 @@ App Outline
 Immeditate Task:
 ================
 
-- Consolidate the mesh editor window,
-    - adding toggles on the points, lines, normals etc.
-    - Buttons around flipping tris and axis
-    - import/export gltf and obj/mtl - with file select.
-        - Menu bar on the top, to hold so many options.
-
 - Load a child tile
     - Use a simple camera distance measure for now.
     - Look at more texture disposal ideas, get responsiveness on the dealloc.
 
-- Create a textured cube primitive.
-    - Should be simpler than the oil barrel. 3x3 image with UV faces.
-    - See if we can standardise the dumping of UVs to image.
+- Consolidate the mesh editor window,
+    - Adding toggles on the points, lines, normals etc.
+    - Buttons around flipping tris and axis
+    - Import/export gltf and obj/mtl - with file select.
+        - Menu bar on the top, to hold so many options.
 
 Short Term Todo List:
 =====================

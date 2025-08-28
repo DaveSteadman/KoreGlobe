@@ -372,10 +372,9 @@ public partial class KoreSandbox3DScene : Node3D
 
         // Add the texture material
         var texBoxMaterial = new KoreMeshMaterial("texBoxMaterial", new KoreColorRGB(200, 10, 10));
-        texBoxMaterial.Filename = "texbox.png"; // Use existing test image
+        texBoxMaterial.Filename = "texbox2.png"; // Use existing test image
         koreMeshData.AddMaterial(texBoxMaterial);
         koreMeshData.SetGroupMaterialName("All", "texBoxMaterial");
-
 
         // Setup the mesh render options
         KoreGodotLineMesh childMeshNode = new KoreGodotLineMesh();
@@ -385,16 +384,16 @@ public partial class KoreSandbox3DScene : Node3D
         childSurfaceMeshNode.UpdateMesh(koreMeshData, "All", "UnitTestArtefacts"); 
 
         KoreGodotNormalMesh childNormalMeshNode = new KoreGodotNormalMesh();
-        childNormalMeshNode.UpdateMesh(koreMeshData, 0.15f); // Small normals for cylinder
+        childNormalMeshNode.UpdateMesh(koreMeshData, 0.1f); // Small normals for cylinder
 
         texBoxNode.AddChild(childMeshNode);
         texBoxNode.AddChild(childSurfaceMeshNode);
         texBoxNode.AddChild(childNormalMeshNode);
 
-
+        // Save clean version without vertex numbers
+        string cleanPath = "UnitTestArtefacts/tex_cube_clean.png";
+        KoreMeshDataUvOps.SaveUVLayout(koreMeshData, cleanPath, 1024, true, true);
     }
-
-
 
     // ---------------------------------------------------------------------------------------------
     // MARK: BOX ARC

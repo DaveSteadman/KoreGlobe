@@ -20,6 +20,7 @@ public static partial class KoreTestMeshUvOps
         double halfWidth = width / 2.0;
         double halfDepth = depth / 2.0;
 
+        // 8 Cube Point Locations
         // Use native x is right, y+ height, -Z for depth away.
         // We'll put the 0,0,0 point of the box middle of the base
         KoreXYZVector topBackLeft = new(-halfWidth, height, -halfDepth);

@@ -12,19 +12,12 @@ public record struct KoreMeshLineColour(KoreColorRGB StartColor, KoreColorRGB En
 public record struct KoreMeshTriangleGroup(string MaterialName, List<int> TriangleIds);
 
 // KoreMeshData: A class to hold mesh data for 3D geometry.
-// - points, lines, triangles, normals, UVs, vertex colors, line colors, and triangle colors.
-// - Information about the larger context, such as the object's name, position, rotation, and scale is handled by a higher level class.
-//
+// - points, lines, triangles, normals, UVs, vertex colors, line colors, and materials.
+
 // COORDINATE SYSTEM SPECIFICATION:
-// - KoreMeshData uses - X+: Right, Y+: Up, Z-: Forward (Godot native)
-// - UV coordinates use top-left origin (Godot/OpenGL style): U (X) incrementing right, V (Y) incrementing down to a 1,1 bottom right
+// - X+: Right, Y+: Up, Z-: Forward (Godot native)
+// - UVs use top-left origin (Godot/OpenGL style): U (X) incrementing right, V (Y) incrementing down to a 1,1 bottom right
 // - Triangle winding: clockwise when viewed from outside (Godot native)
-//
-// CONVERSION TO OTHER FORMATS:
-// - Godot (Y-up, Z-backward, UV bottom-left): Direct coordinate mapping, no conversion needed
-// - glTF (Y-up, Z-forward, UV top-left): Z component negated, triangle winding flipped, V axis flipped
-// - Blender (Z-up, Y-forward): Coordinate rotation (x,y,z) → (x,z,-y), check materials
-// - OBJ/MTL: Depends on target application, typically needs coordinate and UV conversion
 
 public partial class KoreMeshData
 {
@@ -71,14 +64,14 @@ public partial class KoreMeshData
     // Copy constructor
     public KoreMeshData(KoreMeshData mesh)
     {
-        this.Vertices = new Dictionary<int, KoreXYZVector>(mesh.Vertices);
-        this.Lines = new Dictionary<int, KoreMeshLine>(mesh.Lines);
-        this.Triangles = new Dictionary<int, KoreMeshTriangle>(mesh.Triangles);
-        this.Normals = new Dictionary<int, KoreXYZVector>(mesh.Normals);
-        this.UVs = new Dictionary<int, KoreXYVector>(mesh.UVs);
-        this.VertexColors = new Dictionary<int, KoreColorRGB>(mesh.VertexColors);
-        this.LineColors = new Dictionary<int, KoreMeshLineColour>(mesh.LineColors);
-        this.Materials = new List<KoreMeshMaterial>();
+        this.Vertices            = new Dictionary<int, KoreXYZVector>(mesh.Vertices);
+        this.Lines               = new Dictionary<int, KoreMeshLine>(mesh.Lines);
+        this.Triangles           = new Dictionary<int, KoreMeshTriangle>(mesh.Triangles);
+        this.Normals             = new Dictionary<int, KoreXYZVector>(mesh.Normals);
+        this.UVs                 = new Dictionary<int, KoreXYVector>(mesh.UVs);
+        this.VertexColors        = new Dictionary<int, KoreColorRGB>(mesh.VertexColors);
+        this.LineColors          = new Dictionary<int, KoreMeshLineColour>(mesh.LineColors);
+        this.Materials           = new List<KoreMeshMaterial>();
         this.NamedTriangleGroups = new Dictionary<string, KoreMeshTriangleGroup>(mesh.NamedTriangleGroups);
     }
 
@@ -143,7 +136,7 @@ public partial class KoreMeshData
     // MARK: Normals
     // --------------------------------------------------------------------------------------------
 
-    public void SetNormalForId(int vertexId, KoreXYZVector normal)
+    public void SetNormal(int vertexId, KoreXYZVector normal)
     {
         // Need to have the normal tied to the vertex ID
         if (!Vertices.ContainsKey(vertexId))
@@ -161,6 +154,7 @@ public partial class KoreMeshData
         // We want to throw here, because we have a unique ID concept and random new additions break this
         if (!Vertices.ContainsKey(vertexId))
             throw new ArgumentOutOfRangeException(nameof(vertexId), "Vertex ID is not found.");
+
         UVs[vertexId] = uv;
     }
 
@@ -450,10 +444,6 @@ public partial class KoreMeshData
         // Cross product gives us the face normal (right-hand rule)
         KoreXYZVector faceNormal = KoreXYZVector.CrossProduct(ab, ac);
 
-        // Normalize the face normal using the built-in method
-        //faceNormal = faceNormal.Normalize();
-        //faceNormal = faceNormal.Invert();
-
         // Add three separate vertices with the same face normal for sharp edges
         int idxA = AddVertex(a, faceNormal);
         int idxB = AddVertex(b, faceNormal);
@@ -519,7 +509,6 @@ public partial class KoreMeshData
             AddTriangleToGroup(tri2Id, groupName);
         }
     }
-
 
     // --------------------------------------------------------------------------------------------
     // MARK: Materials
