@@ -25,40 +25,43 @@ public static partial class KoreMeshDataIO
     /// <param name="objectName">Name for the object in the OBJ file</param>
     /// <param name="mtlFileName">Name of the MTL file (without extension)</param>
     /// <returns>OBJ file content as string</returns>
+
+    // Usage: KoreMeshDataIO.ToObj(meshData, "MyMesh", "MyMeshMaterial");
+
     public static string ToObj(KoreMeshData mesh, string objectName = "KoreMesh", string? mtlFileName = null)
     {
         var sb = new StringBuilder();
-        
+
         // OBJ Header
         sb.AppendLine("# OBJ file exported from KoreMeshData");
         sb.AppendLine($"# Object: {objectName}");
         sb.AppendLine();
-        
+
         // Reference MTL file if materials exist and MTL filename provided
         if (mesh.Materials.Count > 0 && !string.IsNullOrEmpty(mtlFileName))
         {
             sb.AppendLine($"mtllib {mtlFileName}.mtl");
             sb.AppendLine();
         }
-        
+
         sb.AppendLine($"o {objectName}");
         sb.AppendLine();
-        
+
         // Export vertices (v x y z)
         // Create a mapping from internal vertex IDs to OBJ vertex indices (1-based)
         var vertexIdToObjIndex = new Dictionary<int, int>();
         int objVertexIndex = 1;
-        
+
         foreach (var kvp in mesh.Vertices.OrderBy(x => x.Key))
         {
             int vertexId = kvp.Key;
             KoreXYZVector pos = kvp.Value;
-            
+
             vertexIdToObjIndex[vertexId] = objVertexIndex++;
             sb.AppendLine($"v {pos.X.ToString("F6", CultureInfo.InvariantCulture)} {pos.Y.ToString("F6", CultureInfo.InvariantCulture)} {pos.Z.ToString("F6", CultureInfo.InvariantCulture)}");
         }
         sb.AppendLine();
-        
+
         // Export normals if they exist (vn x y z)
         var hasNormals = mesh.Normals.Count > 0;
         if (hasNormals)
@@ -98,13 +101,13 @@ public static partial class KoreMeshDataIO
             }
             sb.AppendLine();
         }
-        
+
         // Export triangles grouped by material
         if (mesh.Triangles.Count > 0)
         {
             ExportTrianglesByMaterial(mesh, sb, vertexIdToObjIndex, hasNormals, hasUVs);
         }
-        
+
         // Export lines as line elements (l v1 v2)
         if (mesh.Lines.Count > 0)
         {
@@ -112,7 +115,7 @@ public static partial class KoreMeshDataIO
             foreach (var kvp in mesh.Lines.OrderBy(x => x.Key))
             {
                 KoreMeshLine line = kvp.Value;
-                if (vertexIdToObjIndex.TryGetValue(line.A, out int objIndexA) && 
+                if (vertexIdToObjIndex.TryGetValue(line.A, out int objIndexA) &&
                     vertexIdToObjIndex.TryGetValue(line.B, out int objIndexB))
                 {
                     sb.AppendLine($"l {objIndexA} {objIndexB}");
@@ -120,7 +123,7 @@ public static partial class KoreMeshDataIO
             }
             sb.AppendLine();
         }
-        
+
         return sb.ToString();
     }
     

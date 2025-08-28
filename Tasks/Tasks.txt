@@ -48,11 +48,8 @@ Immeditate Task:
     - Use a simple camera distance measure for now.
     - Look at more texture disposal ideas, get responsiveness on the dealloc.
 
-- Consolidate the mesh editor window,
-    - Adding toggles on the points, lines, normals etc.
-    - Buttons around flipping tris and axis
-    - Import/export gltf and obj/mtl - with file select.
-        - Menu bar on the top, to hold so many options.
+- Consolidate the mesh editor window:
+    - Iterate on the export and import between formats - see how well we can work with Blender and re-import.
 
 Short Term Todo List:
 =====================

@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.IO;
 
 using KoreCommon;
 using KoreCommon.UnitTest;
@@ -381,7 +382,7 @@ public partial class KoreSandbox3DScene : Node3D
         childMeshNode.UpdateMesh(koreMeshData);
 
         KoreGodotSurfaceMesh childSurfaceMeshNode = new KoreGodotSurfaceMesh();
-        childSurfaceMeshNode.UpdateMesh(koreMeshData, "All", "UnitTestArtefacts"); 
+        childSurfaceMeshNode.UpdateMesh(koreMeshData, "All", "UnitTestArtefacts");
 
         KoreGodotNormalMesh childNormalMeshNode = new KoreGodotNormalMesh();
         childNormalMeshNode.UpdateMesh(koreMeshData, 0.1f); // Small normals for cylinder
@@ -393,6 +394,17 @@ public partial class KoreSandbox3DScene : Node3D
         // Save clean version without vertex numbers
         string cleanPath = "UnitTestArtefacts/tex_cube_clean.png";
         KoreMeshDataUvOps.SaveUVLayout(koreMeshData, cleanPath, 1024, true, true);
+
+        // Export the texbox to an Obj/MTL file
+        {
+            string objPath = "UnitTestArtefacts/texcube.obj";
+            string mtlPath = "UnitTestArtefacts/texcube.mtl";
+
+            // Export to OBJ/MTL
+            var (objContent, mtlContent) = KoreMeshDataIO.ToObjMtl(koreMeshData, "texcube", "texcube");
+            File.WriteAllLines(objPath, new[] { objContent });
+            File.WriteAllLines(mtlPath, new[] { mtlContent });
+        }
     }
 
     // ---------------------------------------------------------------------------------------------
