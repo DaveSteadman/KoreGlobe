@@ -300,13 +300,82 @@ public partial class KoreWorldMoverNode2 : Node3D
         bool shift = _currentKeys.Contains(Key.Shift);
         return shift ? "Moving" : "Rotating";
     }
-    
+
     // --------------------------------------------------------------------------------------------
-    
+
     private void ApplyPosLimits()
     {
         // Example: Clamp altitude to a realistic range
         if (CurrLLA.AltMslM < 500) CurrLLA.AltMslM = 500; // No negative altitudes
         if (CurrLLA.AltMslKm > 10000) CurrLLA.AltMslKm = 10000; // Arbitrary upper limit
     }
+
+    // --------------------------------------------------------------------------------------------
+    // MARK: String
+    // --------------------------------------------------------------------------------------------
+
+    // Turn the camera position to and from a string we can serialise
+
+    public string GetMoverString()
+    {
+        return $"[{CurrLLA.LatDegs:00.0000}, {CurrLLA.LonDegs:000.0000}, {CurrLLA.AltMslM:F0}, {CurrAim.AzDegs:000.00}, {CurrAim.ElDegs:00.00}]";
+    }
+
+    public void SetMoverString(string s)
+    {
+        // Expecting format: [lat, lon, alt]
+        s = s.Trim();
+        if (!s.StartsWith("[") || !s.EndsWith("]"))
+        {
+            GD.PrintErr($"KoreWorldMoverNode2: Invalid mover string format (missing brackets): {s}");
+            return;
+        }
+        s = s[1..^1]; // Remove brackets
+
+        var parts = s.Split(',');
+        if (parts.Length != 5)
+        {
+            GD.PrintErr($"KoreWorldMoverNode2: Invalid mover string format (expected 5 parts): {s}");
+            return;
+        }
+
+        if (!double.TryParse(parts[0].Trim(), out double lat))
+        {
+            GD.PrintErr($"KoreWorldMoverNode2: Invalid latitude in mover string: {parts[0]}");
+            return;
+        }
+        if (!double.TryParse(parts[1].Trim(), out double lon))
+        {
+            GD.PrintErr($"KoreWorldMoverNode2: Invalid longitude in mover string: {parts[1]}");
+            return;
+        }
+        if (!double.TryParse(parts[2].Trim(), out double alt))
+        {
+            GD.PrintErr($"KoreWorldMoverNode2: Invalid altitude in mover string: {parts[2]}");
+            return;
+        }
+        if (!double.TryParse(parts[3].Trim(), out double az))
+        {
+            GD.PrintErr($"KoreWorldMoverNode2: Invalid azimuth in mover string: {parts[3]}");
+            return;
+        }
+        if (!double.TryParse(parts[4].Trim(), out double el))
+        {
+            GD.PrintErr($"KoreWorldMoverNode2: Invalid elevation in mover string: {parts[4]}");
+            return;
+        }
+
+        CurrLLA.LatDegs = lat;
+        CurrLLA.LonDegs = lon;
+        CurrLLA.AltMslM = alt;
+        CurrAim.AzDegs = az;
+        CurrAim.ElDegs = el;
+
+        // Apply limits
+        ApplyPosLimits();
+
+        // Update transform
+        UpdateTransformFromLLAAndAim();
+    }
+
 }

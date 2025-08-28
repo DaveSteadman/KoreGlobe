@@ -21,6 +21,7 @@ public class KoreGodotFactory
 
     //public GloCameraMoverWorld WorldCamNode         { get; private set; }
 
+    // Configuration settings - KoreGodotFactory.Config
     public KoreStringDictionary Config { get; private set; } = new KoreStringDictionary();
 
     //public KoreGodotEntityManager GodotEntityManager { get; private set; }

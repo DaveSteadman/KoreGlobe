@@ -2,6 +2,7 @@ using Godot;
 using System;
 
 using KoreCommon;
+using KoreSim;
 using System.Collections.Generic;
 
 #nullable enable
@@ -83,6 +84,13 @@ public partial class MainScene : Node3D
         // Add the camera mount and camera
         KoreGodotMainSceneFactory.AddWorldCamera();
 
+        string cameraString = KoreSimFactory.Instance.KoreConfig.Get("CameraPosition");
+        
+        if (!string.IsNullOrEmpty(cameraString))
+        {
+            KoreGodotMainSceneFactory.WorldCameraMount?.SetMoverString(cameraString);
+        }
+
     }
 
     public override void _Process(double delta)
@@ -108,6 +116,11 @@ public partial class MainScene : Node3D
             newZeroPos.AltMslM = 0;
 
             KoreZeroOffset.SetLLA(newZeroPos);
+
+            // Get the camera string and save it to the config
+            string cameraString = KoreGodotMainSceneFactory.WorldCameraMount?.GetMoverString() ?? string.Empty;
+            KoreSimFactory.Instance.KoreConfig.Set("CameraPosition", cameraString);
+            KoreSimFactory.Instance.SaveConfig();
         }
     }
 

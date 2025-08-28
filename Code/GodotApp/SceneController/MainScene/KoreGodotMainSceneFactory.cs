@@ -23,6 +23,7 @@ public static class KoreGodotMainSceneFactory
     public static KoreZeroNodeMapManager? MapManagerNode { get; private set; } = null;
     public static KoreGodotEntityManager? EntityManagerNode { get; private set; } = null;
 
+    // KoreGodotMainSceneFactory.WorldCameraMount
     public static KoreWorldMoverNode2? WorldCameraMount { get; private set; } = null;
 
     // KoreGodotMainSceneFactory.ViewSize.LatestValue = new KoreXYRect(0, 0, 800, 600);

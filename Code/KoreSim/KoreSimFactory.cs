@@ -168,6 +168,12 @@ public class KoreSimFactory
 
     // --------------------------------------------------------------------------------------------
 
+    // Usage: KoreSimFactory.Instance.SaveConfig();
+    public void SaveConfig()
+    {
+        SaveConfig(ConfigPath);
+    }
+
     // Save the config:
     // Usage: KoreSimFactory.Instance.SaveConfig(KoreSimFactory.ConfigPath);
     public void SaveConfig(string configFilePath)
