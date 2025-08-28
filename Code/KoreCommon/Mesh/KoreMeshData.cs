@@ -16,10 +16,9 @@ public record struct KoreMeshTriangleGroup(string MaterialName, List<int> Triang
 // - Information about the larger context, such as the object's name, position, rotation, and scale is handled by a higher level class.
 //
 // COORDINATE SYSTEM SPECIFICATION:
-// - KoreMeshData uses a right-handed coordinate system with Y pointing up (Y-up)
-// - X+: Right, Y+: Up, Z-: Forward (Godot native)
+// - KoreMeshData uses - X+: Right, Y+: Up, Z-: Forward (Godot native)
 // - UV coordinates use top-left origin (Godot/OpenGL style): U (X) incrementing right, V (Y) incrementing down to a 1,1 bottom right
-// - Triangle winding: Counter-clockwise when viewed from outside (right-hand rule)
+// - Triangle winding: clockwise when viewed from outside (Godot native)
 //
 // CONVERSION TO OTHER FORMATS:
 // - Godot (Y-up, Z-backward, UV bottom-left): Direct coordinate mapping, no conversion needed
@@ -382,7 +381,7 @@ public partial class KoreMeshData
     // MARK: Triangle
     // --------------------------------------------------------------------------------------------
 
-    // Triangles wind CCW
+    // Triangles wind CW
 
     // Add a triangle and return its ID
     public int AddTriangle(int vertexIdA, int vertexIdB, int vertexIdC)
@@ -408,6 +407,28 @@ public partial class KoreMeshData
         int triId = AddTriangle(idxA, idxB, idxC);
 
         return triId;
+    }
+
+    // Add an independent triangle with vertices and UV positions
+    // Uses CW winding for the triangle.
+    public void AddTriangle(KoreXYZVector a, KoreXYZVector b, KoreXYZVector c,
+                           KoreXYVector uvA, KoreXYVector uvB, KoreXYVector uvC,
+                           string? groupName = null)
+    {
+        int idxA = AddVertex(a);
+        int idxB = AddVertex(b);
+        int idxC = AddVertex(c);
+
+        SetUV(idxA, uvA);
+        SetUV(idxB, uvB);
+        SetUV(idxC, uvC);
+
+        // Create the triangle
+        int triId = AddTriangle(idxA, idxB, idxC);
+
+        // Add to the group
+        if (groupName != null)
+            AddTriangleToGroup(triId, groupName);
     }
 
     // --------------------------------------------------------------------------------------------
@@ -439,7 +460,7 @@ public partial class KoreMeshData
         int idxC = AddVertex(c, faceNormal);
         int idxD = AddVertex(d, faceNormal);
 
-        // Add the triangles with CCW winding
+        // Add the triangles with CW winding
         int triId1 = AddTriangle(idxA, idxC, idxB);
         int triId2 = AddTriangle(idxA, idxD, idxC);
 
@@ -449,7 +470,7 @@ public partial class KoreMeshData
 
     public void AddFace(int aId, int bId, int cId, int dId)
     {
-        // Create two triangles from the face with CCW winding
+        // Create two triangles from the face with CW winding
         AddTriangle(aId, cId, bId);
         AddTriangle(aId, dId, cId);
     }
@@ -466,10 +487,39 @@ public partial class KoreMeshData
         SetUV(idxC, uvBox.BottomRight);
         SetUV(idxD, uvBox.BottomLeft);
         
-        // Create two triangles from the face with CCW winding
-        AddTriangle(idxA, idxC, idxB);
-        AddTriangle(idxA, idxD, idxC);
+        // Create two triangles from the face with CW winding
+        AddTriangle(idxA, idxB, idxC);
+        AddTriangle(idxA, idxC, idxD);
     }
+
+    // Explicit UV mapping for rotated/oriented faces
+    // Maps: a→uvA, b→uvB, c→uvC, d→uvD directly
+    public void AddFace(KoreXYZVector a, KoreXYZVector b, KoreXYZVector c, KoreXYZVector d,
+                       KoreXYVector uvA, KoreXYVector uvB, KoreXYVector uvC, KoreXYVector uvD,
+                       string? groupName = null)
+    {
+        int idxA = AddVertex(a);
+        int idxB = AddVertex(b);
+        int idxC = AddVertex(c);
+        int idxD = AddVertex(d);
+
+        SetUV(idxA, uvA);
+        SetUV(idxB, uvB);
+        SetUV(idxC, uvC);
+        SetUV(idxD, uvD);
+
+        // Create two triangles from the face with CW winding
+        int tri1Id = AddTriangle(idxA, idxB, idxC);
+        int tri2Id = AddTriangle(idxA, idxC, idxD);
+
+        // add triangles to group if specified
+        if (!string.IsNullOrEmpty(groupName))
+        {
+            AddTriangleToGroup(tri1Id, groupName);
+            AddTriangleToGroup(tri2Id, groupName);
+        }
+    }
+
 
     // --------------------------------------------------------------------------------------------
     // MARK: Materials
@@ -517,6 +567,11 @@ public partial class KoreMeshData
         return materialNames;
     }
 
+    public void AddDefaultMaterial()
+    {
+        AddMaterial(KoreMeshMaterialPalette.DefaultMaterial);
+    }
+
     // --------------------------------------------------------------------------------------------
     // MARK: Groups
     // --------------------------------------------------------------------------------------------
@@ -547,6 +602,7 @@ public partial class KoreMeshData
         }
         return null;
     }
+    
 
     // --------------------------------------------------------------------------------------------
 
@@ -606,9 +662,10 @@ public partial class KoreMeshData
         {
             KoreMeshTriangleGroup newGroup = new KoreMeshTriangleGroup
             {
-                MaterialName = "",
+                MaterialName = KoreMeshMaterialPalette.DefaultMaterialName,
                 TriangleIds = new List<int> { triangleId }
             };
+            AddDefaultMaterial();
             NamedTriangleGroups[groupName] = newGroup;
         }
     }

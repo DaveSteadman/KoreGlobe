@@ -207,7 +207,7 @@ public static class KoreMeshDataGltfIO
                 var v2 = ConvertToGltfVertex(triangle.B, koreMesh);
                 var v3 = ConvertToGltfVertex(triangle.C, koreMesh);
                 
-                // Add triangle with CCW winding (no flip needed)
+                // Add triangle with CCW winding (converted from KoreMeshData CW)
                 primitive.AddTriangle(v1, v2, v3);
             }
         }

@@ -71,11 +71,11 @@ public partial class KoreGodotSurfaceMesh : MeshInstance3D
             Vector3 godotPos = KoreMeshGodotConv.PositionKoreToGodot(vertex);
 
             // Set vertex color if available
-            if (newMeshData.VertexColors.ContainsKey(vertexId))
-            {
-                Color vertexColor = KoreConvColor.ToGodotColor(newMeshData.VertexColors[vertexId]);
-                _surfaceTool.SetColor(vertexColor);
-            }
+            //if (newMeshData.VertexColors.ContainsKey(vertexId))
+            //{
+                //Color vertexColor = KoreConvColor.ToGodotColor(newMeshData.VertexColors[vertexId]);
+                //_surfaceTool.SetColor(vertexColor);
+            //}
 
             // Set normal if available
             if (newMeshData.Normals.ContainsKey(vertexId))

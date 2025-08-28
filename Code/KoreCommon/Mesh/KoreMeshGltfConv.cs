@@ -111,11 +111,11 @@ public static class KoreMeshGltfConv
     // --------------------------------------------------------------------------------------------
 
     // Convert triangle indices for glTF.
-    // Flip winding order to maintain correct normals after Z axis flip
-    // KoreMeshData CCW (A,B,C) → glTF CCW (A,C,B) after Z flip
+    // Convert between winding conventions: KoreMeshData uses CW, glTF uses CCW
+    // KoreMeshData CW (A,B,C) → glTF CCW (A,C,B) 
     public static (int, int, int) ConvertTriangleWinding(int a, int b, int c)
     {
-        return (a, c, b); // Swap B and C to maintain CCW after Z flip
+        return (a, c, b); // Swap B and C to convert CW to CCW
     }
 
     // --------------------------------------------------------------------------------------------

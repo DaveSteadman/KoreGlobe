@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Godot;
 
 #nullable enable
 
@@ -344,6 +345,32 @@ public partial class KoreMeshData
                 UVs[vertexId] = fallback;
         }
     }
+    
+    public void FlipAllUVsVertical()
+    {
+        // Loop through all the UVs and flip their V coordinate
+        foreach (var kvp in UVs)
+        {
+            int uvId = kvp.Key;
+            KoreXYVector uv = kvp.Value;
+
+            // Flip the V coordinate (Y axis in KoreXYVector)
+            UVs[uvId] = new KoreXYVector(uv.X, 1.0 - uv.Y);
+        }
+    }
+
+    public void FlipAllUVsHorizontal()
+    {
+        // Loop through all the UVs and flip their U coordinate
+        foreach (var kvp in UVs)
+        {
+            int uvId = kvp.Key;
+            KoreXYVector uv = kvp.Value;
+
+            // Flip the U coordinate (X axis in KoreXYVector)
+            UVs[uvId] = new KoreXYVector(1.0 - uv.X, uv.Y);
+        }
+    }
 
     // --------------------------------------------------------------------------------------------
     // MARK: Vertex Colors
@@ -508,6 +535,10 @@ public partial class KoreMeshData
             return;
 
         KoreMeshTriangle triangle = Triangles[triId];
+
+
+        GD.Print($"Flipping triangle {triId} winding: ({triangle.A}, {triangle.B}, {triangle.C})");
+        
         // Swap the vertices to flip the winding
         int temp = triangle.B;
         triangle.B = triangle.C;

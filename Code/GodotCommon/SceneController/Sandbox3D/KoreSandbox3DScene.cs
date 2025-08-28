@@ -32,9 +32,10 @@ public partial class KoreSandbox3DScene : Node3D
         GD.Print("KoreSandbox3DScene _Ready");
         CreateTestMeshData_Box();
         CreateTestMeshData_Surface();
-        CreateTestMeshData_Lathe();
+        //CreateTestMeshData_Lathe();
         CreateTestMeshData_Cylinder();
         AddTestMeshData_BoxArc();
+        AddTestMeshData_TexBox();
     }
 
     public override void _Process(double delta)
@@ -351,6 +352,49 @@ public partial class KoreSandbox3DScene : Node3D
         GD.Print("cylinder done");
 
     }
+
+    // ---------------------------------------------------------------------------------------------
+    // MARK: TEX BOX 
+    // ---------------------------------------------------------------------------------------------
+
+    public void AddTestMeshData_TexBox()
+    {
+        // Add the holding node for the meshes
+        Node3D texBoxNode = new Node3D() { Name = "texBoxNode" };
+        AddChild(texBoxNode);
+        texBoxNode.Position = new Vector3(1.5f, 1.5f, 2f);
+
+        // Add a little debug sphere on the origin
+        texBoxNode.AddChild(KoreNodeUtils.DebugSphere(0.01f));
+
+        // Setup the basic mesh
+        KoreMeshData koreMeshData = KoreTestMeshUvOps.CreateBoxWithUV(0.5, 0.5, 0.5);
+
+        // Add the texture material
+        var texBoxMaterial = new KoreMeshMaterial("texBoxMaterial", new KoreColorRGB(200, 10, 10));
+        texBoxMaterial.Filename = "texbox.png"; // Use existing test image
+        koreMeshData.AddMaterial(texBoxMaterial);
+        koreMeshData.SetGroupMaterialName("All", "texBoxMaterial");
+
+
+        // Setup the mesh render options
+        KoreGodotLineMesh childMeshNode = new KoreGodotLineMesh();
+        childMeshNode.UpdateMesh(koreMeshData);
+
+        KoreGodotSurfaceMesh childSurfaceMeshNode = new KoreGodotSurfaceMesh();
+        childSurfaceMeshNode.UpdateMesh(koreMeshData, "All", "UnitTestArtefacts"); 
+
+        KoreGodotNormalMesh childNormalMeshNode = new KoreGodotNormalMesh();
+        childNormalMeshNode.UpdateMesh(koreMeshData, 0.15f); // Small normals for cylinder
+
+        texBoxNode.AddChild(childMeshNode);
+        texBoxNode.AddChild(childSurfaceMeshNode);
+        texBoxNode.AddChild(childNormalMeshNode);
+
+
+    }
+
+
 
     // ---------------------------------------------------------------------------------------------
     // MARK: BOX ARC

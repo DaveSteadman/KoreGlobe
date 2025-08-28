@@ -62,7 +62,7 @@ public static partial class KoreMeshDataPrimitives
 
             if (lat == 0)
             {
-                // Special case: connect top point to first ring (triangular fans - CCW)
+                // Special case: connect top point to first ring (triangular fans - CW)
                 for (int lon = 0; lon < lowerRing.Count; lon++)
                 {
                     int nextLon = (lon + 1) % lowerRing.Count;
@@ -71,12 +71,12 @@ public static partial class KoreMeshDataPrimitives
             }
             else
             {
-                // Normal case: connect two rings with quads (2 triangles each - CCW)
+                // Normal case: connect two rings with quads (2 triangles each - CW)
                 for (int lon = 0; lon < upperRing.Count; lon++)
                 {
                     int nextLon = (lon + 1) % upperRing.Count;
 
-                    // Two triangles forming a quad (CCW winding)
+                    // Two triangles forming a quad (CW winding)
                     mesh.AddTriangle(upperRing[lon], upperRing[nextLon], lowerRing[nextLon]);
                     mesh.AddTriangle(upperRing[lon], lowerRing[nextLon], lowerRing[lon]);
                 }

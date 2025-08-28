@@ -258,4 +258,9 @@ public partial class KoreGodotNormalMesh : MeshInstance3D
         NormalLength = normalLength;
         UpdateMesh(meshData);
     }
+    
+    public void ClearMesh()
+    {
+        Mesh = null;
+    }
 }

@@ -57,7 +57,7 @@ public static partial class KoreMeshDataPrimitives
         pyramidMesh.AddGroupWithMaterial("base", material);
         pyramidMesh.AddGroupWithMaterial("sides", material);
 
-        // Add triangles for the pyramid faces (CCW winding from outside)
+        // Add triangles for the pyramid faces (CW winding from outside)
         pyramidMesh.AddTriangleToGroup(pyramidMesh.AddTriangle(idxApex, idxBase2, idxBase1), "sides"); // front face
         pyramidMesh.AddTriangleToGroup(pyramidMesh.AddTriangle(idxApex, idxBase3, idxBase2), "sides"); // left face
         pyramidMesh.AddTriangleToGroup(pyramidMesh.AddTriangle(idxApex, idxBase4, idxBase3), "sides"); // back face
@@ -66,7 +66,7 @@ public static partial class KoreMeshDataPrimitives
         pyramidMesh.AddTriangleToGroup(pyramidMesh.AddTriangle(idxBase1, idxBase2, idxBase3), "base"); // base triangle 1
         pyramidMesh.AddTriangleToGroup(pyramidMesh.AddTriangle(idxBase1, idxBase3, idxBase4), "base"); // base triangle 2
 
-        // Add wireframe lines (match the CCW triangle winding)
+        // Add wireframe lines (match the CW triangle winding)
         pyramidMesh.OutlineTriangle(idxApex, idxBase2, idxBase1, linecolor);
         pyramidMesh.OutlineTriangle(idxApex, idxBase3, idxBase2, linecolor);
         pyramidMesh.OutlineTriangle(idxApex, idxBase4, idxBase3, linecolor);

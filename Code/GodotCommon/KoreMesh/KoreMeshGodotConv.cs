@@ -14,7 +14,7 @@ using Godot;
 // CONVERSIONS NEEDED:
 // - Position/Normals: Direct copy (coordinate systems now match)
 // - UVs: Direct copy (both use top-left origin)
-// - Triangle winding: Direct copy (both use CCW when viewed from outside)
+// - Triangle winding: Direct copy (both use CW when viewed from outside)
 public static class KoreMeshGodotConv
 {
     // --------------------------------------------------------------------------------------------

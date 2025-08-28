@@ -72,7 +72,7 @@ public static partial class KoreMeshDataPrimitives
                 int i01 = vertexIndices[nextRowStart + i];
                 int i11 = vertexIndices[nextRowStart + (i + 1) % horizSegments];
 
-                // CCW winding
+                // CW winding
                 mesh.AddTriangle(i00, i11, i10);
                 mesh.AddTriangle(i00, i01, i11);
 

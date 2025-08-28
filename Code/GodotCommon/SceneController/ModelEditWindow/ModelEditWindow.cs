@@ -22,6 +22,7 @@ public partial class ModelEditWindow : Window
 
     // Mesh
     private KoreMeshData? WindowMeshData = null;
+    private KoreGodotNormalMesh? NormalMeshData = null;
     private string? SourceFilePath = null;  // Track source file path for texture resolution
 
     // UI Timers
@@ -34,6 +35,8 @@ public partial class ModelEditWindow : Window
     public bool ToClose { get; set; } = false;
 
     private Button? CloseButton = null;
+
+    // int list of menu items
 
     // --------------------------------------------------------------------------------------------
     // MARK: Node3D
@@ -109,36 +112,6 @@ public partial class ModelEditWindow : Window
 
         // Link up the X button to close the window
         Connect("close_requested", new Callable(this, nameof(OnCloseRequested)));
-    }
-
-    private void PopulateMenuBar()
-    {
-        if (ModelMenuBar == null) return;
-
-        // Add menu items
-        // ModelMenuBar.AddItem("File");
-        // ModelMenuBar.AddItem("Edit");
-        // ModelMenuBar.AddItem("View");
-        // ModelMenuBar.AddItem("Help");
-
-        // // Connect menu item signals
-        // ModelMenuBar.GetItem("File")?.Connect("pressed", new Callable(this, nameof(OnFileMenuPressed)));
-        // ModelMenuBar.GetItem("Edit")?.Connect("pressed", new Callable(this, nameof(OnEditMenuPressed)));
-        // ModelMenuBar.GetItem("View")?.Connect("pressed", new Callable(this, nameof(OnViewMenuPressed)));
-        // ModelMenuBar.GetItem("Help")?.Connect("pressed", new Callable(this, nameof(OnHelpMenuPressed)));
-
-
-        int fileIdx = ModelMenuBar.AddMenu("File");
-        var file = ModelMenuBar.GetPopup(fileIdx);
-        file.AddItem("New",   1);
-        file.AddItem("Open…", 2);
-        file.AddSeparator();
-        file.AddItem("Exit",  99);
-
-        file.IdPressed += OnCloseRequested;        // item clicks
-        file.AboutToPopup += OnCloseRequested;  // optional enable/disable before show
-
-
     }
 
 

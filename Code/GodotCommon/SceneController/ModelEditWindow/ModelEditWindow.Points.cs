@@ -37,11 +37,11 @@ public partial class ModelEditWindow
         DeleteAllDebug();
 
         // Update the 3D mesh visualization using material groups
-        DrawMeshWithGroups(WindowMeshData);
 
-        // Also visualize the points and lines in the 3D scene
-        DrawPoints(WindowMeshData);
-        DrawLines(WindowMeshData);
+        if (ViewSelection.ShowFaces) DrawMeshWithGroups(WindowMeshData);
+        if (ViewSelection.ShowPoints) DrawPoints(WindowMeshData);
+        if (ViewSelection.ShowLines) DrawLines(WindowMeshData);
+        if (ViewSelection.ShowNormals) DrawNormals(WindowMeshData);
     }
 
 
@@ -260,6 +260,33 @@ public partial class ModelEditWindow
         }
     }
 
+    // --------------------------------------------------------------------------------------------
+    // MARK: Normals
+    // --------------------------------------------------------------------------------------------
+
+    public void DrawNormals(KoreMeshData meshData)
+    {
+        if (NormalMeshData == null)
+        {
+            NormalMeshData = new KoreGodotNormalMesh();
+            MountRoot!.AddChild(NormalMeshData);
+        }
+        NormalMeshData.UpdateMesh(meshData, 0.15f); // Small normals for cube
+    }
+
+    public void ClearNormals()
+    {
+        if (NormalMeshData != null)
+        {
+            NormalMeshData.ClearMesh();
+        }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    // MARK: Debug
+    // --------------------------------------------------------------------------------------------
+
+
     /// <summary>
     // Iteratively get and delete any node parented from MountRoot
     /// </summary>
@@ -282,6 +309,7 @@ public partial class ModelEditWindow
     {
         ClearDebugPoints();
         ClearDebugLines();
+        ClearNormals();
     }
 
     // --------------------------------------------------------------------------------------------

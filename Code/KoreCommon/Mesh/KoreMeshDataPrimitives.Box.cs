@@ -48,9 +48,9 @@ public static partial class KoreMeshDataPrimitives
         mesh.AddLine(v4, v7, linecolor);
         mesh.AddLine(v5, v6, linecolor);
 
-        // Triangles - using CCW winding when viewed from outside
+        // Triangles - using CW winding when viewed from outside
         // Front face (Z = -size) - looking at it from positive Z
-        // For CCW: v0 (bottom-left) → v1 (bottom-right) → v2 (top-right)
+        // For CW: v0 (bottom-left) → v1 (bottom-right) → v2 (top-right)
         //          v0 (bottom-left) → v2 (top-right) → v3 (top-left)
         mesh.AddTriangle(v0, v1, v2); mesh.AddTriangle(v0, v2, v3);
 
