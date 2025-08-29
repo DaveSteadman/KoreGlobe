@@ -47,7 +47,7 @@ public static partial class KoreTestMeshUvOps
         // --- TOP ---
 
         // Create center vertices for top and bottom caps
-        int topCenterVertex = mesh.AddVertex(
+        int topCenterVertex = mesh.AddCompleteVertex(
             new KoreXYZVector(0, height/2, 0),
             null, null,
             new KoreXYVector(topCenterU, topCenterV)
@@ -65,7 +65,7 @@ public static partial class KoreTestMeshUvOps
             double topV = topCenterV + Math.Sin(anglesRads[i]) * uvRadius; // + = go up in bottom-left coordinate system
 
             // Top ring vertex - CCW from above
-            topRingVertices[i] = mesh.AddVertex(
+            topRingVertices[i] = mesh.AddCompleteVertex(
                 new KoreXYZVector(x, height / 2, z),
                 null, null,
                 new KoreXYVector(topU, topV)
@@ -82,7 +82,7 @@ public static partial class KoreTestMeshUvOps
 
         // --- BOTTOM ---
 
-        int bottomCenterVertex = mesh.AddVertex(
+        int bottomCenterVertex = mesh.AddCompleteVertex(
             new KoreXYZVector(0, -height/2, 0),
             null, null,
             new KoreXYVector(bottomCenterU, bottomCenterV)
@@ -100,7 +100,7 @@ public static partial class KoreTestMeshUvOps
             double bottomV = bottomCenterV - Math.Sin(anglesRads[i]) * uvRadius; // Bottom cap viewed from below, so invert V
 
             // Bottom ring vertex - CW from below
-            bottomRingVertices[i] = mesh.AddVertex(
+            bottomRingVertices[i] = mesh.AddCompleteVertex(
                 new KoreXYZVector(x, -height / 2, z),
                 null, null,
                 new KoreXYVector(bottomU, bottomV)
@@ -136,13 +136,13 @@ public static partial class KoreTestMeshUvOps
             //if (i == segments) u = 0.0;
 
             // Side vertices (same 3D position as ring vertices but different UV)
-            sideTopVertices[i] = mesh.AddVertex(
+            sideTopVertices[i] = mesh.AddCompleteVertex(
                 new KoreXYZVector(x, height / 2, z),
                 null, null,
                 new KoreXYVector(u, wrapTLV) // Top of cylinder rectangle
             );
 
-            sideBottomVertices[i] = mesh.AddVertex(
+            sideBottomVertices[i] = mesh.AddCompleteVertex(
                 new KoreXYZVector(x, -height / 2, z),
                 null, null,
                 new KoreXYVector(u, wrapBRV) // Bottom of cylinder rectangle

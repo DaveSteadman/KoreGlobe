@@ -41,7 +41,7 @@ public partial class KoreMeshData
     public void MakeValid()
     {
         // Delegate to the static EditOps version for consistency
-        KoreMeshDataEditOps.MakeValid(this);
+        // KoreMeshDataEditOps.MakeValid(this);
     }
 
     // --------------------------------------------------------------------------------------------

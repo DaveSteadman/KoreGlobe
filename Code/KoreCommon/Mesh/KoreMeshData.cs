@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 #nullable enable
 
@@ -61,7 +62,7 @@ public partial class KoreMeshData
     // Empty constructor
     public KoreMeshData() { }
 
-    // Copy constructor
+    // Deep Copy constructor
     public KoreMeshData(KoreMeshData mesh)
     {
         this.Vertices            = new Dictionary<int, KoreXYZVector>(mesh.Vertices);
@@ -73,6 +74,10 @@ public partial class KoreMeshData
         this.LineColors          = new Dictionary<int, KoreMeshLineColour>(mesh.LineColors);
         this.Materials           = new List<KoreMeshMaterial>();
         this.NamedTriangleGroups = new Dictionary<string, KoreMeshTriangleGroup>(mesh.NamedTriangleGroups);
+
+        this.NextVertexId   = mesh.NextVertexId;
+        this.NextLineId     = mesh.NextLineId;
+        this.NextTriangleId = mesh.NextTriangleId;
     }
 
     // Initialises the mesh data with empty dictionaries
@@ -110,7 +115,7 @@ public partial class KoreMeshData
     }
 
     // Add a vertex and return its ID
-    public int AddVertex(KoreXYZVector vertex, KoreXYZVector? normal = null, KoreColorRGB? color = null, KoreXYVector? uv = null)
+    public int AddCompleteVertex(KoreXYZVector vertex, KoreXYZVector? normal = null, KoreColorRGB? color = null, KoreXYVector? uv = null)
     {
         int id = NextVertexId++;
         Vertices[id] = vertex;
@@ -120,16 +125,6 @@ public partial class KoreMeshData
         if (uv.HasValue)     UVs[id]          = uv.Value;
 
         return id;
-    }
-
-    // function to add a point from a serialised source (ie bypassing some of the id checks)
-    public void AddFromData(int vertexId, KoreXYZVector vertex, KoreXYZVector? normal = null, KoreColorRGB? color = null, KoreXYVector? uv = null)
-    {
-        Vertices[vertexId] = vertex;
-
-        if (normal.HasValue) Normals[vertexId]      = normal.Value;
-        if (color.HasValue)  VertexColors[vertexId] = color.Value;
-        if (uv.HasValue)     UVs[vertexId]          = uv.Value;
     }
 
     // --------------------------------------------------------------------------------------------
@@ -145,6 +140,11 @@ public partial class KoreMeshData
         Normals[vertexId] = normal;
     }
 
+    public void ClearAllNormals()
+    {
+        Normals.Clear();
+    }
+
     // --------------------------------------------------------------------------------------------
     // MARK: UVs
     // --------------------------------------------------------------------------------------------
@@ -156,6 +156,11 @@ public partial class KoreMeshData
             throw new ArgumentOutOfRangeException(nameof(vertexId), "Vertex ID is not found.");
 
         UVs[vertexId] = uv;
+    }
+
+    public void ClearAllUVs()
+    {
+        UVs.Clear();
     }
 
     // --------------------------------------------------------------------------------------------
@@ -177,8 +182,84 @@ public partial class KoreMeshData
             SetVertexColor(vertexId, color);
     }
 
+    public void ClearAllVertexColors()
+    {
+        VertexColors.Clear();
+    }
+
     // --------------------------------------------------------------------------------------------
     // MARK: Lines
+    // --------------------------------------------------------------------------------------------
+
+    public int AddLine(int vertexIdA, int vertexIdB)
+    {
+        int prevLineId = LineID(vertexIdA, vertexIdB);
+        if (prevLineId != -1)
+            return prevLineId;
+
+        int id = NextLineId++;
+        Lines[id] = new KoreMeshLine(vertexIdA, vertexIdB);
+        return id;
+    }
+
+    public int AddLine(KoreXYZVector startPos, KoreXYZVector endPos)
+    {
+        int idxA = AddVertex(startPos);
+        int idxB = AddVertex(endPos);
+        return AddLine(idxA, idxB);
+    }
+
+    public bool DoesLineExist(int vertexIdA, int vertexIdB)
+    {
+        var line = new KoreMeshLine(vertexIdA, vertexIdB);
+        return Lines.Values.Any(l => l.Equals(line));
+    }
+
+    public int LineID(int vertexIdA, int vertexIdB)
+    {
+        foreach (var kvp in Lines)
+        {
+            int id = kvp.Key;
+            KoreMeshLine line = kvp.Value;
+            
+            if (line.A == vertexIdA && line.B == vertexIdB)
+                return id;
+        }
+        return -1;
+    }
+
+    // --------------------------------------------------------------------------------------------
+    // MARK: Line Color
+    // --------------------------------------------------------------------------------------------
+
+    public void SetLineColor(int lineId, KoreColorRGB lineColor)
+    {
+        // We want to throw here, because we have a unique ID concept and random new additions break this
+        if (!Lines.ContainsKey(lineId))
+            throw new ArgumentOutOfRangeException(nameof(lineId), "Line ID is not found.");
+
+        LineColors[lineId] = new KoreMeshLineColour(lineColor, lineColor);
+    }
+
+    public void SetLineColor(int lineId, KoreColorRGB lineStartColor, KoreColorRGB lineEndColor)
+    {
+        // We want to throw here, because we have a unique ID concept and random new additions break this
+        if (!Lines.ContainsKey(lineId))
+            throw new ArgumentOutOfRangeException(nameof(lineId), "Line ID is not found.");
+
+        LineColors[lineId] = new KoreMeshLineColour(lineStartColor, lineEndColor);
+    }
+
+    public void SetAllLineColors(KoreColorRGB startColor, KoreColorRGB endColor)
+    {
+        foreach (var lineId in Lines.Keys)
+            SetLineColor(lineId, startColor, endColor);
+    }
+    
+    public void SetAllLineColors(KoreColorRGB color) => SetAllLineColors(color, color);
+
+    // --------------------------------------------------------------------------------------------
+    // MARK: Line Shortcuts
     // --------------------------------------------------------------------------------------------
 
     public int AddLine(int vertexIdA, int vertexIdB, KoreColorRGB colLine)
@@ -209,28 +290,9 @@ public partial class KoreMeshData
 
     public int AddLine(KoreXYZVector start, KoreXYZVector end, KoreColorRGB colStart, KoreColorRGB colEnd)
     {
-        int idxA = AddVertex(start, null, colStart);
-        int idxB = AddVertex(end, null, colEnd);
+        int idxA = AddCompleteVertex(start, null, colStart);
+        int idxB = AddCompleteVertex(end, null, colEnd);
         return AddLine(idxA, idxB, colStart, colEnd);
-    }
-
-    // Helper method to add a line only if it doesn't already exist
-    private int AddLineIfNotExists(int vertexIdA, int vertexIdB, KoreColorRGB lineColor)
-    {
-        // Check if line already exists (in either direction)
-        var targetLine1 = new KoreMeshLine(vertexIdA, vertexIdB);
-        var targetLine2 = new KoreMeshLine(vertexIdB, vertexIdA);
-
-        foreach (var kvp in Lines)
-        {
-            if (kvp.Value.Equals(targetLine1) || kvp.Value.Equals(targetLine2))
-            {
-                return kvp.Key; // Return existing line ID
-            }
-        }
-
-        // Line doesn't exist, create it
-        return AddLine(vertexIdA, vertexIdB, lineColor);
     }
 
     // --------------------------------------------------------------------------------------------
@@ -240,9 +302,13 @@ public partial class KoreMeshData
     public void OutlineTriangle(int v0, int v1, int v2, KoreColorRGB linecolor)
     {
         // Outline the triangle by adding lines between its vertices
-        AddLineIfNotExists(v0, v1, linecolor);
-        AddLineIfNotExists(v1, v2, linecolor);
-        AddLineIfNotExists(v2, v0, linecolor);
+        int l1Id = AddLine(v0, v1);
+        int l2Id = AddLine(v1, v2);
+        int l3Id = AddLine(v2, v0);
+
+        SetLineColor(l1Id, linecolor);
+        SetLineColor(l2Id, linecolor);
+        SetLineColor(l3Id, linecolor);
     }
 
     public void OutlineTriangle(int triId, KoreColorRGB linecolor)
@@ -258,11 +324,16 @@ public partial class KoreMeshData
 
     public void OutlineFace(int v0, int v1, int v2, int v3, KoreColorRGB linecolor)
     {
-        // Outline the face by adding lines between its vertices
-        AddLineIfNotExists(v0, v1, linecolor);
-        AddLineIfNotExists(v1, v2, linecolor);
-        AddLineIfNotExists(v2, v3, linecolor);
-        AddLineIfNotExists(v3, v0, linecolor);
+        // Outline the triangle by adding lines between its vertices
+        int l1Id = AddLine(v0, v1);
+        int l2Id = AddLine(v1, v2);
+        int l3Id = AddLine(v2, v3);
+        int l4Id = AddLine(v3, v0);
+
+        SetLineColor(l1Id, linecolor);
+        SetLineColor(l2Id, linecolor);
+        SetLineColor(l3Id, linecolor);
+        SetLineColor(l4Id, linecolor);
     }
 
     // --------------------------------------------------------------------------------------------
@@ -271,8 +342,8 @@ public partial class KoreMeshData
 
     public void AddDottedLineByDistance(KoreXYZVector start, KoreXYZVector end, KoreColorRGB colLine, double dotSpacing)
     {
-        int p1 = AddVertex(start, null, colLine);
-        int p2 = AddVertex(end, null, colLine);
+        int p1 = AddCompleteVertex(start, null, colLine);
+        int p2 = AddCompleteVertex(end, null, colLine);
         AddDottedLineByDistance(p1, p2, colLine, dotSpacing);
     }
 
@@ -331,7 +402,7 @@ public partial class KoreMeshData
 
         foreach (KoreXYZVector pnt in points)
         {
-            int id = AddVertex(pnt, null, colLine);
+            int id = AddCompleteVertex(pnt, null, colLine);
             pointIds.Add(id);
         }
 
@@ -340,36 +411,6 @@ public partial class KoreMeshData
             AddLine(pointIds[i], pointIds[i + 1], colLine);
         }
     }
-
-    // --------------------------------------------------------------------------------------------
-    // MARK: Line Colors
-    // --------------------------------------------------------------------------------------------
-
-    public void SetLineColor(int lineId, KoreColorRGB lineColor)
-    {
-        // We want to throw here, because we have a unique ID concept and random new additions break this
-        if (!Lines.ContainsKey(lineId))
-            throw new ArgumentOutOfRangeException(nameof(lineId), "Line ID is not found.");
-
-        LineColors[lineId] = new KoreMeshLineColour(lineColor, lineColor);
-    }
-
-    public void SetLineColor(int lineId, KoreColorRGB startColor, KoreColorRGB endColor)
-    {
-        if (!Lines.ContainsKey(lineId))
-            throw new ArgumentOutOfRangeException(nameof(lineId), "Line ID is not found.");
-        LineColors[lineId] = new KoreMeshLineColour(startColor, endColor);
-    }
-
-    public void SetAllLineColors(KoreColorRGB startColor, KoreColorRGB endColor)
-    {
-        foreach (var lineId in Lines.Keys)
-        {
-            SetLineColor(lineId, startColor, endColor);
-        }
-    }
-
-    public void SetAllLineColors(KoreColorRGB color) => SetAllLineColors(color, color);
 
     // --------------------------------------------------------------------------------------------
     // MARK: Triangle
@@ -445,10 +486,10 @@ public partial class KoreMeshData
         KoreXYZVector faceNormal = KoreXYZVector.CrossProduct(ab, ac);
 
         // Add three separate vertices with the same face normal for sharp edges
-        int idxA = AddVertex(a, faceNormal);
-        int idxB = AddVertex(b, faceNormal);
-        int idxC = AddVertex(c, faceNormal);
-        int idxD = AddVertex(d, faceNormal);
+        int idxA = AddCompleteVertex(a, faceNormal);
+        int idxB = AddCompleteVertex(b, faceNormal);
+        int idxC = AddCompleteVertex(c, faceNormal);
+        int idxD = AddCompleteVertex(d, faceNormal);
 
         // Add the triangles with CW winding
         int triId1 = AddTriangle(idxA, idxC, idxB);

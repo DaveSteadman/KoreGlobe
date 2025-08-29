@@ -63,10 +63,10 @@ public static partial class KoreTestMeshUvOps
         var mesh = new KoreMeshData();
         
         // Add vertices forming a square with UVs covering the full 0-1 space
-        int v1 = mesh.AddVertex(new KoreXYZVector(-1, -1, 0), null, null, new KoreXYVector(0, 0)); // Bottom-left
-        int v2 = mesh.AddVertex(new KoreXYZVector( 1, -1, 0), null, null, new KoreXYVector(1, 0)); // Bottom-right
-        int v3 = mesh.AddVertex(new KoreXYZVector( 1,  1, 0), null, null, new KoreXYVector(1, 1)); // Top-right
-        int v4 = mesh.AddVertex(new KoreXYZVector(-1,  1, 0), null, null, new KoreXYVector(0, 1)); // Top-left
+        int v1 = mesh.AddCompleteVertex(new KoreXYZVector(-1, -1, 0), null, null, new KoreXYVector(0, 0)); // Bottom-left
+        int v2 = mesh.AddCompleteVertex(new KoreXYZVector( 1, -1, 0), null, null, new KoreXYVector(1, 0)); // Bottom-right
+        int v3 = mesh.AddCompleteVertex(new KoreXYZVector( 1,  1, 0), null, null, new KoreXYVector(1, 1)); // Top-right
+        int v4 = mesh.AddCompleteVertex(new KoreXYZVector(-1,  1, 0), null, null, new KoreXYVector(0, 1)); // Top-left
         
         // Add two triangles to form the quad
         mesh.AddTriangle(v1, v2, v3); // Bottom-right triangle
@@ -160,10 +160,10 @@ public static partial class KoreTestMeshUvOps
             var positions = GetCubeFacePositions(face);
             
             // Add vertices: bottom-left, bottom-right, top-right, top-left
-            faceVertices[face, 0] = mesh.AddVertex(positions[0], null, null, new KoreXYVector(u1, v1));
-            faceVertices[face, 1] = mesh.AddVertex(positions[1], null, null, new KoreXYVector(u2, v1));
-            faceVertices[face, 2] = mesh.AddVertex(positions[2], null, null, new KoreXYVector(u2, v2));
-            faceVertices[face, 3] = mesh.AddVertex(positions[3], null, null, new KoreXYVector(u1, v2));
+            faceVertices[face, 0] = mesh.AddCompleteVertex(positions[0], null, null, new KoreXYVector(u1, v1));
+            faceVertices[face, 1] = mesh.AddCompleteVertex(positions[1], null, null, new KoreXYVector(u2, v1));
+            faceVertices[face, 2] = mesh.AddCompleteVertex(positions[2], null, null, new KoreXYVector(u2, v2));
+            faceVertices[face, 3] = mesh.AddCompleteVertex(positions[3], null, null, new KoreXYVector(u1, v2));
             
             // Add two triangles for this face
             int vert0 = faceVertices[face, 0];

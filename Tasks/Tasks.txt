@@ -44,17 +44,22 @@ App Outline
 Immeditate Task:
 ================
 
-- Load a child tile
-    - Use a simple camera distance measure for now.
-    - Look at more texture disposal ideas, get responsiveness on the dealloc.
+- Mesh deep copy
+    - editor flip UVs and axis
+    - save to a format
+    - load format in editor
 
 - Consolidate the mesh editor window:
     - Iterate on the export and import between formats - see how well we can work with Blender and re-import.
+    
+
 
 Short Term Todo List:
 =====================
 
-- Create a record of visibility/child tile control metrics, updated in background as used in _process to trigger the creation of new tiles.
+- Load a child tile
+    - Use a simple camera distance measure for now.
+    - Look at more texture disposal ideas, get responsiveness on the dealloc.
 
 - Background task:
     - Determine distance to tile

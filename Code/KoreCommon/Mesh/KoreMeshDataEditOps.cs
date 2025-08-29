@@ -11,46 +11,6 @@ namespace KoreCommon;
 public static partial class KoreMeshDataEditOps
 {
 
-    // --------------------------------------------------------------------------------------------
-    // MARK: VERTICES
-    // --------------------------------------------------------------------------------------------
-
-    public static void OffsetVertex(KoreMeshData mesh, int vertexId, KoreXYZVector offset)
-    {
-        // We want to throw here, because we have a unique ID concept and random new additions break this
-        if (!mesh.Vertices.ContainsKey(vertexId))
-            throw new ArgumentOutOfRangeException(nameof(vertexId), "Vertex ID is not found.");
-
-        // Offset the vertex by the given offset vector
-        mesh.Vertices[vertexId] = mesh.Vertices[vertexId] + offset;
-    }
-
-    public static void OffsetAllVertices(KoreMeshData mesh, KoreXYZVector offset)
-    {
-        foreach (var vertexId in mesh.Vertices.Keys)
-        {
-            OffsetVertex(mesh, vertexId, offset);
-        }
-    }
-
-    /// <summary>
-    /// Creates a duplicate vertex with all associated data (normal, UV, color)
-    /// </summary>
-    private static int DuplicateVertex(KoreMeshData mesh, int originalVertexId)
-    {
-        if (!mesh.Vertices.ContainsKey(originalVertexId))
-            return originalVertexId;
-
-        // Get original vertex data
-        KoreXYZVector vertex = mesh.Vertices[originalVertexId];
-
-        KoreXYZVector? normal = mesh.Normals.ContainsKey(originalVertexId) ? mesh.Normals[originalVertexId] : null;
-        KoreXYVector? uv = mesh.UVs.ContainsKey(originalVertexId) ? mesh.UVs[originalVertexId] : null;
-        KoreColorRGB? color = mesh.VertexColors.ContainsKey(originalVertexId) ? mesh.VertexColors[originalVertexId] : null;
-
-        // Create new vertex with all associated data
-        return mesh.AddVertex(vertex, normal, color, uv);
-    }
 
     // --------------------------------------------------------------------------------------------
     // MARK: TRIANGLES
@@ -142,5 +102,3 @@ public static partial class KoreMeshDataEditOps
     }
 
 }
-
-
