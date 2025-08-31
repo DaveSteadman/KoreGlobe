@@ -99,6 +99,21 @@ public partial class KoreMeshData
     }
 
     // --------------------------------------------------------------------------------------------
+    // MARK: Populate: Max Ids
+    // --------------------------------------------------------------------------------------------
+
+    // Reset the Next IDs, looking for the max values in the current lists - Note that after numerous
+    // operations, the IDs can be non-sequential, so we need to find the max value in each list.
+
+    public void ResetMaxIDs()
+    {
+        // Reset the next IDs based on the current max values in the dictionaries
+        NextVertexId   = Vertices.Count > 0 ? Vertices.Keys.Max() + 1 : 0;
+        NextLineId     = Lines.Count > 0 ? Lines.Keys.Max() + 1 : 0;
+        NextTriangleId = Triangles.Count > 0 ? Triangles.Keys.Max() + 1 : 0;
+    }
+
+    // --------------------------------------------------------------------------------------------
     // MARK: Vertices
     // --------------------------------------------------------------------------------------------
 
@@ -193,6 +208,7 @@ public partial class KoreMeshData
 
     public int AddLine(int vertexIdA, int vertexIdB)
     {
+        // Check if the line already exists
         int prevLineId = LineID(vertexIdA, vertexIdB);
         if (prevLineId != -1)
             return prevLineId;
@@ -221,7 +237,7 @@ public partial class KoreMeshData
         {
             int id = kvp.Key;
             KoreMeshLine line = kvp.Value;
-            
+
             if (line.A == vertexIdA && line.B == vertexIdB)
                 return id;
         }
@@ -255,7 +271,7 @@ public partial class KoreMeshData
         foreach (var lineId in Lines.Keys)
             SetLineColor(lineId, startColor, endColor);
     }
-    
+
     public void SetAllLineColors(KoreColorRGB color) => SetAllLineColors(color, color);
 
     // --------------------------------------------------------------------------------------------
@@ -495,8 +511,9 @@ public partial class KoreMeshData
         int triId1 = AddTriangle(idxA, idxC, idxB);
         int triId2 = AddTriangle(idxA, idxD, idxC);
 
-        Normals[triId1] = NormalForTriangle(triId1);
-        Normals[triId2] = NormalForTriangle(triId2);
+        // Set the normals for the triangles
+        Normals[triId1] = KoreMeshDataEditOps.NormalForTriangle(this, triId1);
+        Normals[triId2] = KoreMeshDataEditOps.NormalForTriangle(this, triId2);
     }
 
     public void AddFace(int aId, int bId, int cId, int dId)
@@ -517,7 +534,7 @@ public partial class KoreMeshData
         SetUV(idxB, uvBox.TopRight);
         SetUV(idxC, uvBox.BottomRight);
         SetUV(idxD, uvBox.BottomLeft);
-        
+
         // Create two triangles from the face with CW winding
         AddTriangle(idxA, idxB, idxC);
         AddTriangle(idxA, idxC, idxD);
@@ -555,7 +572,7 @@ public partial class KoreMeshData
     // MARK: Materials
     // --------------------------------------------------------------------------------------------
 
-    // The mesh class will look to add materials given any opportunity, and use a cull orphaned materials function
+    // The mesh class will look to add materials given any opportunity, and use a cull Broken materials function
     // to remove them later if needed.
 
     public void AddMaterial(KoreMeshMaterial material)
@@ -632,7 +649,7 @@ public partial class KoreMeshData
         }
         return null;
     }
-    
+
 
     // --------------------------------------------------------------------------------------------
 

@@ -89,7 +89,7 @@ public static partial class KoreMeshDataPrimitives
         }
 
         // We've added the triangles okay, so we can now loop through them and auto-calculate normals
-        mesh.SetNormalsFromTriangles();
+        KoreMeshDataEditOps.SetNormalsFromTriangles(mesh);
 
         return mesh;
     }

@@ -352,22 +352,22 @@ public partial class ModelEditWindow
     private void DrawSingleMeshGroup(KoreMeshData meshData, string groupName)
     {
         GD.Print($"Drawing mesh group: {groupName}");
-        
+
         // Create a mesh containing only this group's geometry
         KoreMeshData groupMesh = meshData.CreateMeshForGroup(groupName);
-        
+
         if (groupMesh.Triangles.Count == 0) return; // Skip empty groups
 
         // Create a MeshInstance3D for this group
         var meshInstance = new KoreGodotSurfaceMesh();
         meshInstance.Name = $"MeshGroup_{groupName}";
-        
+
         // Update the mesh with the group data, passing source path for texture resolution
         meshInstance.UpdateMesh(groupMesh, groupName, SourceFilePath);
-        
+
         // Add to the scene
         MountRoot!.AddChild(meshInstance);
-        
+
         GD.Print($"Drew mesh group '{groupName}' with {groupMesh.Triangles.Count} triangles, {groupMesh.Materials.Count} materials");
     }
 
@@ -382,13 +382,13 @@ public partial class ModelEditWindow
         // Create a MeshInstance3D for the entire mesh
         var meshInstance = new KoreGodotSurfaceMesh();
         meshInstance.Name = "MeshGroup_EntireMesh";
-        
+
         // Update the mesh with all the data, passing source path for texture resolution
         meshInstance.UpdateMesh(meshData, null, SourceFilePath);
-        
+
         // Add to the scene
         MountRoot!.AddChild(meshInstance);
-        
+
         GD.Print($"Drew entire mesh with {meshData.Triangles.Count} triangles, {meshData.Materials.Count} materials");
     }
 
@@ -427,12 +427,12 @@ public partial class ModelEditWindow
     {
         // Create test mesh with multiple materials
         KoreMeshData meshData = KoreMeshDataPrimitives.BasicCube(0.5f, KoreMeshMaterialPalette.DefaultMaterial);
-        
+
         // Add a second material
         var redMaterial = new KoreMeshMaterial("RedMaterial", new KoreColorRGB(255, 0, 0), 0.1f, 0.3f);
         meshData.AddMaterial(redMaterial);
-        
-        // Add a third material  
+
+        // Add a third material
         var blueMaterial = new KoreMeshMaterial("BlueMaterial", new KoreColorRGB(0, 0, 255), 0.8f, 0.1f);
         meshData.AddMaterial(blueMaterial);
 
@@ -443,11 +443,11 @@ public partial class ModelEditWindow
             // Assign first 4 triangles to red material
             var redTriangles = triangleIds.Take(4).ToList();
             meshData.NamedTriangleGroups["RedGroup"] = new KoreMeshTriangleGroup("RedMaterial", redTriangles);
-            
-            // Assign next 4 triangles to blue material  
+
+            // Assign next 4 triangles to blue material
             var blueTriangles = triangleIds.Skip(4).Take(4).ToList();
             meshData.NamedTriangleGroups["BlueGroup"] = new KoreMeshTriangleGroup("BlueMaterial", blueTriangles);
-            
+
             // Leave remaining triangles with default material
         }
 
@@ -503,7 +503,7 @@ public partial class ModelEditWindow
 
         // Import the OBJ/MTL
         var meshData = KoreMeshDataIO.FromObjMtl(objContent, mtlContent);
-        KoreMeshDataEditOps.ReorientAllFaces(meshData);
+        KoreMeshDataEditOps.FlipAllTriangleWindings(meshData);
 
         // Update the window mesh data
         // WindowMeshData = meshData;
@@ -539,7 +539,7 @@ public partial class ModelEditWindow
         {
             // Load the glTF file from UnitTestArtefacts
             string gltfPath = "UnitTestArtefacts/TestOilBarrel.gltf";
-            
+
             if (!File.Exists(gltfPath))
             {
                 GD.PrintErr($"glTF file not found: {gltfPath}");
@@ -561,7 +561,7 @@ public partial class ModelEditWindow
             GD.Print($"Vertices count: {meshData.Vertices.Count}");
             GD.Print($"Triangles count: {meshData.Triangles.Count}");
             GD.Print($"Materials count: {meshData.Materials.Count}");
-            
+
             for (int i = 0; i < meshData.Materials.Count; i++)
             {
                 var material = meshData.Materials[i];

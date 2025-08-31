@@ -131,7 +131,7 @@ public static partial class KoreTestMeshUvOps
 
             // UV coordinates for cylinder sides - wrap horizontally, span vertically
             double u = textureU[i];
-            
+
             //double u = (double)i / segments;              // 0..1
             //if (i == segments) u = 0.0;
 
@@ -165,7 +165,7 @@ public static partial class KoreTestMeshUvOps
             // replace your two AddTriangle calls in the WRAP loop with:
             mesh.AddTriangle(sideTopVertices[i],    sideTopVertices[next],    sideBottomVertices[next]); // upper-left tri
             mesh.AddTriangle(sideTopVertices[i],    sideBottomVertices[next], sideBottomVertices[i]);    // lower-right tri
-            
+
         }
 
         // Add material with texture
@@ -184,8 +184,8 @@ public static partial class KoreTestMeshUvOps
         mesh.NamedTriangleGroups["OilBarrel"] = triangleGroup;
 
         // Set the normals to a simple flat shading from the triangles
-        mesh.SetNormalsFromTriangles();
-        // mesh.FlipAllNormals(); 
+        KoreMeshDataEditOps.SetNormalsFromTriangles(mesh);
+        // mesh.FlipAllNormals();
         // mesh.FlipAllTriangleWindings();
 
         return mesh;

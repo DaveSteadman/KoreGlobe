@@ -51,7 +51,7 @@ Immeditate Task:
 
 - Consolidate the mesh editor window:
     - Iterate on the export and import between formats - see how well we can work with Blender and re-import.
-    
+
 
 
 Short Term Todo List:
@@ -125,7 +125,8 @@ Future Ideas:
     - Any "injectat runtime" message goes into a time ordered queue/thread, and process the latest one when a time passes.
     - Use a cencptually simple "greater than" rule on the timestamp.
 
-
+- UV isolation
+    - Find groupd of UVs, from material groups, that can be flipped within their BBox.
 
 Comparable Apps/Frameworks:
 ===========================

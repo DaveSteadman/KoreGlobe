@@ -68,7 +68,7 @@ public static partial class KoreMeshDataPrimitives
             {
                 // Create two triangles for each quad (CW winding)
                 int p00 = pointIds[iX, iY];           // Top-left
-                int p01 = pointIds[iX, iY + 1];       // Bottom-left  
+                int p01 = pointIds[iX, iY + 1];       // Bottom-left
                 int p10 = pointIds[iX + 1, iY];       // Top-right
                 int p11 = pointIds[iX + 1, iY + 1];   // Bottom-right
 
@@ -87,7 +87,7 @@ public static partial class KoreMeshDataPrimitives
         }
 
         // Create the normals based on the triangles
-        mesh.SetNormalsFromTriangles();
+        KoreMeshDataEditOps.SetNormalsFromTriangles(mesh);
 
         return mesh;
     }

@@ -24,7 +24,7 @@ public partial class KoreGodot2DDrawTest : Node2D
 
 
         var cubeMesh1 = KoreMeshDataPrimitives.BasicCube(0.5f, KoreMeshMaterialPalette.Find("MattRed"));
-        KoreXYZBox cubeBBox = cubeMesh1.GetBoundingBox();
+        KoreXYZBox cubeBBox = KoreMeshDataEditOps.GetBoundingBox(cubeMesh1);
         _testPoints = KoreConvPos.KoreXYZBoxToV3List(cubeBBox);
 
         SpriteNode = GetNodeOrNull<Sprite2D>("SpriteNode");
@@ -83,7 +83,7 @@ public partial class KoreGodot2DDrawTest : Node2D
         // // Set the texture to the sprite node if it exists
         if (SpriteNode == null)
             return;
-            
+
         // {
         //     SpriteNode.Texture = texture;
         // }

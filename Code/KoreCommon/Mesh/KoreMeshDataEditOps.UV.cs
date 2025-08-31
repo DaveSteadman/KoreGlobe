@@ -12,8 +12,6 @@ namespace KoreCommon;
 /// </summary>
 public static partial class KoreMeshDataEditOps
 {
-
-
     // --------------------------------------------------------------------------------------------
     // MARK: UVs
     // --------------------------------------------------------------------------------------------
@@ -45,5 +43,36 @@ public static partial class KoreMeshDataEditOps
             }
         }
     }
+
+    // --------------------------------------------------------------------------------------------
+    // MARK: Flip
+    // --------------------------------------------------------------------------------------------
+
+    public static void FlipAllUVsVertical(KoreMeshData mesh)
+    {
+        // Loop through all the UVs and flip their V coordinate
+        foreach (var kvp in mesh.UVs)
+        {
+            int uvId = kvp.Key;
+            KoreXYVector uv = kvp.Value;
+
+            // Flip the V coordinate (Y axis in KoreXYVector)
+            mesh.UVs[uvId] = new KoreXYVector(uv.X, 1.0 - uv.Y);
+        }
+    }
+
+    public static void FlipAllUVsHorizontal(KoreMeshData mesh)
+    {
+        // Loop through all the UVs and flip their U coordinate
+        foreach (var kvp in mesh.UVs)
+        {
+            int uvId = kvp.Key;
+            KoreXYVector uv = kvp.Value;
+
+            // Flip the U coordinate (X axis in KoreXYVector)
+            mesh.UVs[uvId] = new KoreXYVector(1.0 - uv.X, uv.Y);
+        }
+    }
+
 
 }

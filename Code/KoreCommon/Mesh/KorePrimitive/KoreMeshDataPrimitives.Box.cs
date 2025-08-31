@@ -88,7 +88,7 @@ public static partial class KoreMeshDataPrimitives
 
         // Call each now-isolated triangle to calc its normals
         //KoreMeshDataEditOps.CalcNormalsForAllTriangles(mesh);
-        mesh.SetNormalsFromTriangles();
+        KoreMeshDataEditOps.SetNormalsFromTriangles(mesh);
 
         // Modify the mesh for the second cube variant if needed
         return mesh;

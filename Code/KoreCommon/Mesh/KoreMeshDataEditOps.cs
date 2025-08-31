@@ -11,94 +11,38 @@ namespace KoreCommon;
 public static partial class KoreMeshDataEditOps
 {
 
-
     // --------------------------------------------------------------------------------------------
-    // MARK: TRIANGLES
-    // --------------------------------------------------------------------------------------------
-
-    // Swap the BC points in an ABC triangle to face the other direction
-    public static void ReorientFace(KoreMeshData mesh, int triId)
-    {
-        if (mesh.Triangles.ContainsKey(triId))
-        {
-            KoreMeshTriangle triangle = mesh.Triangles[triId];
-            // Swap the vertices to reorient the triangle
-            int temp = triangle.B;
-            triangle.B = triangle.C;
-            triangle.C = temp;
-            mesh.Triangles[triId] = triangle;
-        }
-    }
-
-    // Usage: KoreMeshDataEditOps.ReorientAllFaces(mesh);
-    public static void ReorientAllFaces(KoreMeshData mesh)
-    {
-        foreach (var kvp in mesh.Triangles)
-        {
-            ReorientFace(mesh, kvp.Key);
-        }
-    }
-
+    // MARK: Bounding Box
     // --------------------------------------------------------------------------------------------
 
-    /// <summary>
-    /// Isolates a triangle by creating duplicate vertices if they are shared with other triangles.
-    /// This ensures the triangle has its own unique vertices that can be modified independently.
-    /// </summary>
-    public static void IsolateTriangle(KoreMeshData mesh, int triId)
+    // Loop through the vertices, recording the max/min X, Y, Z values. Then return a KoreXYZBox
+
+    public static KoreXYZBox GetBoundingBox(KoreMeshData meshData)
     {
-        if (!mesh.Triangles.ContainsKey(triId))
-            return;
+        if (meshData.Vertices.Count == 0)
+            return KoreXYZBox.Zero;
 
-        KoreMeshTriangle triangle = mesh.Triangles[triId];
+        double minX = double.MaxValue, maxX = double.MinValue;
+        double minY = double.MaxValue, maxY = double.MinValue;
+        double minZ = double.MaxValue, maxZ = double.MinValue;
 
-        // Find which vertices are shared with other triangles
-        HashSet<int> sharedVertices = FindSharedVertices(mesh, triId);
-
-        // Create new vertices for any shared ones
-        int newA = sharedVertices.Contains(triangle.A) ? DuplicateVertex(mesh, triangle.A) : triangle.A;
-        int newB = sharedVertices.Contains(triangle.B) ? DuplicateVertex(mesh, triangle.B) : triangle.B;
-        int newC = sharedVertices.Contains(triangle.C) ? DuplicateVertex(mesh, triangle.C) : triangle.C;
-
-        // Update the triangle with new vertex IDs
-        mesh.Triangles[triId] = new KoreMeshTriangle(newA, newB, newC);
-    }
-
-    /// <summary>
-    /// Finds vertices of a triangle that are shared with other triangles
-    /// </summary>
-    private static HashSet<int> FindSharedVertices(KoreMeshData mesh, int targetTriangleId)
-    {
-        if (!mesh.Triangles.ContainsKey(targetTriangleId))
-            return new HashSet<int>();
-
-        KoreMeshTriangle targetTriangle = mesh.Triangles[targetTriangleId];
-        HashSet<int> targetVertices = new HashSet<int> { targetTriangle.A, targetTriangle.B, targetTriangle.C };
-        HashSet<int> sharedVertices = new HashSet<int>();
-
-        // Check all other triangles for shared vertices
-        foreach (var kvp in mesh.Triangles)
+        foreach (var kvp in meshData.Vertices)
         {
-            if (kvp.Key == targetTriangleId)
-                continue;
-
-            KoreMeshTriangle otherTriangle = kvp.Value;
-
-            if (targetVertices.Contains(otherTriangle.A)) sharedVertices.Add(otherTriangle.A);
-            if (targetVertices.Contains(otherTriangle.B)) sharedVertices.Add(otherTriangle.B);
-            if (targetVertices.Contains(otherTriangle.C)) sharedVertices.Add(otherTriangle.C);
+            KoreXYZVector vertex = kvp.Value;
+            if (vertex.X < minX) minX = vertex.X;
+            if (vertex.X > maxX) maxX = vertex.X;
+            if (vertex.Y < minY) minY = vertex.Y;
+            if (vertex.Y > maxY) maxY = vertex.Y;
+            if (vertex.Z < minZ) minZ = vertex.Z;
+            if (vertex.Z > maxZ) maxZ = vertex.Z;
         }
 
-        return sharedVertices;
-    }
+        KoreXYZVector center = new KoreXYZVector((minX + maxX) / 2, (minY + maxY) / 2, (minZ + maxZ) / 2);
+        double width = maxX - minX;
+        double height = maxY - minY;
+        double length = maxZ - minZ;
 
-    // Usage: KoreMeshDataEditOps.IsolateAllTriangles(mesh);
-    public static void IsolateAllTriangles(KoreMeshData mesh)
-    {
-        foreach (var kvp in mesh.Triangles)
-        {
-            IsolateTriangle(mesh, kvp.Key);
-        }
+        return new KoreXYZBox(center, width, height, length);
     }
 
 }

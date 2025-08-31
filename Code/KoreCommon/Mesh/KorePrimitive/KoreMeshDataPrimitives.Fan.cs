@@ -23,7 +23,7 @@ public static partial class KoreMeshDataPrimitives
 
         // Add the origin
         int originId = mesh.AddCompleteVertex(origin, null, null, null);
-        
+
         // Add the list of points
         List<int> pointIds = new List<int>();
         foreach (var point in fanPoints)
@@ -55,7 +55,7 @@ public static partial class KoreMeshDataPrimitives
         }
 
         // We've added the triangles okay, so we can now loop through them and auto-calculate normals
-        mesh.SetNormalsFromTriangles();
+        KoreMeshDataEditOps.SetNormalsFromTriangles(mesh);
 
         return mesh;
     }

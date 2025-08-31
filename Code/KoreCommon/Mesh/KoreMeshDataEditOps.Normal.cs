@@ -12,14 +12,8 @@ namespace KoreCommon;
 /// </summary>
 public static partial class KoreMeshDataEditOps
 {
+    // Remove normals that don't have supporting vertex IDs
 
-    // --------------------------------------------------------------------------------------------
-    // MARK: Normals
-    // --------------------------------------------------------------------------------------------
-
-    /// <summary>
-    /// Remove normals that don't have supporting vertex IDs
-    /// </summary>
     public static void RemoveBrokenNormals(KoreMeshData mesh)
     {
         var invalidNormalIds = mesh.Normals.Keys.Where(id => !mesh.Vertices.ContainsKey(id)).ToList();
@@ -29,9 +23,10 @@ public static partial class KoreMeshDataEditOps
         }
     }
 
-    /// <summary>
-    /// Create missing normals for vertices
-    /// </summary>
+    // --------------------------------------------------------------------------------------------
+
+    // Create missing normals for vertices
+
     public static void CreateMissingNormals(KoreMeshData mesh, KoreXYZVector? defaultNormal = null)
     {
         KoreXYZVector normal = defaultNormal ?? new KoreXYZVector(0, 1, 0); // Default to up vector
@@ -45,16 +40,19 @@ public static partial class KoreMeshDataEditOps
         }
     }
 
-    /// <summary>
-    /// Calculate normal for a triangle
-    /// </summary>
+    // --------------------------------------------------------------------------------------------
+
+    // Calculate normal for a triangle
+
     public static KoreXYZVector NormalForTriangle(KoreMeshData mesh, int triangleId)
     {
+        // Check if triangle exists
         if (!mesh.Triangles.ContainsKey(triangleId))
             return new KoreXYZVector(0, 1, 0);
 
         var triangle = mesh.Triangles[triangleId];
 
+        // Ensure all vertices exist
         if (!mesh.Vertices.ContainsKey(triangle.A) ||
             !mesh.Vertices.ContainsKey(triangle.B) ||
             !mesh.Vertices.ContainsKey(triangle.C))
@@ -89,17 +87,19 @@ public static partial class KoreMeshDataEditOps
         return normal;
     }
 
-    /// <summary>
-    /// Set normal from first triangle that uses this vertex
-    /// </summary>
+    // --------------------------------------------------------------------------------------------
+
+    // Set normal from first triangle that uses this vertex
+
     public static void SetNormalFromFirstTriangle(KoreMeshData mesh, int vertexId)
     {
         foreach (var triangleKvp in mesh.Triangles)
         {
+            int triangleId = triangleKvp.Key;
             var triangle = triangleKvp.Value;
             if (triangle.A == vertexId || triangle.B == vertexId || triangle.C == vertexId)
             {
-                var normal = NormalForTriangle(mesh, triangleKvp.Key);
+                var normal = NormalForTriangle(mesh, triangleId);
                 mesh.Normals[vertexId] = normal;
                 return;
             }
@@ -109,9 +109,10 @@ public static partial class KoreMeshDataEditOps
         mesh.Normals[vertexId] = new KoreXYZVector(0, 1, 0);
     }
 
-    /// <summary>
-    /// Set normals from triangles for all vertices
-    /// </summary>
+    // --------------------------------------------------------------------------------------------
+
+    // Set normals from triangles for all vertices
+
     public static void SetNormalsFromTriangles(KoreMeshData mesh)
     {
         // Clear existing normals
@@ -124,46 +125,19 @@ public static partial class KoreMeshDataEditOps
         }
     }
 
-    /// <summary>
-    /// Calculate normals for each triangle and assign to vertices
-    /// Usage: KoreMeshDataEditOps.CalcNormalsForAllTriangles(mesh);
-    /// </summary>
-    public static void CalcNormalsForAllTriangles(KoreMeshData mesh)
+    // --------------------------------------------------------------------------------------------
+
+    public static void FlipAllNormals(KoreMeshData mesh)
     {
-        foreach (var kvp in mesh.Triangles)
+        // Loop through all the normals and flip their direction
+        foreach (var kvp in mesh.Normals)
         {
-            CalcNormalsForTriangle(mesh, kvp.Key);
+            int vertexId = kvp.Key;
+            KoreXYZVector normal = kvp.Value;
+
+            // Flip the normal by inverting its direction
+            mesh.Normals[vertexId] = normal.Invert();
         }
-    }
-
-    /// <summary>
-    /// Calculate normal for a specific triangle and assign to its vertices
-    /// </summary>
-    public static KoreXYZVector CalcNormalsForTriangle(KoreMeshData mesh, int triangleId)
-    {
-        if (!mesh.Triangles.ContainsKey(triangleId))
-            return KoreXYZVector.Zero;
-
-        // Get the vertices
-        KoreMeshTriangle triangle = mesh.Triangles[triangleId];
-        KoreXYZVector a = mesh.Vertices[triangle.A];
-        KoreXYZVector b = mesh.Vertices[triangle.B];
-        KoreXYZVector c = mesh.Vertices[triangle.C];
-
-        // Calculate the face normal using cross product
-        KoreXYZVector ab = b - a;  // Vector from A to B
-        KoreXYZVector ac = c - a;  // Vector from A to C
-        KoreXYZVector faceNormal = KoreXYZVector.CrossProduct(ab, ac).Normalize();
-
-        // Normalize the face normal (no inversion needed with CW triangles)
-        faceNormal = faceNormal.Normalize();
-
-        // Set the normals
-        mesh.Normals[triangle.A] = faceNormal;
-        mesh.Normals[triangle.B] = faceNormal;
-        mesh.Normals[triangle.C] = faceNormal;
-
-        return faceNormal;
     }
 
 }

@@ -45,8 +45,8 @@ public static class KoreMeshDataGltfIO
         // Create mesh builder with normal support
         var meshBuilder = new MeshBuilder<VertexPositionNormal, VertexTexture1, VertexEmpty>(meshName);
 
-        mesh.FlipAllNormals(); 
-        mesh.FlipAllTriangleWindings();
+        KoreMeshDataEditOps.FlipAllNormals(mesh);
+        KoreMeshDataEditOps.FlipAllTriangleWindings(mesh);
 
         // Convert mesh data to glTF format
         ConvertKoreMeshToGltf(mesh, meshBuilder, gltfMaterials);
@@ -58,7 +58,7 @@ public static class KoreMeshDataGltfIO
         // Save the model
         model.SaveGLTF(filePath);
     }
-    
+
     /// <summary>
     /// Loads a glTF file into KoreMeshData format.
     /// Automatically converts from glTF coordinate system to Kore internal format.
@@ -69,26 +69,26 @@ public static class KoreMeshDataGltfIO
     {
         var model = ModelRoot.Load(filePath);
         var mesh = new KoreMeshData();
-        
+
         // Convert first mesh found (for now)
         var gltfMesh = model.LogicalMeshes.FirstOrDefault();
         if (gltfMesh == null)
         {
             throw new InvalidOperationException("No meshes found in glTF file");
         }
-        
+
         ConvertGltfToKoreMesh(gltfMesh, mesh);
-        
+
         // Only calculate normals from triangles if no normals were imported
         if (mesh.Normals.Count == 0)
         {
             // Calculate normals from triangles for proper shading
             KoreMeshDataEditOps.SetNormalsFromTriangles(mesh);
         }
-        
+
         return mesh;
     }
-    
+
     /// <summary>
     /// Creates glTF materials from KoreMeshMaterial collection
     /// </summary>
@@ -98,18 +98,18 @@ public static class KoreMeshDataGltfIO
     private static Dictionary<string, MaterialBuilder> CreateGltfMaterials(ModelRoot model, IReadOnlyList<KoreMeshMaterial> materials, string outputDirectory)
     {
         var gltfMaterials = new Dictionary<string, MaterialBuilder>();
-        
+
         foreach (var koreMaterial in materials)
         {
             var gltfMaterial = new MaterialBuilder(koreMaterial.Name);
-            
+
             // Set base color
             var baseColor = new Vector4(
                 (float)koreMaterial.BaseColor.R / 255f,
-                (float)koreMaterial.BaseColor.G / 255f, 
+                (float)koreMaterial.BaseColor.G / 255f,
                 (float)koreMaterial.BaseColor.B / 255f,
                 1.0f);
-            
+
             // Check if material has a texture file
             if (!string.IsNullOrEmpty(koreMaterial.Filename))
             {
@@ -117,17 +117,17 @@ public static class KoreMeshDataGltfIO
                 {
                     // Try to load the texture with improved path resolution
                     string texturePath = koreMaterial.Filename;
-                    
+
                     // If it's just a filename, search in the output directory first, then fallback locations
                     if (!Path.IsPathRooted(texturePath))
                     {
-                        string[] searchPaths = { 
+                        string[] searchPaths = {
                             Path.Combine(outputDirectory, texturePath),  // Output directory (priority)
                             texturePath,  // Current directory
                             Path.Combine(Directory.GetCurrentDirectory(), texturePath),
                             Path.Combine(Directory.GetCurrentDirectory(), "Resources", texturePath)
                         };
-                        
+
                         foreach (string searchPath in searchPaths)
                         {
                             if (File.Exists(searchPath))
@@ -137,13 +137,13 @@ public static class KoreMeshDataGltfIO
                             }
                         }
                     }
-                    
+
                     if (File.Exists(texturePath))
                     {
                         // Load image and create texture using simpler API
                         var imageBytes = File.ReadAllBytes(texturePath);
                         var imageBuilder = ImageBuilder.From(imageBytes, Path.GetFileName(texturePath));
-                        
+
                         // Set diffuse texture - using the basic API
                         gltfMaterial.WithChannelImage(KnownChannel.BaseColor, imageBuilder);
                     }
@@ -164,13 +164,13 @@ public static class KoreMeshDataGltfIO
                 // No texture, just use color
                 gltfMaterial.WithChannelParam(KnownChannel.BaseColor, KnownProperty.RGBA, baseColor);
             }
-            
+
             gltfMaterials[koreMaterial.Name] = gltfMaterial;
         }
-        
+
         return gltfMaterials;
     }
-    
+
     /// <summary>
     /// Converts KoreMeshData to glTF mesh format with coordinate system conversion
     /// </summary>
@@ -181,45 +181,45 @@ public static class KoreMeshDataGltfIO
     {
         // Group triangles by material
         var trianglesByMaterial = GroupTrianglesByMaterial(koreMesh);
-        
+
         foreach (var materialGroup in trianglesByMaterial)
         {
             var materialName = materialGroup.Key;
             var triangleIndices = materialGroup.Value;
-            
+
             // Get or create material
             MaterialBuilder? gltfMaterial = null;
             if (!string.IsNullOrEmpty(materialName) && materials.ContainsKey(materialName))
             {
                 gltfMaterial = materials[materialName];
             }
-            
+
             // Create primitive for this material
             var primitive = meshBuilder.UsePrimitive(gltfMaterial);
-            
+
             // Add triangles for this material
             foreach (var triangleIndex in triangleIndices)
             {
                 var triangle = koreMesh.Triangles[triangleIndex];
-                
+
                 // Get vertices and convert coordinates
                 var v1 = ConvertToGltfVertex(triangle.A, koreMesh);
                 var v2 = ConvertToGltfVertex(triangle.B, koreMesh);
                 var v3 = ConvertToGltfVertex(triangle.C, koreMesh);
-                
+
                 // Add triangle with CCW winding (converted from KoreMeshData CW)
                 primitive.AddTriangle(v1, v2, v3);
             }
         }
     }
-    
+
     /// <summary>
     /// Groups triangles by their assigned material
     /// </summary>
     private static Dictionary<string, List<int>> GroupTrianglesByMaterial(KoreMeshData mesh)
     {
         var groups = new Dictionary<string, List<int>>();
-        
+
         // First, handle triangles assigned to named groups
         foreach (var namedGroup in mesh.NamedTriangleGroups)
         {
@@ -230,7 +230,7 @@ public static class KoreMeshDataGltfIO
             }
             groups[materialName].AddRange(namedGroup.Value.TriangleIds);
         }
-        
+
         // Handle remaining triangles (assign to default material if any)
         var assignedTriangles = new HashSet<int>();
         foreach (var group in groups.Values)
@@ -240,7 +240,7 @@ public static class KoreMeshDataGltfIO
                 assignedTriangles.Add(triangleIndex);
             }
         }
-        
+
         var unassignedTriangles = new List<int>();
         for (int i = 0; i < mesh.Triangles.Count; i++)
         {
@@ -249,7 +249,7 @@ public static class KoreMeshDataGltfIO
                 unassignedTriangles.Add(i);
             }
         }
-        
+
         if (unassignedTriangles.Count > 0)
         {
             var defaultMaterialName = mesh.Materials.Count > 0 ? mesh.Materials[0].Name : "DefaultMaterial";
@@ -259,10 +259,10 @@ public static class KoreMeshDataGltfIO
             }
             groups[defaultMaterialName].AddRange(unassignedTriangles);
         }
-        
+
         return groups;
     }
-    
+
     /// <summary>
     /// Converts a KoreMesh vertex to glTF vertex format with coordinate system conversion
     /// </summary>
@@ -272,34 +272,34 @@ public static class KoreMeshDataGltfIO
         var position = mesh.Vertices[vertexId];
         var normal   = mesh.Normals.ContainsKey(vertexId) ? mesh.Normals[vertexId] : new KoreXYZVector(0, 1, 0);
         var uv       = mesh.UVs.ContainsKey(vertexId) ? mesh.UVs[vertexId] : new KoreXYVector(0, 0);
-        
+
         // Convert from Kore coordinate system to glTF (both Y-up)
         var gltfPosition = KoreMeshGltfConv.PositionKoreToGltf(position);
         var gltfNormal   = KoreMeshGltfConv.NormalKoreToGltf(normal);
 
-        // UV coordinates: 
+        // UV coordinates:
         // - KoreMeshData uses top-left origin
         // - glTF uses bottom left.
         // - flip Y
         // var gltfTexCoord = new Vector2((float)uv.X, 1 - (float)uv.Y);
         var gltfUV = KoreMeshGltfConv.UVKoreToGltf(uv);
-        
+
         return (new VertexPositionNormal(gltfPosition, gltfNormal), new VertexTexture1(gltfUV));
     }
-    
+
 
 
     // --------------------------------------------------------------------------------------------
     // MARK: Import
     // --------------------------------------------------------------------------------------------
-    
+
     /// <summary>
     /// Converts glTF mesh to KoreMeshData format
     /// </summary>
     private static void ConvertGltfToKoreMesh(SharpGLTF.Schema2.Mesh gltfMesh, KoreMeshData koreMesh)
     {
         int primitiveIndex = 0;
-        
+
         foreach (var primitive in gltfMesh.Primitives)
         {
             // Extract vertex data
@@ -326,16 +326,16 @@ public static class KoreMeshDataGltfIO
                     normal = KoreMeshGltfConv.NormalGltfToKore(normals[i]);
                 }
 
-                // UV coordinates: 
+                // UV coordinates:
                 // - KoreMeshData uses top-left origin
                 // - glTF uses bottom left.
                 // - flip Y
-                // var uv = texCoords != null && i < texCoords.Count ? 
-                //     new KoreXYVector(texCoords[i].X, 1 - texCoords[i].Y) : 
+                // var uv = texCoords != null && i < texCoords.Count ?
+                //     new KoreXYVector(texCoords[i].X, 1 - texCoords[i].Y) :
                 //     (KoreXYVector?)null;
 
                 Vector2 gltfUV = new Vector2(
-                    texCoords != null && i < texCoords.Count ? texCoords[i].X : 0, 
+                    texCoords != null && i < texCoords.Count ? texCoords[i].X : 0,
                     texCoords != null && i < texCoords.Count ? texCoords[i].Y : 0);
 
                 var koreUV = KoreMeshGltfConv.UVGltfToKore(gltfUV);
@@ -365,7 +365,7 @@ public static class KoreMeshDataGltfIO
             {
                 var gltfMaterial = primitive.Material;
                 materialName = gltfMaterial.Name ?? $"ImportedMaterial_{primitiveIndex}";
-                
+
                 // Extract base color
                 var baseColorFactor = gltfMaterial.FindChannel("BaseColor")?.Color ?? Vector4.One;
                 var baseColor = new KoreColorRGB(
@@ -373,7 +373,7 @@ public static class KoreMeshDataGltfIO
                     (int)(baseColorFactor.Y * 255),
                     (int)(baseColorFactor.Z * 255)
                 );
-                
+
                 // Extract texture filename if present
                 string? textureFilename = null;
                 var baseColorTexture = gltfMaterial.FindChannel("BaseColor")?.Texture;
@@ -394,7 +394,7 @@ public static class KoreMeshDataGltfIO
                         }
                     }
                 }
-                
+
                 // Create material using the appropriate factory method
                 KoreMeshMaterial material;
                 if (!string.IsNullOrEmpty(textureFilename))
@@ -407,7 +407,7 @@ public static class KoreMeshDataGltfIO
                     // Use FromColor for color-only materials
                     material = KoreMeshMaterial.FromColor(materialName, baseColor);
                 }
-                
+
                 koreMesh.AddMaterial(material);
             }
 

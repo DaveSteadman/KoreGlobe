@@ -71,7 +71,7 @@ public static partial class KoreMeshDataPrimitives
 
         // Calculate normals from triangles for proper lighting. The endcaps and
         // main cylinder all use different vertices. So this call does not average out edge normals.
-        mesh.SetNormalsFromTriangles();
+        KoreMeshDataEditOps.SetNormalsFromTriangles(mesh);
 
         mesh.AddMaterial(new KoreMeshMaterial("DefaultMaterial", new KoreColorRGB(0.5f, 0.5f, 0.5f)));
         mesh.SetGroupMaterialName("p1endcap", "DefaultMaterial");

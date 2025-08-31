@@ -11,14 +11,8 @@ namespace KoreCommon;
 
 public static partial class KoreMeshDataEditOps
 {
-
-
-    // --------------------------------------------------------------------------------------------
-    // MARK: Lines
-    // --------------------------------------------------------------------------------------------
-
     // Remove lines that don't have supporting vertex IDs
-    
+
     public static void RemoveBrokenLines(KoreMeshData mesh)
     {
         var invalidLineIds = mesh.Lines.Where(kvp =>
@@ -63,6 +57,24 @@ public static partial class KoreMeshDataEditOps
         {
             mesh.Lines.Remove(lineId);
             mesh.LineColors.Remove(lineId);
+        }
+    }
+
+    // --------------------------------------------------------------------------------------------
+
+    // Order Line Vertices Ascending, so A < B is guaranteed
+
+    public static void OrderLineVertexAscending(KoreMeshData mesh)
+    {
+        foreach (var kvp in mesh.Lines)
+        {
+            int lineId = kvp.Key;
+            KoreMeshLine line = kvp.Value;
+
+            if (line.A > line.B)
+            {
+                mesh.Lines[lineId] = new KoreMeshLine(line.B, line.A);
+            }
         }
     }
 

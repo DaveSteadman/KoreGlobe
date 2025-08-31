@@ -137,7 +137,7 @@ public partial class KoreSandbox3DScene : Node3D
                 KoreMeshMaterialPalette.Find("MattOrange")
             );
 
-            opMesh.SetNormalsFromTriangles();
+            KoreMeshDataEditOps.SetNormalsFromTriangles(opMesh);
 
             KoreGodotLineMesh childMeshOP = new KoreGodotLineMesh();
             childMeshOP.UpdateMesh(opMesh);
@@ -196,14 +196,14 @@ public partial class KoreSandbox3DScene : Node3D
                     double currY = eleArray[i, j];
                     vertices[i, j] = new KoreXYZVector(currX, currY, currZ);
 
-                    vertices[i, j] = vertices[i, j].FlipZ(); 
+                    vertices[i, j] = vertices[i, j].FlipZ();
                 }
             }
-            
-  
-            
-            
-            
+
+
+
+
+
 
             // Create surface
             KoreMeshData surfaceMesh1 = KoreMeshDataPrimitives.Surface(vertices, KoreUVBox.Full);
@@ -327,7 +327,7 @@ public partial class KoreSandbox3DScene : Node3D
         cylinderNode.AddChild(childSurfaceMeshNode);
         cylinderNode.AddChild(childNormalMeshNode);
 
- 
+
         {
             KoreMeshData oilBarrelMesh = KoreTestMeshUvOps.CreateOilBarrelWithUV(16, 0.4, 1.2);
 
@@ -339,7 +339,7 @@ public partial class KoreSandbox3DScene : Node3D
             childMeshNode1.UpdateMesh(oilBarrelMesh);
 
             KoreGodotSurfaceMesh childSurfaceMeshNode1 = new KoreGodotSurfaceMesh();
-            childSurfaceMeshNode1.UpdateMesh(oilBarrelMesh, "OilBarrel", "UnitTestArtefacts"); 
+            childSurfaceMeshNode1.UpdateMesh(oilBarrelMesh, "OilBarrel", "UnitTestArtefacts");
 
             KoreGodotNormalMesh childNormalMeshNode1 = new KoreGodotNormalMesh();
             childNormalMeshNode1.UpdateMesh(oilBarrelMesh, 0.15f); // Small normals for cube
@@ -355,7 +355,7 @@ public partial class KoreSandbox3DScene : Node3D
     }
 
     // ---------------------------------------------------------------------------------------------
-    // MARK: TEX BOX 
+    // MARK: TEX BOX
     // ---------------------------------------------------------------------------------------------
 
     public void AddTestMeshData_TexBox()

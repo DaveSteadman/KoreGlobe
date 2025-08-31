@@ -11,12 +11,32 @@ namespace KoreCommon;
 public static partial class KoreMeshDataEditOps
 {
     // --------------------------------------------------------------------------------------------
-    // MARK: VERTICES
+    // MARK: Duplicate
     // --------------------------------------------------------------------------------------------
 
-    // Remove duplicate points within tolerance
+    // Creates a duplicate vertex with all associated data (normal, UV, color)
 
-    public static void RemoveDuplicatePoints(KoreMeshData mesh, double tolerance = KoreConsts.ArbitrarySmallDouble)
+    private static int DuplicateVertex(KoreMeshData mesh, int originalVertexId)
+    {
+        if (!mesh.Vertices.ContainsKey(originalVertexId))
+            return originalVertexId;
+
+        // Get original vertex data
+        KoreXYZVector vertex = mesh.Vertices[originalVertexId];
+
+        KoreXYZVector? normal = mesh.Normals.ContainsKey(originalVertexId)      ? mesh.Normals[originalVertexId]      : null;
+        KoreXYVector?  uv     = mesh.UVs.ContainsKey(originalVertexId)          ? mesh.UVs[originalVertexId]          : null;
+        KoreColorRGB?  color  = mesh.VertexColors.ContainsKey(originalVertexId) ? mesh.VertexColors[originalVertexId] : null;
+
+        // Create new vertex with all associated data
+        return mesh.AddCompleteVertex(vertex, normal, color, uv);
+    }
+
+    // --------------------------------------------------------------------------------------------
+
+    // Remove duplicate vertices within tolerance
+
+    public static void RemoveDuplicateVertices(KoreMeshData mesh, double tolerance = KoreConsts.ArbitrarySmallDouble)
     {
         var verticesArray = mesh.Vertices.ToArray();
         var toRemove = new List<int>();
@@ -30,7 +50,7 @@ public static partial class KoreMeshDataEditOps
                 var vertex1 = verticesArray[i].Value;
                 var vertex2 = verticesArray[j].Value;
                 double dist = vertex1.DistanceTo(vertex2);
-                
+
                 // Check if vertices are within tolerance
                 if (dist < tolerance)
                 {
@@ -70,10 +90,13 @@ public static partial class KoreMeshDataEditOps
     }
 
     // --------------------------------------------------------------------------------------------
+    // MARK: Broken
+    // --------------------------------------------------------------------------------------------
+
 
     // Create a hash set of all the used vertex IDs, then remove any points that are not in that set.
 
-    public static void RemoveOrphanedPoints(KoreMeshData mesh)
+    public static void RemoveBrokenVertices(KoreMeshData mesh)
     {
         // Determine which vertices are referenced by lines or triangles
         HashSet<int> referencedVertices = new HashSet<int>();
@@ -106,6 +129,8 @@ public static partial class KoreMeshDataEditOps
     }
 
     // --------------------------------------------------------------------------------------------
+    // MARK: OFFSET
+    // --------------------------------------------------------------------------------------------
 
     public static void OffsetVertex(KoreMeshData mesh, int vertexId, KoreXYZVector offset)
     {
@@ -127,23 +152,7 @@ public static partial class KoreMeshDataEditOps
 
     // --------------------------------------------------------------------------------------------
 
-    // Creates a duplicate vertex with all associated data (normal, UV, color)
 
-    private static int DuplicateVertex(KoreMeshData mesh, int originalVertexId)
-    {
-        if (!mesh.Vertices.ContainsKey(originalVertexId))
-            return originalVertexId;
-
-        // Get original vertex data
-        KoreXYZVector vertex = mesh.Vertices[originalVertexId];
-
-        KoreXYZVector? normal = mesh.Normals.ContainsKey(originalVertexId)      ? mesh.Normals[originalVertexId]      : null;
-        KoreXYVector?  uv     = mesh.UVs.ContainsKey(originalVertexId)          ? mesh.UVs[originalVertexId]          : null;
-        KoreColorRGB?  color  = mesh.VertexColors.ContainsKey(originalVertexId) ? mesh.VertexColors[originalVertexId] : null;
-
-        // Create new vertex with all associated data
-        return mesh.AddCompleteVertex(vertex, normal, color, uv);
-    }
 
 
 }

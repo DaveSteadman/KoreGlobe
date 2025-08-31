@@ -108,7 +108,7 @@ public static partial class KoreMeshDataPrimitives
         }
 
         // calculate the normals from the triangles.
-        mesh.SetNormalsFromTriangles();
+        KoreMeshDataEditOps.SetNormalsFromTriangles(mesh);
 
         return mesh;
     }

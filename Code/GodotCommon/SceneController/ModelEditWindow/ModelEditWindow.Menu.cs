@@ -45,7 +45,7 @@ public partial class ModelEditWindow : Window
         ViewFaces = 3004,
 
 
-        // View menu (for future expansion)  
+        // View menu (for future expansion)
         ViewZoomIn = 20,
         ViewZoomOut = 21,
         ViewResetView = 22
@@ -192,10 +192,11 @@ public partial class ModelEditWindow : Window
     private void HandleEditFlipTriangles()
     {
         GD.Print("ModelEditWindow: Edit -> Flip Triangles");
-        
+
         // Code to Mesh
         JSONToMesh();
-        WindowMeshData?.FlipAllTriangleWindings();
+        if (WindowMeshData != null)
+            KoreMeshDataEditOps.SetNormalsFromTriangles(WindowMeshData);
         MeshToJSON();
         JSONToMesh();
     }
@@ -204,7 +205,9 @@ public partial class ModelEditWindow : Window
     {
         GD.Print("ModelEditWindow: Edit -> Flip UV Vertical");
         JSONToMesh();
-        WindowMeshData?.FlipAllUVsVertical();
+        if (WindowMeshData != null)
+            KoreMeshDataEditOps.FlipAllUVsVertical(WindowMeshData);
+
         MeshToJSON();
         JSONToMesh();
     }
@@ -213,7 +216,8 @@ public partial class ModelEditWindow : Window
     {
         GD.Print("ModelEditWindow: Edit -> Flip UV Horizontal");
         JSONToMesh();
-        WindowMeshData?.FlipAllUVsHorizontal();
+        if (WindowMeshData != null)
+            KoreMeshDataEditOps.FlipAllUVsHorizontal(WindowMeshData);
         MeshToJSON();
         JSONToMesh();
     }
@@ -280,7 +284,7 @@ public partial class ModelEditWindow : Window
         }
 
         JSONToMesh();
-        
+
         // TODO: Apply actual 3D model view changes using ViewSelection state
         // For example: UpdateMeshDisplay(ViewSelection);
     }
@@ -290,19 +294,19 @@ public partial class ModelEditWindow : Window
     {
         return ViewSelection;
     }
-    
+
     public void SetViewSelection(KoreViewSelection newSelection)
     {
         ViewSelection = newSelection;
-        
+
         // Update menu checkboxes to match the new selection
         UpdateMenuFromViewSelection();
     }
-    
+
     private void UpdateMenuFromViewSelection()
     {
         if (ModelMenuBar == null) return;
-        
+
         // Find the view menu
         PopupMenu? viewMenu = null;
         foreach (Node child in ModelMenuBar.GetChildren())
@@ -313,15 +317,15 @@ public partial class ModelEditWindow : Window
                 break;
             }
         }
-        
+
         if (viewMenu == null) return;
-        
+
         // Update checkbox states to match ViewSelection
         int pointsIdx = viewMenu.GetItemIndex((int)MenuId.ViewPoints);
         int linesIdx = viewMenu.GetItemIndex((int)MenuId.ViewLines);
         int normalsIdx = viewMenu.GetItemIndex((int)MenuId.ViewNormals);
         int facesIdx = viewMenu.GetItemIndex((int)MenuId.ViewFaces);
-        
+
         viewMenu.SetItemChecked(pointsIdx, ViewSelection.ShowPoints);
         viewMenu.SetItemChecked(linesIdx, ViewSelection.ShowLines);
         viewMenu.SetItemChecked(normalsIdx, ViewSelection.ShowNormals);

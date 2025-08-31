@@ -117,7 +117,7 @@ public static partial class KoreTestMeshUvOps
         mesh.AddLine(bottomFrontRight, bottomBackRight, lineColor);
         mesh.AddLine(bottomBackRight, bottomBackLeft, lineColor);
         mesh.AddLine(bottomBackLeft, bottomFrontLeft, lineColor);
-        
+
         // Vertical Lines
         mesh.AddLine(topFrontLeft, bottomFrontLeft, lineColor);
         mesh.AddLine(topFrontRight, bottomFrontRight, lineColor);
@@ -130,7 +130,7 @@ public static partial class KoreTestMeshUvOps
         mesh.SetGroupMaterialName("All", KoreMeshMaterialPalette.DefaultMaterialName);
 
 
-        mesh.SetNormalsFromTriangles();
+        KoreMeshDataEditOps.SetNormalsFromTriangles(mesh);
 
         // dump the mesh JSON to the log for analysis
         string json = KoreMeshDataIO.ToJson(mesh, dense: false);
