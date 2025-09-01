@@ -14,7 +14,6 @@ namespace KoreCommon;
 // - UVs use top-left origin (Godot/OpenGL style): U (X) incrementing right, V (Y) incrementing down to a 1,1 bottom right
 // - Triangle winding: clockwise when viewed from outside (Godot native)
 
-
 // Quick structure for a record of three index values for corners of a triangle
 public readonly record struct KoreMeshIndex2(int A, int B);
 public readonly record struct KoreMeshIndex3(int A, int B, int C);
