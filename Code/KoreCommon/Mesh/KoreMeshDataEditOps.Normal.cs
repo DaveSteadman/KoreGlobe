@@ -63,26 +63,19 @@ public static partial class KoreMeshDataEditOps
         var vertexC = mesh.Vertices[triangle.C];
 
         // Calculate cross product for normal
-        var edge1 = vertexB - vertexA;
-        var edge2 = vertexC - vertexA;
+        // For CW winding: use (A→C) × (A→B) to get outward-facing normal
+        var edge1 = vertexC - vertexA;  // A → C
+        var edge2 = vertexB - vertexA;  // A → B
 
-        // Manual cross product calculation: edge1 × edge2
-        var crossX = edge1.Y * edge2.Z - edge1.Z * edge2.Y;
-        var crossY = edge1.Z * edge2.X - edge1.X * edge2.Z;
-        var crossZ = edge1.X * edge2.Y - edge1.Y * edge2.X;
-
-        var normal = new KoreXYZVector(crossX, crossY, crossZ);
+        // Cross product: edge1 × edge2 = (A→C) × (A→B)
+        var normal = KoreXYZVector.CrossProduct(edge1, edge2);
 
         // Normalize the normal vector
         var length = Math.Sqrt(normal.X * normal.X + normal.Y * normal.Y + normal.Z * normal.Z);
         if (length > 0.0001) // Avoid division by zero
-        {
             normal = new KoreXYZVector(normal.X / length, normal.Y / length, normal.Z / length);
-        }
         else
-        {
             normal = new KoreXYZVector(0, 1, 0); // Default up vector
-        }
 
         return normal;
     }

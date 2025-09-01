@@ -143,6 +143,8 @@ public static partial class KoreMeshDataPrimitives
         // mesh.AddTriangle(endCapPntIds[0], endCapPntIds[1], endCapPntIds[2]);
         // mesh.AddTriangle(endCapPntIds[0], endCapPntIds[2], endCapPntIds[3]);
 
+        KoreMeshDataEditOps.SetNormalsFromTriangles(combiningMesh);
+
         return combiningMesh;
 
 

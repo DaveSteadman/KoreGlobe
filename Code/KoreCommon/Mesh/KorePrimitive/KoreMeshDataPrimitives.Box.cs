@@ -78,6 +78,7 @@ public static partial class KoreMeshDataPrimitives
         return mesh;
     }
 
+    // Usage: var cubeMesh = KoreMeshDataPrimitives.IsolatedCube(1.0f, new KoreColorRGB(255, 0, 0));
     public static KoreMeshData IsolatedCube(float size, KoreMeshMaterial mat)
     {
         // Create the basic cube

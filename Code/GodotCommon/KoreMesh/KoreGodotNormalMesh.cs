@@ -244,8 +244,8 @@ public partial class KoreGodotNormalMesh : MeshInstance3D
     /// </summary>
     public void UpdateMesh(KoreMeshData meshData, float normalLength)
     {
-        NormalLength = normalLength;
-        UpdateMesh(meshData);
+        // NormalLength = normalLength;
+        // UpdateMesh(meshData);
     }
 
     /// <summary>
@@ -253,14 +253,14 @@ public partial class KoreGodotNormalMesh : MeshInstance3D
     /// </summary>
     public void UpdateMesh(KoreMeshData meshData, bool showVertexNormals, bool showTriangleNormals, float normalLength = 0.2f)
     {
-        ShowVertexNormals = showVertexNormals;
-        ShowTriangleNormals = showTriangleNormals;
-        NormalLength = normalLength;
-        UpdateMesh(meshData);
+        // ShowVertexNormals = showVertexNormals;
+        // ShowTriangleNormals = showTriangleNormals;
+        // NormalLength = normalLength;
+        // UpdateMesh(meshData);
     }
     
     public void ClearMesh()
     {
-        Mesh = null;
+        // Mesh = null;
     }
 }

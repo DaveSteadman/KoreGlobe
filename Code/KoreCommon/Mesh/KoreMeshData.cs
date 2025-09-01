@@ -482,6 +482,11 @@ public partial class KoreMeshData
             AddTriangleToGroup(triId, groupName);
     }
 
+    public bool HasTriangle(int triId)
+    {
+        return Triangles.ContainsKey(triId);
+    }
+
     // --------------------------------------------------------------------------------------------
     // MARK: Face
     // --------------------------------------------------------------------------------------------
@@ -698,7 +703,6 @@ public partial class KoreMeshData
 
     // --------------------------------------------------------------------------------------------
 
-
     public void AddTriangleToGroup(int triangleId, string groupName)
     {
         if (NamedTriangleGroups.ContainsKey(groupName))
@@ -728,6 +732,24 @@ public partial class KoreMeshData
         foreach (var triangle in Triangles)
         {
             group.TriangleIds.Add(triangle.Key);
+        }
+        NamedTriangleGroups[groupName] = group;
+    }
+    
+    public void AddTrianglesToGroup(List<int> triangleIds, string groupName)
+    {
+        if (!NamedTriangleGroups.ContainsKey(groupName))
+        {
+            AddNamedGroup(groupName);
+        }
+
+        KoreMeshTriangleGroup group = NamedTriangleGroups[groupName];
+        foreach (int triId in triangleIds)
+        {
+            if (Triangles.ContainsKey(triId) && !group.TriangleIds.Contains(triId))
+            {
+                group.TriangleIds.Add(triId);
+            }
         }
         NamedTriangleGroups[groupName] = group;
     }

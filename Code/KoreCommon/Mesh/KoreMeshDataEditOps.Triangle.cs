@@ -161,6 +161,29 @@ public static partial class KoreMeshDataEditOps
         }
     }
 
+    // --------------------------------------------------------------------------------------------
+    // MARK: Delete
+    // --------------------------------------------------------------------------------------------
+    
+    // Deletes the triangle definition and any use in groups.
+
+    // Usage: KoreMeshDataEditOps.DeleteTriangle(mesh, triangleId);
+    public static void DeleteTriangle(KoreMeshData mesh, int triId)
+    {
+        if (!mesh.Triangles.ContainsKey(triId))
+            return;
+
+        KoreMeshTriangle triangle = mesh.Triangles[triId];
+
+        // Remove the triangle
+        mesh.Triangles.Remove(triId);
+
+        // loop through each group and remove the id from its list
+        foreach (var group in mesh.NamedTriangleGroups.Values)
+        {
+            group.TriangleIds.Remove(triId);
+        }
+    }
 
 
 }

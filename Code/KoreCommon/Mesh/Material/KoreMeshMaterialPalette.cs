@@ -12,7 +12,7 @@ namespace KoreCommon;
 public static class KoreMeshMaterialPalette
 {
     public static readonly string DefaultMaterialName = "DefaultMaterial"; // Default material name KoreMeshMaterialPalette.DefaultMaterialName
-    public static readonly KoreMeshMaterial DefaultMaterial = new(DefaultMaterialName, KoreColorRGB.White, 0.0f, 0.8f);
+    public static readonly KoreMeshMaterial DefaultMaterial = new(DefaultMaterialName, KoreColorRGB.White, 0.0f, 0.8f); // KoreMeshMaterialPalette.DefaultMaterial
 
     private static readonly List<KoreMeshMaterial> MaterialsList =
     [

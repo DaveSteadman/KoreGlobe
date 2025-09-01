@@ -307,9 +307,11 @@ public partial class ModelEditWindow
     /// </summary>
     public void ClearAllDebugGeometry()
     {
-        ClearDebugPoints();
-        ClearDebugLines();
-        ClearNormals();
+        // ClearDebugPoints();
+        // ClearDebugLines();
+        // ClearNormals();
+
+        ClearMeshInstances();
     }
 
     // --------------------------------------------------------------------------------------------
@@ -327,70 +329,35 @@ public partial class ModelEditWindow
         // Clear any existing mesh instances (but keep debug objects)
         ClearMeshInstances();
 
-        if (meshData.NamedTriangleGroups.Count == 0)
+        // Get a mesh for each material
+        Dictionary<string, KoreMeshData> groupMeshDict = KoreMeshDataEditOps.MeshForEachGroup(meshData);
+
+        foreach (var kvp in groupMeshDict)
         {
-            GD.Print("ModelEditWindow.DrawMeshWithGroups: No named triangle groups defined, rendering entire mesh as one group.");
-            // No groups defined, render the entire mesh as one group
-            DrawEntireMeshAsGroup(meshData);
+            string groupName = kvp.Key;
+            KoreMeshData groupMesh = kvp.Value;
+
+            // Create a MeshInstance3D for this group
+            var meshInstance = new KoreGodotSurfaceMesh();
+            meshInstance.Name = $"MeshGroup_{groupName}";
+
+            // Update the mesh with the group data, passing source path for texture resolution
+            meshInstance.UpdateMesh(groupMesh, groupName, SourceFilePath);
+
+            // Add to the scene
+            MountRoot!.AddChild(meshInstance);
+
+            GD.Print($"Drew mesh group '{groupName}' with {groupMesh.Triangles.Count} triangles, {groupMesh.Materials.Count} materials");
+
+
+            // Write each mesh to a debug json file
+            string debugJson = KoreMeshDataIO.ToJson(groupMesh, dense: false);
+            File.WriteAllText($"Debug_{groupName}.json", debugJson);
         }
-        else
-        {
-            // Render each group separately
-            foreach (var groupKvp in meshData.NamedTriangleGroups)
-            {
-                string groupName = groupKvp.Key;
-                DrawSingleMeshGroup(meshData, groupName);
-            }
-        }
+
     }
 
-    /// <summary>
-    /// Draw a single material group as a MeshInstance3D
-    /// </summary>
-    /// <param name="meshData">The source mesh data</param>
-    /// <param name="groupName">Name of the group to render</param>
-    private void DrawSingleMeshGroup(KoreMeshData meshData, string groupName)
-    {
-        GD.Print($"Drawing mesh group: {groupName}");
 
-        // Create a mesh containing only this group's geometry
-        KoreMeshData groupMesh = meshData.CreateMeshForGroup(groupName);
-
-        if (groupMesh.Triangles.Count == 0) return; // Skip empty groups
-
-        // Create a MeshInstance3D for this group
-        var meshInstance = new KoreGodotSurfaceMesh();
-        meshInstance.Name = $"MeshGroup_{groupName}";
-
-        // Update the mesh with the group data, passing source path for texture resolution
-        meshInstance.UpdateMesh(groupMesh, groupName, SourceFilePath);
-
-        // Add to the scene
-        MountRoot!.AddChild(meshInstance);
-
-        GD.Print($"Drew mesh group '{groupName}' with {groupMesh.Triangles.Count} triangles, {groupMesh.Materials.Count} materials");
-    }
-
-    /// <summary>
-    /// Draw the entire mesh as a single group when no named groups are defined
-    /// </summary>
-    /// <param name="meshData">The mesh data to render</param>
-    private void DrawEntireMeshAsGroup(KoreMeshData meshData)
-    {
-        if (meshData.Triangles.Count == 0) return; // Skip empty mesh
-
-        // Create a MeshInstance3D for the entire mesh
-        var meshInstance = new KoreGodotSurfaceMesh();
-        meshInstance.Name = "MeshGroup_EntireMesh";
-
-        // Update the mesh with all the data, passing source path for texture resolution
-        meshInstance.UpdateMesh(meshData, null, SourceFilePath);
-
-        // Add to the scene
-        MountRoot!.AddChild(meshInstance);
-
-        GD.Print($"Drew entire mesh with {meshData.Triangles.Count} triangles, {meshData.Materials.Count} materials");
-    }
 
     /// <summary>
     /// Clear all mesh instances (but preserve debug objects like spheres and cylinders)
@@ -403,17 +370,14 @@ public partial class ModelEditWindow
         var childrenToRemove = new List<Node>();
         foreach (Node child in MountRoot.GetChildren())
         {
-            if (child is KoreGodotSurfaceMesh)
-            {
-                childrenToRemove.Add(child);
-            }
+           child.QueueFree();
         }
 
-        foreach (Node child in childrenToRemove)
-        {
-            MountRoot.RemoveChild(child);
-            child.QueueFree();
-        }
+        // foreach (Node child in childrenToRemove)
+        // {
+        //     MountRoot.RemoveChild(child);
+        //     child.QueueFree();
+        // }
     }
 
     // --------------------------------------------------------------------------------------------

@@ -44,14 +44,11 @@ App Outline
 Immeditate Task:
 ================
 
-- Mesh deep copy
-    - editor flip UVs and axis
-    - save to a format
-    - load format in editor
+- CLI message inject
+    - Exercise the network handling, at least internally.
 
-- Consolidate the mesh editor window:
-    - Iterate on the export and import between formats - see how well we can work with Blender and re-import.
-
+- New Mesh Structure
+    - Based on better understanding of meshes and issues, start with a new classname to avoid conflict.
 
 
 Short Term Todo List:
@@ -79,8 +76,6 @@ Short Term Todo List:
     - Add an xbox controller input as an element.
     - Have a facility to add and remove them
 
-- CLI message inject
-    - Exercise the network handling, at least internally.
 
 Tasks:
 ======

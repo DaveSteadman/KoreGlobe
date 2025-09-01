@@ -1,6 +1,7 @@
 using Godot;
 using System;
-
+using System.IO;
+using System.Linq;
 using KoreCommon;
 using System.Collections.Generic;
 
@@ -36,8 +37,13 @@ public partial class ModelEditWindow : Window
         EditFlipTriangles = 1001,
         EditFlipUV_Vertical = 1002,
         EditFlipUV_Horizontal = 1003,
+        EditCalcNormals = 1004,
 
-        ImportObjMtl = 2001,
+        ExportNativeJSON = 2000,
+        ExportObjMtl = 2001,
+
+        ImportNativeJSON = 2500,
+        ImportObjMtl = 2501,
 
         ViewPoints = 3001,
         ViewLines = 3002,
@@ -63,8 +69,20 @@ public partial class ModelEditWindow : Window
     {
         if (ModelMenuBar == null) { GD.PrintErr("ModelEditWindow: ModelMenuBar null"); return; }
 
+        PopupMenu _fileMenu = new PopupMenu();
+        _fileMenu.Name = "File";
+        _fileMenu.AddItem("New", (int)MenuId.FileNew);
+        _fileMenu.AddItem("Open", (int)MenuId.FileOpen);
+        _fileMenu.AddItem("Exit", (int)MenuId.FileExit);
+
+        PopupMenu _exportMenu = new PopupMenu();
+        _exportMenu.Name = "Export";
+        _exportMenu.AddItem("Export Native JSON", (int)MenuId.ExportNativeJSON);
+        _exportMenu.AddItem("Export OBJ/MTL", (int)MenuId.ExportObjMtl);
+
         PopupMenu _importMenu = new PopupMenu();
         _importMenu.Name = "Import";
+        _importMenu.AddItem("Import Native JSON", (int)MenuId.ImportNativeJSON);
         _importMenu.AddItem("Import OBJ/MTL", (int)MenuId.ImportObjMtl);
 
         PopupMenu _editMenu = new PopupMenu();
@@ -73,7 +91,9 @@ public partial class ModelEditWindow : Window
         _editMenu.AddSeparator();
         _editMenu.AddItem("FlipUV - Vertical", (int)MenuId.EditFlipUV_Vertical);
         _editMenu.AddItem("FlipUV - Horizontal", (int)MenuId.EditFlipUV_Horizontal);
-
+        _editMenu.AddSeparator();
+        _editMenu.AddItem("Calculate Normals", (int)MenuId.EditCalcNormals);
+        
         PopupMenu _viewMenu = new PopupMenu();
         _viewMenu.Name = "View";
         _viewMenu.AddItem("Points", (int)MenuId.ViewPoints);
@@ -81,11 +101,15 @@ public partial class ModelEditWindow : Window
         _viewMenu.AddItem("Normals", (int)MenuId.ViewNormals);
         _viewMenu.AddItem("Faces", (int)MenuId.ViewFaces);
 
+        ModelMenuBar.AddChild(_fileMenu);                // attach to MenuBar
+        ModelMenuBar.AddChild(_exportMenu);              // attach to MenuBar
         ModelMenuBar.AddChild(_importMenu);              // attach to MenuBar
         ModelMenuBar.AddChild(_editMenu);                // attach to MenuBar
         ModelMenuBar.AddChild(_viewMenu);                // attach to MenuBar
 
         // Connect all menu event handlers
+        _fileMenu.IdPressed += OnMenuClicked;
+        _exportMenu.IdPressed += OnMenuClicked;
         _importMenu.IdPressed += OnMenuClicked;
         _editMenu.IdPressed += OnMenuClicked;
         _viewMenu.IdPressed += OnMenuClicked;
@@ -115,49 +139,30 @@ public partial class ModelEditWindow : Window
 
         switch ((MenuId)id)
         {
-            case MenuId.FileNew:
-                HandleFileNew();
-                break;
+            // File
+            case MenuId.FileNew:                   HandleFileNew(); break;
+            case MenuId.FileOpen:                  HandleFileOpen(); break;
+            case MenuId.FileExit:                  HandleFileExit(); break;
 
-            case MenuId.FileOpen:
-                HandleFileOpen();
-                break;
+            // Export
+            case MenuId.ExportNativeJSON:          HandleExportNativeJSON(); break;
+            case MenuId.ExportObjMtl:              HandleExportObjMtl(); break;
 
-            case MenuId.FileExit:
-                HandleFileExit();
-                break;
+            // Import
+            case MenuId.ImportNativeJSON:          HandleImportNativeJSON(); break;
+            case MenuId.ImportObjMtl:              HandleImportObjMtl(); break;
 
-            case MenuId.ImportObjMtl:
-                HandleImportObjMtl();
-                break;
+            // Edit
+            case MenuId.EditFlipTriangles:         HandleEditFlipTriangles(); break;
+            case MenuId.EditFlipUV_Vertical:       HandleEditFlipUVVertical(); break;
+            case MenuId.EditFlipUV_Horizontal:     HandleEditFlipUVHorizontal(); break;
+            case MenuId.EditCalcNormals:           HandleEditCalcNormals(); break;
 
-            case MenuId.EditFlipTriangles:
-                HandleEditFlipTriangles();
-                break;
-
-            case MenuId.EditFlipUV_Vertical:
-                HandleEditFlipUVVertical();
-                break;
-
-            case MenuId.EditFlipUV_Horizontal:
-                HandleEditFlipUVHorizontal();
-                break;
-
-            case MenuId.ViewPoints:
-                HandleViewToggle(MenuId.ViewPoints);
-                break;
-
-            case MenuId.ViewLines:
-                HandleViewToggle(MenuId.ViewLines);
-                break;
-
-            case MenuId.ViewNormals:
-                HandleViewToggle(MenuId.ViewNormals);
-                break;
-
-            case MenuId.ViewFaces:
-                HandleViewToggle(MenuId.ViewFaces);
-                break;
+            // View
+            case MenuId.ViewPoints:                HandleViewToggle(MenuId.ViewPoints); break;
+            case MenuId.ViewLines:                 HandleViewToggle(MenuId.ViewLines); break;
+            case MenuId.ViewNormals:               HandleViewToggle(MenuId.ViewNormals); break;
+            case MenuId.ViewFaces:                 HandleViewToggle(MenuId.ViewFaces); break;
 
             default:
                 GD.PrintErr($"ModelEditWindow: Unknown menu ID - {id}");
@@ -165,10 +170,19 @@ public partial class ModelEditWindow : Window
         }
     }
 
+    // --------------------------------------------------------------------------------------------
+
     private void HandleFileNew()
     {
         GD.Print("ModelEditWindow: File -> New");
         // TODO: Implement new file functionality
+
+        // create a nominal cube and
+        WindowMeshData = KoreMeshDataPrimitives.IsolatedCube(1.0f, KoreMeshMaterialPalette.Find("BlueGlass"));
+        MeshJsonEdit!.SetText(KoreMeshDataIO.ToJson(WindowMeshData, dense: false));
+
+        ClearMeshInstances();
+        JSONToMesh();
     }
 
     private void HandleFileOpen()
@@ -183,22 +197,129 @@ public partial class ModelEditWindow : Window
         OnCloseRequested();
     }
 
+    // --------------------------------------------------------------------------------------------
+
+    // Export
+    private void HandleExportNativeJSON()
+    {
+        GD.Print("ModelEditWindow: Export -> Native JSON");
+
+        // Create and configure file dialog
+        var fileDialog = new FileDialog();
+        fileDialog.Title = "Save Native JSON";
+        fileDialog.CurrentFile = "mesh.json";
+        fileDialog.FileMode = FileDialog.FileModeEnum.SaveFile;
+        fileDialog.Access = FileDialog.AccessEnum.Filesystem; // Allow access to user filesystem (C:\, etc.)
+        fileDialog.AddFilter("*.json", "JSON Files");
+
+        // Connect the file selected signal
+        fileDialog.FileSelected += OnExportNativeFileSelected;
+
+        // Add to scene tree and show
+        AddChild(fileDialog);
+        fileDialog.PopupCentered(new Vector2I(800, 600));
+    }
+
+    private void HandleExportObjMtl()
+    {
+        GD.Print("ModelEditWindow: Export -> OBJ/MTL");
+        // TODO: Implement OBJ/MTL export functionality
+    }
+
+    private void OnExportNativeFileSelected(string path)
+    {
+        GD.Print($"ModelEditWindow: Export -> Native JSON: {path}");
+
+        // Clean up the file dialog
+        foreach (Node child in GetChildren())
+        {
+            if (child is FileDialog fileDialog)
+            {
+                fileDialog.QueueFree();
+                break;
+            }
+        }
+
+        // TODO: Implement actual JSON export functionality
+        // Example: ExportMeshToJSON(path);
+        string jsonStr = KoreMeshDataIO.ToJson(WindowMeshData, dense: false);
+        File.WriteAllText(path, jsonStr);
+    }
+
+    // --------------------------------------------------------------------------------------------
+
+    // import
+
+    private void HandleImportNativeJSON()
+    {
+        GD.Print("ModelEditWindow: Import -> Native JSON");
+
+        // Create and configure file dialog
+        var fileDialog = new FileDialog();
+        fileDialog.Title = "Open Native JSON";
+        fileDialog.FileMode = FileDialog.FileModeEnum.OpenFile;
+        fileDialog.Access = FileDialog.AccessEnum.Filesystem; // Allow access to user filesystem (C:\, etc.)
+        fileDialog.AddFilter("*.json", "JSON Files");
+
+        // Connect the file selected signal
+        fileDialog.FileSelected += OnImportNativeFileSelected;
+
+        // Add to scene tree and show
+        AddChild(fileDialog);
+        fileDialog.PopupCentered(new Vector2I(800, 600));
+    }
+
+    private void OnImportNativeFileSelected(string path)
+    {
+        GD.Print($"ModelEditWindow: Import -> Native JSON: {path}");
+
+        // Clean up the file dialog
+        foreach (Node child in GetChildren())
+        {
+            if (child is FileDialog fileDialog)
+            {
+                fileDialog.QueueFree();
+                break;
+            }
+        }
+
+        // Import JSON file and load into mesh
+        try
+        {
+            string jsonStr = File.ReadAllText(path);
+            MeshJsonEdit!.SetText(jsonStr);
+            WindowMeshData = KoreMeshDataIO.FromJson(jsonStr);
+            JSONToMesh(); // Update the 3D display
+            GD.Print($"Successfully imported mesh from: {path}");
+        }
+        catch (Exception ex)
+        {
+            GD.PrintErr($"Failed to import JSON file: {ex.Message}");
+        }
+    }
+
     private void HandleImportObjMtl()
     {
         GD.Print("ModelEditWindow: Import -> OBJ/MTL");
         // TODO: Implement OBJ/MTL import functionality
     }
 
+
+    // --------------------------------------------------------------------------------------------
+
+
+
     private void HandleEditFlipTriangles()
     {
         GD.Print("ModelEditWindow: Edit -> Flip Triangles");
 
-        // Code to Mesh
+        // Load mesh, flip triangles, and save back
         JSONToMesh();
+
         if (WindowMeshData != null)
-            KoreMeshDataEditOps.SetNormalsFromTriangles(WindowMeshData);
+            KoreMeshDataEditOps.FlipAllTriangleWindings(WindowMeshData);
+
         MeshToJSON();
-        JSONToMesh();
     }
 
     private void HandleEditFlipUVVertical()
@@ -207,9 +328,8 @@ public partial class ModelEditWindow : Window
         JSONToMesh();
         if (WindowMeshData != null)
             KoreMeshDataEditOps.FlipAllUVsVertical(WindowMeshData);
-
         MeshToJSON();
-        JSONToMesh();
+        // Note: Don't call JSONToMesh() again - it causes disposal conflicts
     }
 
     private void HandleEditFlipUVHorizontal()
@@ -219,7 +339,7 @@ public partial class ModelEditWindow : Window
         if (WindowMeshData != null)
             KoreMeshDataEditOps.FlipAllUVsHorizontal(WindowMeshData);
         MeshToJSON();
-        JSONToMesh();
+        // Note: Don't call JSONToMesh() again - it causes disposal conflicts
     }
 
     private void HandleViewToggle(MenuId viewItem)
@@ -288,6 +408,23 @@ public partial class ModelEditWindow : Window
         // TODO: Apply actual 3D model view changes using ViewSelection state
         // For example: UpdateMeshDisplay(ViewSelection);
     }
+
+
+    public void HandleEditCalcNormals()
+    {
+        GD.Print("ModelEditWindow: Edit -> Calculate Normals");
+        JSONToMesh();
+        if (WindowMeshData != null)
+            KoreMeshDataEditOps.SetNormalsFromTriangles(WindowMeshData);
+        MeshToJSON();
+    }
+
+
+
+
+
+    // ---------------------------------------------------------------------
+
 
     // Helper methods to access ViewSelection state
     public KoreViewSelection GetViewSelection()

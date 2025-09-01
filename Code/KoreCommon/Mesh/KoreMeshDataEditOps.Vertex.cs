@@ -93,7 +93,6 @@ public static partial class KoreMeshDataEditOps
     // MARK: Broken
     // --------------------------------------------------------------------------------------------
 
-
     // Create a hash set of all the used vertex IDs, then remove any points that are not in that set.
 
     public static void RemoveBrokenVertices(KoreMeshData mesh)

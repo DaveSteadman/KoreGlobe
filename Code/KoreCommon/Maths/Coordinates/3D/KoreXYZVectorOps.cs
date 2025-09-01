@@ -146,6 +146,7 @@ public static class KoreXYZVectorOps
     // Computes an inset point at vertex B, offset along the angle bisector of segments AB and BC by distance t.
     // Useful for generating smoothed or beveled corners in 3D geometry.
     // Handles all three dimensions for accurate 3D insetting.
+    // Usage: KoreXYZVector insetPoint = KoreXYZVectorOps.InsetPoint(a, b, c, insetDistance);
     public static KoreXYZVector InsetPoint(KoreXYZVector a, KoreXYZVector b, KoreXYZVector c, double t)
     {
         // Calculate direction vectors for AB and BC, including the Z dimension
