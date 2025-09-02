@@ -467,10 +467,9 @@ public partial class KoreSandbox3DScene : Node3D
             string mtlContent2 = File.ReadAllText("UnitTestArtefacts/MiniMesh_Cube2.mtl");
             KoreMiniMesh miniMesh = KoreMiniMeshIO.FromObjMtl(objContent2, mtlContent2);
 
-            // dump to JSON
-            string json = KoreMiniMeshIO.ToJson(miniMesh);
-            GD.Print($"========> Cube JSON: \n{json}\n");
-
+            // Import from JSON
+            string jsonContent = File.ReadAllText("UnitTestArtefacts/MiniMesh_Cube.json");
+            //KoreMiniMesh miniMesh = KoreMiniMeshIO.FromJson(jsonContent);
 
             // var miniMesh = KoreMiniMeshPrimitives.BasicCube(0.5f, KoreMiniMeshMaterialPalette.Find("MattCyan"), KoreColorRGB.White);
 
@@ -509,7 +508,12 @@ public partial class KoreSandbox3DScene : Node3D
             // File.WriteAllText("UnitTestArtefacts/MiniMesh_Cube.obj", objContent);
             // File.WriteAllText("UnitTestArtefacts/MiniMesh_Cube.mtl", mtlContent);
 
+            // dump to JSON
+            // string json = KoreMiniMeshIO.ToJson(miniMesh);
+            // //GD.Print($"========> Cube JSON: \n{json}\n");
+            // File.WriteAllText("UnitTestArtefacts/MiniMesh_Cube.json", json);
+
         }
     }
-    
+
 }

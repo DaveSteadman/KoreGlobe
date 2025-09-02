@@ -44,12 +44,12 @@ App Outline
 Immeditate Task:
 ================
 
-- CLI message inject
-    - Exercise the network handling, at least internally.
+- MiniMesh
+    - Check the roughness/metallic params are moving around correctly.
 
-- New Mesh Structure
-    - Based on better understanding of meshes and issues, start with a new classname to avoid conflict.
-
+- Consider how we manage a library of objects
+    - Actions around rotations, collision, scale.
+    - Inject mesh from message?
 
 Short Term Todo List:
 =====================
