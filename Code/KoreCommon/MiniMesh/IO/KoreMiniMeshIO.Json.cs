@@ -14,9 +14,7 @@ namespace KoreCommon;
 
 public static partial class KoreMiniMeshIO
 {
-    static string startColorName = "start";
-    static string endColorName   = "end";
-    //static string colorName      = "color";
+
 
     // --------------------------------------------------------------------------------------------
     // MARK: ToJson
@@ -28,11 +26,12 @@ public static partial class KoreMiniMeshIO
     {
         var obj = new
         {
-            vertices  = mesh.Vertices,
-            colors    = mesh.Colors,
-            lines     = mesh.Lines,
+            vertices = mesh.Vertices,
+            colors = mesh.Colors,
+            materials = mesh.Materials,
+            lines = mesh.Lines,
             triangles = mesh.Triangles,
-            groups    = mesh.Groups
+            groups = mesh.Groups
         };
 
         var options = new JsonSerializerOptions
@@ -44,6 +43,7 @@ public static partial class KoreMiniMeshIO
                 new KoreMiniMeshColorConverter(),
                 new KoreMiniMeshLineConverter(),
                 new KoreMiniMeshTriConverter(),
+                new KoreMiniMeshMaterialConverter(),
                 new KoreMiniMeshGroupConverter()
             }
         };
@@ -74,6 +74,16 @@ public static partial class KoreMiniMeshIO
         {
             foreach (var c in colorsProp.EnumerateObject())
                 mesh.Colors[int.Parse(c.Name)] = KoreMiniMeshColorConverter.ReadElement(c.Value);
+        }
+
+        // --- Materials ---
+        if (root.TryGetProperty("materials", out var materialsProp) && materialsProp.ValueKind == JsonValueKind.Array)
+        {
+            foreach (var m in materialsProp.EnumerateArray())
+            {
+                var material = KoreMiniMeshMaterialConverter.ReadMaterial(m);
+                mesh.Materials.Add(material);
+            }
         }
 
         // --- Lines ---
@@ -239,6 +249,58 @@ public static partial class KoreMiniMeshIO
 
 
     // --------------------------------------------------------------------------------------------
+    // MARK: MaterialConverter
+    // --------------------------------------------------------------------------------------------
+
+    private class KoreMiniMeshMaterialConverter : JsonConverter<KoreMiniMeshMaterial>
+    {
+        public override KoreMiniMeshMaterial Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            using var doc = JsonDocument.ParseValue(ref reader);
+            return ReadMaterial(doc.RootElement);
+        }
+
+        public override void Write(Utf8JsonWriter writer, KoreMiniMeshMaterial value, JsonSerializerOptions options)
+        {
+            // Format: "name: Gold, baseColor: #FFD700, metallic: 1.0, roughness: 0.1, filename: texture.png"
+            string baseColorHex = KoreColorIO.RBGtoHexStringShort(value.BaseColor);
+            writer.WriteStringValue($"name: {value.Name}, baseColor: {baseColorHex}, metallic: {value.Metallic:F1}, roughness: {value.Roughness:F1}");
+        }
+
+        public static KoreMiniMeshMaterial ReadMaterial(JsonElement el)
+        {
+            string? str = el.GetString() ?? "";
+
+            if (!string.IsNullOrEmpty(str))
+            {
+                // Parse format: "name: Gold, baseColor: #FFD700, metallic: 1.0, roughness: 0.1, filename: texture.png"
+                var parts = str.Split(',');
+                if (parts.Length < 4 || parts.Length > 5)
+                    throw new FormatException($"Invalid KoreMiniMeshMaterial string format. Expected 4-5 parts but got {parts.Length}: {str}");
+
+                // Parse name
+                string namePart = parts[0].Split(':')[1].Trim();
+
+                // Parse base color (includes alpha)
+                string baseColorPart = parts[1].Split(':')[1].Trim();
+                KoreColorRGB baseColor = KoreColorIO.HexStringToRGB(baseColorPart);
+
+                // Parse metallic
+                string metallicPart = parts[2].Split(':')[1].Trim();
+                float metallic = float.Parse(metallicPart);
+
+                // Parse roughness
+                string roughnessPart = parts[3].Split(':')[1].Trim();
+                float roughness = float.Parse(roughnessPart);
+
+                return new KoreMiniMeshMaterial(namePart, baseColor, metallic, roughness);
+            }
+
+            return KoreMiniMeshMaterialPalette.DefaultMaterial;
+        }
+    }
+
+    // --------------------------------------------------------------------------------------------
     // MARK: GroupConverter
     // --------------------------------------------------------------------------------------------
 
@@ -252,9 +314,9 @@ public static partial class KoreMiniMeshIO
 
         public override void Write(Utf8JsonWriter writer, KoreMiniMeshGroup value, JsonSerializerOptions options)
         {
-            // Format: "colorId: 1, TriIds: [1,2,3,4]"
+            // Format: "MaterialName: 1, TriIds: [1,2,3,4]"
             string triangleIdsList = string.Join(",", value.TriIdList);
-            writer.WriteStringValue($"colorId: {value.ColorId}, TriIds: [{triangleIdsList}]");
+            writer.WriteStringValue($"MaterialName: {value.MaterialName}, TriIds: [{triangleIdsList}]");
         }
 
         public static KoreMiniMeshGroup ReadGroup(JsonElement el)
@@ -268,8 +330,8 @@ public static partial class KoreMiniMeshIO
                 if (parts.Length < 2)
                     throw new FormatException($"Invalid KoreMeshTriangleGroup string format. Expected at least 2 parts: {str}");
 
-                // Parse colorId
-                int colorId = int.Parse(parts[0].Split(':')[1].Trim());
+                // Parse MaterialName
+                string materialName = parts[0].Split(':')[1].Trim();
 
                 // Parse triangleIds - everything after "triangleIds: [" and before "]"
                 string triangleIdsPart = str.Substring(str.IndexOf('[') + 1);
@@ -286,10 +348,10 @@ public static partial class KoreMiniMeshIO
                     }
                 }
 
-                return new KoreMiniMeshGroup(colorId, triangleIds);
+                return new KoreMiniMeshGroup(materialName, triangleIds);
             }
 
-            return new KoreMiniMeshGroup(-1, new List<int>());
+            return new KoreMiniMeshGroup(string.Empty, new List<int>());
         }
     }
 }

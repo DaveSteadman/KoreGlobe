@@ -66,6 +66,48 @@ public partial class KoreMiniMesh
     public void RemoveTriangle(int triangleId) { Triangles.Remove(triangleId); }
 
     // --------------------------------------------------------------------------------------------
+    // MARK: Materials
+    // --------------------------------------------------------------------------------------------
+
+    // Add material, checked for uniqueness by name
+
+    public void AddMaterial(KoreMiniMeshMaterial material)
+    {
+        if (!HasMaterial(material.Name))
+            Materials.Add(material);
+    }
+
+    public bool HasMaterial(string materialName)
+    {
+        return Materials.Any(m => string.Equals(m.Name, materialName, StringComparison.OrdinalIgnoreCase));
+    }
+
+    public KoreMiniMeshMaterial GetMaterial(string materialName)
+    {
+        // loop through the materials list, return first one with a matching name
+        foreach (var material in Materials)
+        {
+            if (string.Equals(material.Name, materialName, StringComparison.OrdinalIgnoreCase))
+                return material;
+        }
+
+        // Return the default material
+        return KoreMiniMeshMaterialPalette.DefaultMaterial;
+    }
+
+    public void RemoveMaterial(string materialName)
+    {
+        for (int i = Materials.Count - 1; i >= 0; i--)
+        {
+            if (string.Equals(Materials[i].Name, materialName, StringComparison.OrdinalIgnoreCase))
+            {
+                Materials.RemoveAt(i);
+                break;
+            }
+        }
+    }
+
+    // --------------------------------------------------------------------------------------------
     // MARK: Group
     // --------------------------------------------------------------------------------------------
 

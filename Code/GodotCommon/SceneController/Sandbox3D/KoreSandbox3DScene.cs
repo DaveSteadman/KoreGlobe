@@ -37,6 +37,8 @@ public partial class KoreSandbox3DScene : Node3D
         CreateTestMeshData_Cylinder();
         AddTestMeshData_BoxArc();
         AddTestMeshData_TexBox();
+
+        AddTestMeshData_MiniMeshBox();
     }
 
     public override void _Process(double delta)
@@ -65,7 +67,7 @@ public partial class KoreSandbox3DScene : Node3D
         Node3D Cube1Node = new Node3D() { Name = "Cube1Node" };
         Node3D Cube2Node = new Node3D() { Name = "Cube2Node" };
         Node3D Cube3Node = new Node3D() { Name = "Cube3Node" };
-        Node3D opNode    = new Node3D() { Name = "OPNode" };
+        Node3D opNode = new Node3D() { Name = "OPNode" };
         AddChild(Cube1Node);
         AddChild(Cube2Node);
         AddChild(Cube3Node);
@@ -74,7 +76,7 @@ public partial class KoreSandbox3DScene : Node3D
         Cube1Node.Position = new Vector3(-1.5f, 0.3f, 0.2f);
         Cube2Node.Position = new Vector3(0, 0.5f, 0.2f);
         Cube3Node.Position = new Vector3(1.5f, 0.7f, 0.2f);
-        opNode.Position    = new Vector3(0, 2f, 0);
+        opNode.Position = new Vector3(0, 2f, 0);
 
         // 1
         {
@@ -447,4 +449,67 @@ public partial class KoreSandbox3DScene : Node3D
         }
     }
 
+    // ---------------------------------------------------------------------------------------------
+    // MARK: Mini Mesh Box
+    // ---------------------------------------------------------------------------------------------
+
+    public void AddTestMeshData_MiniMeshBox()
+    {
+        // Function to add a test mini mesh box
+        Node3D MiniMeshBoxNode = new Node3D() { Name = "MiniMeshBoxNode" };
+        AddChild(MiniMeshBoxNode);
+        MiniMeshBoxNode.Position = new Vector3(3, 3, -3.6f);
+
+        // Test Mini Mesh Box
+        {
+            // Import the mesh
+            string objContent2 = File.ReadAllText("UnitTestArtefacts/MiniMesh_Cube2.obj");
+            string mtlContent2 = File.ReadAllText("UnitTestArtefacts/MiniMesh_Cube2.mtl");
+            KoreMiniMesh miniMesh = KoreMiniMeshIO.FromObjMtl(objContent2, mtlContent2);
+
+            // dump to JSON
+            string json = KoreMiniMeshIO.ToJson(miniMesh);
+            GD.Print($"========> Cube JSON: \n{json}\n");
+
+
+            // var miniMesh = KoreMiniMeshPrimitives.BasicCube(0.5f, KoreMiniMeshMaterialPalette.Find("MattCyan"), KoreColorRGB.White);
+
+            // KoreGodotLineMesh childMeshNode1 = new KoreGodotLineMesh();
+            // childMeshNode1.UpdateMesh(miniMesh);
+
+            // loop through each group in the mesh, and add a surface renderer for each
+            foreach (var group in miniMesh.Groups)
+            {
+                KoreMiniMeshGodotSurface childSurfaceMeshNode = new KoreMiniMeshGodotSurface();
+                childSurfaceMeshNode.UpdateMesh(miniMesh, group.Key);
+                MiniMeshBoxNode.AddChild(childSurfaceMeshNode);
+            }
+
+            // KoreMiniMeshGodotSurface childSurfaceMeshNode1 = new KoreMiniMeshGodotSurface();
+            // childSurfaceMeshNode1.UpdateMesh(miniMesh, "MattCyan");
+
+            // KoreMiniMeshGodotLine lineMeshNode1 = new KoreMiniMeshGodotLine();
+            // lineMeshNode1.UpdateMesh(miniMesh, "All");
+
+
+            // KoreMiniMeshGodotNormal normalMeshNode1 = new KoreMiniMeshGodotNormal();
+            // normalMeshNode1.UpdateMesh(miniMesh, "All", 0.1f);
+
+            // Use a different color to distinguish from lathe
+            // var surfaceMaterial = KoreGodotMaterialFactory.SimpleColoredMaterial(new Color(0.3f, 0.3f, 0.8f));
+            // childSurfaceMeshNode1.MaterialOverride = surfaceMaterial;
+
+            // Add the child nodes to the MiniMeshBoxNode
+            // MiniMeshBoxNode.AddChild(childSurfaceMeshNode1);
+            // MiniMeshBoxNode.AddChild(lineMeshNode1);
+            // MiniMeshBoxNode.AddChild(normalMeshNode1);
+
+            // Export the mesh to Obj/MTL
+            // var (objContent, mtlContent) = KoreMiniMeshIO.ToObjMtl(miniMesh, "MiniMesh_Cube", "MiniMesh_Cube");
+            // File.WriteAllText("UnitTestArtefacts/MiniMesh_Cube.obj", objContent);
+            // File.WriteAllText("UnitTestArtefacts/MiniMesh_Cube.mtl", mtlContent);
+
+        }
+    }
+    
 }

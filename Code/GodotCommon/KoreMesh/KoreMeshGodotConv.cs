@@ -78,6 +78,7 @@ public static class KoreMeshGodotConv
 
     // Convert KoreColorRGB to Godot Color.
     // Direct conversion, no coordinate system changes needed.
+    // Usage: KoreMeshGodotConv.ColorKoreToGodot(koreColor);
     public static Color ColorKoreToGodot(KoreColorRGB color)
     {
         return new Color(color.Rf, color.Gf, color.Bf, color.Af);

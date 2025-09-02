@@ -29,6 +29,7 @@ public static class KoreXYZVectorOps
     // Calculates the cross product of two 3D points (vectors).
     // Returns a new vector perpendicular to both input vectors, following the right-hand rule.
     // Useful for finding normals or the area of a parallelogram defined by the vectors.
+    // Usage: KoreXYZVector normal = KoreXYZVectorOps.CrossProduct(a, b);
     public static KoreXYZVector CrossProduct(KoreXYZVector a, KoreXYZVector b)
     {
         double x = (a.Y * b.Z) - (a.Z * b.Y);

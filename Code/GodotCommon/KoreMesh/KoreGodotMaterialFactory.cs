@@ -45,6 +45,35 @@ public static class KoreGodotMaterialFactory
         return material;
     }
 
+    // Usage: StandardMaterial3D mat = KoreGodotMaterialFactory.MiniMeshMaterial(koreMaterial);
+    public static StandardMaterial3D MiniMeshMaterial(KoreMiniMeshMaterial mat)
+    {
+        StandardMaterial3D material = new StandardMaterial3D();
+        material.AlbedoColor = KoreMeshGodotConv.ColorKoreToGodot(mat.BaseColor);
+        material.Roughness   = mat.Roughness;
+        material.Metallic    = mat.Metallic;
+
+        // Handle transparency based on alpha
+        if (mat.BaseColor.A < 1.0f)
+        {
+            material.Transparency = BaseMaterial3D.TransparencyEnum.Alpha;
+        }
+        else
+        {
+            material.Transparency = BaseMaterial3D.TransparencyEnum.Disabled;
+            material.DepthDrawMode = BaseMaterial3D.DepthDrawModeEnum.OpaqueOnly;
+        }
+
+        // Standard shading settings
+        material.ShadingMode   = BaseMaterial3D.ShadingModeEnum.PerPixel;
+        material.SpecularMode  = BaseMaterial3D.SpecularModeEnum.SchlickGgx;
+        material.CullMode      = BaseMaterial3D.CullModeEnum.Back;
+        material.NoDepthTest   = false;
+
+        return material;
+    }
+
+
     // --------------------------------------------------------------------------------------------
     // MARK: Vertex
     // --------------------------------------------------------------------------------------------

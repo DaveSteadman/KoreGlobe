@@ -13,6 +13,33 @@ public static partial class KoreMiniMeshOps
     // --------------------------------------------------------------------------------------------
 
 
+    // --------------------------------------------------------------------------------------------
+    // MARK: Normals
+    // --------------------------------------------------------------------------------------------
+
+    // Usage: KoreXYZVector triNorm = KoreMiniMeshOps.CalculateFaceNormal(mesh, tri);
+
+    public static KoreXYZVector CalculateFaceNormal(KoreMiniMesh mesh, KoreMiniMeshTri tri)
+    {
+        // Get the vertex positions
+        var vA = mesh.GetVertex(tri.A);
+        var vB = mesh.GetVertex(tri.B);
+        var vC = mesh.GetVertex(tri.C);
+
+        // Calc the edges
+        var abEdge = vA.XYZTo(vB);
+        var acEdge = vA.XYZTo(vC);
+
+        // Cross product and magnitude
+        KoreXYZVector normal = KoreXYZVectorOps.CrossProduct(acEdge, abEdge);
+        double length = normal.Magnitude;
+
+        // Normalize the normal vector
+        if (length > 0)
+            return normal.Normalize();
+
+        return KoreXYZVector.Zero;
+    }
 
     // --------------------------------------------------------------------------------------------
     // MARK: Colors
@@ -51,6 +78,26 @@ public static partial class KoreMiniMeshOps
     // MARK: Triangles
     // --------------------------------------------------------------------------------------------
 
+    // Define four points of a face, in CW order, to be stored as two new triangles.
+    // return a list of the new triangle IDs
+
+    // A -- B
+    // |    |
+    // D -- C
+
+    public static List<int> AddFace(KoreMiniMesh mesh, int a, int b, int c, int d)
+    {
+        var triangleIds = new List<int>();
+
+        // Split the quad into two triangles using a fan from vertex a
+        // Triangle 1: a -> b -> c
+        triangleIds.Add(mesh.AddTriangle(new KoreMiniMeshTri(a, b, c)));
+
+        // Triangle 2: a -> c -> d
+        triangleIds.Add(mesh.AddTriangle(new KoreMiniMeshTri(a, c, d)));
+
+        return triangleIds;
+    }
 
     // --------------------------------------------------------------------------------------------
     // MARK: Group
@@ -59,27 +106,27 @@ public static partial class KoreMiniMeshOps
     public static KoreMiniMeshGroup GetOrCreateGroup(KoreMiniMesh mesh, string groupName)
     {
         if (!mesh.HasGroup(groupName))
-            mesh.AddGroup(groupName, new KoreMiniMeshGroup(-1, new List<int>()));
+            mesh.AddGroup(groupName, new KoreMiniMeshGroup("", new List<int>()));
 
         return mesh.GetGroup(groupName);
     }
 
-    public static void SetGroupColor(KoreMiniMesh mesh, string groupName, int newColorId)
+    public static void SetGroupMaterial(KoreMiniMesh mesh, string groupName, string materialName)
     {
         if (mesh.HasGroup(groupName))
         {
             KoreMiniMeshGroup group = mesh.GetGroup(groupName);
-            group = group with { ColorId = newColorId };
+            group = group with { MaterialName = materialName };
             mesh.Groups[groupName] = group; // re-assign the modified group back to the dictionary
         }
     }
 
-    public static void SetGroupColor(KoreMiniMesh mesh, string groupName, KoreColorRGB color)
+    public static void SetGroupMaterial(KoreMiniMesh mesh, string groupName, KoreMiniMeshMaterial material)
     {
         if (mesh.HasGroup(groupName))
         {
-            int newColorId = GetOrCreateColorId(mesh, color);
-            SetGroupColor(mesh, groupName, newColorId);
+            mesh.AddMaterial(material);
+            SetGroupMaterial(mesh, groupName, material.Name);
         }
     }
 
@@ -87,7 +134,7 @@ public static partial class KoreMiniMeshOps
     {
         // create the group if it doesn't exist
         if (!mesh.HasGroup(groupName))
-            mesh.AddGroup(groupName, new KoreMiniMeshGroup(-1, new List<int>()));
+            mesh.AddGroup(groupName, new KoreMiniMeshGroup("", new List<int>()));
 
         // get the group
         KoreMiniMeshGroup group = mesh.GetGroup(groupName);

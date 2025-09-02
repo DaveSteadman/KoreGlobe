@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://buqq7o2fp8vgm"]
+[gd_scene load_steps=12 format=3 uid="uid://buqq7o2fp8vgm"]
 
 [ext_resource type="Script" uid="uid://dd6epp0iyhyal" path="res://Code/GodotCommon/Util/KoreViewportAutosize.cs" id="1_hlcvn"]
 [ext_resource type="Script" uid="uid://fp7k80n2ou0q" path="res://Code/GodotCommon/SceneController/Sandbox3D/KoreSandbox3DWindow.cs" id="1_s4y37"]
@@ -15,6 +15,10 @@
 [sub_resource type="BoxMesh" id="BoxMesh_iflb7"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_0yqbw"]
+
+[sub_resource type="Environment" id="Environment_s4y37"]
+ssao_enabled = true
+sdfgi_enabled = true
 
 [node name="Window" type="Window"]
 oversampling_override = 1.0
@@ -68,13 +72,15 @@ physics_interpolation_mode = 1
 shape = SubResource("CapsuleShape3D_6i22l")
 
 [node name="OmniLight3D" type="OmniLight3D" parent="SubViewportContainer/SubViewport/Scene3DRoot"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.81, 3.34, 3.415)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.02, 4.76, 1.6)
 light_color = Color(0.8693259, 0.5112665, 0.3452526, 1)
 light_energy = 11.553
 light_indirect_energy = 1.406
 shadow_enabled = true
-omni_range = 830.993
-omni_attenuation = 1.203
+shadow_opacity = 0.78
+shadow_blur = 2.822
+omni_range = 494.111
+omni_shadow_mode = 0
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Scene3DRoot/OmniLight3D"]
 mesh = SubResource("SphereMesh_s4y37")
@@ -89,6 +95,9 @@ skeleton = NodePath("StaticBody3D/CollisionShape3D")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="SubViewportContainer/SubViewport/Scene3DRoot/MeshInstance3D-FloorBox/StaticBody3D"]
 transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, 0, 0, 0)
 shape = SubResource("BoxShape3D_0yqbw")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="SubViewportContainer/SubViewport/Scene3DRoot"]
+environment = SubResource("Environment_s4y37")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 anchors_preset = 15

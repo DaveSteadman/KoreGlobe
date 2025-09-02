@@ -21,7 +21,7 @@ public readonly record struct KoreMiniMeshTri(
     int A, int B, int C // position indices
 );
 
-public readonly record struct KoreMiniMeshGroup(int ColorId, List<int> TriIdList);
+public readonly record struct KoreMiniMeshGroup(string MaterialName, List<int> TriIdList);
 
 public partial class KoreMiniMesh
 {
@@ -34,6 +34,7 @@ public partial class KoreMiniMesh
     public Dictionary<int, KoreMiniMeshTri> Triangles = []; // per-face corner refs
 
     // Rendering 
+    public List<KoreMiniMeshMaterial> Materials = []; // Materials list - they contain their own name
     public Dictionary<string, KoreMiniMeshGroup> Groups = []; // Tags for grouping triangles under names/colors
 
     // Counters for unique IDs
