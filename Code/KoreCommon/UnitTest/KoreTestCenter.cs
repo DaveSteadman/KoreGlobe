@@ -19,9 +19,9 @@ public static class KoreTestCenter
             // Option 1: Relative to current directory
             string testDir = Path.Combine(Directory.GetCurrentDirectory(), "UnitTestArtefacts");
             GD.Print("Attempting to create directory at: " + testDir);
-            
+
             KoreFileOps.CreateDirectory(testDir);
-            
+
             // Verify the directory was actually created
             if (Directory.Exists(testDir))
             {
@@ -31,8 +31,8 @@ public static class KoreTestCenter
             {
                 GD.PrintErr("❌ Test directory was NOT created at: " + testDir);
             }
-            
-            
+
+
             KoreTestMath.RunTests(testLog);
             KoreTestXYZVector.RunTests(testLog);
             KoreTestLine.RunTests(testLog);
@@ -54,6 +54,8 @@ public static class KoreTestCenter
             KoreTestDatabase.RunTests(testLog);
             KoreTestSkiaSharp.RunTests(testLog);
             KoreTestMeshUvOps.RunTests(testLog);
+
+            KoreTestMiniMesh.RunTests(testLog);
 
         }
         catch (Exception)
