@@ -17,8 +17,7 @@
 [sub_resource type="BoxShape3D" id="BoxShape3D_0yqbw"]
 
 [sub_resource type="Environment" id="Environment_s4y37"]
-ssao_enabled = true
-sdfgi_enabled = true
+ssao_radius = 9.77
 
 [node name="Window" type="Window"]
 oversampling_override = 1.0
@@ -72,9 +71,9 @@ physics_interpolation_mode = 1
 shape = SubResource("CapsuleShape3D_6i22l")
 
 [node name="OmniLight3D" type="OmniLight3D" parent="SubViewportContainer/SubViewport/Scene3DRoot"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.02, 4.76, 1.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.02, 11.185, 12.085)
 light_color = Color(0.8693259, 0.5112665, 0.3452526, 1)
-light_energy = 11.553
+light_energy = 16.0
 light_indirect_energy = 1.406
 shadow_enabled = true
 shadow_opacity = 0.78
