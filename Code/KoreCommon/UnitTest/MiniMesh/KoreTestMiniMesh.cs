@@ -52,45 +52,25 @@ public static partial class KoreTestMiniMesh
         // Test BasicSphere
         testLog.AddComment("--- Basic Sphere ---");
         KoreMiniMesh basicSphere = KoreMiniMeshPrimitives.BasicSphere(center, radius, latSegments, material, lineColor);
-        
+
         testLog.AddComment($"Basic Sphere Vertices: {basicSphere.Vertices.Count}");
         testLog.AddComment($"Basic Sphere Groups: {basicSphere.Groups.Count}");
         testLog.AddComment($"Basic Sphere Materials: {basicSphere.Materials.Count}");
         testLog.AddComment($"Basic Sphere Lines: {basicSphere.Lines.Count}");
 
-        // Test OptimizedSphere
-        testLog.AddComment("--- Optimized Sphere ---");
-        KoreMiniMesh optimizedSphere = KoreMiniMeshPrimitives.OptimizedSphere(center, radius, latSegments, material, lineColor);
-        
-        testLog.AddComment($"Optimized Sphere Vertices: {optimizedSphere.Vertices.Count}");
-        testLog.AddComment($"Optimized Sphere Groups: {optimizedSphere.Groups.Count}");
-        testLog.AddComment($"Optimized Sphere Materials: {optimizedSphere.Materials.Count}");
-        testLog.AddComment($"Optimized Sphere Lines: {optimizedSphere.Lines.Count}");
-
-        // Calculate efficiency improvement
-        float vertexReduction = (float)(basicSphere.Vertices.Count - optimizedSphere.Vertices.Count) / basicSphere.Vertices.Count * 100f;
-        testLog.AddComment($"Vertex count reduction: {vertexReduction:F1}%");
-
         // Test JSON serialization for both
         string basicJson = KoreMiniMeshIO.ToJson(basicSphere);
-        string optimizedJson = KoreMiniMeshIO.ToJson(optimizedSphere);
-        
+
         var loadedBasic = KoreMiniMeshIO.FromJson(basicJson);
-        var loadedOptimized = KoreMiniMeshIO.FromJson(optimizedJson);
-        
+
         testLog.AddResult("Basic Sphere JSON roundtrip vertices", loadedBasic.Vertices.Count == basicSphere.Vertices.Count);
-        testLog.AddResult("Optimized Sphere JSON roundtrip vertices", loadedOptimized.Vertices.Count == optimizedSphere.Vertices.Count);
 
         // Save both to OBJ/MTL for visual comparison
         var (basicObjContent, basicMtlContent) = KoreMiniMeshIO.ToObjMtl(basicSphere, "BasicSphere", "BasicSphereMaterials");
         File.WriteAllText("UnitTestArtefacts/BasicSphere.obj", basicObjContent);
         File.WriteAllText("UnitTestArtefacts/BasicSphereMaterials.mtl", basicMtlContent);
 
-        var (optimizedObjContent, optimizedMtlContent) = KoreMiniMeshIO.ToObjMtl(optimizedSphere, "OptimizedSphere", "OptimizedSphereMaterials");
-        File.WriteAllText("UnitTestArtefacts/OptimizedSphere.obj", optimizedObjContent);
-        File.WriteAllText("UnitTestArtefacts/OptimizedSphereMaterials.mtl", optimizedMtlContent);
-        
-        testLog.AddComment("Sphere comparison completed - check UnitTestArtefacts/BasicSphere.obj vs OptimizedSphere.obj");
+        testLog.AddComment("Sphere comparison completed - check UnitTestArtefacts/BasicSphere.obj");
 
     }
 

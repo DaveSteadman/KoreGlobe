@@ -40,7 +40,6 @@ public partial class KoreSandbox3DScene : Node3D
 
         AddTestMeshData_MiniMeshBox();
         AddTestMeshData_MiniMeshSphere();
-        AddTestMeshData_MiniMeshOptimizedSphere();
     }
 
     public override void _Process(double delta)
@@ -532,17 +531,17 @@ public partial class KoreSandbox3DScene : Node3D
         // Test Mini Mesh Sphere
         {
             // Import the mesh
-            // string objContent2 = File.ReadAllText("UnitTestArtefacts/MiniMesh_Sphere.obj");
-            // string mtlContent2 = File.ReadAllText("UnitTestArtefacts/MiniMesh_Sphere.mtl");
+            // string objContent2 = File.ReadAllText("UnitTestArtefacts/MiniMesh_Sphere_edit.obj");
+            // string mtlContent2 = File.ReadAllText("UnitTestArtefacts/MiniMesh_Sphere_edit.mtl");
             // KoreMiniMesh miniMesh = KoreMiniMeshIO.FromObjMtl(objContent2, mtlContent2);
 
             // Import from JSON
-            // string jsonContent = File.ReadAllText("UnitTestArtefacts/MiniMesh_Sphere.json");
-            // KoreMiniMesh miniMesh = KoreMiniMeshIO.FromJson(jsonContent);
+            string jsonContent = File.ReadAllText("UnitTestArtefacts/MiniMesh_Sphere.json");
+            KoreMiniMesh miniMesh = KoreMiniMeshIO.FromJson(jsonContent);
 
             KoreXYZVector center = new KoreXYZVector(0, 0, 0);
 
-            var miniMesh = KoreMiniMeshPrimitives.BasicSphere(center, 0.5f, 8, KoreMiniMeshMaterialPalette.Find("MattCyan"), KoreColorRGB.White);
+            // var miniMesh = KoreMiniMeshPrimitives.BasicSphere(center, 0.5f, 8, KoreMiniMeshMaterialPalette.Find("MattCyan"), KoreColorRGB.White);
 
             // KoreGodotLineMesh childMeshNode1 = new KoreGodotLineMesh();
             // childMeshNode1.UpdateMesh(miniMesh);
@@ -586,48 +585,5 @@ public partial class KoreSandbox3DScene : Node3D
         }
     }
 
-    // ---------------------------------------------------------------------------------------------
-    // MARK: Mini Mesh Optimized Sphere
-    // ---------------------------------------------------------------------------------------------
-
-    public void AddTestMeshData_MiniMeshOptimizedSphere()
-    {
-        // Function to add a test mini mesh optimized sphere for comparison
-        Node3D MiniMeshOptimizedSphereNode = new Node3D() { Name = "MiniMeshOptimizedSphereNode" };
-        AddChild(MiniMeshOptimizedSphereNode);
-        MiniMeshOptimizedSphereNode.Position = new Vector3(0, 3, -3.6f); // Between the box and basic sphere
-
-        // Test Mini Mesh Optimized Sphere
-        {
-            KoreXYZVector center = new KoreXYZVector(0, 0, 0);
-
-            var miniMesh = KoreMiniMeshPrimitives.OptimizedSphere(center, 0.5f, 16, KoreMiniMeshMaterialPalette.Find("MattOrange"), KoreColorRGB.White);
-
-            // loop through each group in the mesh, and add a surface renderer for each
-            foreach (var group in miniMesh.Groups)
-            {
-                KoreMiniMeshGodotSurface childSurfaceMeshNode = new KoreMiniMeshGodotSurface();
-                MiniMeshOptimizedSphereNode.AddChild(childSurfaceMeshNode);
-                childSurfaceMeshNode.UpdateMesh(miniMesh, group.Key);
-            }
-
-            // Add the line renderer
-            KoreMiniMeshGodotLine lineMeshNode = new KoreMiniMeshGodotLine();
-            lineMeshNode.UpdateMesh(miniMesh, "All");
-            MiniMeshOptimizedSphereNode.AddChild(lineMeshNode);
-
-            // Export the mesh to Obj/MTL
-            var (objContent, mtlContent) = KoreMiniMeshIO.ToObjMtl(miniMesh, "MiniMesh_OptimizedSphere", "MiniMesh_OptimizedSphere");
-            File.WriteAllText("UnitTestArtefacts/MiniMesh_OptimizedSphere.obj", objContent);
-            File.WriteAllText("UnitTestArtefacts/MiniMesh_OptimizedSphere.mtl", mtlContent);
-
-            // dump to JSON
-            string json = KoreMiniMeshIO.ToJson(miniMesh);
-            File.WriteAllText("UnitTestArtefacts/MiniMesh_OptimizedSphere.json", json);
-
-            // Print vertex count comparison for debugging
-            GD.Print($"Optimized Sphere vertices: {miniMesh.Vertices.Count}");
-        }
-    }
 
 }
