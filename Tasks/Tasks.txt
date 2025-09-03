@@ -4,6 +4,7 @@ Vision:
 A 3D world to explore and visualise customer data.
 
 
+
 Target of current iteration:
 ============================
 Deliver the core functionality and demonstrate developing areas through tech-demo windows.
@@ -41,15 +42,20 @@ App Outline
     - CLI
 
 
+
 Immeditate Task:
 ================
 
-- MiniMesh
-    - Check the roughness/metallic params are moving around correctly.
+- Wire MiniMesh into the edit window.
+    - Flip triangles
+    - OutlineTriangle(s)
 
 - Consider how we manage a library of objects
     - Actions around rotations, collision, scale.
-    - Inject mesh from message?
+    - Inject mesh from message?!?
+    - Need a purpose to fulfill.
+
+
 
 Short Term Todo List:
 =====================
@@ -77,6 +83,7 @@ Short Term Todo List:
     - Have a facility to add and remove them
 
 
+
 Tasks:
 ======
 
@@ -91,6 +98,7 @@ Networking:
 
 - Display entities
     - New scene/window to show loaded entities and basic movement attributes.
+
 
 
 Bugs:
@@ -123,6 +131,8 @@ Future Ideas:
 - UV isolation
     - Find groupd of UVs, from material groups, that can be flipped within their BBox.
 
+
+
 Comparable Apps/Frameworks:
 ===========================
 - Google Maps
@@ -140,9 +150,10 @@ Comparable Apps/Frameworks:
 
 
 
-
-
 Setup
 =====
 
     dotnet add package SharpGLTF.Toolkit
+
+
+

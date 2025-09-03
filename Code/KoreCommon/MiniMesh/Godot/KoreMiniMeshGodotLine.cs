@@ -1,5 +1,4 @@
-// KoreGodotSurfaceMesh : Class to take a KoreCommon/KoreMeshData and create a Godot SurfaceMesh from it.
-// - Will use the vertices/triangles list and the Godot SurfaceTool.
+// <fileheader>
 
 using KoreCommon;
 using System.Collections.Generic;
@@ -19,14 +18,6 @@ public partial class KoreMiniMeshGodotLine : MeshInstance3D
 
     public override void _Ready()
     {
-        // Initialize the SurfaceTool
-        _surfaceTool = new SurfaceTool();
-
-        // Apply the shared Vertex Color Material to this MeshInstance3D
-        // MaterialOverride = GetSharedVertexColorMaterial();
-
-        // Debug Call: Create a cube with colored edges
-        //CreateCube();
     }
 
     public override void _Process(double delta)
@@ -73,37 +64,15 @@ public partial class KoreMiniMeshGodotLine : MeshInstance3D
             _surfaceTool.AddVertex(pB);
         }
 
-        // Generate normals if they weren't provided
+        // Generate normals if they weren't provided (Needs to be on main thread)
         Mesh = _surfaceTool.Commit();
+
         // Apply unlit material to make lines always bright and visible
-        MaterialOverride = GetUnlitLineMaterial();
+        MaterialOverride = KoreMiniMeshGodotMaterialFactory.GetUnlitLineMaterial();
 
         // Disable shadow casting for line meshes (lines typically shouldn't cast shadows)
         CastShadow = GeometryInstance3D.ShadowCastingSetting.Off;
 
         _meshNeedsUpdate = false;
-    }
-
-    // --------------------------------------------------------------------------------------------
-    // MARK: Materials
-    // --------------------------------------------------------------------------------------------
-
-    private StandardMaterial3D GetUnlitLineMaterial()
-    {
-        var material = new StandardMaterial3D();
-
-        // Make it unlit so lines are always bright
-        material.ShadingMode = BaseMaterial3D.ShadingModeEnum.Unshaded;
-
-        // Enable vertex colors so line colors work
-        material.VertexColorUseAsAlbedo = true;
-
-        // Optional: Add some brightness boost
-        material.AlbedoColor = new Color(1.2f, 1.2f, 1.2f, 1.0f); // Slightly brighter than normal
-
-        // Disable depth testing if you want lines to always show on top (optional)
-        // material.NoDepthTest = true;
-
-        return material;
     }
 }

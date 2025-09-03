@@ -39,6 +39,8 @@ public partial class KoreSandbox3DScene : Node3D
         AddTestMeshData_TexBox();
 
         AddTestMeshData_MiniMeshBox();
+        AddTestMeshData_MiniMeshSphere();
+        AddTestMeshData_MiniMeshOptimizedSphere();
     }
 
     public override void _Process(double delta)
@@ -480,8 +482,8 @@ public partial class KoreSandbox3DScene : Node3D
             foreach (var group in miniMesh.Groups)
             {
                 KoreMiniMeshGodotSurface childSurfaceMeshNode = new KoreMiniMeshGodotSurface();
-                childSurfaceMeshNode.UpdateMesh(miniMesh, group.Key);
                 MiniMeshBoxNode.AddChild(childSurfaceMeshNode);
+                childSurfaceMeshNode.UpdateMesh(miniMesh, group.Key);
             }
 
             // KoreMiniMeshGodotSurface childSurfaceMeshNode1 = new KoreMiniMeshGodotSurface();
@@ -513,6 +515,118 @@ public partial class KoreSandbox3DScene : Node3D
             //GD.Print($"========> Cube JSON: \n{json}\n");
             File.WriteAllText("UnitTestArtefacts/MiniMesh_Cube.json", json);
 
+        }
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // MARK: Mini Mesh Sphere
+    // ---------------------------------------------------------------------------------------------
+
+    public void AddTestMeshData_MiniMeshSphere()
+    {
+        // Function to add a test mini mesh sphere
+        Node3D MiniMeshSphereNode = new Node3D() { Name = "MiniMeshSphereNode" };
+        AddChild(MiniMeshSphereNode);
+        MiniMeshSphereNode.Position = new Vector3(-3, 3, -3.6f);
+
+        // Test Mini Mesh Sphere
+        {
+            // Import the mesh
+            // string objContent2 = File.ReadAllText("UnitTestArtefacts/MiniMesh_Sphere.obj");
+            // string mtlContent2 = File.ReadAllText("UnitTestArtefacts/MiniMesh_Sphere.mtl");
+            // KoreMiniMesh miniMesh = KoreMiniMeshIO.FromObjMtl(objContent2, mtlContent2);
+
+            // Import from JSON
+            // string jsonContent = File.ReadAllText("UnitTestArtefacts/MiniMesh_Sphere.json");
+            // KoreMiniMesh miniMesh = KoreMiniMeshIO.FromJson(jsonContent);
+
+            KoreXYZVector center = new KoreXYZVector(0, 0, 0);
+
+            var miniMesh = KoreMiniMeshPrimitives.BasicSphere(center, 0.5f, 8, KoreMiniMeshMaterialPalette.Find("MattCyan"), KoreColorRGB.White);
+
+            // KoreGodotLineMesh childMeshNode1 = new KoreGodotLineMesh();
+            // childMeshNode1.UpdateMesh(miniMesh);
+
+            // loop through each group in the mesh, and add a surface renderer for each
+            foreach (var group in miniMesh.Groups)
+            {
+                KoreMiniMeshGodotSurface childSurfaceMeshNode = new KoreMiniMeshGodotSurface();
+                MiniMeshSphereNode.AddChild(childSurfaceMeshNode);
+                childSurfaceMeshNode.UpdateMesh(miniMesh, group.Key);
+            }
+
+            // KoreMiniMeshGodotSurface childSurfaceMeshNode1 = new KoreMiniMeshGodotSurface();
+            // childSurfaceMeshNode1.UpdateMesh(miniMesh, "MattCyan");
+
+            KoreMiniMeshGodotLine lineMeshNode1 = new KoreMiniMeshGodotLine();
+            lineMeshNode1.UpdateMesh(miniMesh, "All");
+            MiniMeshSphereNode.AddChild(lineMeshNode1);
+
+            // KoreMiniMeshGodotNormal normalMeshNode1 = new KoreMiniMeshGodotNormal();
+            // normalMeshNode1.UpdateMesh(miniMesh, "All", 0.1f);
+
+            // Use a different color to distinguish from lathe
+            // var surfaceMaterial = KoreGodotMaterialFactory.SimpleColoredMaterial(new Color(0.3f, 0.3f, 0.8f));
+            // childSurfaceMeshNode1.MaterialOverride = surfaceMaterial;
+
+            // Add the child nodes to the MiniMeshSphereNode
+            // MiniMeshSphereNode.AddChild(childSurfaceMeshNode1);
+            // MiniMeshSphereNode.AddChild(normalMeshNode1);
+
+            // Export the mesh to Obj/MTL
+            var (objContent, mtlContent) = KoreMiniMeshIO.ToObjMtl(miniMesh, "MiniMesh_Sphere", "MiniMesh_Sphere");
+            File.WriteAllText("UnitTestArtefacts/MiniMesh_Sphere.obj", objContent);
+            File.WriteAllText("UnitTestArtefacts/MiniMesh_Sphere.mtl", mtlContent);
+
+            // dump to JSON
+            string json = KoreMiniMeshIO.ToJson(miniMesh);
+            //GD.Print($"========> Sphere JSON: \n{json}\n");
+            File.WriteAllText("UnitTestArtefacts/MiniMesh_Sphere.json", json);
+
+        }
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // MARK: Mini Mesh Optimized Sphere
+    // ---------------------------------------------------------------------------------------------
+
+    public void AddTestMeshData_MiniMeshOptimizedSphere()
+    {
+        // Function to add a test mini mesh optimized sphere for comparison
+        Node3D MiniMeshOptimizedSphereNode = new Node3D() { Name = "MiniMeshOptimizedSphereNode" };
+        AddChild(MiniMeshOptimizedSphereNode);
+        MiniMeshOptimizedSphereNode.Position = new Vector3(0, 3, -3.6f); // Between the box and basic sphere
+
+        // Test Mini Mesh Optimized Sphere
+        {
+            KoreXYZVector center = new KoreXYZVector(0, 0, 0);
+
+            var miniMesh = KoreMiniMeshPrimitives.OptimizedSphere(center, 0.5f, 16, KoreMiniMeshMaterialPalette.Find("MattOrange"), KoreColorRGB.White);
+
+            // loop through each group in the mesh, and add a surface renderer for each
+            foreach (var group in miniMesh.Groups)
+            {
+                KoreMiniMeshGodotSurface childSurfaceMeshNode = new KoreMiniMeshGodotSurface();
+                MiniMeshOptimizedSphereNode.AddChild(childSurfaceMeshNode);
+                childSurfaceMeshNode.UpdateMesh(miniMesh, group.Key);
+            }
+
+            // Add the line renderer
+            KoreMiniMeshGodotLine lineMeshNode = new KoreMiniMeshGodotLine();
+            lineMeshNode.UpdateMesh(miniMesh, "All");
+            MiniMeshOptimizedSphereNode.AddChild(lineMeshNode);
+
+            // Export the mesh to Obj/MTL
+            var (objContent, mtlContent) = KoreMiniMeshIO.ToObjMtl(miniMesh, "MiniMesh_OptimizedSphere", "MiniMesh_OptimizedSphere");
+            File.WriteAllText("UnitTestArtefacts/MiniMesh_OptimizedSphere.obj", objContent);
+            File.WriteAllText("UnitTestArtefacts/MiniMesh_OptimizedSphere.mtl", mtlContent);
+
+            // dump to JSON
+            string json = KoreMiniMeshIO.ToJson(miniMesh);
+            File.WriteAllText("UnitTestArtefacts/MiniMesh_OptimizedSphere.json", json);
+
+            // Print vertex count comparison for debugging
+            GD.Print($"Optimized Sphere vertices: {miniMesh.Vertices.Count}");
         }
     }
 

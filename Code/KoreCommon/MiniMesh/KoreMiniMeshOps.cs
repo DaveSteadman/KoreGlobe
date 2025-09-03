@@ -1,3 +1,5 @@
+// <fileheader>
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,7 +49,6 @@ public static partial class KoreMiniMeshOps
 
     public static bool HasColor(KoreMiniMesh mesh, int colorId) { return mesh.Colors.ContainsKey(colorId); }
     public static bool HasColor(KoreMiniMesh mesh, KoreColorRGB color) { return mesh.Colors.ContainsValue(color); }
-    
 
     public static int GetColorId(KoreMiniMesh mesh, KoreColorRGB color)
     {
@@ -71,6 +72,8 @@ public static partial class KoreMiniMeshOps
     // --------------------------------------------------------------------------------------------
     // MARK: Lines
     // --------------------------------------------------------------------------------------------
+
+
 
 
 
