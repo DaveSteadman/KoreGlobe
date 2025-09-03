@@ -463,13 +463,13 @@ public partial class KoreSandbox3DScene : Node3D
         // Test Mini Mesh Box
         {
             // Import the mesh
-            string objContent2 = File.ReadAllText("UnitTestArtefacts/MiniMesh_Cube2.obj");
-            string mtlContent2 = File.ReadAllText("UnitTestArtefacts/MiniMesh_Cube2.mtl");
+            string objContent2 = File.ReadAllText("UnitTestArtefacts/MiniMesh_Cube.obj");
+            string mtlContent2 = File.ReadAllText("UnitTestArtefacts/MiniMesh_Cube.mtl");
             KoreMiniMesh miniMesh = KoreMiniMeshIO.FromObjMtl(objContent2, mtlContent2);
 
             // Import from JSON
-            string jsonContent = File.ReadAllText("UnitTestArtefacts/MiniMesh_Cube.json");
-            //KoreMiniMesh miniMesh = KoreMiniMeshIO.FromJson(jsonContent);
+            // string jsonContent = File.ReadAllText("UnitTestArtefacts/MiniMesh_Cube.json");
+            // KoreMiniMesh miniMesh = KoreMiniMeshIO.FromJson(jsonContent);
 
             // var miniMesh = KoreMiniMeshPrimitives.BasicCube(0.5f, KoreMiniMeshMaterialPalette.Find("MattCyan"), KoreColorRGB.White);
 
@@ -504,14 +504,14 @@ public partial class KoreSandbox3DScene : Node3D
             // MiniMeshBoxNode.AddChild(normalMeshNode1);
 
             // Export the mesh to Obj/MTL
-            // var (objContent, mtlContent) = KoreMiniMeshIO.ToObjMtl(miniMesh, "MiniMesh_Cube", "MiniMesh_Cube");
-            // File.WriteAllText("UnitTestArtefacts/MiniMesh_Cube.obj", objContent);
-            // File.WriteAllText("UnitTestArtefacts/MiniMesh_Cube.mtl", mtlContent);
+            var (objContent, mtlContent) = KoreMiniMeshIO.ToObjMtl(miniMesh, "MiniMesh_Cube", "MiniMesh_Cube");
+            File.WriteAllText("UnitTestArtefacts/MiniMesh_Cube.obj", objContent);
+            File.WriteAllText("UnitTestArtefacts/MiniMesh_Cube.mtl", mtlContent);
 
             // dump to JSON
-            // string json = KoreMiniMeshIO.ToJson(miniMesh);
-            // //GD.Print($"========> Cube JSON: \n{json}\n");
-            // File.WriteAllText("UnitTestArtefacts/MiniMesh_Cube.json", json);
+            string json = KoreMiniMeshIO.ToJson(miniMesh);
+            //GD.Print($"========> Cube JSON: \n{json}\n");
+            File.WriteAllText("UnitTestArtefacts/MiniMesh_Cube.json", json);
 
         }
     }

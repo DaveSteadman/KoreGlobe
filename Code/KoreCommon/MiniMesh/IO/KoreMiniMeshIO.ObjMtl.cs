@@ -194,16 +194,16 @@ public static partial class KoreMiniMeshIO
                 float g = material.BaseColor.G / 255.0f;
                 float b = material.BaseColor.B / 255.0f;
                 
-                sb.AppendLine($"Ka {r.ToString("F6", CultureInfo.InvariantCulture)} {g.ToString("F6", CultureInfo.InvariantCulture)} {b.ToString("F6", CultureInfo.InvariantCulture)}");
+                // Standard MTL properties
+                sb.AppendLine($"Ka 1.000000 1.000000 1.000000");
                 sb.AppendLine($"Kd {r.ToString("F6", CultureInfo.InvariantCulture)} {g.ToString("F6", CultureInfo.InvariantCulture)} {b.ToString("F6", CultureInfo.InvariantCulture)}");
+                sb.AppendLine($"Ks 0.500000 0.500000 0.500000");
+                sb.AppendLine($"Ns 96.0");
                 
-                // Convert metallic to specular color (simplified approach)
-                float specular = material.Metallic;
-                sb.AppendLine($"Ks {specular.ToString("F6", CultureInfo.InvariantCulture)} {specular.ToString("F6", CultureInfo.InvariantCulture)} {specular.ToString("F6", CultureInfo.InvariantCulture)}");
-                
-                // Convert roughness to shininess (inverse relationship)
-                float shininess = (1.0f - material.Roughness) * 100.0f;
-                sb.AppendLine($"Ns {shininess.ToString("F1", CultureInfo.InvariantCulture)}");
+                // PBR Extensions - these preserve your exact metallic/roughness values for Blender
+                sb.AppendLine($"Pr {material.Roughness.ToString("F6", CultureInfo.InvariantCulture)}"); // Roughness
+                sb.AppendLine($"Pm {material.Metallic.ToString("F6", CultureInfo.InvariantCulture)}");   // Metallic
+                sb.AppendLine($"Pc {r.ToString("F6", CultureInfo.InvariantCulture)} {g.ToString("F6", CultureInfo.InvariantCulture)} {b.ToString("F6", CultureInfo.InvariantCulture)}"); // Base Color
                 
                 // Transparency (from alpha channel)
                 float alpha = material.BaseColor.A / 255.0f;
@@ -342,12 +342,43 @@ public static partial class KoreMiniMeshIO
                     }
                     break;
                     
-                case "ns": // Shininess (we'll use this to infer roughness)
+                case "ns": // Shininess (legacy - only use if no Pr extension found)
                     if (parts.Length >= 2 && 
                         float.TryParse(parts[1], NumberStyles.Float, CultureInfo.InvariantCulture, out float shininess))
                     {
-                        // Convert shininess to roughness (inverse relationship)
+                        // Convert shininess to roughness (inverse relationship) - backup if no Pr found
                         currentRoughness = 1.0f - Math.Clamp(shininess / 100.0f, 0f, 1f);
+                    }
+                    break;
+                    
+                case "pr": // PBR Roughness extension - preserves exact values
+                    if (parts.Length >= 2 && 
+                        float.TryParse(parts[1], NumberStyles.Float, CultureInfo.InvariantCulture, out float roughness))
+                    {
+                        currentRoughness = Math.Clamp(roughness, 0f, 1f);
+                    }
+                    break;
+                    
+                case "pm": // PBR Metallic extension - preserves exact values
+                    if (parts.Length >= 2 && 
+                        float.TryParse(parts[1], NumberStyles.Float, CultureInfo.InvariantCulture, out float metallic))
+                    {
+                        currentMetallic = Math.Clamp(metallic, 0f, 1f);
+                    }
+                    break;
+                    
+                case "pc": // PBR Base Color extension - preserves exact color
+                    if (parts.Length >= 4 && 
+                        float.TryParse(parts[1], NumberStyles.Float, CultureInfo.InvariantCulture, out float pr) &&
+                        float.TryParse(parts[2], NumberStyles.Float, CultureInfo.InvariantCulture, out float pg) &&
+                        float.TryParse(parts[3], NumberStyles.Float, CultureInfo.InvariantCulture, out float pb))
+                    {
+                        currentColor = new KoreColorRGB(
+                            (byte)(Math.Clamp(pr, 0f, 1f) * 255),
+                            (byte)(Math.Clamp(pg, 0f, 1f) * 255),
+                            (byte)(Math.Clamp(pb, 0f, 1f) * 255),
+                            currentColor.A // Preserve alpha
+                        );
                     }
                     break;
                     
