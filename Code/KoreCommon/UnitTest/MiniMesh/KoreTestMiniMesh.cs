@@ -1,3 +1,5 @@
+// <fileheader>
+
 using System;
 using System.IO;
 using KoreCommon;
@@ -14,6 +16,7 @@ public static partial class KoreTestMiniMesh
         TestSimpleJSON(testLog);
         TestSphere(testLog);
         TestCylinder(testLog);
+        TestPyramid(testLog);
     }
 
 
@@ -111,6 +114,37 @@ public static partial class KoreTestMiniMesh
         
         testLog.AddComment("Cylinder test completed - check UnitTestArtefacts/TestCylinder.obj");
 
+    }
+
+    private static void TestPyramid(KoreTestLog testLog)
+    {
+        testLog.AddComment("Testing KoreMiniMeshPrimitives.CreatePyramid");
+
+        // Create test pyramid with tilted axis
+        KoreXYZVector pApex = new KoreXYZVector(1, 2, 0.5);      // Tilted apex
+        KoreXYZVector pBaseCenter = new KoreXYZVector(0, 0, 0);  // Base center at origin
+        KoreXYZVector baseForward = new KoreXYZVector(1, 0, 1);  // Forward direction
+        double width = 0.8;
+        double height = 1.2;
+
+        var pyramidMesh = KoreMiniMeshPrimitives.CreatePyramid(
+            pApex, pBaseCenter, baseForward, width, height, true,
+            KoreMiniMeshMaterialPalette.Find("MattGreen"), 
+            new KoreColorRGB(0, 0, 255));
+
+        // Verify basic structure
+        testLog.AddComment($"Pyramid created with {pyramidMesh.Vertices.Count} vertices and {pyramidMesh.Triangles.Count} triangles");
+        
+        // Test JSON serialization
+        string json = KoreMiniMeshIO.ToJson(pyramidMesh);
+        testLog.AddResult("JSON serialization", !string.IsNullOrEmpty(json));
+        
+        // Test OBJ/MTL export
+        var (objContent, mtlContent) = KoreMiniMeshIO.ToObjMtl(pyramidMesh, "TestPyramid", "PyramidMaterials");
+        File.WriteAllText("UnitTestArtefacts/TestPyramid.obj", objContent);
+        File.WriteAllText("UnitTestArtefacts/PyramidMaterials.mtl", mtlContent);
+        
+        testLog.AddComment("Pyramid test completed - check UnitTestArtefacts/TestPyramid.obj");
     }
 
 }

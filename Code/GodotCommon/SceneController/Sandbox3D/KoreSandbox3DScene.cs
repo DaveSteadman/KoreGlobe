@@ -1,3 +1,5 @@
+// <fileheader>
+
 using Godot;
 using System;
 using System.IO;
@@ -41,6 +43,7 @@ public partial class KoreSandbox3DScene : Node3D
         AddTestMeshData_MiniMeshBox();
         AddTestMeshData_MiniMeshSphere();
         AddTestMeshData_MiniMeshCylinder();
+        AddTestMeshData_MiniMeshPyramid();
     }
 
     public override void _Process(double delta)
@@ -543,7 +546,7 @@ public partial class KoreSandbox3DScene : Node3D
             KoreXYZVector center = new KoreXYZVector(0, 0, 0);
 
             var miniMesh = KoreMiniMeshPrimitives.BasicSphere(center, 0.5f, 8, KoreMiniMeshMaterialPalette.Find("StainedGlassBlue"), KoreColorRGB.White);
-            KoreMiniMeshOps.VariateModel(miniMesh, "All", 0.1f, 4);
+            KoreMiniMeshOps.VariateGroup(miniMesh, "All", 0.1f, 4);
 
             // KoreGodotLineMesh childMeshNode1 = new KoreGodotLineMesh();
             // childMeshNode1.UpdateMesh(miniMesh);
@@ -585,7 +588,7 @@ public partial class KoreSandbox3DScene : Node3D
             // File.WriteAllText("UnitTestArtefacts/MiniMesh_Sphere.json", json);
 
             // Make a variated version and dump to JSON            
-            // KoreMiniMeshOps.VariateModel(miniMesh, "All", 0.2f, 5);
+            // KoreMiniMeshOps.VariateGroup(miniMesh, "All", 0.2f, 5);
             string vjson = KoreMiniMeshIO.ToJson(miniMesh);
             File.WriteAllText("UnitTestArtefacts/MiniMesh_Sphere_v.json", vjson);
 
@@ -640,6 +643,56 @@ public partial class KoreSandbox3DScene : Node3D
 
             // Print vertex count for debugging
             GD.Print($"Cylinder vertices: {miniMesh.Vertices.Count}, triangles: {miniMesh.Triangles.Count}");
+        }
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // MARK: Mini Mesh Pyramid
+    // ---------------------------------------------------------------------------------------------
+
+    public void AddTestMeshData_MiniMeshPyramid()
+    {
+        // Function to add a test mini mesh pyramid
+        Node3D MiniMeshPyramidNode = new Node3D() { Name = "MiniMeshPyramidNode" };
+        AddChild(MiniMeshPyramidNode);
+        MiniMeshPyramidNode.Position = new Vector3(3, 3, 0); // Position to the right of the cylinder
+
+        // Test Mini Mesh Pyramid
+        {
+            KoreXYZVector pApex       = new KoreXYZVector(0, 0, 0);      // Apex point
+            KoreXYZVector pBaseCenter = new KoreXYZVector(1f, -0.5f, 1f); // Base center
+            KoreXYZVector baseForward = new KoreXYZVector(1, 0, 0); // Forward direction
+            double width = 0.6;
+            double height = 0.8;
+
+            var miniMesh = KoreMiniMeshPrimitives.CreatePyramid(
+                pApex, pBaseCenter, baseForward, width, height, true,
+                KoreMiniMeshMaterialPalette.Find("StainedGlassRed"), KoreColorRGB.White);
+
+            // loop through each group in the mesh, and add a surface renderer for each
+            foreach (var group in miniMesh.Groups)
+            {
+                KoreMiniMeshGodotSurface childSurfaceMeshNode = new KoreMiniMeshGodotSurface();
+                MiniMeshPyramidNode.AddChild(childSurfaceMeshNode);
+                childSurfaceMeshNode.UpdateMesh(miniMesh, group.Key);
+            }
+
+            // Add wireframe lines
+            KoreMiniMeshGodotLine lineMeshNode1 = new KoreMiniMeshGodotLine();
+            lineMeshNode1.UpdateMesh(miniMesh, "All");
+            MiniMeshPyramidNode.AddChild(lineMeshNode1);
+
+            // Export the mesh to Obj/MTL
+            var (objContent, mtlContent) = KoreMiniMeshIO.ToObjMtl(miniMesh, "MiniMesh_Pyramid", "MiniMesh_Pyramid");
+            File.WriteAllText("UnitTestArtefacts/MiniMesh_Pyramid.obj", objContent);
+            File.WriteAllText("UnitTestArtefacts/MiniMesh_Pyramid.mtl", mtlContent);
+
+            // dump to JSON
+            string json = KoreMiniMeshIO.ToJson(miniMesh);
+            File.WriteAllText("UnitTestArtefacts/MiniMesh_Pyramid.json", json);
+
+            // Print vertex count for debugging
+            GD.Print($"Pyramid vertices: {miniMesh.Vertices.Count}, triangles: {miniMesh.Triangles.Count}");
         }
     }
 

@@ -102,59 +102,5 @@ public static partial class KoreMiniMeshOps
         return triangleIds;
     }
 
-    // --------------------------------------------------------------------------------------------
-    // MARK: Group
-    // --------------------------------------------------------------------------------------------
-
-    public static KoreMiniMeshGroup GetOrCreateGroup(KoreMiniMesh mesh, string groupName)
-    {
-        if (!mesh.HasGroup(groupName))
-            mesh.AddGroup(groupName, new KoreMiniMeshGroup("", new List<int>()));
-
-        return mesh.GetGroup(groupName);
-    }
-
-    public static void SetGroupMaterial(KoreMiniMesh mesh, string groupName, string materialName)
-    {
-        if (mesh.HasGroup(groupName))
-        {
-            KoreMiniMeshGroup group = mesh.GetGroup(groupName);
-            group = group with { MaterialName = materialName };
-            mesh.Groups[groupName] = group; // re-assign the modified group back to the dictionary
-        }
-    }
-
-    public static void SetGroupMaterial(KoreMiniMesh mesh, string groupName, KoreMiniMeshMaterial material)
-    {
-        if (mesh.HasGroup(groupName))
-        {
-            mesh.AddMaterial(material);
-            SetGroupMaterial(mesh, groupName, material.Name);
-        }
-    }
-
-    public static KoreMiniMeshMaterial GetGroupMaterial(KoreMiniMesh mesh, string groupName)
-    {
-        if (mesh.HasGroup(groupName))
-        {
-            KoreMiniMeshGroup group = mesh.GetGroup(groupName);
-            return mesh.GetMaterial(group.MaterialName);
-        }
-        return KoreMiniMeshMaterialPalette.DefaultMaterial;
-    }
-
-    public static void AddTrianglesToGroup(KoreMiniMesh mesh, string groupName)
-    {
-        // create the group if it doesn't exist
-        if (!mesh.HasGroup(groupName))
-            mesh.AddGroup(groupName, new KoreMiniMeshGroup("", new List<int>()));
-
-        // get the group
-        KoreMiniMeshGroup group = mesh.GetGroup(groupName);
-
-        // Add the whole triangle list to the group
-        foreach (int currTriId in mesh.Triangles.Keys)
-            group.TriIdList.Add(currTriId);
-    }
 
 }

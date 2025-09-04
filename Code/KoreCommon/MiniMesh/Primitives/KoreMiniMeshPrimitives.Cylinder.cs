@@ -22,6 +22,8 @@ public static partial class KoreMiniMeshPrimitives
     /// <param name="material">Material for the cylinder surface</param>
     /// <param name="lineCol">Color for wireframe lines</param>
     /// <returns>KoreMiniMesh cylinder</returns>
+    /// 
+    // Usage: KoreMiniMesh cyl1 = KoreMiniMeshPrimitives.CreateCylinder(p1, p2, p1radius, p2radius, sides, endsClosed, material, lineCol);
     public static KoreMiniMesh CreateCylinder(
         KoreXYZVector p1, 
         KoreXYZVector p2, 

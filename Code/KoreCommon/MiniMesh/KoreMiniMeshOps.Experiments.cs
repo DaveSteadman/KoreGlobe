@@ -11,16 +11,15 @@ namespace KoreCommon;
 
 public static partial class KoreMiniMeshOps
 {
-
     // --------------------------------------------------------------------------------------------
-    // MARK: Experiments
+    // MARK: VariateGroup
     // --------------------------------------------------------------------------------------------
 
-    // VariateModel: An experiment in creating additional materials/groups on a mesh as minor variations 
+    // VariateGroup: An experiment in creating additional materials/groups on a mesh as minor variations 
     // on a stated group, then assigning the group triangles across new groups. The aspiration is to create
     // some presentation variation on the model, making plain materials more interesting.
 
-    public static void VariateModel(KoreMiniMesh mesh, string groupName, float variationAmount, int numberOfVariations)
+    public static void VariateGroup(KoreMiniMesh mesh, string groupName, float variationAmount, int numberOfVariations)
     {
         // Basic validation
         if (variationAmount <= 0) throw new ArgumentException("Variation amount must be positive and non-zero.");
