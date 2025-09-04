@@ -661,12 +661,16 @@ public partial class KoreSandbox3DScene : Node3D
         {
             KoreXYZVector pApex       = new KoreXYZVector(0, 0, 0);      // Apex point
             KoreXYZVector pBaseCenter = new KoreXYZVector(1f, -0.5f, 1f); // Base center
-            KoreXYZVector baseForward = new KoreXYZVector(1, 0, 0); // Forward direction
+            
+            // Test with explicit control over base orientation
+            // This reference direction will be projected onto the base plane (perpendicular to apex-base axis)
+            KoreXYZVector baseReference = new KoreXYZVector(1, 0, 0.2); // Reference direction for base orientation
+            
             double width = 0.6;
             double height = 0.8;
 
             var miniMesh = KoreMiniMeshPrimitives.CreatePyramid(
-                pApex, pBaseCenter, baseForward, width, height, true,
+                pApex, pBaseCenter, baseReference, width, height, true,
                 KoreMiniMeshMaterialPalette.Find("StainedGlassRed"), KoreColorRGB.White);
 
             // loop through each group in the mesh, and add a surface renderer for each

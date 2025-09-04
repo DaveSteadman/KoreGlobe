@@ -11,13 +11,13 @@ namespace KoreCommon;
 public static partial class KoreMiniMeshPrimitives
 {
     /// <summary>
-    /// Create a pyramid mesh for KoreMiniMesh
+    /// Create a pyramid mesh for KoreMiniMesh with explicit base orientation control
     /// </summary>
     /// <param name="pApex">Apex point of the pyramid</param>
     /// <param name="pBaseCenter">Center point of the base</param>
-    /// <param name="baseForwardVector">Forward direction vector for the base orientation</param>
-    /// <param name="width">Width of the base (perpendicular to forward direction)</param>
-    /// <param name="height">Height of the base (along forward direction)</param>
+    /// <param name="baseReferenceDirection">Reference direction to orient the base (will be projected onto base plane)</param>
+    /// <param name="width">Width of the base (perpendicular to reference direction)</param>
+    /// <param name="height">Height of the base (along reference direction)</param>
     /// <param name="baseClosed">Whether to create the base face</param>
     /// <param name="material">Material for the pyramid surface</param>
     /// <param name="lineCol">Color for wireframe lines</param>
@@ -25,7 +25,7 @@ public static partial class KoreMiniMeshPrimitives
     public static KoreMiniMesh CreatePyramid(
         KoreXYZVector pApex,
         KoreXYZVector pBaseCenter,
-        KoreXYZVector baseForwardVector,
+        KoreXYZVector baseReferenceDirection,
         double width,
         double height,
         bool baseClosed,
@@ -45,24 +45,25 @@ public static partial class KoreMiniMeshPrimitives
 
         if (pyramidHeight < 1e-6) throw new ArgumentException("Pyramid height must be greater than zero");
 
-        // Ensure baseForwardVector is perpendicular to axis
-        // If they're not perpendicular, project baseForwardVector onto the plane perpendicular to axis
-        KoreXYZVector normalizedAxis = axis;
-        double dotProduct = KoreXYZVector.DotProduct(baseForwardVector, normalizedAxis);
-        KoreXYZVector projectedForward = baseForwardVector - (normalizedAxis * dotProduct);
-        KoreXYZVector normalizedForward = projectedForward.Normalize();
+        // Use the same plane creation logic as the cylinder for consistent behavior
+        // This ensures the base is perpendicular to the axis
+        KoreXYZPlane basePlane = KoreXYZPlane.MakePlane(pBaseCenter, axis, baseReferenceDirection);
 
-        // Create the right vector perpendicular to both axis and baseForwardVector
-        KoreXYZVector rightVector = KoreXYZVector.CrossProduct(normalizedForward, normalizedAxis).Normalize();
-
-        // Calculate the 4 base vertices for a rectangular pyramid
+        // Calculate the 4 base vertices using the plane's coordinate system
         double halfWidth = width * 0.5;
         double halfHeight = height * 0.5;
 
-        KoreXYZVector baseVertex1Pos = pBaseCenter + (normalizedForward * halfHeight) + (rightVector * halfWidth);   // front-right
-        KoreXYZVector baseVertex2Pos = pBaseCenter + (normalizedForward * halfHeight) - (rightVector * halfWidth);   // front-left
-        KoreXYZVector baseVertex3Pos = pBaseCenter - (normalizedForward * halfHeight) - (rightVector * halfWidth);   // back-left
-        KoreXYZVector baseVertex4Pos = pBaseCenter - (normalizedForward * halfHeight) + (rightVector * halfWidth);   // back-right
+        // Create 2D points in the plane's coordinate system
+        var baseVertex1_2D = new KoreXYVector(halfWidth, halfHeight);   // front-right
+        var baseVertex2_2D = new KoreXYVector(-halfWidth, halfHeight);  // front-left
+        var baseVertex3_2D = new KoreXYVector(-halfWidth, -halfHeight); // back-left
+        var baseVertex4_2D = new KoreXYVector(halfWidth, -halfHeight);  // back-right
+
+        // Project to 3D using the plane
+        KoreXYZVector baseVertex1Pos = basePlane.Project2DTo3D(baseVertex1_2D);
+        KoreXYZVector baseVertex2Pos = basePlane.Project2DTo3D(baseVertex2_2D);
+        KoreXYZVector baseVertex3Pos = basePlane.Project2DTo3D(baseVertex3_2D);
+        KoreXYZVector baseVertex4Pos = basePlane.Project2DTo3D(baseVertex4_2D);
 
         // Add vertices to mesh
         int apexVertex = mesh.AddVertex(pApex);
@@ -111,6 +112,35 @@ public static partial class KoreMiniMeshPrimitives
         mesh.AddGroup("All", new KoreMiniMeshGroup(matName, allTriangles));
 
         return mesh;
+    }
+
+    /// <summary>
+    /// Create a pyramid with automatic reference direction selection
+    /// </summary>
+    /// <param name="pApex">Apex point of the pyramid</param>
+    /// <param name="pBaseCenter">Center point of the base</param>
+    /// <param name="width">Width of the base</param>
+    /// <param name="height">Height of the base</param>
+    /// <param name="baseClosed">Whether to create the base face</param>
+    /// <param name="material">Material for the pyramid surface</param>
+    /// <param name="lineCol">Color for wireframe lines</param>
+    /// <returns>KoreMiniMesh pyramid</returns>
+    public static KoreMiniMesh CreatePyramidAuto(
+        KoreXYZVector pApex,
+        KoreXYZVector pBaseCenter,
+        double width,
+        double height,
+        bool baseClosed,
+        KoreMiniMeshMaterial material,
+        KoreColorRGB lineCol)
+    {
+        // Calculate pyramid axis
+        KoreXYZVector axis = (pApex - pBaseCenter).Normalize();
+        
+        // Use ArbitraryPerpendicular to get a consistent reference direction
+        KoreXYZVector baseReference = axis.ArbitraryPerpendicular();
+        
+        return CreatePyramid(pApex, pBaseCenter, baseReference, width, height, baseClosed, material, lineCol);
     }
 
     /// <summary>
@@ -222,33 +252,6 @@ public static partial class KoreMiniMeshPrimitives
         KoreXYZVector pBaseCenter = center;
         KoreXYZVector pApex = center + axis * height;
         
-        // Use a default forward direction (perpendicular to axis)
-        KoreXYZVector baseForward = FindPerpendicularVector(axis);
-        
-        return CreatePyramid(pApex, pBaseCenter, baseForward, width, depth, true, material, lineCol);
-    }
-
-    /// <summary>
-    /// Helper function to find a vector perpendicular to the given vector
-    /// </summary>
-    private static KoreXYZVector FindPerpendicularVector(KoreXYZVector vector)
-    {
-        // Strategy: Try standard basis vectors and pick the one that's most perpendicular
-        KoreXYZVector[] candidates = { KoreXYZVector.Right, KoreXYZVector.Up, KoreXYZVector.Forward };
-
-        double minDot = double.MaxValue;
-        KoreXYZVector bestCandidate = KoreXYZVector.Right;
-
-        foreach (var candidate in candidates)
-        {
-            double dot = Math.Abs(KoreXYZVector.DotProduct(vector, candidate));
-            if (dot < minDot)
-            {
-                minDot = dot;
-                bestCandidate = candidate;
-            }
-        }
-
-        return bestCandidate;
+        return CreatePyramidAuto(pApex, pBaseCenter, width, depth, true, material, lineCol);
     }
 }

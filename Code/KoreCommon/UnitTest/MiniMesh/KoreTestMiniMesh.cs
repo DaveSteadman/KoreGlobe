@@ -123,12 +123,12 @@ public static partial class KoreTestMiniMesh
         // Create test pyramid with tilted axis
         KoreXYZVector pApex = new KoreXYZVector(1, 2, 0.5);      // Tilted apex
         KoreXYZVector pBaseCenter = new KoreXYZVector(0, 0, 0);  // Base center at origin
-        KoreXYZVector baseForward = new KoreXYZVector(1, 0, 1);  // Forward direction
+        KoreXYZVector baseReference = new KoreXYZVector(1, 0, 1);  // Reference direction for base orientation
         double width = 0.8;
         double height = 1.2;
 
         var pyramidMesh = KoreMiniMeshPrimitives.CreatePyramid(
-            pApex, pBaseCenter, baseForward, width, height, true,
+            pApex, pBaseCenter, baseReference, width, height, true,
             KoreMiniMeshMaterialPalette.Find("MattGreen"), 
             new KoreColorRGB(0, 0, 255));
 

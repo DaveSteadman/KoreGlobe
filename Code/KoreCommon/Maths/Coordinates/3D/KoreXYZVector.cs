@@ -1,3 +1,5 @@
+// <fileheader>
+
 using System;
 
 // KoreXYZVector: A class to hold an XYZ vector. Units are abstract, for the consumer to decide the context.
