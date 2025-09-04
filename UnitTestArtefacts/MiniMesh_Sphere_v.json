@@ -126,11 +126,11 @@
     "0": "#FFF"
   },
   "materials": [
-    "name: StainedGlassBlue, baseColor: #3366CCC8, metallic: 0.600, roughness: 0.150",
-    "name: StainedGlassBlue_var1, baseColor: #3F5ED6C8, metallic: 0.540, roughness: 0.176",
-    "name: StainedGlassBlue_var2, baseColor: #3B70C1C8, metallic: 0.525, roughness: 0.087",
-    "name: StainedGlassBlue_var3, baseColor: #316DD1C8, metallic: 0.530, roughness: 0.090",
-    "name: StainedGlassBlue_var4, baseColor: #2A5BD8C8, metallic: 0.672, roughness: 0.120"
+    "name: StainedGlassBlue, baseColor: #3366CCDC, metallic: 0.600, roughness: 0.150",
+    "name: StainedGlassBlue_var1, baseColor: #3F6CD7DC, metallic: 0.506, roughness: 0.121",
+    "name: StainedGlassBlue_var2, baseColor: #3966C7DC, metallic: 0.554, roughness: 0.250",
+    "name: StainedGlassBlue_var3, baseColor: #336EC0DC, metallic: 0.630, roughness: 0.193",
+    "name: StainedGlassBlue_var4, baseColor: #305CD1DC, metallic: 0.686, roughness: 0.148"
   ],
   "lines": {
     "0": "2, 3, 0",
@@ -609,10 +609,10 @@
     "223": "1, 120, 119"
   },
   "groups": {
-    "All": "MaterialName: StainedGlassBlue, TriIds: [5,6,13,36,44,58,60,61,65,71,76,77,80,86,90,94,96,97,100,102,104,106,110,112,113,117,119,126,136,141,143,144,148,151,159,165,169,176,179,182,185,187,192,198,202,203,209,212,214,215,220,221]",
-    "All_var1": "MaterialName: StainedGlassBlue_var1, TriIds: [2,8,14,22,23,25,27,29,33,40,41,45,47,50,52,62,67,72,82,87,88,98,99,114,123,125,130,135,139,140,145,147,150,153,158,166,172,181,183,184,186,191,197,204,205,207,210,213,223]",
-    "All_var2": "MaterialName: StainedGlassBlue_var2, TriIds: [0,4,10,11,20,26,30,32,34,35,46,56,59,66,68,73,78,79,81,83,93,101,115,120,122,128,129,134,137,146,154,161,163,164,173,175,190,194,195,196,201,208,218,222]",
-    "All_var3": "MaterialName: StainedGlassBlue_var3, TriIds: [3,7,9,12,15,17,21,24,42,51,53,57,64,69,75,92,105,107,108,116,118,124,132,138,142,149,155,171,180,188,193,199,217]",
-    "All_var4": "MaterialName: StainedGlassBlue_var4, TriIds: [1,16,18,19,28,31,37,38,39,43,48,49,54,55,63,70,74,84,85,89,91,95,103,109,111,121,127,131,133,152,156,157,160,162,167,168,170,174,177,178,189,200,206,211,216,219]"
+    "All": "MaterialName: StainedGlassBlue, TriIds: [0,3,7,8,12,16,21,33,41,47,53,81,82,83,87,93,100,104,106,108,109,115,116,128,129,130,134,135,138,139,140,142,143,146,160,164,172,173,174,184,186,188,189,192,193,194,196,199,206,217,219]",
+    "All_var1": "MaterialName: StainedGlassBlue_var1, TriIds: [31,38,39,43,44,54,57,58,60,63,70,72,88,99,102,105,113,117,122,123,127,133,136,141,144,147,148,153,158,169,170,176,178,181,182,190,191,198,203,204,205,209,210,213,220]",
+    "All_var2": "MaterialName: StainedGlassBlue_var2, TriIds: [11,13,15,19,22,25,29,34,37,45,46,49,51,52,69,71,73,74,76,92,95,103,111,114,118,121,125,131,145,150,152,161,166,168,171,175,179,185,200,218,221,222,223]",
+    "All_var3": "MaterialName: StainedGlassBlue_var3, TriIds: [6,17,18,20,24,26,27,28,32,40,50,59,62,64,77,78,79,80,84,85,86,96,97,98,107,110,119,124,126,137,154,155,157,162,177,180,195,212,215,216]",
+    "All_var4": "MaterialName: StainedGlassBlue_var4, TriIds: [1,2,4,5,9,10,14,23,30,35,36,42,48,55,56,61,65,66,67,68,75,89,90,91,94,101,112,120,132,149,151,156,159,163,165,167,183,187,197,201,202,207,208,211,214]"
   }
 }

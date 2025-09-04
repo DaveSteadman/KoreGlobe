@@ -1,0 +1,14 @@
+# MTL file exported from KoreMiniMesh
+
+newmtl StainedGlassBlue
+Ka 1.000000 1.000000 1.000000
+Kd 0.200000 0.400000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ns 96.0
+Pr 0.150000
+Pm 0.600000
+Pc 0.200000 0.400000 0.800000
+d 0.862745
+Tr 0.137255
+illum 2
+

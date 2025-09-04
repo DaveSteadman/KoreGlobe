@@ -15,7 +15,7 @@ public static partial class KoreMiniMeshOps
     // --------------------------------------------------------------------------------------------
 
     // Function to create a circle of points, returning the list of Ids
-
+    // KoreMiniMeshOps.AddCirclePoints(mesh, center, normal, radius, numSides, referenceDirection);
     public static List<int> AddCirclePoints(
         KoreMiniMesh mesh,
         KoreXYZVector center, 
@@ -66,6 +66,8 @@ public static partial class KoreMiniMeshOps
         return pointIds;
     }
 
+    // --------------------------------------------------------------------------------------------
+
     /// <summary>
     /// Find a vector perpendicular to the given vector using a consistent strategy
     /// </summary>
@@ -91,11 +93,100 @@ public static partial class KoreMiniMeshOps
         return bestCandidate;
     }
 
-
-
     // --------------------------------------------------------------------------------------------
-    // MARK: #
+    // MARK: Shape Parts
     // --------------------------------------------------------------------------------------------
 
+    /// <summary>
+    /// Create a ribbon surface connecting two circles of vertices
+    /// </summary>
+    public static List<int> AddRibbon(
+        KoreMiniMesh mesh,
+        List<int> circle1,
+        List<int> circle2)
+    {
+        if (circle1.Count != circle2.Count || circle1.Count < 3)
+            throw new ArgumentException("Circles must have the same count and at least 3 vertices");
+
+        List<int> triangleIds = new List<int>();
+        int sides = circle1.Count;
+
+        for (int i = 0; i < sides; i++)
+        {
+            int next = (i + 1) % sides;
+            
+            // Create a quad between corresponding points on the two circles
+            int v1 = circle1[i];      // current circle1
+            int v2 = circle2[i];      // current circle2  
+            int v3 = circle2[next];   // next circle2
+            int v4 = circle1[next];   // next circle1
+
+            // Add the quad as two triangles
+            triangleIds.AddRange(KoreMiniMeshOps.AddFace(mesh, v1, v2, v3, v4));
+        }
+
+        return triangleIds;
+    }
+
+    // --------------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// Create a fan surface from a center point to a circle of vertices
+    /// </summary>
+    public static List<int> AddFan(
+        KoreMiniMesh mesh,
+        int centerVertex,
+        List<int> circleVertices,
+        bool windingOutward = true)
+    {
+        if (circleVertices.Count < 3)
+            throw new ArgumentException("Circle must have at least 3 vertices");
+
+        List<int> triangleIds = new List<int>();
+
+        for (int i = 0; i < circleVertices.Count; i++)
+        {
+            int next = (i + 1) % circleVertices.Count;
+
+            int v1 = centerVertex;
+            int v2 = circleVertices[i];
+            int v3 = circleVertices[next];
+
+            // Wind triangles based on direction parameter
+            if (windingOutward)
+            {
+                triangleIds.Add(mesh.AddTriangle(new KoreMiniMeshTri(v1, v2, v3)));
+            }
+            else
+            {
+                triangleIds.Add(mesh.AddTriangle(new KoreMiniMeshTri(v1, v3, v2)));
+            }
+        }
+
+        return triangleIds;
+    }
+
+    // --------------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// Add circle lines connecting vertices in a circle
+    /// </summary>
+    public static void AddCircleLines(
+        KoreMiniMesh mesh,
+        List<int> circleVertices,
+        int lineColorId)
+    {
+        for (int i = 0; i < circleVertices.Count; i++)
+        {
+            int next = (i + 1) % circleVertices.Count;
+            mesh.AddLine(new KoreMiniMeshLine(circleVertices[i], circleVertices[next], lineColorId));
+        }
+    }
+
+    // --------------------------------------------------------------------------------------------
+    // 
+    // --------------------------------------------------------------------------------------------
 
 }
+
+

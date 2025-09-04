@@ -38,8 +38,13 @@ public struct KoreXYZPlane
         vN = vN.Normalize();
         vY = vY.Normalize();
 
-        // Create the X axis vector, which is perpendicular to the normal and Y axis vectors
-        KoreXYZVector vX = KoreXYZVector.CrossProduct(vN, vY);
+        // Make vY orthogonal to vN (project vY onto the plane perpendicular to vN)
+        double dotProduct = KoreXYZVector.DotProduct(vY, vN);
+        vY = (vY - vN * dotProduct).Normalize();
+
+        // Create the X axis vector using the correct cross product order
+        // vX should be perpendicular to both vY and vN, lying in the plane
+        KoreXYZVector vX = KoreXYZVector.CrossProduct(vY, vN).Normalize();
 
         return new KoreXYZPlane(pO, vN, vX, vY);
     }

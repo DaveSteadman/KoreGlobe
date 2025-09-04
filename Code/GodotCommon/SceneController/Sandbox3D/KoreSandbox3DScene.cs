@@ -40,6 +40,7 @@ public partial class KoreSandbox3DScene : Node3D
 
         AddTestMeshData_MiniMeshBox();
         AddTestMeshData_MiniMeshSphere();
+        AddTestMeshData_MiniMeshCylinder();
     }
 
     public override void _Process(double delta)
@@ -588,6 +589,57 @@ public partial class KoreSandbox3DScene : Node3D
             string vjson = KoreMiniMeshIO.ToJson(miniMesh);
             File.WriteAllText("UnitTestArtefacts/MiniMesh_Sphere_v.json", vjson);
 
+        }
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // MARK: Mini Mesh Cylinder
+    // ---------------------------------------------------------------------------------------------
+
+    public void AddTestMeshData_MiniMeshCylinder()
+    {
+        // Function to add a test mini mesh cylinder
+        Node3D MiniMeshCylinderNode = new Node3D() { Name = "MiniMeshCylinderNode" };
+        AddChild(MiniMeshCylinderNode);
+        MiniMeshCylinderNode.Position = new Vector3(0, 3, -3.6f); // Between the box and sphere
+
+        // Test Mini Mesh Cylinder
+        {
+            KoreXYZVector p1 = new KoreXYZVector(0, -0.5f, 0); // Bottom center
+            KoreXYZVector p2 = new KoreXYZVector(2, 0.5f, 1);  // Top center
+            double p1Radius = 0.1;
+            double p2Radius = 0.4;
+            int sides = 12;
+
+            var miniMesh = KoreMiniMeshPrimitives.CreateCylinder(
+                p1, p2, p1Radius, p2Radius,
+                sides, true,
+                KoreMiniMeshMaterialPalette.Find("StainedGlassBlue"), KoreColorRGB.White);
+
+            // loop through each group in the mesh, and add a surface renderer for each
+            foreach (var group in miniMesh.Groups)
+            {
+                KoreMiniMeshGodotSurface childSurfaceMeshNode = new KoreMiniMeshGodotSurface();
+                MiniMeshCylinderNode.AddChild(childSurfaceMeshNode);
+                childSurfaceMeshNode.UpdateMesh(miniMesh, group.Key);
+            }
+
+            // Add wireframe lines
+            KoreMiniMeshGodotLine lineMeshNode1 = new KoreMiniMeshGodotLine();
+            lineMeshNode1.UpdateMesh(miniMesh, "All");
+            MiniMeshCylinderNode.AddChild(lineMeshNode1);
+
+            // Export the mesh to Obj/MTL
+            var (objContent, mtlContent) = KoreMiniMeshIO.ToObjMtl(miniMesh, "MiniMesh_Cylinder", "MiniMesh_Cylinder");
+            File.WriteAllText("UnitTestArtefacts/MiniMesh_Cylinder.obj", objContent);
+            File.WriteAllText("UnitTestArtefacts/MiniMesh_Cylinder.mtl", mtlContent);
+
+            // dump to JSON
+            string json = KoreMiniMeshIO.ToJson(miniMesh);
+            File.WriteAllText("UnitTestArtefacts/MiniMesh_Cylinder.json", json);
+
+            // Print vertex count for debugging
+            GD.Print($"Cylinder vertices: {miniMesh.Vertices.Count}, triangles: {miniMesh.Triangles.Count}");
         }
     }
 

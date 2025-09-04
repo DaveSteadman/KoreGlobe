@@ -80,8 +80,7 @@ public static class KoreMiniMeshMaterialPalette
         new ("Water", new KoreColorRGB(0, 102, 204, 179), 0.0f, 0.0f),
         new ("Ice", new KoreColorRGB(230, 242, 255, 204), 0.0f, 0.0f),
 
-        new ("StainedGlassBlue", new KoreColorRGB(51, 102, 204, 200), 0.6f, 0.15f),
-
+        new ("StainedGlassBlue", new KoreColorRGB(51, 102, 204, 220), 0.6f, 0.15f),
 
         // ----------------------------------------------------------------------------------------
         // MARK: Fabric Materials

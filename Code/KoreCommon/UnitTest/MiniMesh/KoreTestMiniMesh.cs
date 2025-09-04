@@ -13,6 +13,7 @@ public static partial class KoreTestMiniMesh
 
         TestSimpleJSON(testLog);
         TestSphere(testLog);
+        TestCylinder(testLog);
     }
 
 
@@ -70,7 +71,45 @@ public static partial class KoreTestMiniMesh
         File.WriteAllText("UnitTestArtefacts/BasicSphere.obj", basicObjContent);
         File.WriteAllText("UnitTestArtefacts/BasicSphereMaterials.mtl", basicMtlContent);
 
-        testLog.AddComment("Sphere comparison completed - check UnitTestArtefacts/BasicSphere.obj");
+        testLog.AddComment("Sphere comparison completed - check UnitTestArtefacts/BasicSphere.obj vs OptimizedSphere.obj");
+
+    }
+
+    private static void TestCylinder(KoreTestLog testLog)
+    {
+        testLog.AddComment("=== Testing Cylinder Primitive ===");
+
+        // Create a cylinder
+        KoreXYZVector p1 = new KoreXYZVector(0, -1, 0);
+        KoreXYZVector p2 = new KoreXYZVector(0, 1, 0);
+        double radius = 0.5;
+        int sides = 8; // Low res for testing
+        var material = KoreMiniMeshMaterialPalette.Find("MattGreen");
+        var lineColor = new KoreColorRGB(255, 255, 0); // Yellow wireframe
+
+        KoreMiniMesh cylinderMesh = KoreMiniMeshPrimitives.CreateCylinder(
+            p1, p2, radius, radius, sides, true, material, lineColor);
+        
+        testLog.AddComment($"Cylinder Vertices: {cylinderMesh.Vertices.Count}");
+        testLog.AddComment($"Cylinder Groups: {cylinderMesh.Groups.Count}");
+        testLog.AddComment($"Cylinder Materials: {cylinderMesh.Materials.Count}");
+        testLog.AddComment($"Cylinder Lines: {cylinderMesh.Lines.Count}");
+        testLog.AddComment($"Cylinder Triangles: {cylinderMesh.Triangles.Count}");
+
+        // Test JSON serialization
+        string json = KoreMiniMeshIO.ToJson(cylinderMesh);
+        testLog.AddComment($"Cylinder JSON length: {json.Length}");
+        
+        var loadedCylinder = KoreMiniMeshIO.FromJson(json);
+        testLog.AddResult("Cylinder JSON roundtrip vertices", loadedCylinder.Vertices.Count == cylinderMesh.Vertices.Count);
+        testLog.AddResult("Cylinder JSON roundtrip groups", loadedCylinder.Groups.Count == cylinderMesh.Groups.Count);
+
+        // Save to OBJ/MTL for visual verification
+        var (objContent, mtlContent) = KoreMiniMeshIO.ToObjMtl(cylinderMesh, "TestCylinder", "CylinderMaterials");
+        File.WriteAllText("UnitTestArtefacts/TestCylinder.obj", objContent);
+        File.WriteAllText("UnitTestArtefacts/CylinderMaterials.mtl", mtlContent);
+        
+        testLog.AddComment("Cylinder test completed - check UnitTestArtefacts/TestCylinder.obj");
 
     }
 
