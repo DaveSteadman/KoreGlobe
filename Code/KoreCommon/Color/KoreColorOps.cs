@@ -70,7 +70,6 @@ public static class KoreColorOps
         float gf = KoreValueUtils.Clamp(color.Gf + gfnoise, 0f, 1f);
         float bf = KoreValueUtils.Clamp(color.Bf + bfnoise, 0f, 1f);
 
-
         KoreColorRGB newColor = new KoreColorRGB(rf, gf, bf, color.Af);
 
         return newColor;
@@ -79,6 +78,7 @@ public static class KoreColorOps
     // --------------------------------------------------------------------------------------------
 
     // Function to output a new color with a random noise factor on the overall brightness of th RGB.
+    // Usage: KoreColorRGB noiseCol = KoreColorOps.ColorwithBrightnessNoise(originalColor, 0.1f);
     public static KoreColorRGB ColorwithBrightnessNoise(KoreColorRGB color, float fractionNoise)
     {
         // Determine the adjustment multiplier
@@ -86,10 +86,10 @@ public static class KoreColorOps
 
         // Apply the adjustment
         return new KoreColorRGB(
-            color.R * brightnessAdj,
-            color.G * brightnessAdj,
-            color.B * brightnessAdj,
-            color.A);
+            color.Rf * brightnessAdj,
+            color.Gf * brightnessAdj,
+            color.Bf * brightnessAdj,
+            color.Af);
     }
 
 }

@@ -124,6 +124,7 @@ public static partial class KoreValueUtils
     // --------------------------------------------------------------------------------------------
     // Uses a y=mx+c mechanism to convert a value between an input and output range.
 
+    // Usage: KoreValueUtils.ScaleVal(5, 0, 10, 0, 100) // Returns 50
     public static double ScaleVal(double inval, double inrangemin, double inrangemax, double outrangemin, double outrangemax)
     {
         // Check in the input value is in range

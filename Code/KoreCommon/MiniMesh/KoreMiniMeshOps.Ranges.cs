@@ -53,8 +53,8 @@ public static partial class KoreMiniMeshOps
             if (vertex.Z > maxZ) maxZ = vertex.Z;
         }
 
-        return (new KoreNumericRange<double>(minX, maxX), 
-                new KoreNumericRange<double>(minY, maxY), 
+        return (new KoreNumericRange<double>(minX, maxX),
+                new KoreNumericRange<double>(minY, maxY),
                 new KoreNumericRange<double>(minZ, maxZ));
     }
 
@@ -78,6 +78,30 @@ public static partial class KoreMiniMeshOps
 
             mesh.Vertices[id] = new KoreXYZVector(newX, newY, newZ);
         }
-
     }
+
+    // --------------------------------------------------------------------------------------------
+
+    // Setup a model in a standard position, centered on the XZ origin 
+
+    // Usage: KoreMiniMesh newRootedMesh = KoreMiniMeshOps.RootMesh(mesh);
+    public static void RootMesh(KoreMiniMesh mesh)
+    {
+        // Get the ranges, the co-ordinate bounds of the mesh
+        (KoreNumericRange<double> xRange, KoreNumericRange<double> yRange, KoreNumericRange<double> zRange) = GetRanges(mesh);
+
+        // Translate the y-axis, so the min is zero
+        yRange.Offset(-yRange.Min);
+
+        // Center the x and z axes on zero
+        xRange = xRange.CenterOnValue(0);
+        zRange = zRange.CenterOnValue(0);
+
+        // Apply the new ranges to the mesh
+        SetRanges(mesh, (xRange, yRange, zRange), (xRange, yRange, zRange));
+    }
+
 }
+
+
+

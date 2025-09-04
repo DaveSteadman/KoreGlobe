@@ -133,6 +133,16 @@ public static partial class KoreMiniMeshOps
         }
     }
 
+    public static KoreMiniMeshMaterial GetGroupMaterial(KoreMiniMesh mesh, string groupName)
+    {
+        if (mesh.HasGroup(groupName))
+        {
+            KoreMiniMeshGroup group = mesh.GetGroup(groupName);
+            return mesh.GetMaterial(group.MaterialName);
+        }
+        return KoreMiniMeshMaterialPalette.DefaultMaterial;
+    }
+
     public static void AddTrianglesToGroup(KoreMiniMesh mesh, string groupName)
     {
         // create the group if it doesn't exist

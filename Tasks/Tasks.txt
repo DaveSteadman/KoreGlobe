@@ -7,16 +7,8 @@ A 3D world to explore and visualise customer data.
 
 Target of current iteration:
 ============================
-Deliver the core functionality and demonstrate developing areas through tech-demo windows.
-- Dynamically loading earth - reducing VRAM burden
-- 2D selectable elements
-- Windows of entity details
-- Better 3D model loading and management (consistency).
-- Management of linked and unlinked elements.
-
-Functional Goal:
-- Tech demo presentation.
-- Outline next version of the app - validate tech demos.
+1 - Define what we want from the application
+2 - Deliver tech demos on all the areas.
 
 
 
@@ -43,22 +35,18 @@ App Outline
 
 
 
-Immeditate Task:
-================
+Immediate Task (Define a task - focus on delivering it):
+=========================================================
 
-- Wire MiniMesh into the edit window.
-    - Flip triangles
-    - OutlineTriangle(s)
-
-- Consider how we manage a library of objects
-    - Actions around rotations, collision, scale.
-    - Inject mesh from message?!?
-    - Need a purpose to fulfill.
 
 
 
 Short Term Todo List:
 =====================
+
+- Wire MiniMesh into the edit window.
+    - Flip triangles
+    - OutlineTriangle(s)
 
 - Load a child tile
     - Use a simple camera distance measure for now.
@@ -84,23 +72,6 @@ Short Term Todo List:
 
 
 
-Tasks:
-======
-
-3D Models:
-    - Get the loading running again
-        - Improve the scaling, maybe in a loader scene with rulers etc.
-        - Load dummy elements to check for awkward presentation cases.
-
-Networking:
-    - Get a dummy program from KoreSim injecting JSON messages
-    - Network config window
-
-- Display entities
-    - New scene/window to show loaded entities and basic movement attributes.
-
-
-
 Bugs:
 =====
 
@@ -117,6 +88,13 @@ Future Ideas:
         - put into a separate project (like the mesh decimation) to progress.
     - Primitives:
         - Some ideas, but plan into a test project in the future.
+
+- Consider how we manage a library of objects
+    - Actions around rotations, collision, scale.
+    - Inject mesh from message?!?
+    - Need a purpose to fulfill.
+    - We export an ArrayMesh from SurfaceTool into a cache, then assign it to a MeshInstance3D.
+        - The detachment (and )
 
 - Coperniucus:
     - Start reading elevation data from the service in the same way that we read images.

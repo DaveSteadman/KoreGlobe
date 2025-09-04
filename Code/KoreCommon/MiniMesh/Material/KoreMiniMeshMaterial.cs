@@ -24,62 +24,17 @@ public struct KoreMiniMeshMaterial : IEquatable<KoreMiniMeshMaterial>
     // MARK: Constructors
     // --------------------------------------------------------------------------------------------
 
-    public KoreMiniMeshMaterial(string name, KoreColorRGB baseColor, float metallic = 0.0f, float roughness = 0.7f, string? filename = null)
+    public KoreMiniMeshMaterial(string name, KoreColorRGB baseColor, float metallic = 0.0f, float roughness = 0.7f)
     {
         Name      = name;
         BaseColor = baseColor;
-        Metallic  = metallic;
-        Roughness = roughness;
+        Metallic  = KoreNumericRange<float>.ZeroToOne.Apply(metallic);
+        Roughness = KoreNumericRange<float>.ZeroToOne.Apply(roughness);
     }
 
     // --------------------------------------------------------------------------------------------
     // MARK: Default materials
     // --------------------------------------------------------------------------------------------
-
-    public static KoreMiniMeshMaterial White => KoreMiniMeshMaterialPalette.GetMaterial("MattWhite");
-
-    // --------------------------------------------------------------------------------------------
-    // MARK: Helper Methods
-    // --------------------------------------------------------------------------------------------
-
-    // Create a material with just a color (using default material properties)
-    public static KoreMiniMeshMaterial FromColor(string name, KoreColorRGB color)
-    {
-        return new KoreMiniMeshMaterial(name, color);
-    }
-
-    // Create a material with just a color (anonymous)
-    public static KoreMiniMeshMaterial FromColor(KoreColorRGB color)
-    {
-        return new KoreMiniMeshMaterial("Anonymous", color);
-    }
-
-    // Create a material from a filename with fallback color
-    // Usage: KoreMiniMeshMaterial.FromTexture("MyTexture", "path/to/texture.png", KoreMiniMeshMaterial.White.BaseColor)
-    public static KoreMiniMeshMaterial FromTexture(string name, string filename, KoreColorRGB fallbackColor)
-    {
-        return new KoreMiniMeshMaterial(name, fallbackColor, filename: filename);
-    }
-
-    // Create a transparent version of this material
-    public KoreMiniMeshMaterial WithAlpha(float alpha)
-    {
-        // Create new color with specified alpha
-        var newColor = new KoreColorRGB(BaseColor.Rf, BaseColor.Gf, BaseColor.Bf, alpha);
-        return this with { BaseColor = newColor };
-    }
-
-    // Create a metallic version of this material
-    public KoreMiniMeshMaterial AsMetallic(float metallic = 1.0f, float roughness = 0.2f)
-    {
-        return this with { Metallic = metallic, Roughness = roughness };
-    }
-
-    // Create a plastic/matte version of this material
-    public KoreMiniMeshMaterial AsPlastic(float roughness = 0.8f)
-    {
-        return this with { Metallic = 0.0f, Roughness = roughness };
-    }
 
     // Check if this material is transparent
     public bool IsTransparent => BaseColor.IsTransparent;

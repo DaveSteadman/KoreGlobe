@@ -22,7 +22,7 @@ public static class KoreMiniMeshGodotMaterialFactory
         material.Metallic    = mat.Metallic;
 
         // Handle transparency based on alpha
-        if (mat.BaseColor.A < 1.0f)
+        if (mat.BaseColor.Af < 1.0f)
         {
             material.Transparency = BaseMaterial3D.TransparencyEnum.Alpha;
         }

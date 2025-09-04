@@ -536,12 +536,13 @@ public partial class KoreSandbox3DScene : Node3D
             // KoreMiniMesh miniMesh = KoreMiniMeshIO.FromObjMtl(objContent2, mtlContent2);
 
             // Import from JSON
-            string jsonContent = File.ReadAllText("UnitTestArtefacts/MiniMesh_Sphere.json");
-            KoreMiniMesh miniMesh = KoreMiniMeshIO.FromJson(jsonContent);
+            // string jsonContent = File.ReadAllText("UnitTestArtefacts/MiniMesh_Sphere_v.json");
+            // KoreMiniMesh miniMesh = KoreMiniMeshIO.FromJson(jsonContent);
 
             KoreXYZVector center = new KoreXYZVector(0, 0, 0);
 
-            // var miniMesh = KoreMiniMeshPrimitives.BasicSphere(center, 0.5f, 8, KoreMiniMeshMaterialPalette.Find("MattCyan"), KoreColorRGB.White);
+            var miniMesh = KoreMiniMeshPrimitives.BasicSphere(center, 0.5f, 8, KoreMiniMeshMaterialPalette.Find("StainedGlassBlue"), KoreColorRGB.White);
+            KoreMiniMeshOps.VariateModel(miniMesh, "All", 0.1f, 4);
 
             // KoreGodotLineMesh childMeshNode1 = new KoreGodotLineMesh();
             // childMeshNode1.UpdateMesh(miniMesh);
@@ -580,7 +581,12 @@ public partial class KoreSandbox3DScene : Node3D
             // dump to JSON
             string json = KoreMiniMeshIO.ToJson(miniMesh);
             //GD.Print($"========> Sphere JSON: \n{json}\n");
-            File.WriteAllText("UnitTestArtefacts/MiniMesh_Sphere.json", json);
+            // File.WriteAllText("UnitTestArtefacts/MiniMesh_Sphere.json", json);
+
+            // Make a variated version and dump to JSON            
+            // KoreMiniMeshOps.VariateModel(miniMesh, "All", 0.2f, 5);
+            string vjson = KoreMiniMeshIO.ToJson(miniMesh);
+            File.WriteAllText("UnitTestArtefacts/MiniMesh_Sphere_v.json", vjson);
 
         }
     }

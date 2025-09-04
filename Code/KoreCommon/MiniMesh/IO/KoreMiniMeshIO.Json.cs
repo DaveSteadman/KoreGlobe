@@ -266,7 +266,7 @@ public static partial class KoreMiniMeshIO
         {
             // Format: "name: Gold, baseColor: #FFD700, metallic: 1.0, roughness: 0.1, filename: texture.png"
             string baseColorHex = KoreColorIO.RBGtoHexStringShort(value.BaseColor);
-            writer.WriteStringValue($"name: {value.Name}, baseColor: {baseColorHex}, metallic: {value.Metallic:F1}, roughness: {value.Roughness:F1}");
+            writer.WriteStringValue($"name: {value.Name}, baseColor: {baseColorHex}, metallic: {value.Metallic:F3}, roughness: {value.Roughness:F3}");
         }
 
         public static KoreMiniMeshMaterial ReadMaterial(JsonElement el)

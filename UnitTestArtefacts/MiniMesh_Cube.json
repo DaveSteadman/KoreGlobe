@@ -19,9 +19,9 @@
   },
   "colors": {},
   "materials": [
-    "name: Blue, baseColor: #03217E, metallic: 0.6, roughness: 0.1",
-    "name: Green, baseColor: #086608, metallic: 0.5, roughness: 0.5",
-    "name: MattCyan, baseColor: #0FF, metallic: 0.0, roughness: 1.0"
+    "name: Blue, baseColor: #03217E, metallic: 0.600, roughness: 0.100",
+    "name: Green, baseColor: #086608, metallic: 0.500, roughness: 0.500",
+    "name: MattCyan, baseColor: #0FF, metallic: 0.000, roughness: 1.000"
   ],
   "lines": {},
   "triangles": {

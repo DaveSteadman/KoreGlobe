@@ -31,7 +31,7 @@ public static class KoreMiniMeshMaterialPalette
         new ("MattBlue", new KoreColorRGB(0, 0, 255), 0f, 1f),
         new ("MattYellow", new KoreColorRGB(255, 255, 0), 0f, 1f),
         new ("MattMagenta", new KoreColorRGB(255, 0, 255), 0f, 1f),
-        new ("MattCyan", new KoreColorRGB(0, 255, 255), 0f, 1f),
+        new ("MattCyan", new KoreColorRGB(0, 255, 255), 0.15f, 0.85f),
         new ("MattOrange", new KoreColorRGB(255, 100, 0), 0f, 1f),
 
         new ("MattDarkRed", new KoreColorRGB(130, 0, 0), 0f, 1f),
@@ -79,6 +79,9 @@ public static class KoreMiniMeshMaterialPalette
         new ("GreenGlass", new KoreColorRGB(51, 204, 102, 102), 0.0f, 0.0f),
         new ("Water", new KoreColorRGB(0, 102, 204, 179), 0.0f, 0.0f),
         new ("Ice", new KoreColorRGB(230, 242, 255, 204), 0.0f, 0.0f),
+
+        new ("StainedGlassBlue", new KoreColorRGB(51, 102, 204, 200), 0.6f, 0.15f),
+
 
         // ----------------------------------------------------------------------------------------
         // MARK: Fabric Materials
