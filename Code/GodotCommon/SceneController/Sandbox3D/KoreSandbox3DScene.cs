@@ -673,7 +673,7 @@ public partial class KoreSandbox3DScene : Node3D
             // Load an image, create a colormap from it
             string imagePath = "UnitTestArtefacts/TestImage_Input.png";
             SKBitmap image = KoreSkiaSharpBitmapOps.LoadBitmap(imagePath);
-            KoreColorRGB[,] colormap = KoreSkiaSharpBitmapOps.SampleBitmapColors(image, 128*4, 256*4);
+            KoreColorRGB[,] colormap = KoreSkiaSharpBitmapOps.SampleBitmapColors(image, 128, 256);
 
             // Create a color mesh sphere
             var colorMesh = KoreColorMeshPrimitives.BasicSphere(center, 0.5f, colormap);
