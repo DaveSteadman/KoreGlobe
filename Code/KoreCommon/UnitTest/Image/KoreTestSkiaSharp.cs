@@ -17,6 +17,7 @@ public static partial class KoreTestSkiaSharp
         TestBasicImage(testLog);
         TestCircumcircle(testLog);
         TestPlane(testLog);
+        TestImage(testLog);
     }
 
     // Draw a testcard image

@@ -1,12 +1,15 @@
 // <fileheader>
 
-using Godot;
 using System;
 using System.IO;
+using System.Collections.Generic;
+
+using Godot;
+using SkiaSharp;
 
 using KoreCommon;
 using KoreCommon.UnitTest;
-using System.Collections.Generic;
+using KoreCommon.SkiaSharp;
 
 #nullable enable
 
@@ -44,6 +47,7 @@ public partial class KoreSandbox3DScene : Node3D
         AddTestMeshData_MiniMeshSphere();
         AddTestMeshData_MiniMeshCylinder();
         AddTestMeshData_MiniMeshPyramid();
+        AddTestMeshData_ColorMeshSphere();
     }
 
     public override void _Process(double delta)
@@ -545,19 +549,24 @@ public partial class KoreSandbox3DScene : Node3D
 
             KoreXYZVector center = new KoreXYZVector(0, 0, 0);
 
-            var miniMesh = KoreMiniMeshPrimitives.BasicSphere(center, 0.5f, 8, KoreMiniMeshMaterialPalette.Find("StainedGlassBlue"), KoreColorRGB.White);
-            KoreMiniMeshOps.VariateGroup(miniMesh, "All", 0.1f, 4);
+            var miniMesh = KoreMiniMeshPrimitives.BasicSphere(center, 0.5f, 64, KoreMiniMeshMaterialPalette.Find("StainedGlassBlue"), KoreColorRGB.White);
+            KoreMiniMeshOps.VariateGroup(miniMesh, "All", 0.5f, 32);
 
             // KoreGodotLineMesh childMeshNode1 = new KoreGodotLineMesh();
             // childMeshNode1.UpdateMesh(miniMesh);
 
             // loop through each group in the mesh, and add a surface renderer for each
-            foreach (var group in miniMesh.Groups)
-            {
-                KoreMiniMeshGodotSurface childSurfaceMeshNode = new KoreMiniMeshGodotSurface();
-                MiniMeshSphereNode.AddChild(childSurfaceMeshNode);
-                childSurfaceMeshNode.UpdateMesh(miniMesh, group.Key);
-            }
+            // foreach (var group in miniMesh.Groups)
+            // {
+            //     KoreMiniMeshGodotSurface childSurfaceMeshNode = new KoreMiniMeshGodotSurface();
+            //     MiniMeshSphereNode.AddChild(childSurfaceMeshNode);
+            //     childSurfaceMeshNode.UpdateMesh(miniMesh, group.Key);
+            // }
+
+            KoreMiniMeshGodotColoredSurface coloredMeshNode = new KoreMiniMeshGodotColoredSurface();
+            MiniMeshSphereNode.AddChild(coloredMeshNode);
+            coloredMeshNode.UpdateMesh(miniMesh);
+
 
             // KoreMiniMeshGodotSurface childSurfaceMeshNode1 = new KoreMiniMeshGodotSurface();
             // childSurfaceMeshNode1.UpdateMesh(miniMesh, "MattCyan");
@@ -647,6 +656,58 @@ public partial class KoreSandbox3DScene : Node3D
     }
 
     // ---------------------------------------------------------------------------------------------
+    // MARK: Color Mesh Sphere
+    // ---------------------------------------------------------------------------------------------
+
+    public void AddTestMeshData_ColorMeshSphere()
+    {
+        // Function to add a test mini mesh sphere
+        Node3D ColorMeshSphereNode = new Node3D() { Name = "ColorMeshSphereNode" };
+        AddChild(ColorMeshSphereNode);
+        ColorMeshSphereNode.Position = new Vector3(-3, 3, 0); // Position to the left of the cylinder
+
+        // Test Color Mesh Sphere
+        {
+            KoreXYZVector center = new KoreXYZVector(0, 0, 0);
+
+            // Load an image, create a colormap from it
+            string imagePath = "UnitTestArtefacts/TestImage_Input.png";
+            SKBitmap image = KoreSkiaSharpBitmapOps.LoadBitmap(imagePath);
+            KoreColorRGB[,] colormap = KoreSkiaSharpBitmapOps.SampleBitmapColors(image, 128*4, 256*4);
+
+            // Create a color mesh sphere
+            var colorMesh = KoreColorMeshPrimitives.BasicSphere(center, 0.5f, colormap);
+
+            // Dump to JSON for review
+            string json = KoreColorMeshIO.ToJson(colorMesh);
+            File.WriteAllText("UnitTestArtefacts/ColorMesh_Sphere.json", json);
+
+            // Create the Godot Rendered
+
+
+            KoreColorMeshGodot coloredMeshNode = new ();
+            ColorMeshSphereNode.AddChild(coloredMeshNode);
+            coloredMeshNode.UpdateMesh(colorMesh);
+
+            // // Export the mesh to Obj/MTL
+            // var (objContent, mtlContent) = KoreColorMeshIO.ToObjMtl(colorMesh, "ColorMesh_Sphere", "ColorMesh_Sphere");
+            // File.WriteAllText("UnitTestArtefacts/ColorMesh_Sphere.obj", objContent);
+            // File.WriteAllText("UnitTestArtefacts/ColorMesh_Sphere.mtl", mtlContent);
+
+            // // dump to JSON
+            // string json = KoreColorMeshIO.ToJson(colorMesh);
+            // File.WriteAllText("UnitTestArtefacts/ColorMesh_Sphere.json", json);
+
+            // // Make a variated version and dump to JSON            
+            // // KoreColorMeshOps.VariateGroup(colorMesh, "All", 0.2f, 5);
+            // string vjson = KoreColorMeshIO.ToJson(colorMesh);
+            // File.WriteAllText("UnitTestArtefacts/ColorMesh_Sphere_v.json", vjson);
+
+        }
+    }
+
+
+    // ---------------------------------------------------------------------------------------------
     // MARK: Mini Mesh Pyramid
     // ---------------------------------------------------------------------------------------------
 
@@ -659,13 +720,13 @@ public partial class KoreSandbox3DScene : Node3D
 
         // Test Mini Mesh Pyramid
         {
-            KoreXYZVector pApex       = new KoreXYZVector(0, 0, 0);      // Apex point
+            KoreXYZVector pApex = new KoreXYZVector(0, 0, 0);      // Apex point
             KoreXYZVector pBaseCenter = new KoreXYZVector(1f, -0.5f, 1f); // Base center
-            
+
             // Test with explicit control over base orientation
             // This reference direction will be projected onto the base plane (perpendicular to apex-base axis)
             KoreXYZVector baseReference = new KoreXYZVector(1, 0, 0.2); // Reference direction for base orientation
-            
+
             double width = 0.6;
             double height = 0.8;
 

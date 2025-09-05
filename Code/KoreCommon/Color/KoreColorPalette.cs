@@ -7,7 +7,8 @@ namespace KoreCommon;
 
 public static class KoreColorPalette
 {
-    public static KoreColorRGB DefaultColor = new KoreColorRGB(255, 255, 255);
+    public static KoreColorRGB DefaultColor = new KoreColorRGB(255, 255, 255); // KoreColorPalette.DefaultColor
+    public static string DefaultColorName = "White";
 
     public static readonly Dictionary<string, KoreColorRGB> Colors = new Dictionary<string, KoreColorRGB>
     {
@@ -120,4 +121,39 @@ public static class KoreColorPalette
         }
         return DefaultColor; // Default color
     }
+
+    public static KoreColorList ToColorList()
+    {
+        var list = new KoreColorList();
+        foreach (var col in Colors.Values)
+            list.AddColor(col);
+        return list;
+    }
+
+    // --------------------------------------------------------------------------------------------
+
+    // Get the name and color of the closest match in the palette to the given color
+    // Usage: (string name, KoreColorRGB col) = KoreColorPalette.ClosestColor(targetColor);
+
+    public static (string, KoreColorRGB) ClosestColor(KoreColorRGB targetColor)
+    {
+        // Initialise our working variables off the first list entry
+        float closestDist = KoreColorOps.ColorDistance(KoreColorPalette.Colors["White"], targetColor);
+        string closestName = KoreColorPalette.DefaultColorName;
+
+        foreach (var kvp in Colors)
+        {
+            string colorName = kvp.Key;
+            KoreColorRGB colorValue = kvp.Value;
+
+            float currDist = KoreColorOps.ColorDistance(colorValue, targetColor);
+            if (currDist < closestDist)
+            {
+                closestDist = currDist;
+                closestName = colorName;
+            }
+        }
+        return (closestName, Colors[closestName]);
+    }
+
 }

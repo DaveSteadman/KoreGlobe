@@ -69,6 +69,7 @@ public static class KoreSkiaSharpBitmapOps
 
     // SKBitmap.Decode will handle PNG, WebP, JPEG, BMP, GIF, and several other common image formats, as long as SkiaSharp is
     // built with support for those formats (which is true for standard SkiaSharp distributions).
+    // Usage: KoreSkiaSharpBitmapOps.LoadBitmap(string)
 
     public static SKBitmap LoadBitmap(string filePath)
     {
@@ -201,6 +202,81 @@ public static class KoreSkiaSharpBitmapOps
 
         // Return the 2D array of bitmaps
         return result;
+    }
+
+
+    // --------------------------------------------------------------------------------------------
+    // MARK: Color List
+    // --------------------------------------------------------------------------------------------
+
+    // Loop through all the pixels in an image, creating a KoreColorList from it
+    // Usage: KoreColorList colorList = KoreSkiaSharpBitmapOps.ColorsFromBitmap(SKBitmap);
+    public static KoreColorList ColorsFromBitmap(SKBitmap bitmap)
+    {
+        KoreColorList resultList = new();
+
+        // Loop across the pixels
+        for (int y = 0; y < bitmap.Height; y++)
+        {
+            for (int x = 0; x < bitmap.Width; x++)
+            {
+                SKColor pixelColor = bitmap.GetPixel(x, y);
+                KoreColorRGB koreColor = new KoreColorRGB(pixelColor.Red, pixelColor.Green, pixelColor.Blue);
+                resultList.AddWithCheck(koreColor, 5f);
+            }
+        }
+
+        return resultList;
+    }
+
+    // Apply a KoreColorList to an image, replacing each pixel with the closest color from the list
+    // Usage: KoreSkiaSharpBitmapOps.ApplyColorListToBitmap(bitmap, colorList);
+
+    public static void ApplyColorListToBitmap(SKBitmap bitmap, KoreColorList colorList)
+    {
+        // Loop across the pixels
+        for (int y = 0; y < bitmap.Height; y++)
+        {
+            for (int x = 0; x < bitmap.Width; x++)
+            {
+                // Get the actual pixel color
+                SKColor pixelColor = bitmap.GetPixel(x, y);
+                KoreColorRGB koreColor = new KoreColorRGB(pixelColor.Red, pixelColor.Green, pixelColor.Blue);
+                
+                // Find the closest color in the list
+                KoreColorRGB closestColor = colorList.ClosestColor(koreColor);
+                SKColor skiaClosest = new SKColor(closestColor.R, closestColor.G, closestColor.B, pixelColor.Alpha);
+                
+                // Apply the new color back to the bitmap
+                bitmap.SetPixel(x, y, skiaClosest);
+            }
+        }
+    }
+
+    public static KoreColorRGB[,] SampleBitmapColors(SKBitmap bitmap, int sampleWidth, int sampleHeight)
+    {
+        KoreColorRGB[,] colorGrid = new KoreColorRGB[sampleHeight, sampleWidth];
+
+        float xStep = (float)bitmap.Width / sampleWidth;
+        float yStep = (float)bitmap.Height / sampleHeight;
+
+        for (int y = 0; y < sampleHeight; y++)
+        {
+            for (int x = 0; x < sampleWidth; x++)
+            {
+                int pixelX = (int)(x * xStep);
+                int pixelY = (int)(y * yStep);
+
+                // Clamp to bitmap dimensions
+                pixelX = Math.Min(pixelX, bitmap.Width - 1);
+                pixelY = Math.Min(pixelY, bitmap.Height - 1);
+
+                SKColor pixelColor = bitmap.GetPixel(pixelX, pixelY);
+                colorGrid[y, x] = new KoreColorRGB(pixelColor.Red, pixelColor.Green, pixelColor.Blue, pixelColor.Alpha);
+            }
+        }
+
+        return colorGrid;
     }
 
     // --------------------------------------------------------------------------------------------

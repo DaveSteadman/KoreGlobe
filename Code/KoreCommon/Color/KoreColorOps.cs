@@ -92,5 +92,73 @@ public static class KoreColorOps
             color.Af);
     }
 
+    // --------------------------------------------------------------------------------------------
+    // MARK: Distance
+    // --------------------------------------------------------------------------------------------
+
+    // When comparing colors, we often want to know how "far apart" they are. We'll use sum of differences
+    // in the RGBA values.
+
+    // Note: The human eye is more sensitive to green, then red, then blue, so this "geometric" distance,
+    // also called Euclidean or Manhattan distance, is not ideal for perceptual color matching. Images will 
+    // have green areas with fewer available colours than (perceived) red or blue areas.
+    
+    // Usage: int dist = KoreColorOps.ColorDistance(col1, col2);
+    public static float ColorDistance(KoreColorRGB col1, KoreColorRGB col2)
+    {
+        // Calculate differences (sign doesn't matter as we square them)
+        float rDiff = col1.R - col2.R;
+        float gDiff = col1.G - col2.G;
+        float bDiff = col1.B - col2.B;
+
+        // If we equate RGB with XYZ, the distance defines a radius around the RGB value, so we'll use
+        // pythagoras to get a single distance value
+        float dist = MathF.Sqrt(rDiff * rDiff + gDiff * gDiff + bDiff * bDiff);
+        return dist;
+    }
+
+    // A weighted version of the color distance, that does a better job of matching human perception.
+    
+    // Usage: int dist = KoreColorOps.WeightedColorDistance(col1, col2);
+    public static float WeightedColorDistance(KoreColorRGB col1, KoreColorRGB col2)
+    {
+        // Calculate differences (sign doesn't matter as we square them)
+        float rDiff = col1.R - col2.R;
+        float gDiff = col1.G - col2.G;
+        float bDiff = col1.B - col2.B;
+
+        // Weighting factors based on human eye sensitivity to different colors, biasing green.
+        // Experimenting with the weights has lead to a color-cast being added to images.
+        float rWeight = 0.2126f; 
+        float gWeight = 0.7152f;
+        float bWeight = 0.0722f;
+
+        // If we equate RGB with XYZ, the distance defines a radius around the RGB value, so we'll use
+        // pythagoras to get a single distance value
+        float dist = MathF.Sqrt(
+            rWeight * rDiff * rDiff +
+            gWeight * gDiff * gDiff +
+            bWeight * bDiff * bDiff);
+
+        return dist;
+    }
+
+    // --------------------------------------------------------------------------------------------
+    // MARK: Color Name
+    // --------------------------------------------------------------------------------------------
+
+    // Return a name for any given color, starting with the names from the system palette, suffixes with the short hex code
+    // Usage: string name = KoreColorOps.ColorName(color) => "Red_#FF0104"
+
+    public static string ColorName(KoreColorRGB color)
+    {
+        (string name, KoreColorRGB col) = KoreColorPalette.ClosestColor(color);
+
+        string hexString = KoreColorIO.RBGtoHexStringShort(color);
+
+        return $"{name}_{hexString}";
+    }
+
 }
+
 
