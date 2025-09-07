@@ -32,19 +32,26 @@ public partial class KoreZeroNodeMapTile : Node3D
             ConstructionComplete = false;
             ActiveVisibility = false;
 
-            // // Pause the thread, being a good citizen with lots of tasks around.
+            // Pause the thread, being a good citizen with lots of tasks around.
             await Task.Yield();
 
             // ----------------------------
             // File IO and Tile center
 
-            // // Setup some basic elements of the tile ahead of the main elevation and image loading.
+            // Setup some basic elements of the tile ahead of the main elevation and image loading.
             Filepaths = new KoreMapTileFilepaths(TileCode); // Figure out the file paths for the tile
 
             // Setup the tile center shortcuts
             RwTileLLBox = KoreMapTileCode.LLBoxForCode(TileCode);
             RwTileCenterLLA = new KoreLLAPoint(RwTileLLBox.CenterPoint);
             RwTileCenterXYZ = RwTileCenterLLA.ToXYZ();
+
+            int dummyAzCount = 20;
+            int dummyElCount = 20;
+            TileColormap = new KoreColorRGB[dummyAzCount, dummyElCount];
+            for (int i = 0; i < dummyAzCount; i++)
+                for (int j = 0; j < dummyElCount; j++)
+                    TileColormap[i, j] = KoreColorOps.ColorWithRGBNoise(KoreColorPalette.Colors["MutedCyan"], 0.5f);
 
             // Pause the thread, being a good citizen with lots of tasks around.
             await Task.Yield();
@@ -121,6 +128,48 @@ public partial class KoreZeroNodeMapTile : Node3D
                     CreateMeshTileSurfacePoints();
                     ConstructionStage = 1;
                 //}
+
+
+                // create the color mesh
+                if (TileColormap != null)
+                {
+
+                    // TileColorMesh = KoreColorMeshPrimitives.CenteredSphereSection(
+                    //         llBox: RwTileLLBox,
+                    //         radius: 10,//(float)KoreWorldConsts.EarthRadiusM,
+                    //         colormap: TileColormap,
+                    //         tileEleData: TileEleData);
+
+
+                    // TileColorMesh = KoreColorMeshPrimitives.SphereSection(
+                    //         center: KoreXYZVector.Zero,
+                    //         llBox: RwTileLLBox,
+                    //         radius: 3,//(float)KoreWorldConsts.EarthRadiusM,
+                    //         colormap: TileColormap,
+                    //         tileEleData: TileEleData);
+
+                    TileColorMesh = KoreColorMeshPrimitives.BasicSphere(
+                            center: KoreXYZVector.Zero,
+                            radius: 3,//(float)KoreWorldConsts.EarthRadiusM,
+                            colormap: TileColormap);
+
+
+
+
+                    // create the godot renderer for the color mesh
+                    KoreColorMeshGodot colorMeshNode = new KoreColorMeshGodot();
+                    AddChild(colorMeshNode);
+                    colorMeshNode.UpdateMesh(TileColorMesh);
+                    colorMeshNode.Name = "TileExperiment";
+
+
+                    // TileColorMesh = KoreColorMeshPrimitives.SphereSection(
+                    //     radius: (float)KoreWorldConsts.EarthRadiusM,
+                    //     llBox: RwTileLLBox,
+                    //     colormap: TileColormap,
+                    //     // addPoles: false);
+                }
+
                 break;
 
             default:

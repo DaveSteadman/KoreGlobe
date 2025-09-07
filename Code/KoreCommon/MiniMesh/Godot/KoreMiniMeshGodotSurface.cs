@@ -37,7 +37,7 @@ public partial class KoreMiniMeshGodotSurface : MeshInstance3D
 
     public void UpdateMesh(KoreMiniMesh newMesh, string groupName)
     {
-        GD.Print("Updating KoreGodotSurfaceMesh with groupName:", groupName);
+        //GD.Print("Updating KoreGodotSurfaceMesh with groupName:", groupName);
         Name = $"MiniMesh_Surface_{groupName}";
 
         // Basic validation

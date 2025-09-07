@@ -67,6 +67,9 @@ public partial class KoreZeroNodeMapTile : Node3D
     private Vector3             TileLabelOffsetBelow;
     public  bool                TileOwnsTexture = false;
 
+    public KoreColorMesh? TileColorMesh = null;
+    public KoreColorRGB[,]? TileColormap = null;
+
     // Godot Game Engine objects
     // private MeshInstance3D MeshInstance  = new();
     // private KoreLineMesh3D  MeshInstanceW = new();
@@ -155,6 +158,15 @@ public partial class KoreZeroNodeMapTile : Node3D
 
         TileVisibilityStats.LatestValue = new KoreZeroTileVisibilityStats();
         Task.Run(() => BackgroundProcessing());
+
+
+        // KoreColorMesh colorMesh = KoreColorMeshPrimitives.Tile(TileCode, tileEleData, colormap);
+        // //KoreColorMesh colorMesh = KoreColorMeshPrimitives.BasicSphere(KoreXYZVector.Zero, 1f, colormap);
+        // KoreColorMeshGodot colorMeshNode = new KoreColorMeshGodot();
+        // colorMeshNode.UpdateMesh(colorMesh);
+        // AddChild(colorMeshNode);
+
+        //GD.Print($"{TileCode} COLORMESH // Vertices: {tileMesh.Vertices.Count} // Triangles: {tileMesh.Triangles.Count}");
     }
 
     // --------------------------------------------------------------------------------------------

@@ -10,6 +10,7 @@ using SkiaSharp;
 using KoreCommon;
 using KoreCommon.UnitTest;
 using KoreCommon.SkiaSharp;
+using KoreSim;
 
 #nullable enable
 
@@ -344,7 +345,7 @@ public partial class KoreSandbox3DScene : Node3D
 
             // Dump the mesh to JSON for debugging
             string json = KoreMeshDataIO.ToJson(oilBarrelMesh, dense: false);
-            GD.Print("Oil Barrel Mesh JSON:", json);
+            // GD.Print("Oil Barrel Mesh JSON:", json);
 
             KoreGodotLineMesh childMeshNode1 = new KoreGodotLineMesh();
             childMeshNode1.UpdateMesh(oilBarrelMesh);
@@ -596,7 +597,7 @@ public partial class KoreSandbox3DScene : Node3D
             //GD.Print($"========> Sphere JSON: \n{json}\n");
             // File.WriteAllText("UnitTestArtefacts/MiniMesh_Sphere.json", json);
 
-            // Make a variated version and dump to JSON            
+            // Make a variated version and dump to JSON
             // KoreMiniMeshOps.VariateGroup(miniMesh, "All", 0.2f, 5);
             string vjson = KoreMiniMeshIO.ToJson(miniMesh);
             File.WriteAllText("UnitTestArtefacts/MiniMesh_Sphere_v.json", vjson);
@@ -673,36 +674,87 @@ public partial class KoreSandbox3DScene : Node3D
             // Load an image, create a colormap from it
             string imagePath = "UnitTestArtefacts/TestImage_Input.png";
             SKBitmap image = KoreSkiaSharpBitmapOps.LoadBitmap(imagePath);
-            KoreColorRGB[,] colormap = KoreSkiaSharpBitmapOps.SampleBitmapColors(image, 128, 256);
+            KoreColorRGB[,] colormap = KoreSkiaSharpBitmapOps.SampleBitmapColors(image, 360, 180);
+
+            // load the sphere from binary file
+            // byte[] readbytes = File.ReadAllBytes("UnitTestArtefacts/ColorMesh_Sphere.bin");
+            // var colorMesh = KoreColorMeshIO.FromBytes(readbytes);
 
             // Create a color mesh sphere
-            var colorMesh = KoreColorMeshPrimitives.BasicSphere(center, 0.5f, colormap);
+            var colorMesh = KoreColorMeshPrimitives.BasicSphere(center, 0.8f, colormap);
 
             // Dump to JSON for review
-            string json = KoreColorMeshIO.ToJson(colorMesh);
-            File.WriteAllText("UnitTestArtefacts/ColorMesh_Sphere.json", json);
+            // string json = KoreColorMeshIO.ToJson(colorMesh);
+            // File.WriteAllText("UnitTestArtefacts/ColorMesh_Sphere.json", json);
+
+            /// Dump to a byte/binary file
+            // byte[] bytes = KoreColorMeshIO.ToBytes(colorMesh);
+            // File.WriteAllBytes("UnitTestArtefacts/ColorMesh_Sphere.bin", bytes);
 
             // Create the Godot Rendered
-
-
-            KoreColorMeshGodot coloredMeshNode = new ();
+            KoreColorMeshGodot coloredMeshNode = new();
             ColorMeshSphereNode.AddChild(coloredMeshNode);
             coloredMeshNode.UpdateMesh(colorMesh);
-
-            // // Export the mesh to Obj/MTL
-            // var (objContent, mtlContent) = KoreColorMeshIO.ToObjMtl(colorMesh, "ColorMesh_Sphere", "ColorMesh_Sphere");
-            // File.WriteAllText("UnitTestArtefacts/ColorMesh_Sphere.obj", objContent);
-            // File.WriteAllText("UnitTestArtefacts/ColorMesh_Sphere.mtl", mtlContent);
 
             // // dump to JSON
             // string json = KoreColorMeshIO.ToJson(colorMesh);
             // File.WriteAllText("UnitTestArtefacts/ColorMesh_Sphere.json", json);
 
-            // // Make a variated version and dump to JSON            
+            // // Make a variated version and dump to JSON
             // // KoreColorMeshOps.VariateGroup(colorMesh, "All", 0.2f, 5);
             // string vjson = KoreColorMeshIO.ToJson(colorMesh);
             // File.WriteAllText("UnitTestArtefacts/ColorMesh_Sphere_v.json", vjson);
 
+        }
+
+        {
+            KoreMapTileCode tileCode = new KoreMapTileCode("BH");
+
+            KoreElevationTile? eleTile = KoreElevationTileIO.ReadFromTextFile("C:/Util/Data/GitRepos/KoreCommonTest/UnitTestArtefacts/Ele_BF_BF.arr");
+
+
+            if (eleTile == null)
+            {
+                // Handle the case where the elevation tile is not found
+                GD.PrintErr("Elevation tile not found");
+                return;
+            }
+
+            // KoreNumeric2DArray<float> tileEleData = eleTile!.ElevationData;
+            // tileEleData.Scale(0.01f, 0.1f); // Scale to a reasonable range for testing
+
+            // int countAz = tileEleData.Width;
+            // int countEl = tileEleData.Height;
+
+
+            int countAz = 50;
+            int countEl = 50;
+            KoreNumeric2DArray<float> tileEleData = new KoreNumeric2DArray<float>(countAz, countEl);
+            tileEleData.SetAllNoise(0.01f, 0.02f);
+            // KoreColorRGB[,] colormap = new KoreColorRGB[countAz, countEl];
+            // for (int i = 0; i < countAz; i++)
+            //     for (int j = 0; j < countEl; j++)
+            //         colormap[i, j] = KoreColorOps.ColorWithRGBNoise(KoreColorPalette.Colors["MutedCyan"], 0.5f);
+
+            // Load an image, create a colormap from it
+            string imagePath = "UnitTestArtefacts/Sat_BF.webp";
+            SKBitmap image = KoreSkiaSharpBitmapOps.LoadBitmap(imagePath);
+            KoreColorRGB[,] colormap = KoreSkiaSharpBitmapOps.SampleBitmapColors(image, countAz, countEl);
+
+            //KoreAzElBox azEl = new KoreAzElBox() { MinAzDegs = 30, MaxAzDegs = 60, MinElDegs = 30, MaxElDegs = 60 };
+
+            KoreLLBox llBox = tileCode.LLBox;
+
+
+            KoreColorMesh sphereSectionMesh = KoreColorMeshPrimitives.SphereSection(KoreXYZVector.Zero, llBox, 0.83, colormap, tileEleData);
+
+
+            //KoreColorMesh colorMesh = KoreColorMeshPrimitives.Tile(tileCode, tileEleData, colormap);
+            //KoreColorMesh colorMesh = KoreColorMeshPrimitives.BasicSphere(KoreXYZVector.Zero, 1f, colormap);
+            KoreColorMeshGodot colorMeshNode = new KoreColorMeshGodot();
+            colorMeshNode.Name = "TileExperiment";
+            ColorMeshSphereNode.AddChild(colorMeshNode);
+            colorMeshNode.UpdateMesh(sphereSectionMesh);
         }
     }
 

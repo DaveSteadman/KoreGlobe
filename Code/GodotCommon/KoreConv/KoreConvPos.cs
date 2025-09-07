@@ -17,12 +17,6 @@ public static class KoreConvPos
         return new Vector3((float)pos.X, (float)pos.Y, (float)pos.Z);
     }
 
-    // Usage: Vector3 godotPos = KoreConvPos.ToGodotVector3(korePos);
-    public static Vector3 PosToV3(KoreXYZVector pos)
-    {
-        return new Vector3((float)pos.X, (float)pos.Y, (float)pos.Z);
-    }
-
     // Convert a polar coordinate (azimuth, elevation, distance) to a Godot Vector3
     // Usage: Vector3 godotPos = KoreConvPos.PolarToV3(azimuth, elevation, distance);
     public static Vector3 PolarToV3(float azRads, float elRads, float distanceGE)
@@ -68,14 +62,14 @@ public static class KoreConvPos
     {
         List<Vector3> points = new List<Vector3>
         {
-            PosToV3(box.Corner(KoreXYZBox.EnumCorner.TopLeftFront)),
-            PosToV3(box.Corner(KoreXYZBox.EnumCorner.TopRightFront)),
-            PosToV3(box.Corner(KoreXYZBox.EnumCorner.BottomRightFront)),
-            PosToV3(box.Corner(KoreXYZBox.EnumCorner.BottomLeftFront)),
-            PosToV3(box.Corner(KoreXYZBox.EnumCorner.TopLeftBack)),
-            PosToV3(box.Corner(KoreXYZBox.EnumCorner.TopRightBack)),
-            PosToV3(box.Corner(KoreXYZBox.EnumCorner.BottomRightBack)),
-            PosToV3(box.Corner(KoreXYZBox.EnumCorner.BottomLeftBack))
+            VecToV3(box.Corner(KoreXYZBox.EnumCorner.TopLeftFront)),
+            VecToV3(box.Corner(KoreXYZBox.EnumCorner.TopRightFront)),
+            VecToV3(box.Corner(KoreXYZBox.EnumCorner.BottomRightFront)),
+            VecToV3(box.Corner(KoreXYZBox.EnumCorner.BottomLeftFront)),
+            VecToV3(box.Corner(KoreXYZBox.EnumCorner.TopLeftBack)),
+            VecToV3(box.Corner(KoreXYZBox.EnumCorner.TopRightBack)),
+            VecToV3(box.Corner(KoreXYZBox.EnumCorner.BottomRightBack)),
+            VecToV3(box.Corner(KoreXYZBox.EnumCorner.BottomLeftBack))
         };
         return points;
     }

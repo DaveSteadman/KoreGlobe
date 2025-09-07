@@ -50,7 +50,7 @@ public partial class KoreGodotSurfaceMesh : MeshInstance3D
         // Ensure mesh data is complete and valid before processing
         // newMeshData.FullyPopulate();
 
-        GD.Print("Updating KoreGodotSurfaceMesh with groupName:", groupName, "basePath:", basePath);
+        //GD.Print("Updating KoreGodotSurfaceMesh with groupName:", groupName, "basePath:", basePath);
 
         _surfaceTool = new SurfaceTool();
 
@@ -132,7 +132,7 @@ public partial class KoreGodotSurfaceMesh : MeshInstance3D
             KoreMeshMaterial kMat = newMeshData.MaterialForGroup(groupName);
 
             GD.Print("Found material for group:", groupName, " // material Name:", kMat.Name);
-            
+
             List<string> allMatNamesList = newMeshData.AllMaterialNames();
             string allMatNames = string.Join(", ", allMatNamesList);
 

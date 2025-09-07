@@ -33,7 +33,7 @@ public partial class KoreMiniMeshGodotLine : MeshInstance3D
 
     public void UpdateMesh(KoreMiniMesh newMesh, string groupName)
     {
-        GD.Print("Updating KoreGodotSurfaceMesh with groupName:", groupName);
+        //GD.Print("Updating KoreGodotSurfaceMesh with groupName:", groupName);
 
         // Basic validation
         if (string.IsNullOrEmpty(groupName)) return;

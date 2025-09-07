@@ -37,7 +37,7 @@ public partial class KoreMiniMeshGodotColoredSurface : MeshInstance3D
 
     public void UpdateMesh(KoreMiniMesh newMesh)
     {
-        GD.Print("Updating KoreGodotSurfaceMesh");
+        //GD.Print("Updating KoreGodotSurfaceMesh");
         Name = $"MiniMesh_ColoredSurface";
 
         // Basic validation
@@ -58,7 +58,7 @@ public partial class KoreMiniMeshGodotColoredSurface : MeshInstance3D
             KoreMiniMeshGroup currGrp = kvp.Value;
 
             // get the group material and color
-            KoreMiniMeshMaterial mat = newMesh.GetMaterial(currGrp.MaterialName);   
+            KoreMiniMeshMaterial mat = newMesh.GetMaterial(currGrp.MaterialName);
             Color godotCol = KoreConvColor.ToGodotColor(mat.BaseColor);
 
             // Loop through each of the triangles, adding each vertex and normal in turn
@@ -89,7 +89,7 @@ public partial class KoreMiniMeshGodotColoredSurface : MeshInstance3D
                 _surfaceTool.AddVertex(pC);
             }
         }
-        
+
         // Generate normals if they weren't provided (Needs to be on main thread)
         Mesh = _surfaceTool.Commit();
 

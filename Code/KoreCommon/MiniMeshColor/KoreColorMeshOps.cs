@@ -43,9 +43,6 @@ public static partial class KoreColorMeshOps
         return KoreXYZVector.Zero;
     }
 
-
-
-
     // --------------------------------------------------------------------------------------------
     // MARK: Triangles
     // --------------------------------------------------------------------------------------------
@@ -66,7 +63,8 @@ public static partial class KoreColorMeshOps
         triangleIds.Add(mesh.AddTriangle(new KoreColorMeshTri(a, b, c, color)));
 
         // Triangle 2: a -> c -> d
-        triangleIds.Add(mesh.AddTriangle(new KoreColorMeshTri(a, c, d, color)));
+        KoreColorRGB col2 = KoreColorOps.Lerp(color, KoreColorRGB.Black, 0.15f); // Slightly different color for second triangle
+        triangleIds.Add(mesh.AddTriangle(new KoreColorMeshTri(a, c, d, col2)));
 
         return triangleIds;
     }

@@ -58,6 +58,7 @@ public struct KoreColorRGB : IEquatable<KoreColorRGB>
 
     public static readonly KoreColorRGB Zero = new KoreColorRGB(KoreColorIO.MinByte, KoreColorIO.MinByte, KoreColorIO.MinByte, KoreColorIO.MinByte);
     public static readonly KoreColorRGB White = new KoreColorRGB(KoreColorIO.MaxByte, KoreColorIO.MaxByte, KoreColorIO.MaxByte, KoreColorIO.MaxByte);
+    public static readonly KoreColorRGB Black = new KoreColorRGB(0, 0, 0, KoreColorIO.MaxByte);
 
     // --------------------------------------------------------------------------------------------
     // MARK: Equality Operations

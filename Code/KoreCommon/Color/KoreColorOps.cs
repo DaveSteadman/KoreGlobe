@@ -19,10 +19,10 @@ public static class KoreColorOps
         if (col2fraction < 0.0f) col2fraction = 0.0f;
         if (col2fraction > 1.0f) col2fraction = 1.0f;
 
-        float newR = col1.R + (col2.R - col1.R) * col2fraction;
-        float newG = col1.G + (col2.G - col1.G) * col2fraction;
-        float newB = col1.B + (col2.B - col1.B) * col2fraction;
-        float newA = col1.A + (col2.A - col1.A) * col2fraction;
+        float newR = col1.Rf + (col2.Rf - col1.Rf) * col2fraction;
+        float newG = col1.Gf + (col2.Gf - col1.Gf) * col2fraction;
+        float newB = col1.Bf + (col2.Bf - col1.Bf) * col2fraction;
+        float newA = col1.Af + (col2.Af - col1.Af) * col2fraction;
 
         return new KoreColorRGB(newR, newG, newB, newA);
     }
@@ -37,9 +37,9 @@ public static class KoreColorOps
     {
         // Calculate the Euclidean distance between the pixel color and the source color
         float distance = MathF.Sqrt(
-            MathF.Pow(pixelColor.R - sourceColor.R, 2) +
-            MathF.Pow(pixelColor.G - sourceColor.G, 2) +
-            MathF.Pow(pixelColor.B - sourceColor.B, 2)
+            MathF.Pow(pixelColor.Rf - sourceColor.Rf, 2) +
+            MathF.Pow(pixelColor.Gf - sourceColor.Gf, 2) +
+            MathF.Pow(pixelColor.Bf - sourceColor.Bf, 2)
         );
 
         // If the distance is greater than the tolerance, return the original color
@@ -100,9 +100,9 @@ public static class KoreColorOps
     // in the RGBA values.
 
     // Note: The human eye is more sensitive to green, then red, then blue, so this "geometric" distance,
-    // also called Euclidean or Manhattan distance, is not ideal for perceptual color matching. Images will 
+    // also called Euclidean or Manhattan distance, is not ideal for perceptual color matching. Images will
     // have green areas with fewer available colours than (perceived) red or blue areas.
-    
+
     // Usage: int dist = KoreColorOps.ColorDistance(col1, col2);
     public static float ColorDistance(KoreColorRGB col1, KoreColorRGB col2)
     {
@@ -118,7 +118,7 @@ public static class KoreColorOps
     }
 
     // A weighted version of the color distance, that does a better job of matching human perception.
-    
+
     // Usage: int dist = KoreColorOps.WeightedColorDistance(col1, col2);
     public static float WeightedColorDistance(KoreColorRGB col1, KoreColorRGB col2)
     {
@@ -129,7 +129,7 @@ public static class KoreColorOps
 
         // Weighting factors based on human eye sensitivity to different colors, biasing green.
         // Experimenting with the weights has lead to a color-cast being added to images.
-        float rWeight = 0.2126f; 
+        float rWeight = 0.2126f;
         float gWeight = 0.7152f;
         float bWeight = 0.0722f;
 
