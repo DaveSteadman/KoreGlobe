@@ -134,11 +134,11 @@ public partial class KoreZeroNodeMapTile : Node3D
                 if (TileColormap != null)
                 {
 
-                    // TileColorMesh = KoreColorMeshPrimitives.CenteredSphereSection(
-                    //         llBox: RwTileLLBox,
-                    //         radius: 10,//(float)KoreWorldConsts.EarthRadiusM,
-                    //         colormap: TileColormap,
-                    //         tileEleData: TileEleData);
+                    TileColorMesh = KoreColorMeshPrimitives.CenteredSphereSection(
+                            llBox: RwTileLLBox,
+                            radius: 10,//(float)KoreWorldConsts.EarthRadiusM,
+                            colormap: TileColormap,
+                            tileEleData: TileEleData);
 
 
                     // TileColorMesh = KoreColorMeshPrimitives.SphereSection(
@@ -148,10 +148,15 @@ public partial class KoreZeroNodeMapTile : Node3D
                     //         colormap: TileColormap,
                     //         tileEleData: TileEleData);
 
-                    TileColorMesh = KoreColorMeshPrimitives.BasicSphere(
-                            center: KoreXYZVector.Zero,
-                            radius: 3,//(float)KoreWorldConsts.EarthRadiusM,
-                            colormap: TileColormap);
+
+
+                    // The ColorMesh works, and creates a basic sphere that we can show
+
+                    // TileColorMesh = KoreColorMeshPrimitives.BasicSphere(
+                    //         center: KoreXYZVector.Zero,
+                    //         radius: 3,//(float)KoreWorldConsts.EarthRadiusM,
+                    //         colormap: TileColormap);
+
 
 
 

@@ -99,17 +99,48 @@ public static partial class KoreColorMeshPrimitives
         int lonSegments = colormap.GetLength(1); // longitude segments (horizontal divisions)
         int latSegments = colormap.GetLength(0); // latitude segments (vertical divisions)
 
-        // define the center point in real-world coordinates
-        KoreLLAPoint rwLLAZeroLonCenter = new KoreLLAPoint() { LatDegs = llBox.MidLatDegs, LonDegs = llBox.MidLonDegs, RadiusM = radius };
+        // rwCenter
+        KoreLLPoint rwTileCenter = llBox.CenterPoint;
+        KoreLLAPoint rwTileCenterLLA = new KoreLLAPoint() {
+            LatDegs = rwTileCenter.LatDegs,
+            LonDegs = rwTileCenter.LonDegs,
+            RadiusM = 3
+        };
+
+        // Zero Lon Center - so we create a common tile, then rotate into position later
+        // - also means we can create the tile from relative angles, which is easier to manage
+
+        // Define zero longitude center, so we can create the tile from relative (not absolute) angles and
+        // more intuitively rotate the tile to the absolute longitude later.
+        KoreLLAPoint rwLLAZeroLonCenter = new KoreLLAPoint()
+        {
+            LatDegs = rwTileCenterLLA.LatDegs,
+            LonDegs = 0,
+            RadiusM = 3
+        };
         KoreXYZVector rwXYZZeroLonCenter = rwLLAZeroLonCenter.ToXYZ();
 
-        // Create a simple double-list that includes poles as duplicated vertices
+        // Setup the loop control values
+        List<double> lonZeroListRads = KoreValueUtils.CreateRangeList(lonSegments, -llBox.HalfDeltaLonRads, llBox.HalfDeltaLonRads); // Relative azimuth - left to right (low to high longitude)
+        List<double> latListRads = KoreValueUtils.CreateRangeList(latSegments, llBox.MaxLatRads, llBox.MinLatRads); // Max to min +90 -> -90. Start at top of tile
+
+        // Create a simple double-list for the vertex IDs
         var vertexIdGrid = new List<List<int>>();
+
+
+
+
+
+
+
+
+
 
         for (int lat = 0; lat <= latSegments; lat++) // Include both poles
         {
             // flip the lat, to go from top to bottom
-            int usedLat = latSegments - lat;
+            int usedLat = lat;
+
             double latDegs = llBox.MinLatDegs + (llBox.DeltaLatDegs * usedLat / latSegments);
             float latFraction = (float)lat / latSegments;
 
@@ -120,11 +151,11 @@ public static partial class KoreColorMeshPrimitives
                 double lonDegs = llBox.MinLonDegs + (llBox.DeltaLonDegs * lon / lonSegments);
                 float lonFraction = (float)lon / lonSegments;
 
-                double ele = radius + tileEleData.InterpolatedValue(lonFraction, latFraction);
+                //double ele = radius + tileEleData.InterpolatedValue(lonFraction, latFraction);
 
                 //GD.Print($"lat: {latDegs:F2}, lon: {lonDegs:F2}, rad: {radius:F2}, ele: {tileEleData.InterpolatedValue(lonFraction, latFraction)}");
 
-                KoreLLAPoint rwLLAPointPos = new KoreLLAPoint() { LatDegs = latDegs, LonDegs = lonDegs, RadiusM = ele };
+                KoreLLAPoint rwLLAPointPos = new KoreLLAPoint() { LatDegs = latDegs, LonDegs = lonDegs, RadiusM = 3 };
                 KoreXYZVector rwXYZPointPos = rwLLAPointPos.ToXYZ();
 
                 KoreXYZVector rwXYZCenterOffset = rwXYZZeroLonCenter.XYZTo(rwXYZPointPos);
