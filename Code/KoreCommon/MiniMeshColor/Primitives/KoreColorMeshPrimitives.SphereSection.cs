@@ -158,7 +158,7 @@ public static partial class KoreColorMeshPrimitives
 
                 float lonFraction = 1 - (float)lon / lonSegments;
 
-                double eleAmplifier = 25;
+                double eleAmplifier = 3;
 
                 // Get real-world radius with elevation
                 double realWorldRadiusWithElevation = KoreWorldConsts.EarthRadiusM + (eleAmplifier * tileEleData.InterpolatedValue(lonFraction, latFraction));

@@ -207,7 +207,8 @@ public partial class KoreZeroNodeMapTile : Node3D
                 
                 // start a timer
                 // float startTime = KoreCentralTime.RuntimeSecs;
-
+                // ConstructionComplete = true;
+                // BackgroundConstructionComplete = true;
 
                 // float endTime = KoreCentralTime.RuntimeSecs;
 
@@ -217,7 +218,8 @@ public partial class KoreZeroNodeMapTile : Node3D
 
             default:
                 ConstructionComplete = true;
-
+                BackgroundConstructionComplete = true;
+    
                 KoreCentralLog.AddEntry($"DONE KoreZeroNodeMapTile: {TileCode}");
 
                 LocateTile();

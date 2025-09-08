@@ -152,92 +152,109 @@ public partial class KoreZeroNodeMapTile : Node3D
 
     private void UpdateVisbilityRules()
     {
-        // if (ActiveVisibility)
-        // {
+        if (ActiveVisibility)
+        {
+
             // Get the latest background stats (Endeavours to offload effort to background threads)
-        //     GloZeroTileVisibilityStats latestStats = TileVisibilityStats.LatestValue;
-        //     float distanceToTileCenterM = latestStats.distanceToTileCenterM;
-        //     float distanceFraction      = latestStats.distanceFraction;
+            //     GloZeroTileVisibilityStats latestStats = TileVisibilityStats.LatestValue;
+            //     float distanceToTileCenterM = latestStats.distanceToTileCenterM;
+            //     float distanceFraction      = latestStats.distanceFraction;
 
-        //     if (KoreZeroNodeMapManager.DistanceToHorizonM < 10000) KoreZeroNodeMapManager.DistanceToHorizonM = 10000; // minimise value at 10km
+            // Get the camera LLA
+            KoreLLAPoint camLla = KoreZeroNodeMapManager.LoadRefLLA;
+            if (KoreGodotMainSceneFactory.WorldCameraMount != null)
+                camLla = KoreGodotMainSceneFactory.WorldCameraMount.CurrLLA;
 
-        //     // The minimum view distance is at least the display distance for the tile level.
-        //     double minViewDist = ChildTileDisplayMForLvl[TileCode.MapLvl];
+            KoreXYZVector refXYZ = camLla.ToXYZ();
 
-        //     int maxMapLvl = KoreZeroNodeMapManager.CurrMaxMapLvl;
+            float distanceToTileCenterM = (float)(refXYZ.DistanceTo(RwTileCenterXYZ));
+            float distanceFraction = (float)(distanceToTileCenterM / KoreWorldConsts.EarthRadiusM);
 
-        //     // The logic could get complex, so factored it all out into a set of statement flags.
-        //     bool withinChildDisplayDistance = distanceFraction < ChildTileDisplayForLvl[TileCode.MapLvl];
-        //     bool withinChildCreateDistance  = distanceFraction < CreateChildTilesForLvl[TileCode.MapLvl];
-        //     bool beyondChildDeleteDistance  = distanceFraction > DeleteChildTilesForLvl[TileCode.MapLvl];
-        //     bool tileOverHorizon            = distanceToTileCenterM > (KoreZeroNodeMapManager.DistanceToHorizonM * 2);
-        //     bool tileInMinViewDistance      = distanceToTileCenterM < (minViewDist * 1.5);
+            int maxMapLvl = 5; //KoreZeroNodeMapManager.CurrMaxMapLvl;
 
-        //     // A child tile will be beyond max level when we are at max level
-        //     bool childTileBeyondMaxLvl      = TileCode.MapLvl >= maxMapLvl;
+            //     if (KoreZeroNodeMapManager.DistanceToHorizonM < 10000) KoreZeroNodeMapManager.DistanceToHorizonM = 10000; // minimise value at 10km
 
-        //     bool childTilesExist            = DoChildTilesExist();
-        //     bool childTilesLoaded           = AreChildTilesLoaded();
+            //     // The minimum view distance is at least the display distance for the tile level.
+            double minViewDist = ChildTileDisplayMForLvl[TileCode.MapLvl];
 
-        //     bool shouldDisplaySelf          = true; //(!tileOverHorizon) || (tileInMinViewDistance);
-        //     bool shouldCreateChildTiles     = withinChildCreateDistance && ConstructionComplete && !childTilesExist && (TileCode.MapLvl < maxMapLvl) && ChildTileDataAvailable;
-        //     bool shouldDisplayChildTiles    = withinChildDisplayDistance && childTilesLoaded;
-        //     bool shouldDeleteChildTiles     = childTilesLoaded && (beyondChildDeleteDistance || childTileBeyondMaxLvl);
+            // The logic could get complex, so factored it all out into a set of statement flags.
+            bool withinChildDisplayDistance = distanceFraction < ChildTileDisplayForLvl[TileCode.MapLvl];
+            bool withinChildCreateDistance = distanceFraction < CreateChildTilesForLvl[TileCode.MapLvl];
+            bool beyondChildDeleteDistance = distanceFraction > DeleteChildTilesForLvl[TileCode.MapLvl];
+            bool tileOverHorizon = distanceToTileCenterM > (KoreZeroNodeMapManager.DistanceToHorizonM * 2);
+            bool tileInMinViewDistance = distanceToTileCenterM < (minViewDist * 1.5);
 
-        //     bool hideSelfEvent              = (!shouldDisplayChildTiles) && !shouldDisplaySelf && VisibleState;
-        //     bool showSelfEvent              = (!shouldDisplayChildTiles) && shouldDisplaySelf && !VisibleState;
-        //     bool displayChildTileEvent      = shouldDisplayChildTiles && !ChildrenVisibleState;
-        //     bool hideChildTileEvent         = !shouldDisplayChildTiles && ChildrenVisibleState;
+            // A child tile will be beyond max level when we are at max level
+            bool childTileBeyondMaxLvl = TileCode.MapLvl >= maxMapLvl;
 
-        //     // Events to hide/show self to improve performance. Over the horizon tiles are not visible etc.
-        //     if (hideSelfEvent) SetVisibility(false);
-        //     if (showSelfEvent) SetVisibility(true);
+            bool childTilesExist = DoChildTilesExist();
+            bool childTilesLoaded = AreChildTilesLoaded();
 
-        //     // If we should create child tiles, and they don't exist, create them, kick off the background processing
-        //     if (shouldCreateChildTiles)
-        //     {
-        //         //CreateSubtileNodes();
-        //         CallDeferred(nameof(DeferredCreateSubtileNodes)); // call the creation deferred, to avoid blocking the main thread.
-        //     }
+            bool shouldDisplaySelf = true; //(!tileOverHorizon) || (tileInMinViewDistance);
+            bool shouldCreateChildTiles = withinChildCreateDistance && ConstructionComplete && !childTilesExist && (TileCode.MapLvl < maxMapLvl);
+            bool shouldDisplayChildTiles = withinChildDisplayDistance && childTilesLoaded;
+            bool shouldDeleteChildTiles = childTilesLoaded && (beyondChildDeleteDistance || childTileBeyondMaxLvl);
 
-        //     // If we should display child tiles, then make ourselves invisible, and make the children visible.
-        //     if (displayChildTileEvent)
-        //     {
-        //         if (!ChildrenVisibleState)
-        //         {
-        //             ChildrenVisibleState = true;
-        //             SetChildrenActive(true);
-        //             SetChildrenVisibility(true);
-        //             SetVisibility(false);
-        //         }
-        //     }
-        //     if (hideChildTileEvent)
-        //     {
-        //         if (ChildrenVisibleState)
-        //         {
-        //             ChildrenVisibleState = false;
-        //             SetChildrenActive(false);
-        //             SetChildrenVisibility(false);
-        //             SetVisibility(true);
-        //         }
-        //     }
+            bool hideSelfEvent = (!shouldDisplayChildTiles) && !shouldDisplaySelf && VisibleState;
+            bool showSelfEvent = (!shouldDisplayChildTiles) && shouldDisplaySelf && !VisibleState;
+            bool displayChildTileEvent = shouldDisplayChildTiles && !ChildrenVisibleState;
+            bool hideChildTileEvent = !shouldDisplayChildTiles && ChildrenVisibleState;
 
-        //     if (shouldDeleteChildTiles)
-        //     {
-        //         GD.Print($"Deleting child tiles: {TileCode}");
+            GD.Print($"UpdateVisbilityRules: {TileCode} // DistFrac:{distanceFraction:F3} // ChildDist:{(withinChildDisplayDistance?"In":"Out")} // Create:{(shouldCreateChildTiles?"Yes":"No")}");
 
-        //         SetChildrenActive(false);
-        //         SetChildrenVisibility(false);
-        //         SetVisibility(true);
 
-        //         DeleteSubtileNodes();
-        //     }
-        // }
-        // else
-        // {
-        //     // Not active state - hide tile.
-        //     SetVisibility(false);
-        // }
+
+            // Events to hide/show self to improve performance. Over the horizon tiles are not visible etc.
+            if (hideSelfEvent) SetVisibility(false);
+            if (showSelfEvent) SetVisibility(true);
+
+            // If we should create child tiles, and they don't exist, create them, kick off the background processing
+            if (shouldCreateChildTiles)
+            {
+                //CreateSubtileNodes();
+                CallDeferred(nameof(DeferredCreateSubtileNodes)); // call the creation deferred, to avoid blocking the main thread.
+
+                GD.Print($"Creating child tiles: {TileCode}");
+            }
+
+            // If we should display child tiles, then make ourselves invisible, and make the children visible.
+            if (displayChildTileEvent)
+            {
+                if (!ChildrenVisibleState)
+                {
+                    ChildrenVisibleState = true;
+                    SetChildrenActive(true);
+                    SetChildrenVisibility(true);
+                    SetVisibility(false);
+                }
+            }
+            if (hideChildTileEvent)
+            {
+                if (ChildrenVisibleState)
+                {
+                    ChildrenVisibleState = false;
+                    SetChildrenActive(false);
+                    SetChildrenVisibility(false);
+                    SetVisibility(true);
+                }
+            }
+
+            if (shouldDeleteChildTiles)
+            {
+                GD.Print($"Deleting child tiles: {TileCode}");
+
+                SetChildrenActive(false);
+                SetChildrenVisibility(false);
+                SetVisibility(true);
+
+                DeleteSubtileNodes();
+            }
+        }
+        else
+        {
+            // Not active state - hide tile.
+            SetVisibility(false);
+        }
     }
 
     // --------------------------------------------------------------------------------------------
@@ -314,9 +331,11 @@ public partial class KoreZeroNodeMapTile : Node3D
         foreach (KoreMapTileCode currTileCode in childTileCodes)
         {
             string tileName = currTileCode.ToString();
-
+            
             // Check if the node already exists - prevent duplicates
             if (HasNode(tileName)) continue;
+
+            KoreCentralLog.AddEntry($"Creating child tile node: {tileName}");
 
             // Create a new node
             KoreZeroNodeMapTile childTile   = new KoreZeroNodeMapTile(currTileCode);
