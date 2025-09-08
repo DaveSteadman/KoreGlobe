@@ -155,7 +155,7 @@ public partial class KoreZeroNodeMapTile : Node3D
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
-        GD.Print($"Tile Ready: {TileCode}");
+        // GD.Print($"Tile Ready: {TileCode}");
 
         TileVisibilityStats.LatestValue = new KoreZeroTileVisibilityStats();
         Task.Run(() => BackgroundProcessing());
@@ -184,7 +184,7 @@ public partial class KoreZeroNodeMapTile : Node3D
             // the final construction steps in stages.
             if (BackgroundConstructionComplete)
             {
-                GD.Print($"Tile: {TileCode} - Construction Stage: {ConstructionStage}");
+                // GD.Print($"Tile: {TileCode} - Construction Stage: {ConstructionStage}");
                 MainThreadFinalizeCreation();
                 return;
             }
@@ -323,6 +323,8 @@ public partial class KoreZeroNodeMapTile : Node3D
     private void LocateTile()
     {
         // GD.Print($"Locating Tile: {TileCode} - {RwTileCenterLLA}");
+        var llPos = TileCode.LLBox.CenterPoint;
+        RwTileCenterLLA = new KoreLLAPoint() { LatRads = llPos.LatRads, LonRads = llPos.LonRads, AltMslM = 0 };
 
         // Set the local position from the parent object
         Vector3 newPos = KoreGeoConvOps.RwToOffsetGe(RwTileCenterLLA);
@@ -334,3 +336,5 @@ public partial class KoreZeroNodeMapTile : Node3D
     }
 
 }
+
+

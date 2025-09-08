@@ -29,7 +29,7 @@ public partial class KoreZeroNodeMapTile : Node3D
 
     private async Task BackgroundTileCreation(KoreMapTileCode tileCode)
     {
-        GD.Print($"Starting Create: {tileCode}");
+        // GD.Print($"Starting Create: {tileCode}");
         try
         {
             // Starting: Set the flags that will be used later to determine activity around the tile while we construct it.
@@ -58,7 +58,7 @@ public partial class KoreZeroNodeMapTile : Node3D
 
             // Default everything, in case we fall through the logic, the objects are not null
             UVBox = new KoreUVBoxDropEdgeTile(KoreUVBoxDropEdgeTile.UVTopLeft, KoreUVBoxDropEdgeTile.UVBottomRight);
-            TileMaterial = KoreGodotMaterialFactory.SimpleColoredMaterial(new Color(0.5f, 0.5f, 0f, 1f));
+            // TileMaterial = KoreGodotMaterialFactory.SimpleColoredMaterial(new Color(0.5f, 0.5f, 0f, 1f));
             TileEleData = new KoreFloat2DArray(20, 20);
             TileEleData.SetAllNoise(2.0f, (float)(KoreWorldConsts.EarthRadiusM / 100.0));
 
@@ -68,13 +68,13 @@ public partial class KoreZeroNodeMapTile : Node3D
             // // ----------------------------
             // // Image
             // Report the state of the image filepaths
-            KoreCentralLog.AddEntry($"KoreZeroNodeMapTile: {tileCode} // Image Filepath: {Filepaths.WebpFilepath} // Exists: {Filepaths.WebpFileExists}");
+            // KoreCentralLog.AddEntry($"KoreZeroNodeMapTile: {tileCode} // Image Filepath: {Filepaths.WebpFilepath} // Exists: {Filepaths.WebpFileExists}");
 
-            // Source the tile image
-            // SourceTileImage();
+            // // Source the tile image
+            // // SourceTileImage();
 
-            // Pause the thread, being a good citizen with lots of tasks around.
-            await Task.Yield();
+            // // Pause the thread, being a good citizen with lots of tasks around.
+            // await Task.Yield();
 
             // // ----------------------------
             // // Elevation
@@ -96,7 +96,7 @@ public partial class KoreZeroNodeMapTile : Node3D
 
             BackgroundColorMesh();
 
-            GD.Print($"Ending Create: {tileCode}");
+            // GD.Print($"Ending Create: {tileCode}");
             BackgroundConstructionComplete = true;
         }
         catch (Exception ex)
@@ -110,7 +110,7 @@ public partial class KoreZeroNodeMapTile : Node3D
 
     private void BackgroundColorMesh()
     {
-        if (!Filepaths.MeshFileExists)
+        // if (Filepaths.MeshFileExists)
         {
             // create a color map
             int dummyAzCount = 60;
@@ -126,7 +126,7 @@ public partial class KoreZeroNodeMapTile : Node3D
                 using (SKBitmap image = KoreSkiaSharpBitmapOps.LoadBitmap(Filepaths.WebpFilepath))
                 {
                     TileColormap = KoreSkiaSharpBitmapOps.SampleBitmapColors(image, dummyAzCount, dummyElCount);
-                    GD.Print($"Sampled colormap from image for tile {TileCode} // {Filepaths.WebpFilepath}");
+                    // GD.Print($"Sampled colormap from image for tile {TileCode} // {Filepaths.WebpFilepath}");
                 }
             }
 
@@ -144,7 +144,7 @@ public partial class KoreZeroNodeMapTile : Node3D
 
             TileColorMesh = KoreColorMeshPrimitives.CenteredSphereSection(
                     llBox: RwTileLLBox,
-                    radius: 10f,//(float)KoreWorldConsts.EarthRadiusM,
+                    radius: KoreZeroOffset.GeEarthRadius,//(float)KoreWorldConsts.EarthRadiusM,
                     colormap: TileColormap,
                     tileEleData: TileEleData);
 
@@ -159,18 +159,19 @@ public partial class KoreZeroNodeMapTile : Node3D
             System.IO.File.WriteAllBytes(Filepaths.MeshFilepath, meshdata);
 
         }
-        else
-        {
+        // else
+        // {
 
-            // read the mesh from a binary file
-            byte[] meshdata = System.IO.File.ReadAllBytes(Filepaths.MeshFilepath);
-            TileColorMesh = KoreColorMeshIO.FromBytes(meshdata, KoreColorMeshIO.DataSize.AsDouble);
+        //     // read the mesh from a binary file
+        //     byte[] meshdata = System.IO.File.ReadAllBytes(Filepaths.MeshFilepath);
+        //     TileColorMesh = KoreColorMeshIO.FromBytes(meshdata, KoreColorMeshIO.DataSize.AsDouble);
 
-            // create the godot renderer for the color mesh
-            ColorMeshNode = new KoreColorMeshGodot();
-            ColorMeshNode.UpdateMeshBackground(TileColorMesh);
-            ColorMeshNode.Name = "LoadedTileExperiment";
-        }
+        //     // create the godot renderer for the color mesh
+        //     ColorMeshNode = new KoreColorMeshGodot();
+        //     ColorMeshNode.UpdateMeshBackground(TileColorMesh);
+        //     ColorMeshNode.Name = "LoadedTileExperiment";
+        // }
+        
 
     }
 
@@ -179,10 +180,37 @@ public partial class KoreZeroNodeMapTile : Node3D
         if (ColorMeshNode != null)
         {
             AddChild(ColorMeshNode);
+            ColorMeshNode.Visible = false;
             ColorMeshNode.UpdateMeshMainThread();
             ColorMeshNode.Name = "TileExperiment";
+
+            // Set the orientation here - tile should be tangent to Earth surface
+            // OrientTileToEarthSurface();
+
+            if (ParentTile != null)
+            {
+                // Find the root tile's longitude as reference
+                // KoreZeroNodeMapTile rootTile = this;
+                // while (rootTile.ParentTile != null)
+                //     rootTile = rootTile.ParentTile;
+                
+
+                double thisLon = RwTileCenterLLA.LonRads;
+                double parentLon = ParentTile.RwTileCenterLLA.LonRads;
+                
+                // Rotate relative to parent by the difference between this tile and parent
+                double relativeLonDiff = thisLon - parentLon;
+                //relativeLonDiff -= 0.2;
+                
+                ColorMeshNode.Rotation = new Vector3(0, (float)relativeLonDiff, 0);
+            }
+
+
         }
     }
+
+
+
 
     // --------------------------------------------------------------------------------------------
     // MARK: Main Thread
@@ -204,7 +232,7 @@ public partial class KoreZeroNodeMapTile : Node3D
                 ConstructionStage = 1;
                 //}
                 MainThreadColorMesh();
-                
+
                 // start a timer
                 // float startTime = KoreCentralTime.RuntimeSecs;
                 // ConstructionComplete = true;
@@ -219,7 +247,7 @@ public partial class KoreZeroNodeMapTile : Node3D
             default:
                 ConstructionComplete = true;
                 BackgroundConstructionComplete = true;
-    
+
                 KoreCentralLog.AddEntry($"DONE KoreZeroNodeMapTile: {TileCode}");
 
                 LocateTile();

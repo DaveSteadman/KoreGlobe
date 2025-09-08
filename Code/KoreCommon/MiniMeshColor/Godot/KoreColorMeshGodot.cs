@@ -37,7 +37,7 @@ public partial class KoreColorMeshGodot : MeshInstance3D
 
     public void UpdateMesh(KoreColorMesh newMesh)
     {
-        GD.Print("Updating KoreColorMeshGodot");
+        // GD.Print("Updating KoreColorMeshGodot");
         Name = $"ColorMeshSurface";
 
         _surfaceTool.Clear();
@@ -90,7 +90,7 @@ public partial class KoreColorMeshGodot : MeshInstance3D
 
     public void UpdateMeshBackground(KoreColorMesh newMesh)
     {
-        GD.Print("Updating KoreColorMeshGodot");
+        // GD.Print("Updating KoreColorMeshGodot");
         Name = $"ColorMeshSurface";
 
         _surfaceTool.Clear();

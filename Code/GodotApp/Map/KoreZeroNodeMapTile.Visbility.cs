@@ -26,24 +26,32 @@ public partial class KoreZeroNodeMapTile : Node3D
 
     private void SetVisibility(bool visible)
     {
-        // if (VisibleState != visible)
-        // {
-        //     VisibleState = visible;
+        if (VisibleState != visible)
+        {
+            VisibleState = visible;
+
+            if (ColorMeshNode != null)
+                ColorMeshNode.Visible = visible;
+                
         //     //GD.Print($"Setting visibility for {TileCode} to {visible}");
 
-        //     bool showDebug = KoreGodotFactory.Instance.UIState.ShowTileInfo  && visible;
+            //     bool showDebug = KoreGodotFactory.Instance.UIState.ShowTileInfo  && visible;
 
-        //     if (MeshInstance  != null) MeshInstance.Visible  = visible;
-        //     if (MeshInstanceW != null) MeshInstanceW.Visible = showDebug;
-        //     if (TileCodeLabel != null) TileCodeLabel.Visible = showDebug;
-        // }
+            //     if (MeshInstance  != null) MeshInstance.Visible  = visible;
+            //     if (MeshInstanceW != null) MeshInstanceW.Visible = showDebug;
+            //     if (TileCodeLabel != null) TileCodeLabel.Visible = showDebug;
+        }
 
-        // if (!visible)
-        // {
-        //     if (MeshInstance  != null) MeshInstance.Visible  = false;
-        //     if (MeshInstanceW != null) MeshInstanceW.Visible = false;
-        //     if (TileCodeLabel != null) TileCodeLabel.Visible = false;
-        // }
+        if (!visible)
+        {
+            if (ColorMeshNode != null)
+                ColorMeshNode.Visible = false;
+
+            
+            // if (MeshInstance != null) MeshInstance.Visible = false;
+            // if (MeshInstanceW != null) MeshInstanceW.Visible = false;
+            // if (TileCodeLabel != null) TileCodeLabel.Visible = false;
+        }
     }
 
     // --------------------------------------------------------------------------------------------
@@ -170,7 +178,7 @@ public partial class KoreZeroNodeMapTile : Node3D
             float distanceToTileCenterM = (float)(refXYZ.DistanceTo(RwTileCenterXYZ));
             float distanceFraction = (float)(distanceToTileCenterM / KoreWorldConsts.EarthRadiusM);
 
-            int maxMapLvl = 5; //KoreZeroNodeMapManager.CurrMaxMapLvl;
+            int maxMapLvl = 4; //KoreZeroNodeMapManager.CurrMaxMapLvl;
 
             //     if (KoreZeroNodeMapManager.DistanceToHorizonM < 10000) KoreZeroNodeMapManager.DistanceToHorizonM = 10000; // minimise value at 10km
 
@@ -200,7 +208,7 @@ public partial class KoreZeroNodeMapTile : Node3D
             bool displayChildTileEvent = shouldDisplayChildTiles && !ChildrenVisibleState;
             bool hideChildTileEvent = !shouldDisplayChildTiles && ChildrenVisibleState;
 
-            GD.Print($"UpdateVisbilityRules: {TileCode} // DistFrac:{distanceFraction:F3} // ChildDist:{(withinChildDisplayDistance?"In":"Out")} // Create:{(shouldCreateChildTiles?"Yes":"No")}");
+            //GD.Print($"UpdateVisbilityRules: {TileCode} // DistFrac:{distanceFraction:F3} // ChildDist:{(withinChildDisplayDistance?"In":"Out")} // Create:{(shouldCreateChildTiles?"Yes":"No")}");
 
 
 
