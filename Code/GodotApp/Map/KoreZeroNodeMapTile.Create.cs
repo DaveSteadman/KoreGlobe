@@ -110,7 +110,7 @@ public partial class KoreZeroNodeMapTile : Node3D
 
     private void BackgroundColorMesh()
     {
-        // if (Filepaths.MeshFileExists)
+        if (!Filepaths.MeshFileExists)
         {
             // create a color map
             int dummyAzCount = 60;
@@ -159,18 +159,18 @@ public partial class KoreZeroNodeMapTile : Node3D
             System.IO.File.WriteAllBytes(Filepaths.MeshFilepath, meshdata);
 
         }
-        // else
-        // {
+        else
+        {
 
-        //     // read the mesh from a binary file
-        //     byte[] meshdata = System.IO.File.ReadAllBytes(Filepaths.MeshFilepath);
-        //     TileColorMesh = KoreColorMeshIO.FromBytes(meshdata, KoreColorMeshIO.DataSize.AsDouble);
+            // read the mesh from a binary file
+            byte[] meshdata = System.IO.File.ReadAllBytes(Filepaths.MeshFilepath);
+            TileColorMesh = KoreColorMeshIO.FromBytes(meshdata, KoreColorMeshIO.DataSize.AsDouble);
 
-        //     // create the godot renderer for the color mesh
-        //     ColorMeshNode = new KoreColorMeshGodot();
-        //     ColorMeshNode.UpdateMeshBackground(TileColorMesh);
-        //     ColorMeshNode.Name = "LoadedTileExperiment";
-        // }
+            // create the godot renderer for the color mesh
+            ColorMeshNode = new KoreColorMeshGodot();
+            ColorMeshNode.UpdateMeshBackground(TileColorMesh);
+            ColorMeshNode.Name = "LoadedTileExperiment";
+        }
     }
 
     private void MainThreadColorMesh()
@@ -184,6 +184,8 @@ public partial class KoreZeroNodeMapTile : Node3D
 
             // Set the orientation here - tile should be tangent to Earth surface
             // OrientTileToEarthSurface();
+
+            LonDiff = RwTileCenterLLA.LonRads;
 
             if (ParentTile != null)
             {
@@ -202,11 +204,12 @@ public partial class KoreZeroNodeMapTile : Node3D
 
             }
 
-            else
-            {
-                LonDiff = 0;// RwTileCenterLLA.LonRads / 2;
-            }
-            ColorMeshNode.Rotation = new Vector3(0, (float)LonDiff, 0);
+            double lon = TileCode.LLBox.CenterPoint.LonRads;
+            ColorMeshNode.Rotation = new Vector3(0, (float)lon, 0);
+
+            //tile.Rotation = new Vector3(0, (float)lon, 0);
+
+
 
         }
     }

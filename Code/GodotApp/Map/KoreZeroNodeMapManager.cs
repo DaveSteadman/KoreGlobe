@@ -72,7 +72,7 @@ public partial class KoreZeroNodeMapManager : Node3D
             //i++;
             AddChild(tile);
             double lon = tile.TileCode.LLBox.CenterPoint.LonRads;
-            tile.Rotation = new Vector3(0, (float)lon, 0);
+            //tile.Rotation = new Vector3(0, (float)lon, 0);
 
             //if (i > 20) break;
         }
