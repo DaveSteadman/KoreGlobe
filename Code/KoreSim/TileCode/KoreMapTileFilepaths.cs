@@ -17,7 +17,7 @@ public class KoreMapTileFilepaths
     public string WebpFilepath   { get; set; }
     //public string WebpAnalysisFilepath     { get; set; }
 
-    public bool EleFileExists    { get; set; } = false;
+    public bool EleFileExists { get; set; } = false;
     public bool EleArrFileExists { get; set; } = false;
     public bool MeshFileExists   { get; set; } = false;
     public bool ImageFileExists  { get; set; } = false;

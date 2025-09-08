@@ -253,6 +253,8 @@ public static class KoreSkiaSharpBitmapOps
         }
     }
 
+    // returns an x,y array, with 0,0 being top-left
+
     public static KoreColorRGB[,] SampleBitmapColors(SKBitmap bitmap, int sampleWidth, int sampleHeight)
     {
         KoreColorRGB[,] colorGrid = new KoreColorRGB[sampleHeight, sampleWidth];
@@ -272,7 +274,7 @@ public static class KoreSkiaSharpBitmapOps
                 pixelY = Math.Min(pixelY, bitmap.Height - 1);
 
                 SKColor pixelColor = bitmap.GetPixel(pixelX, pixelY);
-                colorGrid[y, x] = new KoreColorRGB(pixelColor.Red, pixelColor.Green, pixelColor.Blue, pixelColor.Alpha);
+                colorGrid[x, y] = new KoreColorRGB(pixelColor.Red, pixelColor.Green, pixelColor.Blue, pixelColor.Alpha);
             }
         }
 

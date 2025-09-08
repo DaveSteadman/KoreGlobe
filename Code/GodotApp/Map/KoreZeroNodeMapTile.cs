@@ -69,6 +69,7 @@ public partial class KoreZeroNodeMapTile : Node3D
 
     public KoreColorMesh? TileColorMesh = null;
     public KoreColorRGB[,]? TileColormap = null;
+    public KoreColorMeshGodot? ColorMeshNode = null;
 
     // Godot Game Engine objects
     // private MeshInstance3D MeshInstance  = new();
@@ -202,7 +203,7 @@ public partial class KoreZeroNodeMapTile : Node3D
             {
                 // Increment the timer by a slightly random amount to avoid all the tiles updating at the same time
                 UIUpdateTimer = KoreCentralTime.RuntimeSecs + RandomLoopList.GetNext();
-                UpdateVisbilityRules();
+                CallDeferred(nameof(UpdateVisbilityRules));
             }
 
             // if (KoreAppRoot.Instance != null)

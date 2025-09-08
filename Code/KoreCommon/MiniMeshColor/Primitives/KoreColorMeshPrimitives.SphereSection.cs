@@ -96,15 +96,17 @@ public static partial class KoreColorMeshPrimitives
     {
         var mesh = new KoreColorMesh();
 
+
+        // get the array lengths
         int lonSegments = colormap.GetLength(1); // longitude segments (horizontal divisions)
         int latSegments = colormap.GetLength(0); // latitude segments (vertical divisions)
 
-        // rwCenter
+        // find the real-world center
         KoreLLPoint rwTileCenter = llBox.CenterPoint;
         KoreLLAPoint rwTileCenterLLA = new KoreLLAPoint() {
             LatDegs = rwTileCenter.LatDegs,
             LonDegs = rwTileCenter.LonDegs,
-            RadiusM = 3
+            RadiusM = radius
         };
 
         // Zero Lon Center - so we create a common tile, then rotate into position later
@@ -116,13 +118,16 @@ public static partial class KoreColorMeshPrimitives
         {
             LatDegs = rwTileCenterLLA.LatDegs,
             LonDegs = 0,
-            RadiusM = 3
+            RadiusM = radius
         };
         KoreXYZVector rwXYZZeroLonCenter = rwLLAZeroLonCenter.ToXYZ();
 
+        double boxWidthDegs = llBox.DeltaLonDegs;
+        double boxHalfWidthDegs = boxWidthDegs / 2.0;
+
         // Setup the loop control values
-        List<double> lonZeroListRads = KoreValueUtils.CreateRangeList(lonSegments, -llBox.HalfDeltaLonRads, llBox.HalfDeltaLonRads); // Relative azimuth - left to right (low to high longitude)
-        List<double> latListRads = KoreValueUtils.CreateRangeList(latSegments, llBox.MaxLatRads, llBox.MinLatRads); // Max to min +90 -> -90. Start at top of tile
+        // List<double> lonZeroListDegs = KoreValueUtils.CreateRangeList(lonSegments, -boxHalfWidthDegs, boxHalfWidthDegs); // Relative azimuth - left to right (low to high longitude)
+        // List<double> latListDegs = KoreValueUtils.CreateRangeList(latSegments, llBox.MaxLatDegs, llBox.MinLatDegs); // Max to min +90 -> -90. Start at top of tile
 
         // Create a simple double-list for the vertex IDs
         var vertexIdGrid = new List<List<int>>();
@@ -130,8 +135,8 @@ public static partial class KoreColorMeshPrimitives
 
 
 
-
-
+        double stepLonDegs = llBox.DeltaLonDegs / lonSegments;
+        double stepLatDegs = llBox.DeltaLatDegs / latSegments;
 
 
 
@@ -141,28 +146,36 @@ public static partial class KoreColorMeshPrimitives
             // flip the lat, to go from top to bottom
             int usedLat = lat;
 
-            double latDegs = llBox.MinLatDegs + (llBox.DeltaLatDegs * usedLat / latSegments);
-            float latFraction = (float)lat / latSegments;
+            double latDegs = llBox.MinLatDegs + (stepLatDegs * lat);
+            //latDegs = latListDegs[lat];
+            float latFraction = 1 - ((float)lat / latSegments);
 
             var latRow = new List<int>();
 
             for (int lon = 0; lon <= lonSegments; lon++)
             {
-                double lonDegs = llBox.MinLonDegs + (llBox.DeltaLonDegs * lon / lonSegments);
-                float lonFraction = (float)lon / lonSegments;
+                double lonDegs = -boxHalfWidthDegs + (stepLonDegs * lon);
 
-                //double ele = radius + tileEleData.InterpolatedValue(lonFraction, latFraction);
+                float lonFraction = 1 - (float)lon / lonSegments;
+
+                double eleAmplifier = 25;
+
+                // Get real-world radius with elevation
+                double realWorldRadiusWithElevation = KoreWorldConsts.EarthRadiusM + (eleAmplifier * tileEleData.InterpolatedValue(lonFraction, latFraction));
+
+                // Scale to game engine radius
+                double gameEngineRadius = (realWorldRadiusWithElevation / KoreWorldConsts.EarthRadiusM) * radius;
 
                 //GD.Print($"lat: {latDegs:F2}, lon: {lonDegs:F2}, rad: {radius:F2}, ele: {tileEleData.InterpolatedValue(lonFraction, latFraction)}");
 
-                KoreLLAPoint rwLLAPointPos = new KoreLLAPoint() { LatDegs = latDegs, LonDegs = lonDegs, RadiusM = 3 };
+                KoreLLAPoint rwLLAPointPos = new KoreLLAPoint() { LatDegs = latDegs, LonDegs = lonDegs, RadiusM = gameEngineRadius };
                 KoreXYZVector rwXYZPointPos = rwLLAPointPos.ToXYZ();
 
                 KoreXYZVector rwXYZCenterOffset = rwXYZZeroLonCenter.XYZTo(rwXYZPointPos);
 
                 // ---- convert from real-world to game engine ----
-                rwXYZPointPos = new KoreXYZVector(rwXYZPointPos.X, rwXYZPointPos.Y, -rwXYZPointPos.Z);
-                KoreXYZVector geVector = new KoreXYZVector(rwXYZPointPos.X, rwXYZPointPos.Y, -rwXYZPointPos.Z);
+                rwXYZPointPos = new KoreXYZVector(rwXYZCenterOffset.X, rwXYZCenterOffset.Y, rwXYZCenterOffset.Z);
+                KoreXYZVector geVector = new KoreXYZVector(rwXYZPointPos.X, rwXYZPointPos.Y, rwXYZPointPos.Z);
 
                 // KoreXYZVector vertex = rwXYZPointPos;
                 int vertexId = mesh.AddVertex(geVector);
@@ -172,11 +185,17 @@ public static partial class KoreColorMeshPrimitives
             vertexIdGrid.Add(latRow);
         }
 
+        // colormap is x,y 0,0 top left
+
         // Create triangles between all adjacent latitude rows
         for (int lat = 0; lat < latSegments; lat++)
         {
+            int yid = (latSegments - lat) % colormap.GetLength(1);
+
             for (int lon = 0; lon < lonSegments; lon++)
             {
+                int xid = (lonSegments - lon) % colormap.GetLength(0);
+
                 // Get the four vertices of the current quad
                 int v1 = vertexIdGrid[lat][lon];         // current lat, current lon
                 int v2 = vertexIdGrid[lat + 1][lon];     // next lat, current lon
@@ -184,7 +203,7 @@ public static partial class KoreColorMeshPrimitives
                 int v4 = vertexIdGrid[lat][lon + 1];     // current lat, next lon
 
                 // Use colormap coordinates
-                KoreColorRGB col = colormap[lat % colormap.GetLength(0), lon % colormap.GetLength(1)];
+                KoreColorRGB col = colormap[xid, yid];
 
                 // Add the quad as two triangles using AddFace helper
                 KoreColorMeshOps.AddFace(mesh, v1, v4, v3, v2, col);

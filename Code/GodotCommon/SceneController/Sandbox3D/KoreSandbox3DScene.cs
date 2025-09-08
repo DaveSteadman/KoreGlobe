@@ -708,6 +708,7 @@ public partial class KoreSandbox3DScene : Node3D
         }
 
         {
+
             KoreMapTileCode tileCode = new KoreMapTileCode("BH");
 
             KoreElevationTile? eleTile = KoreElevationTileIO.ReadFromTextFile("C:/Util/Data/GitRepos/KoreCommonTest/UnitTestArtefacts/Ele_BF_BF.arr");
