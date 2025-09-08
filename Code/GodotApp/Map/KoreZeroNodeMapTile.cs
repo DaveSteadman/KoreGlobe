@@ -71,6 +71,8 @@ public partial class KoreZeroNodeMapTile : Node3D
     public KoreColorRGB[,]? TileColormap = null;
     public KoreColorMeshGodot? ColorMeshNode = null;
 
+    public double LonDiff = 0;
+
     // Godot Game Engine objects
     // private MeshInstance3D MeshInstance  = new();
     // private KoreLineMesh3D  MeshInstanceW = new();

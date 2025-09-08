@@ -171,8 +171,6 @@ public partial class KoreZeroNodeMapTile : Node3D
         //     ColorMeshNode.UpdateMeshBackground(TileColorMesh);
         //     ColorMeshNode.Name = "LoadedTileExperiment";
         // }
-        
-
     }
 
     private void MainThreadColorMesh()
@@ -193,18 +191,22 @@ public partial class KoreZeroNodeMapTile : Node3D
                 // KoreZeroNodeMapTile rootTile = this;
                 // while (rootTile.ParentTile != null)
                 //     rootTile = rootTile.ParentTile;
-                
+
 
                 double thisLon = RwTileCenterLLA.LonRads;
-                double parentLon = ParentTile.RwTileCenterLLA.LonRads;
-                
+                double parentLon = ParentTile.LonDiff;
+
                 // Rotate relative to parent by the difference between this tile and parent
-                double relativeLonDiff = thisLon - parentLon;
+                LonDiff = thisLon - parentLon;
                 //relativeLonDiff -= 0.2;
-                
-                ColorMeshNode.Rotation = new Vector3(0, (float)relativeLonDiff, 0);
+
             }
 
+            else
+            {
+                LonDiff = 0;// RwTileCenterLLA.LonRads / 2;
+            }
+            ColorMeshNode.Rotation = new Vector3(0, (float)LonDiff, 0);
 
         }
     }
