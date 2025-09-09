@@ -30,17 +30,17 @@ public static partial class KoreColorMeshIO
             KoreXYZVector v = kvp.Value;
 
             bw.Write((int)vertexId);
-            if (dataSize == DataSize.AsFloat)
-            {
-                bw.Write((float)v.X);
-                bw.Write((float)v.Y);
-                bw.Write((float)v.Z);
-            }
-            else
+            if (dataSize == DataSize.AsDouble)
             {
                 bw.Write((double)v.X);
                 bw.Write((double)v.Y);
                 bw.Write((double)v.Z);
+            }
+            else
+            {
+                bw.Write((float)v.X);
+                bw.Write((float)v.Y);
+                bw.Write((float)v.Z);
             }
         }
 
@@ -51,7 +51,7 @@ public static partial class KoreColorMeshIO
             int triangleId = kvp.Key;
             KoreColorMeshTri t = kvp.Value;
             bw.Write((int)triangleId);
-            
+
             if (dataSize == DataSize.AsDouble)
             {
                 bw.Write((int)t.A);
