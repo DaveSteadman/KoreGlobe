@@ -32,7 +32,7 @@ public partial class KoreZeroNodeMapTile : Node3D
 
             if (ColorMeshNode != null)
                 ColorMeshNode.Visible = visible;
-                
+
         //     //GD.Print($"Setting visibility for {TileCode} to {visible}");
 
             //     bool showDebug = KoreGodotFactory.Instance.UIState.ShowTileInfo  && visible;
@@ -47,7 +47,7 @@ public partial class KoreZeroNodeMapTile : Node3D
             if (ColorMeshNode != null)
                 ColorMeshNode.Visible = false;
 
-            
+
             // if (MeshInstance != null) MeshInstance.Visible = false;
             // if (MeshInstanceW != null) MeshInstanceW.Visible = false;
             // if (TileCodeLabel != null) TileCodeLabel.Visible = false;
@@ -144,7 +144,7 @@ public partial class KoreZeroNodeMapTile : Node3D
                 // // Check if 'this' object is still valid
                 // if (this == null)
                 //     liveTile = false;
-                
+
             }
         }
         catch (Exception e)
@@ -178,7 +178,7 @@ public partial class KoreZeroNodeMapTile : Node3D
             float distanceToTileCenterM = (float)(refXYZ.DistanceTo(RwTileCenterXYZ));
             float distanceFraction = (float)(distanceToTileCenterM / KoreWorldConsts.EarthRadiusM);
 
-            int maxMapLvl = 4; //KoreZeroNodeMapManager.CurrMaxMapLvl;
+            int maxMapLvl = 3; //KoreZeroNodeMapManager.CurrMaxMapLvl;
 
             //     if (KoreZeroNodeMapManager.DistanceToHorizonM < 10000) KoreZeroNodeMapManager.DistanceToHorizonM = 10000; // minimise value at 10km
 
@@ -339,7 +339,7 @@ public partial class KoreZeroNodeMapTile : Node3D
         foreach (KoreMapTileCode currTileCode in childTileCodes)
         {
             string tileName = currTileCode.ToString();
-            
+
             // Check if the node already exists - prevent duplicates
             if (HasNode(tileName)) continue;
 

@@ -20,7 +20,7 @@ public static class KoreLLAPointOps
 
         double latDegs = fromPoint.LatDegs + (toPoint.LatDegs - fromPoint.LatDegs) * fraction;
         double lonDegs = fromPoint.LonDegs + (toPoint.LonDegs - fromPoint.LonDegs) * fraction;
-        double alt     = fromPoint.AltMslM + (toPoint.AltMslM - fromPoint.AltMslM) * fraction;
+        double alt = fromPoint.AltMslM + (toPoint.AltMslM - fromPoint.AltMslM) * fraction;
 
         return new KoreLLAPoint() { LatDegs = latDegs, LonDegs = lonDegs, AltMslM = alt };
     }
@@ -95,8 +95,8 @@ public static class KoreLLAPointOps
 
     public static KoreLLAPoint StraightLineInterpolation(KoreLLAPoint fromPoint, KoreLLAPoint toPoint, double fraction)
     {
-        KoreXYZVector fromXYZ   = fromPoint.ToXYZ();
-        KoreXYZVector toXYZ     = toPoint.ToXYZ();
+        KoreXYZVector fromXYZ = fromPoint.ToXYZ();
+        KoreXYZVector toXYZ = toPoint.ToXYZ();
         KoreXYZVector interpXYZ = KoreXYZVectorOps.Lerp(fromXYZ, toXYZ, fraction);
 
         return KoreLLAPoint.FromXYZ(interpXYZ);
@@ -151,12 +151,12 @@ public static class KoreLLAPointOps
         double lon = currentPos.LonRads;
 
         // Up  (surface normal, unit)
-        KoreXYZVector up    = new KoreXYZVector(Math.Cos(lat) * Math.Cos(lon),
+        KoreXYZVector up = new KoreXYZVector(Math.Cos(lat) * Math.Cos(lon),
                                                 Math.Sin(lat),
                                                 Math.Cos(lat) * Math.Sin(lon)).Normalize();
 
         // East (unit)
-        KoreXYZVector east  = new KoreXYZVector(-Math.Sin(lon),
+        KoreXYZVector east = new KoreXYZVector(-Math.Sin(lon),
                                                 0.0,
                                                 Math.Cos(lon)); // already unit
 
@@ -166,39 +166,39 @@ public static class KoreLLAPointOps
                                                 -Math.Sin(lat) * Math.Sin(lon)).Normalize();
 
         // Yaw-only forward on tangent plane
-        double yaw          = aim.AzRads;
+        double yaw = aim.AzRads;
         KoreXYZVector fFlat = (north * Math.Cos(yaw)) + (east * Math.Sin(yaw));
-        fFlat               = fFlat.Normalize();
+        fFlat = fFlat.Normalize();
 
         // Full forward with pitch (elevation relative to horizon)
-        double pitch        = aim.ElRads;
-        KoreXYZVector fwd   = (fFlat * Math.Cos(pitch)) + (up * Math.Sin(pitch));
-        fwd                 = fwd.Normalize();
+        double pitch = aim.ElRads;
+        KoreXYZVector fwd = (fFlat * Math.Cos(pitch)) + (up * Math.Sin(pitch));
+        fwd = fwd.Normalize();
 
         // Right (strafe) = fFlat � Up
         KoreXYZVector right = KoreXYZVector.CrossProduct(fFlat, up).Normalize();
 
         // Choose movement direction
-        KoreXYZVector dir   = direction switch
+        KoreXYZVector dir = direction switch
         {
-            MoveDirection.Forward  =>  fwd,
-            MoveDirection.Backward =>  fwd.Invert(),
-            MoveDirection.Left     =>  right.Invert(),
-            MoveDirection.Right    =>  right,
-            MoveDirection.Up       =>  up,
-            MoveDirection.Down     =>  up.Invert(),
-            _                      =>  KoreXYZVector.Zero
+            MoveDirection.Forward => fwd,
+            MoveDirection.Backward => fwd.Invert(),
+            MoveDirection.Left => right.Invert(),
+            MoveDirection.Right => right,
+            MoveDirection.Up => up,
+            MoveDirection.Down => up.Invert(),
+            _ => KoreXYZVector.Zero
         };
 
         // Step in XYZ
-        KoreXYZVector  currPt = currentPos.ToXYZ();
-        KoreXYZVector curr   = new KoreXYZVector(currPt);
-        KoreXYZVector step   = dir * distanceM;
-        KoreXYZVector moved  = curr + step;
+        KoreXYZVector currPt = currentPos.ToXYZ();
+        KoreXYZVector curr = new KoreXYZVector(currPt);
+        KoreXYZVector step = dir * distanceM;
+        KoreXYZVector moved = curr + step;
 
         // Keep radius for strafes (and F/B when pitch � 0) so you stay on the same altitude
         bool keepRadius =
-            direction == MoveDirection.Left  ||
+            direction == MoveDirection.Left ||
             direction == MoveDirection.Right ||
             ((direction == MoveDirection.Forward || direction == MoveDirection.Backward) && Math.Abs(pitch) < 1e-6);
 
@@ -206,10 +206,89 @@ public static class KoreLLAPointOps
             moved.Magnitude = currentPos.RadiusM;   // project back to original radius
 
         // Convert back to LLA
-        KoreXYZVector  newPt  = new KoreXYZVector(moved.X, moved.Y, moved.Z);
+        KoreXYZVector newPt = new KoreXYZVector(moved.X, moved.Y, moved.Z);
         return KoreLLAPoint.FromXYZ(newPt);
     }
 
+    // --------------------------------------------------------------------------------------------
+    // MARK: Projected Point
+    // --------------------------------------------------------------------------------------------
 
+    // Given an LLA point, and an aim az/el, what point on the surface (0 MSL, spherical earth) is being aimed at?
+
+    public static KoreLLAPoint ProjectedSurfacePoint(KoreLLAPoint fromPoint, KoreAzEl aim)
+    {
+        // --- Local frame at fromPoint (spherical Earth, matches ToXYZ basis) ---
+        double lat = fromPoint.LatRads;
+        double lon = fromPoint.LonRads;
+
+        // Up  (surface normal, unit)
+        KoreXYZVector up = new KoreXYZVector(Math.Cos(lat) * Math.Cos(lon),
+                                                Math.Sin(lat),
+                                                Math.Cos(lat) * Math.Sin(lon)).Normalize();
+
+        // East (unit)
+        KoreXYZVector east = new KoreXYZVector(-Math.Sin(lon),
+                                                0.0,
+                                                Math.Cos(lon)); // already unit
+
+        // North (unit)
+        KoreXYZVector north = new KoreXYZVector(-Math.Sin(lat) * Math.Cos(lon),
+                                                Math.Cos(lat),
+                                                -Math.Sin(lat) * Math.Sin(lon)).Normalize();
+
+        // Calculate aim direction vector
+        double yaw = aim.AzRads;
+        double pitch = aim.ElRads;
+
+        // Yaw-only forward on tangent plane
+        KoreXYZVector fFlat = (north * Math.Cos(yaw)) + (east * Math.Sin(yaw));
+        fFlat = fFlat.Normalize();
+
+        // Full forward with pitch (elevation relative to horizon)
+        KoreXYZVector aimDir = (fFlat * Math.Cos(pitch)) + (up * Math.Sin(pitch));
+        aimDir = aimDir.Normalize();
+
+        // Ray-sphere intersection: find where aim ray intersects Earth surface (radius = KoreWorldConsts.EarthRadiusM)
+        KoreXYZVector rayStart = fromPoint.ToXYZ();
+        KoreXYZVector rayDir = aimDir;
+        double sphereRadius = KoreWorldConsts.EarthRadiusM;
+
+        // Solve: |rayStart + t * rayDir|² = sphereRadius²
+        double a = rayDir.Magnitude * rayDir.Magnitude;
+        double b = 2.0 * KoreXYZVector.DotProduct(rayStart, rayDir);
+        double c = (rayStart.Magnitude * rayStart.Magnitude) - (sphereRadius * sphereRadius);
+
+        double discriminant = b * b - 4 * a * c;
+
+        if (discriminant < 0)
+        {
+            // No intersection (aiming away from Earth) - project forward by MSL altitude distance
+            double projectionDistance = Math.Min(fromPoint.AltMslM, 100000.0); // Cap at 100km
+            KoreXYZVector projectedPoint = rayStart + (rayDir * projectionDistance);
+            return KoreLLAPoint.FromXYZ(projectedPoint);
+        }
+
+        // Take the closer intersection point (smaller positive t)
+        double t1 = (-b - Math.Sqrt(discriminant)) / (2 * a);
+        double t2 = (-b + Math.Sqrt(discriminant)) / (2 * a);
+
+        // Choose the intersection point that's in front of the ray (positive t)
+        double t = (t1 > 0) ? t1 : t2;
+
+        if (t <= 0)
+        {
+            // No forward intersection - project forward by MSL altitude distance
+            double projectionDistance = Math.Min(fromPoint.AltMslM, 100000.0); // Cap at 100km
+            KoreXYZVector projectedPoint = rayStart + (rayDir * projectionDistance);
+            return KoreLLAPoint.FromXYZ(projectedPoint);
+        }
+
+        // Calculate intersection point
+        KoreXYZVector intersectionPoint = rayStart + (rayDir * t);
+
+        // Convert back to LLA
+        return KoreLLAPoint.FromXYZ(intersectionPoint);
+    }
 
 }
