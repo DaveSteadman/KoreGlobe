@@ -77,8 +77,11 @@ public partial class KoreColorMeshGodot : MeshInstance3D
         // Generate normals if they weren't provided (Needs to be on main thread)
         Mesh = _surfaceTool.Commit();
 
+        // Clear the SurfaceTool to free memory - no longer needed
+        _surfaceTool.Clear();
+
         // Apply material from mesh
-        MaterialOverride = KoreColorMeshGodotMaterialFactory.FromVertexColors(transparent: true);
+        MaterialOverride = KoreColorMeshGodotMaterialFactory.FromVertexColors(transparent: false);
 
         // Enable shadow casting for surface meshes
         CastShadow = GeometryInstance3D.ShadowCastingSetting.On;
@@ -128,19 +131,86 @@ public partial class KoreColorMeshGodot : MeshInstance3D
         }
     }
 
+    public void UpdateMeshBackground2(KoreColorMesh newMesh)
+    {
+        // GD.Print("Updating KoreColorMeshGodot");
+        Name = $"ColorMeshSurface";
+
+        _surfaceTool.Clear();
+        _surfaceTool.Begin(Mesh.PrimitiveType.Triangles);
+
+        // Dictionary to map mesh vertex ID to SurfaceTool vertex index
+        Dictionary<int, int> meshToSurfaceVertexMap = new Dictionary<int, int>();
+        int surfaceVertexIndex = 0;
+
+        // Loop through each vertex in turn, adding it and looking up its color.
+        foreach (var kvp in newMesh.Vertices)
+        {
+            int vId = kvp.Key;
+            KoreXYZVector currV = kvp.Value;
+
+            // Get the color for this vertex
+            KoreColorRGB color = KoreColorMeshOps.FirstColorForVertex(newMesh, vId);
+            Color godotCol = KoreConvColor.ToGodotColor(color);
+
+            // get and convert the point
+            Godot.Vector3 pV = XYZtoV3(currV);
+
+            // Add the vertex
+            _surfaceTool.SetColor(godotCol);
+            _surfaceTool.AddVertex(pV);
+
+            // Map the mesh vertex ID to our manually tracked surface index
+            meshToSurfaceVertexMap[vId] = surfaceVertexIndex;
+            surfaceVertexIndex++;
+        }
+
+        // Second pass: Add triangles using AddIndex
+        foreach (var kvp in newMesh.Triangles)
+        {
+            KoreColorMeshTri currTri = kvp.Value;
+
+            // Look up the SurfaceTool indices for this triangle's vertices
+            int indexA = meshToSurfaceVertexMap[currTri.A];
+            int indexB = meshToSurfaceVertexMap[currTri.B];
+            int indexC = meshToSurfaceVertexMap[currTri.C];
+
+            // Add triangle by referencing the vertex indices
+            _surfaceTool.AddIndex(indexA);
+            _surfaceTool.AddIndex(indexB);
+            _surfaceTool.AddIndex(indexC);
+        }
+
+        _surfaceTool.GenerateNormals();
+    }
+
+
+
+
+    // --------------------------------------------------------------------------------------------
+
     public void UpdateMeshMainThread()
     {
         // Generate normals if they weren't provided (Needs to be on main thread)
         Mesh = _surfaceTool.Commit();
 
         // Apply material from mesh
-        MaterialOverride = KoreColorMeshGodotMaterialFactory.FromVertexColors(transparent: true);
+        MaterialOverride = KoreColorMeshGodotMaterialFactory.FromVertexColors(transparent: false);
 
         // Enable shadow casting for surface meshes
         CastShadow = GeometryInstance3D.ShadowCastingSetting.On;
 
         _meshNeedsUpdate = false;
     }
+
+    // --------------------------------------------------------------------------------------------
+
+    public void PostCreateTidyUp()
+    {
+        // Clear the SurfaceTool to free memory - no longer needed
+        _surfaceTool.Clear();
+    }
+    
 }
 
 

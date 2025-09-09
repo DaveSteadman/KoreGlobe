@@ -127,15 +127,15 @@ public partial class KoreZeroNodeMapTile : Node3D
 
 
 
-                // GloZeroTileVisibilityStats newStats = new GloZeroTileVisibilityStats();
+                KoreZeroTileVisibilityStats newStats = new KoreZeroTileVisibilityStats();
 
-                // if ((ActiveVisibility) && (ConstructionComplete))
-                // {
-                //     newStats.distanceToTileCenterM = (float)(KoreZeroNodeMapManager.LoadRefXYZ.DistanceTo(RwTileCenterXYZ));
-                //     newStats.distanceFraction      = (float)(newStats.distanceToTileCenterM / GloWorldConsts.EarthRadiusM);
+                if ((ActiveVisibility) && (ConstructionComplete))
+                {
+                    newStats.distanceToTileCenterM = (float)(KoreZeroNodeMapManager.LoadRefXYZ.DistanceTo(RwTileCenterXYZ));
+                    newStats.distanceFraction      = (float)(newStats.distanceToTileCenterM / KoreWorldConsts.EarthRadiusM);
 
-                //     TileVisibilityStats.LatestValue = newStats;
-                // }
+                    TileVisibilityStats.LatestValue = newStats;
+                }
 
                 // // Yield and delay for the next cycle
                 await Task.Yield();
@@ -171,14 +171,14 @@ public partial class KoreZeroNodeMapTile : Node3D
             // Get the camera LLA
             KoreLLAPoint camLla = KoreZeroNodeMapManager.LoadRefLLA;
             if (KoreGodotMainSceneFactory.WorldCameraMount != null)
-                camLla = KoreGodotMainSceneFactory.WorldCameraMount.CurrLLA;
+                camLla = KoreGodotMainSceneFactory.WorldCameraMount.CurrAimLLA;
 
             KoreXYZVector refXYZ = camLla.ToXYZ();
 
             float distanceToTileCenterM = (float)(refXYZ.DistanceTo(RwTileCenterXYZ));
             float distanceFraction = (float)(distanceToTileCenterM / KoreWorldConsts.EarthRadiusM);
 
-            int maxMapLvl = 3; //KoreZeroNodeMapManager.CurrMaxMapLvl;
+            int maxMapLvl = 5; //KoreZeroNodeMapManager.CurrMaxMapLvl;
 
             //     if (KoreZeroNodeMapManager.DistanceToHorizonM < 10000) KoreZeroNodeMapManager.DistanceToHorizonM = 10000; // minimise value at 10km
 
@@ -197,9 +197,10 @@ public partial class KoreZeroNodeMapTile : Node3D
 
             bool childTilesExist = DoChildTilesExist();
             bool childTilesLoaded = AreChildTilesLoaded();
+            bool childDataExists = ChildTileDataAvailable;
 
             bool shouldDisplaySelf = true; //(!tileOverHorizon) || (tileInMinViewDistance);
-            bool shouldCreateChildTiles = withinChildCreateDistance && ConstructionComplete && !childTilesExist && (TileCode.MapLvl < maxMapLvl);
+            bool shouldCreateChildTiles = withinChildCreateDistance && ConstructionComplete && !childTilesExist && (TileCode.MapLvl < maxMapLvl) && childDataExists;
             bool shouldDisplayChildTiles = withinChildDisplayDistance && childTilesLoaded;
             bool shouldDeleteChildTiles = childTilesLoaded && (beyondChildDeleteDistance || childTileBeyondMaxLvl);
 

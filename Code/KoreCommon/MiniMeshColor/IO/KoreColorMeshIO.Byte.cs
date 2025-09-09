@@ -51,9 +51,19 @@ public static partial class KoreColorMeshIO
             int triangleId = kvp.Key;
             KoreColorMeshTri t = kvp.Value;
             bw.Write((int)triangleId);
-            bw.Write((int)t.A);
-            bw.Write((int)t.B);
-            bw.Write((int)t.C);
+            
+            if (dataSize == DataSize.AsDouble)
+            {
+                bw.Write((int)t.A);
+                bw.Write((int)t.B);
+                bw.Write((int)t.C);
+            }
+            else
+            {
+                bw.Write((short)t.A);
+                bw.Write((short)t.B);
+                bw.Write((short)t.C);
+            }
             WriteColor(bw, t.Color);
         }
 
@@ -99,9 +109,20 @@ public static partial class KoreColorMeshIO
         for (int i = 0; i < tCount; i++)
         {
             int triangleId = br.ReadInt32();
-            int a = br.ReadInt32();
-            int b = br.ReadInt32();
-            int c = br.ReadInt32();
+
+            int a, b, c;
+            if (dataSize == DataSize.AsDouble)
+            {
+                a = br.ReadInt32();
+                b = br.ReadInt32();
+                c = br.ReadInt32();
+            }
+            else
+            {
+                a = br.ReadInt16();
+                b = br.ReadInt16();
+                c = br.ReadInt16();
+            }
             KoreColorRGB col = ReadColor(br);
             mesh.Triangles[triangleId] = new KoreColorMeshTri(a, b, c, col);
         }

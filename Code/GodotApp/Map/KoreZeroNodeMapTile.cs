@@ -38,7 +38,7 @@ public partial class KoreZeroNodeMapTile : Node3D
     // Tile Code and tile centre positions - Setup early in tile creation and then fixed.
     public  KoreMapTileCode  TileCode        = KoreMapTileCode.Zero;
     private KoreLLAPoint     RwTileCenterLLA = KoreLLAPoint.Zero; // Shortcut from the tilecode center
-    private KoreXYZVector     RwTileCenterXYZ = KoreXYZVector.Zero; // Shortcut from the tilecode center
+    private KoreXYZVector    RwTileCenterXYZ = KoreXYZVector.Zero; // Shortcut from the tilecode center
     private KoreLLBox        RwTileLLBox     = KoreLLBox.Zero; // Shortcut from the tilecode center
 
     // Parent/child tiles relationships
@@ -50,8 +50,8 @@ public partial class KoreZeroNodeMapTile : Node3D
 
     // Real world elevation data, defining the tile's geometry
     public KoreNumeric2DArray<float> TileEleData  = new KoreNumeric2DArray<float>();
-    private KoreXYZVector[,] v3Data;
-    private KoreXYZVector[,] v3DataBottom;
+    // private KoreXYZVector[,] v3Data;
+    // private KoreXYZVector[,] v3DataBottom;
 
     // UV Box - Child accessible values
     public KoreNumericRange<float> UVx   = KoreNumericRange<float>.ZeroToOne;
@@ -59,16 +59,16 @@ public partial class KoreZeroNodeMapTile : Node3D
     public KoreUVBoxDropEdgeTile   UVBox = KoreUVBoxDropEdgeTile.FullImage();
 
     // Materials and Meshes
-    private ArrayMesh           TileMeshData;
-    private Color               WireColor;
-    public  StandardMaterial3D? TileMaterial = null;
-    private Vector3             TileLabelOffset;
-    private Vector3             TileLabelOffsetN;
-    private Vector3             TileLabelOffsetBelow;
-    public  bool                TileOwnsTexture = false;
+    // private ArrayMesh           TileMeshData;
+    // private Color               WireColor;
+    // public  StandardMaterial3D? TileMaterial = null;
+    // private Vector3             TileLabelOffset;
+    // private Vector3             TileLabelOffsetN;
+    // private Vector3             TileLabelOffsetBelow;
+    // public  bool                TileOwnsTexture = false;
 
     public KoreColorMesh? TileColorMesh = null;
-    public KoreColorRGB[,]? TileColormap = null;
+    // public KoreColorRGB[,]? TileColormap = null;
     public KoreColorMeshGodot? ColorMeshNode = null;
 
     public double LonDiff = 0;
@@ -77,7 +77,7 @@ public partial class KoreZeroNodeMapTile : Node3D
     // private MeshInstance3D MeshInstance  = new();
     // private KoreLineMesh3D  MeshInstanceW = new();
 
-    private KoreMeshData TileMesh = new();
+    // private KoreMeshData TileMesh = new();
 
     private Label3D TileCodeLabel;
     private List<Node3D> GEElements = new List<Node3D>();
@@ -147,7 +147,7 @@ public partial class KoreZeroNodeMapTile : Node3D
 
         // Fire off the fully background task of creating/loading the tile elements asap.
         Task.Run(() => BackgroundTileCreation(tileCode));
-        //Task.Run(() => DetermineChildTileAvailability(tileCode));
+        Task.Run(() => DetermineChildTileAvailability(tileCode));
     }
 
     // --------------------------------------------------------------------------------------------
@@ -161,7 +161,6 @@ public partial class KoreZeroNodeMapTile : Node3D
 
         TileVisibilityStats.LatestValue = new KoreZeroTileVisibilityStats();
         Task.Run(() => BackgroundProcessing());
-
 
         // KoreColorMesh colorMesh = KoreColorMeshPrimitives.Tile(TileCode, tileEleData, colormap);
         // //KoreColorMesh colorMesh = KoreColorMeshPrimitives.BasicSphere(KoreXYZVector.Zero, 1f, colormap);
@@ -187,7 +186,7 @@ public partial class KoreZeroNodeMapTile : Node3D
             if (BackgroundConstructionComplete)
             {
                 // GD.Print($"Tile: {TileCode} - Construction Stage: {ConstructionStage}");
-                MainThreadFinalizeCreation();
+                CallDeferred(nameof(MainThreadFinalizeCreation));
                 return;
             }
         }
@@ -207,34 +206,6 @@ public partial class KoreZeroNodeMapTile : Node3D
                 UIUpdateTimer = KoreCentralTime.RuntimeSecs + RandomLoopList.GetNext();
                 CallDeferred(nameof(UpdateVisbilityRules));
             }
-
-            // if (KoreAppRoot.Instance != null)
-            // {
-            //     CanvasLayer? bboxLayer = KoreAppRoot.GetBBoxCanvasLayer();
-
-            //     if (bboxLayer != null)
-            //     {
-            //         if (TileScreenBBox == null)
-            //         {
-            //             TileScreenBBox = new KoreGodot2DBox();
-            //             bboxLayer.AddChild(TileScreenBBox);
-
-            //             TileScreenBBox.ScreenRect = TileScreenRect;
-            //             TileScreenBBox.IsValid = false;
-            //             TileScreenBBox.LineColor = new Color(1, 0, 0, 1); // Red color
-            //             TileScreenBBox.LineWidth = 2.0f;
-            //             TileScreenBBox.Filled = false;
-            //             TileScreenBBox.InvalidateDeferred();
-            //         }
-
-            //         if (ValidScreenRect)
-            //         {
-            //             TileScreenBBox.ScreenRect = TileScreenRect;
-            //             TileScreenBBox.IsValid = true;
-            //         }
-            //     }
-            // }
-
         }
     }
 
@@ -242,45 +213,34 @@ public partial class KoreZeroNodeMapTile : Node3D
 
     public override void _ExitTree()
     {
-        // Free the material and its texture if the tile owns it
-        if (TileMaterial != null)
+        // Clear large data arrays immediately
+        // TileColormap = null;
+        TileEleData = new KoreNumeric2DArray<float>(); // Reset to empty
+        TileColorMesh = null;
+        
+        // Aggressively clear child collections
+        foreach (var child in ChildTiles)
         {
-            if (TileOwnsTexture && TileMaterial.AlbedoTexture != null)
-            {
-                TileMaterial.AlbedoTexture.Dispose();
-                TileMaterial.AlbedoTexture = null;
-
-                TileMaterial.Dispose();
-                TileMaterial = null;
-            }
+            child?.QueueFree();
         }
-
-        // Free the mesh data
-        if (TileOwnsTexture && TileMeshData != null)
+        ChildTiles.Clear();
+        
+        foreach (var element in GEElements)
         {
-            TileMeshData.Dispose();
+            element?.QueueFree();
         }
-        TileMeshData = null;
-
-        // Free any other GPU resources
-        // if (TileMesh != null)
-        // {
-        //     TileMesh.QueueFree();
-        //     MeshInstance = null;
-        // }
-
-        // if (MeshInstanceW != null)
-        // {
-        //     MeshInstanceW.QueueFree();
-        //     MeshInstanceW = null;
-        // }
-
-        if (TileCodeLabel != null)
-        {
-            TileCodeLabel.QueueFree();
-            TileCodeLabel = null;
-        }
-
+        GEElements.Clear();
+        
+        // Free Godot nodes
+        ColorMeshNode?.QueueFree();
+        ColorMeshNode = null;
+        
+        TileCodeLabel?.QueueFree();
+        TileCodeLabel = null;
+        
+        // Force immediate cleanup
+        GC.Collect(0, GCCollectionMode.Optimized);
+        
         base._ExitTree();
     }
 
@@ -288,7 +248,13 @@ public partial class KoreZeroNodeMapTile : Node3D
     // MARK: Action Counter
     // --------------------------------------------------------------------------------------------
 
-    public bool GrabbedActionCounter() => KoreGodotFactory.Instance.ZeroNodeMapManager.ActionCounter.TryConsume();
+    public bool GrabbedActionCounter()
+    {
+        // if (KoreGodotFactory.Instance == null) return false;
+        // if (KoreGodotFactory.Instance.ZeroNodeMapManager == null) return false;
+        
+        return KoreZeroNodeMapManager.ActionCounter.TryConsume();
+    }
 
     // --------------------------------------------------------------------------------------------
     // MARK: Child Tiles
@@ -338,5 +304,3 @@ public partial class KoreZeroNodeMapTile : Node3D
     }
 
 }
-
-

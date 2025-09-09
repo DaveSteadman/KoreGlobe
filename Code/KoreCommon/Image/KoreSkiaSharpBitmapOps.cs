@@ -204,6 +204,35 @@ public static class KoreSkiaSharpBitmapOps
         return result;
     }
 
+    // --------------------------------------------------------------------------------------------
+
+    // Using fractions (like from a calculated map tile subsection) chop a new section out of an image.
+    // 0,0 is top-left, 1,1 is bottom-right
+    // Usage: KoreSkiaSharpBitmapOps.BitmapSubsection(SKBitmap, float, float, float, float)
+
+    public static SKBitmap BitmapSubsection(SKBitmap bitmap, float minFracX, float minFracY, float maxFracX, float maxFracY)
+    {
+        // Validate input fractions
+        if (minFracX < 0 || minFracX > 1 || minFracY < 0 || minFracY > 1 ||
+            maxFracX < 0 || maxFracX > 1 || maxFracY < 0 || maxFracY > 1 ||
+            minFracX >= maxFracX || minFracY >= maxFracY)
+        {
+            throw new ArgumentException("Fraction values must be between 0 and 1 and min values must be less than max values.");
+        }
+
+        int startX = (int)(minFracX * bitmap.Width);
+        int startY = (int)(minFracY * bitmap.Height);
+        int width = (int)((maxFracX - minFracX) * bitmap.Width);
+        int height = (int)((maxFracY - minFracY) * bitmap.Height);
+
+        SKBitmap subsection = new SKBitmap(width, height);
+        using (SKCanvas canvas = new SKCanvas(subsection))
+        {
+            canvas.DrawBitmap(bitmap, new SKRect(startX, startY, startX + width, startY + height), new SKRect(0, 0, width, height));
+        }
+
+        return subsection;
+    }
 
     // --------------------------------------------------------------------------------------------
     // MARK: Color List

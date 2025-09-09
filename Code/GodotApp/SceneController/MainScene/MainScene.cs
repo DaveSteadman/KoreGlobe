@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Runtime;
 
 using KoreCommon;
 using KoreSim;
@@ -121,7 +122,45 @@ public partial class MainScene : Node3D
             string cameraString = KoreGodotMainSceneFactory.WorldCameraMount?.GetMoverString() ?? string.Empty;
             KoreSimFactory.Instance.KoreConfig.Set("CameraPosition", cameraString);
             KoreSimFactory.Instance.SaveConfig();
+
+
+            AggressiveMemoryCleanup();
+            
+            // Force immediate garbage collection
+            // GC.Collect();
+            // GC.WaitForPendingFinalizers();
+            // GC.Collect(); // Second pass to clean up finalizer queue
+
+            // Force compaction of the heap
+            // GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
+            // GC.Collect();
+
+
         }
+    }
+
+    private void AggressiveMemoryCleanup()
+    {
+        // 1. Clean up Godot resources first
+        GetTree().CallGroup("nodes", "queue_free"); // Better approach for Godot 4
+
+        // 2. Force cleanup of any queued-for-deletion nodes
+        //SceneTree.CurrentScene?.PropagateCall("queue_free");
+
+        // 3. Multiple C# GC passes
+        for (int i = 0; i < 3; i++)
+        {
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+        }
+
+        // 4. Compact the heap
+        GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
+        GC.Collect();
+
+        // 5. Log memory usage
+        long memoryAfter = GC.GetTotalMemory(false);
+        GD.Print($"Memory after aggressive cleanup: {memoryAfter / 1024 / 1024}MB");
     }
 
     // // ---------------------------------------------------------------------------------------------

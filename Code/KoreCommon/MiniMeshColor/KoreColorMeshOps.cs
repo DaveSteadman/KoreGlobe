@@ -14,6 +14,18 @@ public static partial class KoreColorMeshOps
     // MARK: Vertices
     // --------------------------------------------------------------------------------------------
 
+    // Usage: KoreColorRGB color = KoreColorMeshOps.FirstColorForVertex(mesh, vertexId);
+
+    public static KoreColorRGB FirstColorForVertex(KoreColorMesh mesh, int vertexId)
+    {
+        foreach (var tri in mesh.Triangles.Values)
+        {
+            if (tri.A == vertexId || tri.B == vertexId || tri.C == vertexId)
+                return tri.Color;
+        }
+
+        return KoreColorRGB.White; // Default color if no triangles found
+    }
 
     // --------------------------------------------------------------------------------------------
     // MARK: Normals

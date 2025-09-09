@@ -22,7 +22,7 @@ public static class KoreColorMeshGodotMaterialFactory
         StandardMaterial3D material = new StandardMaterial3D();
         material.AlbedoColor = new Color(1, 1, 1, 1); // White base
         material.VertexColorUseAsAlbedo = true;
-        material.Roughness = 0.7f;
+        material.Roughness = 0.8f;
         material.Metallic = 0.0f;
 
         // Handle transparency

@@ -98,6 +98,26 @@ public partial class KoreZeroNodeMapTile : Node3D
 
             // GD.Print($"Ending Create: {tileCode}");
             BackgroundConstructionComplete = true;
+
+
+            // Loop until the main construction is complete, and then tidy up.
+
+            while (!ConstructionComplete)
+            {
+                await Task.Delay(100);
+            }
+
+            if (ColorMeshNode != null)
+                ColorMeshNode.PostCreateTidyUp();
+
+            // TileColormap = null; // free up memory
+            TileColorMesh = null;  // free up memory                
+            TileEleData = new KoreNumeric2DArray<float>(3, 3); // free up memory
+
+            Filepaths.Init();
+            
+            // Clear any temporary objects
+            GC.Collect(0, GCCollectionMode.Optimized);
         }
         catch (Exception ex)
         {
@@ -116,19 +136,21 @@ public partial class KoreZeroNodeMapTile : Node3D
             int dummyAzCount = 60;
             int dummyElCount = 60;
 
-            TileColormap = new KoreColorRGB[dummyAzCount, dummyElCount];
-            for (int i = 0; i < dummyAzCount; i++)
-                for (int j = 0; j < dummyElCount; j++)
-                    TileColormap[i, j] = KoreColorOps.ColorWithRGBNoise(KoreColorPalette.Colors["DarkGreen"], 0.5f);
+            // TileColormap = new KoreColorRGB[dummyAzCount, dummyElCount];
+            // for (int i = 0; i < dummyAzCount; i++)
+            //     for (int j = 0; j < dummyElCount; j++)
+            //         TileColormap[i, j] = KoreColorOps.ColorWithRGBNoise(KoreColorPalette.Colors["DarkGreen"], 0.5f);
 
-            if (Filepaths.WebpFileExists)
-            {
-                using (SKBitmap image = KoreSkiaSharpBitmapOps.LoadBitmap(Filepaths.WebpFilepath))
-                {
-                    TileColormap = KoreSkiaSharpBitmapOps.SampleBitmapColors(image, dummyAzCount, dummyElCount);
-                    // GD.Print($"Sampled colormap from image for tile {TileCode} // {Filepaths.WebpFilepath}");
-                }
-            }
+            // if (Filepaths.WebpFileExists)
+            // {
+            //     using (SKBitmap image = KoreSkiaSharpBitmapOps.LoadBitmap(Filepaths.WebpFilepath))
+            //     {
+            //         TileColormap = KoreSkiaSharpBitmapOps.SampleBitmapColors(image, dummyAzCount, dummyElCount);
+            //         // GD.Print($"Sampled colormap from image for tile {TileCode} // {Filepaths.WebpFilepath}");
+            //     }
+            // }
+
+            KoreColorRGB[,] colorMap = TileImage(dummyAzCount, dummyElCount);
 
             if (Filepaths.EleArrFileExists)
             {
@@ -145,32 +167,30 @@ public partial class KoreZeroNodeMapTile : Node3D
             TileColorMesh = KoreColorMeshPrimitives.CenteredSphereSection(
                     llBox: RwTileLLBox,
                     radius: KoreZeroOffset.GeEarthRadius,//(float)KoreWorldConsts.EarthRadiusM,
-                    colormap: TileColormap,
+                    colormap: colorMap,
                     tileEleData: TileEleData);
 
 
             // create the godot renderer for the color mesh
-            ColorMeshNode = new KoreColorMeshGodot();
+            ColorMeshNode = new KoreColorMeshGodot() { Visible = false, Name = "ColorMeshNode" };
             ColorMeshNode.UpdateMeshBackground(TileColorMesh);
-            ColorMeshNode.Name = "TileExperiment";
 
             // serialise the mesh to a binary file
-            byte[] meshdata = KoreColorMeshIO.ToBytes(TileColorMesh, KoreColorMeshIO.DataSize.AsDouble);
+            byte[] meshdata = KoreColorMeshIO.ToBytes(TileColorMesh, KoreColorMeshIO.DataSize.AsFloat);
             System.IO.File.WriteAllBytes(Filepaths.MeshFilepath, meshdata);
-
         }
         else
         {
-
             // read the mesh from a binary file
             byte[] meshdata = System.IO.File.ReadAllBytes(Filepaths.MeshFilepath);
-            TileColorMesh = KoreColorMeshIO.FromBytes(meshdata, KoreColorMeshIO.DataSize.AsDouble);
+            TileColorMesh = KoreColorMeshIO.FromBytes(meshdata, KoreColorMeshIO.DataSize.AsFloat);
 
             // create the godot renderer for the color mesh
             ColorMeshNode = new KoreColorMeshGodot();
             ColorMeshNode.UpdateMeshBackground(TileColorMesh);
             ColorMeshNode.Name = "LoadedTileExperiment";
         }
+
     }
 
     private void MainThreadColorMesh()
@@ -231,12 +251,12 @@ public partial class KoreZeroNodeMapTile : Node3D
         switch (ConstructionStage)
         {
             case 0:
-                //if (GrabbedActionCounter())
-                //{
-                // CreateMeshTileSurfacePoints();
-                ConstructionStage = 1;
-                //}
-                MainThreadColorMesh();
+                if (GrabbedActionCounter())
+                {
+                    // CreateMeshTileSurfacePoints();
+                    ConstructionStage = 1;
+                    MainThreadColorMesh();
+                }
 
                 // start a timer
                 // float startTime = KoreCentralTime.RuntimeSecs;
@@ -279,55 +299,6 @@ public partial class KoreZeroNodeMapTile : Node3D
         AddChild(sphereInstance);
 
         GEElements.Add(sphereInstance);
-    }
-
-    // --------------------------------------------------------------------------------------------
-    // MARK: Image
-    // --------------------------------------------------------------------------------------------
-
-    // We either load an image for this tile, or take the parent tile material (or a default material on error).
-
-    private void SourceTileImage()
-    {
-        //KoreTextureLoader? TL = KoreTextureLoader.Instance;
-
-        // Load the image if we have it, or take the parent file if it exists, or leave the image blank.
-        if (Filepaths.WebpFileExists)
-        {
-            TileMaterial = KoreGodotImageOps.LoadMaterial2(Filepaths.WebpFilepath);
-            UVBox        = KoreUVBoxDropEdgeTile.FullImage();
-            TileOwnsTexture = true; // We own the texture, so we can delete it when done.
-        }
-        else if (Filepaths.ImageFileExists)
-        {
-            // Convert the image (typically from an import operation).
-            KoreWebpConverter.CompressPNGtoWEBP(Filepaths.ImageFilepath, Filepaths.WebpFilepath);
-
-            // repeat the Webp import process
-            TileMaterial = KoreGodotImageOps.LoadMaterial2(Filepaths.WebpFilepath);
-            UVBox        = KoreUVBoxDropEdgeTile.FullImage();
-            TileOwnsTexture = true; // We own the texture, so we can delete it when done.
-        }
-        else if (ParentTile != null)
-        {
-            TileMaterial = ParentTile!.TileMaterial;
-
-            // Setup the UV Box - Sourced from the parent (which may already be subsampled), we subsample for this tile's range
-            UVBox = new KoreUVBoxDropEdgeTile(ParentTile!.UVBox, TileCode.GridPos);
-        }
-
-        // If we still don't have the image, we'll setup a default Material and UVBox.
-        if (TileMaterial == null)
-        {
-            TileMaterial = KoreGodotMaterialFactory.SimpleColoredMaterial(new Color(1.0f, 0.0f, 1.0f, 1.0f));
-            UVBox        = KoreUVBoxDropEdgeTile.FullImage();
-        }
-
-        // GD.Print($"TileCode: {TileCode} // UVBox: {UVBox.TopLeft} {UVBox.BottomRight}");
-
-        // Turn the UVBox into a UV Ranges
-        UVx = UVBox.UVRangeX;
-        UVy = UVBox.UVRangeY;
     }
 
 

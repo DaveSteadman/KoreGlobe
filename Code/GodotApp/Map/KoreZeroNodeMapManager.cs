@@ -24,7 +24,7 @@ public partial class KoreZeroNodeMapManager : Node3D
     public static float DistanceToHorizonM = 0;
 
     // Tile Action counter - Sets up a number of tile creation actions to be performed per _Process call.
-    public KoreActionCounter ActionCounter = new(10);
+    public static KoreActionCounter ActionCounter = new(10);
 
     // lvl0 tile list
     private List<KoreZeroNodeMapTile> Lvl0Tiles = new List<KoreZeroNodeMapTile>();
@@ -116,7 +116,7 @@ public partial class KoreZeroNodeMapManager : Node3D
     // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(double delta)
     {
-        ActionCounter.Refresh(5); // Tile create actions per update cycle (frame)
+        ActionCounter.Refresh(2); // Tile create actions per update cycle (frame)
 
         // If we have a timer, increment it
         if (currTimer < KoreCentralTime.RuntimeSecs)

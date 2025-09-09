@@ -23,6 +23,9 @@ public partial class KoreWorldMoverNode2 : Node3D
     public KoreLLAPoint CurrLLA = new KoreLLAPoint() { LatDegs = 50, LonDegs = 0, AltMslM = 3000 };
     public KoreAzEl CurrAim = KoreAzEl.Zero; // Az: yaw (0=north, +east), El: pitch (0=horizon,+up)
 
+    public KoreLLAPoint CurrAimLLA = new KoreLLAPoint() { LatDegs = 50, LonDegs = 0, AltMslM = 3000 };
+
+
     // Input state
     private bool _isRightMouseDown = false;
     private bool _isMiddleMouseDown = false;
@@ -39,7 +42,7 @@ public partial class KoreWorldMoverNode2 : Node3D
         Input.MouseMode = Input.MouseModeEnum.Visible;
         UpdateTransformFromLLAAndAim();
 
-        MouseDragSpeedToAlt.Add(0.0, 50);
+        MouseDragSpeedToAlt.Add(0.0, 5);
         MouseDragSpeedToAlt.Add(100000, 5000);
 
         MouseWheelSpeedToAlt.Add(0.0, 500);
@@ -62,6 +65,9 @@ public partial class KoreWorldMoverNode2 : Node3D
 
         // Keep transform in sync with CurrLLA/CurrAim
         UpdateTransformFromLLAAndAim();
+        
+        // Update a position on the ground where the camera is looking
+        UpdateProjectedGroundPoint();
     }
 
     // --------------------------------------------------------------------------------------------
@@ -273,6 +279,18 @@ public partial class KoreWorldMoverNode2 : Node3D
         Basis basis = new Basis(right, -upOrtho, -fwd).Orthonormalized();
 
         GlobalTransform = new Transform3D(basis, v3Pos);
+    }
+
+    // --------------------------------------------------------------------------------------------
+
+    private void UpdateProjectedGroundPoint()
+    {
+        double offsetRange = CurrLLA.AltMslM;
+        if (offsetRange < 1.0) offsetRange = 1.0;
+        if (offsetRange > 100_000) offsetRange = 100_000;
+        KoreRangeBearing offset = new KoreRangeBearing() { BearingRads = CurrAim.AzRads, RangeM =  offsetRange};
+
+        CurrAimLLA = CurrLLA.PlusRangeBearing(offset);
     }
 
     // --------------------------------------------------------------------------------------------

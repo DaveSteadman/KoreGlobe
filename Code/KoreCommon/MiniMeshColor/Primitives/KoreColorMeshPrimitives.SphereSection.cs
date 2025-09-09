@@ -146,9 +146,9 @@ public static partial class KoreColorMeshPrimitives
             // flip the lat, to go from top to bottom
             int usedLat = lat;
 
-            double latDegs = llBox.MinLatDegs + (stepLatDegs * lat);
+            double latDegs = llBox.MaxLatDegs - (stepLatDegs * lat); 
             //latDegs = latListDegs[lat];
-            float latFraction = 1 - ((float)lat / latSegments);
+            float latFraction =  ((float)lat / latSegments);
 
             var latRow = new List<int>();
 
@@ -156,9 +156,9 @@ public static partial class KoreColorMeshPrimitives
             {
                 double lonDegs = -boxHalfWidthDegs + (stepLonDegs * lon);
 
-                float lonFraction = 1 - (float)lon / lonSegments;
+                float lonFraction =  (float)lon / lonSegments;
 
-                double eleAmplifier = 2;
+                double eleAmplifier = 1;
 
                 // Get real-world radius with elevation
                 double realWorldRadiusWithElevation = KoreWorldConsts.EarthRadiusM + (eleAmplifier * tileEleData.InterpolatedValue(lonFraction, latFraction));
@@ -175,7 +175,7 @@ public static partial class KoreColorMeshPrimitives
 
                 // ---- convert from real-world to game engine ----
                 rwXYZPointPos = new KoreXYZVector(rwXYZCenterOffset.X, rwXYZCenterOffset.Y, rwXYZCenterOffset.Z);
-                KoreXYZVector geVector = new KoreXYZVector(rwXYZPointPos.X, rwXYZPointPos.Y, rwXYZPointPos.Z);
+                KoreXYZVector geVector = new KoreXYZVector(rwXYZPointPos.X, rwXYZPointPos.Y, -rwXYZPointPos.Z);
 
                 // KoreXYZVector vertex = rwXYZPointPos;
                 int vertexId = mesh.AddVertex(geVector);
@@ -190,11 +190,11 @@ public static partial class KoreColorMeshPrimitives
         // Create triangles between all adjacent latitude rows
         for (int lat = 0; lat < latSegments; lat++)
         {
-            int yid = (latSegments - lat) % colormap.GetLength(1);
+            int yid =  lat % colormap.GetLength(1);
 
             for (int lon = 0; lon < lonSegments; lon++)
             {
-                int xid = (lonSegments - lon) % colormap.GetLength(0);
+                int xid =  lon % colormap.GetLength(0);
 
                 // Get the four vertices of the current quad
                 int v1 = vertexIdGrid[lat][lon];         // current lat, current lon
