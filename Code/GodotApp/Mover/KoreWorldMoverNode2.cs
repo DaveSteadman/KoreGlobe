@@ -47,7 +47,6 @@ public partial class KoreWorldMoverNode2 : Node3D
 
         MouseWheelSpeedToAlt.Add(0.0, 500);
         MouseWheelSpeedToAlt.Add(1000000, 500000);
-
     }
 
     // --------------------------------------------------------------------------------------------

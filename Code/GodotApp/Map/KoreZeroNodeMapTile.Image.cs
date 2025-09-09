@@ -40,7 +40,6 @@ public partial class KoreZeroNodeMapTile : Node3D
             // Load the image (SkiaSharp) with proper disposal
             using (SKBitmap tileImage = KoreSkiaSharpBitmapOps.LoadBitmap(filepaths.WebpFilepath))
             {
-
                 // determine the difference in angle ranges between this tile, and the tile for the image, so
                 // we can subsample the image to this tile's range.
 

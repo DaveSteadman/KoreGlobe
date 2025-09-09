@@ -18,28 +18,39 @@ public partial class KoreZeroNodeMapTile : Node3D
     // MARK: Elevation Methods
     // --------------------------------------------------------------------------------------------
 
-    private void LoadTileEleArr()
+    private KoreNumeric2DArray<float> LoadTileEleArr()
     {
-        KoreElevationTile? eleTile = KoreElevationTileIO.ReadFromTextFile(Filepaths.EleArrFilepath);
+            KoreNumeric2DArray<float> eleData = new KoreNumeric2DArray<float>();
 
-        if (eleTile != null)
+        if (Filepaths.EleArrFileExists)
         {
-            TileEleData = eleTile.ElevationData;
+            KoreElevationTile? eleTile = KoreElevationTileIO.ReadFromTextFile(Filepaths.EleArrFilepath);
 
-            // if we have a subsurface tile, set it to a lower resolution
-            if (TileEleData.MaxVal() <= 0)
-                TileEleData = new KoreFloat2DArray(10, 10);
+            if (eleTile != null)
+            {
+                eleData = eleTile.ElevationData;
 
-            // Write the simplified data back to the file, to be faster next time.
-            eleTile.ElevationData = TileEleData;
-            KoreElevationTileIO.WriteToTextFile(eleTile, Filepaths.EleArrFilepath);
+                // if we have a subsurface tile, set it to a lower resolution
+                if (eleData.MaxVal() <= 0)
+                    eleData = new KoreFloat2DArray(10, 10);
+
+                // Write the simplified data back to the file, to be faster next time.
+                // eleTile.ElevationData = TileEleData;
+                // KoreElevationTileIO.WriteToTextFile(eleTile, Filepaths.EleArrFilepath);
+            }
+            else
+            {
+                KoreCentralLog.AddEntry($"Failed to load: {Filepaths.EleArrFilepath}");
+            }
+            eleData = eleData.CropToRange(new KoreNumericRange<float>(0f, 10000f));
         }
         else
         {
-            KoreCentralLog.AddEntry($"Failed to load: {Filepaths.EleArrFilepath}");
+            eleData = new KoreFloat2DArray(20, 20);
+            //eleData.SetAllNoise(2.0f, (float)(KoreWorldConsts.EarthRadiusM / 100.0));            
         }
 
-        TileEleData = TileEleData.CropToRange(new KoreNumericRange<float>(0f, 10000f));
+        return eleData;
     }
 
     // --------------------------------------------------------------------------------------------
@@ -80,7 +91,7 @@ public partial class KoreZeroNodeMapTile : Node3D
 
         (float latFrac, float lonFrac) = llBounds.GetLatLonFraction(pos);
 
-        return TileEleData.InterpolatedValue(latFrac, lonFrac);
+        return 0f;  ///TileEleData.InterpolatedValue(latFrac, lonFrac);
     }
 
     public float GetElevation(KoreLLPoint pos)

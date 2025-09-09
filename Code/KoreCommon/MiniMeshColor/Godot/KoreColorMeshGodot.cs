@@ -91,6 +91,8 @@ public partial class KoreColorMeshGodot : MeshInstance3D
 
     // --------------------------------------------------------------------------------------------
 
+    // Turn the ColorMesh into a Godot mesh with distinct triangles.
+
     public void UpdateMeshBackground(KoreColorMesh newMesh)
     {
         // GD.Print("Updating KoreColorMeshGodot");
@@ -130,6 +132,12 @@ public partial class KoreColorMeshGodot : MeshInstance3D
             _surfaceTool.AddVertex(pC);
         }
     }
+
+    // --------------------------------------------------------------------------------------------
+
+    // Turn the ColorMesh into a Godot mesh with colors per vertex, not per triangle.
+    // This is more memory efficient for large meshes with many triangles, but means that colors
+    // are averaged across triangles sharing a vertex.
 
     public void UpdateMeshBackground2(KoreColorMesh newMesh)
     {
@@ -185,9 +193,9 @@ public partial class KoreColorMeshGodot : MeshInstance3D
     }
 
 
-
-
     // --------------------------------------------------------------------------------------------
+
+    // Perform the creation activities that must be done on the main thread.
 
     public void UpdateMeshMainThread()
     {
@@ -204,6 +212,8 @@ public partial class KoreColorMeshGodot : MeshInstance3D
     }
 
     // --------------------------------------------------------------------------------------------
+
+    // After the mesh has been extracted, reset the SurfaceTool to free memory.
 
     public void PostCreateTidyUp()
     {

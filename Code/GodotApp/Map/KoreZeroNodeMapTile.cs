@@ -49,7 +49,7 @@ public partial class KoreZeroNodeMapTile : Node3D
     private KoreMapTileFilepaths Filepaths;
 
     // Real world elevation data, defining the tile's geometry
-    public KoreNumeric2DArray<float> TileEleData  = new KoreNumeric2DArray<float>();
+    // public KoreNumeric2DArray<float> TileEleData  = new KoreNumeric2DArray<float>();
     // private KoreXYZVector[,] v3Data;
     // private KoreXYZVector[,] v3DataBottom;
 
@@ -70,8 +70,6 @@ public partial class KoreZeroNodeMapTile : Node3D
     public KoreColorMesh? TileColorMesh = null;
     // public KoreColorRGB[,]? TileColormap = null;
     public KoreColorMeshGodot? ColorMeshNode = null;
-
-    public double LonDiff = 0;
 
     // Godot Game Engine objects
     // private MeshInstance3D MeshInstance  = new();
@@ -186,7 +184,8 @@ public partial class KoreZeroNodeMapTile : Node3D
             if (BackgroundConstructionComplete)
             {
                 // GD.Print($"Tile: {TileCode} - Construction Stage: {ConstructionStage}");
-                CallDeferred(nameof(MainThreadFinalizeCreation));
+                if (GrabbedActionCounter())
+                    CallDeferred(nameof(MainThreadFinalizeCreation));
                 return;
             }
         }
@@ -215,7 +214,7 @@ public partial class KoreZeroNodeMapTile : Node3D
     {
         // Clear large data arrays immediately
         // TileColormap = null;
-        TileEleData = new KoreNumeric2DArray<float>(); // Reset to empty
+        // TileEleData = new KoreNumeric2DArray<float>(); // Reset to empty
         TileColorMesh = null;
         
         // Aggressively clear child collections
