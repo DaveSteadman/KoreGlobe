@@ -134,10 +134,8 @@ public static partial class KoreColorMeshPrimitives
 
 
 
-
         double stepLonDegs = llBox.DeltaLonDegs / lonSegments;
         double stepLatDegs = llBox.DeltaLatDegs / latSegments;
-
 
 
 

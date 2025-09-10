@@ -87,15 +87,22 @@ public partial class KoreZeroNodeMapTile : Node3D
     private void BackgroundColorMesh()
     {
         // Create or load the color mesh for the tile
-        if (!Filepaths.MeshFileExists)
+        if (true)//!Filepaths.MeshFileExists)
         {
+            KoreNumeric2DArray<float> eleData = LoadTileEleArr();
+
             // create a color map
             int dummyAzCount = 60;
             int dummyElCount = 60;
 
+            if (eleData.MaxVal() < 0.01)
+            {
+                dummyAzCount = 10;
+                dummyElCount = 10;
+            }
+            
             // Source the key ele and color data
             KoreColorRGB[,] colorMap = TileImage(dummyAzCount, dummyElCount);
-            KoreNumeric2DArray<float> eleData = LoadTileEleArr();
 
             // create the color mesh
             TileColorMesh = KoreColorMeshPrimitives.CenteredSphereSection(
@@ -103,10 +110,6 @@ public partial class KoreZeroNodeMapTile : Node3D
                     radius: KoreZeroOffset.GeEarthRadius,//(float)KoreWorldConsts.EarthRadiusM,
                     colormap: colorMap,
                     tileEleData: eleData);
-
-            // create the godot renderer for the color mesh
-            ColorMeshNode = new KoreColorMeshGodot() { Visible = false, Name = "ColorMeshNode" };
-            ColorMeshNode.UpdateMeshBackground(TileColorMesh);
 
             // serialise the mesh to a binary file
             byte[] meshdata = KoreColorMeshIO.ToBytes(TileColorMesh, KoreColorMeshIO.DataSize.AsFloat);
@@ -117,13 +120,11 @@ public partial class KoreZeroNodeMapTile : Node3D
             // read the mesh from a binary file
             byte[] meshdata = System.IO.File.ReadAllBytes(Filepaths.MeshFilepath);
             TileColorMesh = KoreColorMeshIO.FromBytes(meshdata, KoreColorMeshIO.DataSize.AsFloat);
-
-            // create the godot renderer for the color mesh
-            ColorMeshNode = new KoreColorMeshGodot();
-            ColorMeshNode.UpdateMeshBackground(TileColorMesh);
-            ColorMeshNode.Name = "LoadedTileExperiment";
         }
 
+        // create the godot renderer for the color mesh
+        ColorMeshNode = new KoreColorMeshGodot() { Visible = false, Name = "ColorMeshNode" };
+        ColorMeshNode.UpdateMeshBackground(TileColorMesh);
     }
 
     private void MainThreadColorMesh()

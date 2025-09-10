@@ -38,6 +38,43 @@ App Outline
 Immediate Task (Define a task - focus on delivering it):
 =========================================================
 
+Assessment:
+- MiniMesh has been very good in defining new options of OBJ/MTL edits with Blender, and then import/export from the code.
+- ColorMesh has been very good at defining new minimal surface mesh options. Good mesh creation and serialisation options.
+
+- ColorMesh, plus a number of optimisations around serialisation size and tile creation, does not deliver the required level
+  of performance and quality.
+    - The RAM usage it too high, even after optimisations. The visual compromise needs to deliver a 100x improvement elsewhere. 
+        - Can't just trade VRAM for RAM usage.
+    - The step changes in resolution are too high for a consistent aesthetic. This would need a tile-code rework into a b-tree.
+        - This is a whole rework of tilecode, map tiles, everything.
+
+Ideas:
+- We have an elevation system that can load anything with a range and resolution. Create the same for images.
+    - We essentially split the data import from the internal format. Can generate our b-trees on the fly.
+- Abort the whole idea and see what optimisations are availble in textured tiles.
+- develop the ideas around scoring tiles and a hard cap on the number loaded. Useful in many different tile schemes.
+- More research into how GoogleMaps or similar will handle the data.
+
+- What are we doing this for? Need to get other items into the environment to compare it with.
+    - Add runways, buildings, trees, platforms.
+    - Will we want a KoreSim - Mesh library for this, to match the Terrain elements? Be that common thing we instantiate from?
+
+    - First we have the basic meshes we can reference
+    - Then we need a godot version of the mesh, then we need to create a located instance of that mesh.
+
+Actions:
+- Create better Terrain Elevation/Image classes in KoreSim, so we have an isolated way to get any LLA/Col values from CLI loaded data.
+    - Maybe even don't use tilecodes or map library paths here, just raw LLA values, raw paths.
+    - Can use it on the triangle meshes - get the LLA of the three positions, average and get.
+
+
+
+Ground clamping:
+- If we're going to start another pass on the map tiles, maybe reconsider the ground clamps and physics side of things?
+    - Enganging with the collision meshes, which may need to mirror the rendered ones?
+
+    - Maybe this needs its own low-poly test project to develop.
 
 
 

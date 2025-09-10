@@ -137,6 +137,12 @@ public partial class KoreZeroNodeMapTile : Node3D
                     TileVisibilityStats.LatestValue = newStats;
                 }
 
+                // If we are a top lvl0 tile, kick off a count of all child tiles.
+                if (TileCode.MapLvl == 0)
+                {
+                    CountChildTiles();
+                }
+
                 // // Yield and delay for the next cycle
                 await Task.Yield();
                 await Task.Delay(200); // 200ms = 0.2s

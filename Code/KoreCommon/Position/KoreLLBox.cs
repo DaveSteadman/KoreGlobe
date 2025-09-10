@@ -40,6 +40,14 @@ public struct KoreLLBox
 
     // --------------------------------------------------------------------------------------------
 
+    // Latitude range in degrees, min to max
+    public KoreNumericRange<double> LatRangeDegs => new KoreNumericRange<double>(MinLatDegs, MaxLatDegs);
+
+    // Longitude range in degrees, min to max
+    public KoreNumericRange<double> LonRangeDegs => new KoreNumericRange<double>(MinLonDegs, MaxLonDegs);
+
+    // --------------------------------------------------------------------------------------------
+
     public double MidLatDegs => (MinLatDegs + MaxLatDegs) / 2.0;
     public double MidLonDegs => (MinLonDegs + MaxLonDegs) / 2.0;
 

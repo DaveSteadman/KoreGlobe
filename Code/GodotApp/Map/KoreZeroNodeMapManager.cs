@@ -119,15 +119,22 @@ public partial class KoreZeroNodeMapManager : Node3D
         ActionCounter.Refresh(5); // Tile create actions per update cycle (frame)
 
         // If we have a timer, increment it
-        if (currTimer < KoreCentralTime.RuntimeSecs)
+        if (KoreCentralTime.CheckTimer(ref currTimer, currTimerIncrement))
         {
-            currTimer = KoreCentralTime.RuntimeSecs + currTimerIncrement;
-
             // Get the latest camera and viewport
             Viewport viewport = GetViewport();
             Camera3D? camera = GetViewport().GetCamera3D();
             if (camera != null)
                 KoreUnprojectManager.UpdateState(camera, viewport);
+
+            // Loop across all the lvl0 tiles, accumulate and output the tile count.
+            int totalTileCount = 0;
+            foreach (var tile in Lvl0Tiles)
+            {
+                //tile.CountChildTiles();
+                totalTileCount += tile.TileCount;
+            }
+            GD.Print($"Total Tile Count: {totalTileCount} // {Lvl0Tiles.Count}");
         }
     }
 

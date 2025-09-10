@@ -72,6 +72,8 @@ public static class KoreSkiaSharpConv
             (byte)(alpha * 255));
     }
 
+    // Usage: KoreColorRGB kCol = KoreSkiaSharpConv.ToKoreColorRGB(skCol);
+
     public static KoreColorRGB ToKoreColorRGB(this SKColor color)
     {
         float colR = (float)color.Red;

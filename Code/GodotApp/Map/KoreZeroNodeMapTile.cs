@@ -109,6 +109,9 @@ public partial class KoreZeroNodeMapTile : Node3D
     // private Rect2 TileScreenRect = new Rect2();
     // private KoreGodot2DBox? TileScreenBBox = null;
 
+    // Define a count of this tile, and all child tiles underneath it.
+    public int TileCount = 0;
+
 
     // --------------------------------------------------------------------------------------------
 
@@ -278,6 +281,17 @@ public partial class KoreZeroNodeMapTile : Node3D
             currChildTile.ParentTile = this;
         }
     }
+    
+    public void CountChildTiles()
+    {
+        TileCount = 1; // Count this tile
+        
+        foreach (var child in ChildTiles)
+        {
+            child.CountChildTiles();
+            TileCount += child.TileCount;
+        }
+    }
 
     // --------------------------------------------------------------------------------------------
     // MARK: Locate
@@ -297,9 +311,9 @@ public partial class KoreZeroNodeMapTile : Node3D
         Vector3 newPos = KoreGeoConvOps.RwToOffsetGe(RwTileCenterLLA);
 
         // Set the local position from the parent object
-        var transform    = GlobalTransform;
+        var transform = GlobalTransform;
         transform.Origin = newPos;
-        GlobalTransform  = transform;
+        GlobalTransform = transform;
     }
 
 }

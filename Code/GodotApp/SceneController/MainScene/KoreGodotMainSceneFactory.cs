@@ -17,10 +17,10 @@ public static class KoreGodotMainSceneFactory
 {
     // Core nodes
     public static Node3D? MainSceneRootNode { get; private set; } = null;
-    public static KoreZeroNode? ZeroNode { get; private set; } = null; // KoreGodotMainSceneFactory.ZeroNode
-    
+    public static KoreZeroNode? ZeroNode    { get; private set; } = null; // KoreGodotMainSceneFactory.ZeroNode
+
     // Service Nodes
-    public static KoreZeroNodeMapManager? MapManagerNode { get; private set; } = null;
+    public static KoreZeroNodeMapManager? MapManagerNode    { get; private set; } = null;
     public static KoreGodotEntityManager? EntityManagerNode { get; private set; } = null;
 
     // KoreGodotMainSceneFactory.WorldCameraMount
@@ -28,7 +28,7 @@ public static class KoreGodotMainSceneFactory
 
     // KoreGodotMainSceneFactory.ViewSize.LatestValue = new KoreXYRect(0, 0, 800, 600);
     // KoreXYRect currViewSize = KoreGodotMainSceneFactory.ViewSize.LatestValue();
-    public static KoreLatestHolderStruct<KoreXYRect> ViewSize { get; private set; } = new KoreLatestHolderStruct<KoreXYRect>(KoreXYRect.Zero);
+    public static KoreLatestHolderStruct<KoreXYRect> ViewSize  { get; private set; } = new KoreLatestHolderStruct<KoreXYRect>(KoreXYRect.Zero);
     public static KoreLatestHolderStruct<float>      CameraFOV { get; private set; } = new KoreLatestHolderStruct<float>(60.0f); // Default FOV in degrees
 
     // -----------------------------------------------------------------------------------------------
@@ -55,12 +55,12 @@ public static class KoreGodotMainSceneFactory
         // Child tile nodes hang off of the manager and control their own zeronode offset.
         MapManagerNode = new KoreZeroNodeMapManager(ZeroNode);
         ZeroNode?.AddChild(MapManagerNode);
-    
+
         EntityManagerNode = new KoreGodotEntityManager();
         ZeroNode?.AddChild(EntityManagerNode);
 
         // Internal Model initialization
-        
+
         KoreSimFactory.TriggerInstance();
         KoreAppCommands.RegisterCommands(KoreSimFactory.Instance.ConsoleInterface);
     }
@@ -70,7 +70,9 @@ public static class KoreGodotMainSceneFactory
         // Create a new camera node
         Camera3D camera = new Camera3D();
         camera.Name = "WorldCamera";
-        camera.Fov = 35f;
+        camera.Fov  = 35f;
+        camera.Near = 0.1f;
+        camera.Far  = 100_000f; 
 
         // Create the camera mount
         WorldCameraMount = new KoreWorldMoverNode2();
@@ -80,13 +82,11 @@ public static class KoreGodotMainSceneFactory
 
         // Set the camera's position and rotation
         WorldCameraMount.CurrLLA = new KoreLLAPoint(50, 0, 5000);
-        
     }
 
     public static void AddDebugNodes()
     {
         // GodotMeshPrimitives.AddChildDebugSphere(MapManagerNode, 0.1f, KoreColorPalette.Colors["DarkBlue"]);
-        //GodotMeshPrimitives.AddChildDebugSphere(ZeroNode, 0.1f, KoreColorPalette.Colors["Yellow"]);
-
+        // GodotMeshPrimitives.AddChildDebugSphere(ZeroNode, 0.1f, KoreColorPalette.Colors["Yellow"]);
     }
 }
