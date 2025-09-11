@@ -116,7 +116,7 @@ public partial class KoreNumeric2DArray<T> where T : struct, INumber<T>
     public T MaxVal() => Data.Cast<T>().Max();
     public T Sum() => Data.Cast<T>().Aggregate(T.Zero, (current, value) => current + value);
 
-    public KoreNumeric2DArray<T> Scale(T newMin, T newMax)
+    public KoreNumeric2DArray<T> ScaleValues(T newMin, T newMax)
     {
         T oldMin = MinVal();
         T oldMax = MaxVal();
@@ -137,7 +137,7 @@ public partial class KoreNumeric2DArray<T> where T : struct, INumber<T>
         return scaledArray;
     }
 
-    public KoreNumeric2DArray<T> CropToRange(T newMin, T newMax)
+    public KoreNumeric2DArray<T> CropValuesToRange(T newMin, T newMax)
     {
         KoreNumeric2DArray<T> croppedArray = new KoreNumeric2DArray<T>(Width, Height);
 
@@ -155,7 +155,7 @@ public partial class KoreNumeric2DArray<T> where T : struct, INumber<T>
         return croppedArray;
     }
 
-    public KoreNumeric2DArray<T> CropToRange(KoreNumericRange<T> range) => CropToRange(range.Min, range.Max);
+    public KoreNumeric2DArray<T> CropValuesToRange(KoreNumericRange<T> range) => CropValuesToRange(range.Min, range.Max);
 
     // --------------------------------------------------------------------------------------------
     // MARK: Set Value

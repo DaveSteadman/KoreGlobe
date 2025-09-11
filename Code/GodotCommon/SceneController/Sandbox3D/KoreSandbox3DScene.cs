@@ -48,7 +48,8 @@ public partial class KoreSandbox3DScene : Node3D
         AddTestMeshData_MiniMeshSphere();
         AddTestMeshData_MiniMeshCylinder();
         AddTestMeshData_MiniMeshPyramid();
-        AddTestMeshData_ColorMeshSphere();
+        //AddTestMeshData_ColorMeshSphere();
+        AddTestMeshData_QuadMesh();
     }
 
     public override void _Process(double delta)
@@ -814,5 +815,107 @@ public partial class KoreSandbox3DScene : Node3D
         }
     }
 
+    // ---------------------------------------------------------------------------------------------
+    // MARK: Quad Sphere
+    // ---------------------------------------------------------------------------------------------
+
+    public void AddTestMeshData_QuadMesh()
+    {
+        // Function to add a test Quad mesh
+        Node3D QuadMeshNode = new Node3D() { Name = "QuadMeshNode" };
+        AddChild(QuadMeshNode);
+        QuadMeshNode.Position = new Vector3(5.5f, 3, 0); // Position to the right of the cylinder
+
+        //KoreQuadCubeTileCode tileCode = new KoreQuadCubeTileCode() { Face = KoreQuadFace.CubeFace.Front, Quadrants = new List<int> { 0, 1, 2, 3 } };
+
+        KoreQuadCubeTileCode tileCodeFront = new KoreQuadCubeTileCode() { Face = KoreQuadFace.CubeFace.Front };
+        KoreQuadCubeTileCode tileCodeBack = new KoreQuadCubeTileCode() { Face = KoreQuadFace.CubeFace.Back };
+        KoreQuadCubeTileCode tileCodeLeft = new KoreQuadCubeTileCode() { Face = KoreQuadFace.CubeFace.Left };
+        KoreQuadCubeTileCode tileCodeRight = new KoreQuadCubeTileCode() { Face = KoreQuadFace.CubeFace.Right };
+        KoreQuadCubeTileCode tileCodeUp = new KoreQuadCubeTileCode() { Face = KoreQuadFace.CubeFace.Top };
+        KoreQuadCubeTileCode tileCodeDown = new KoreQuadCubeTileCode() { Face = KoreQuadFace.CubeFace.Bottom };
+
+        KoreQuadCubeTile tileFront = KoreQuadCubeTileFactory.TileForCode(tileCodeFront, radius: 1.0);
+        KoreQuadCubeTile tileBack = KoreQuadCubeTileFactory.TileForCode(tileCodeBack, radius: 1.01);
+        KoreQuadCubeTile tileLeft = KoreQuadCubeTileFactory.TileForCode(tileCodeLeft, radius: 1.02);
+        KoreQuadCubeTile tileRight = KoreQuadCubeTileFactory.TileForCode(tileCodeRight, radius: 1.03);
+        KoreQuadCubeTile tileUp = KoreQuadCubeTileFactory.TileForCode(tileCodeUp, radius: 1.04);
+        KoreQuadCubeTile tileDown = KoreQuadCubeTileFactory.TileForCode(tileCodeDown, radius: 1.05);
+
+        KoreColorMeshOps.SetAllColors(tileFront.ColorMesh, KoreColorPalette.RandomColor());
+        KoreColorMeshOps.SetAllColors(tileBack.ColorMesh, KoreColorPalette.RandomColor());
+        KoreColorMeshOps.SetAllColors(tileLeft.ColorMesh, KoreColorPalette.RandomColor());
+        KoreColorMeshOps.SetAllColors(tileRight.ColorMesh, KoreColorPalette.RandomColor());
+        KoreColorMeshOps.SetAllColors(tileUp.ColorMesh, KoreColorPalette.RandomColor());
+        KoreColorMeshOps.SetAllColors(tileDown.ColorMesh, KoreColorPalette.RandomColor());
+
+        KoreColorMeshGodot coloredMeshNodeFront = new() { Name = "QuadMesh_Front" }; QuadMeshNode.AddChild(coloredMeshNodeFront);
+        KoreColorMeshGodot coloredMeshNodeBack = new() { Name = "QuadMesh_Back" }; QuadMeshNode.AddChild(coloredMeshNodeBack);
+        KoreColorMeshGodot coloredMeshNodeLeft = new() { Name = "QuadMesh_Left" }; QuadMeshNode.AddChild(coloredMeshNodeLeft);
+        KoreColorMeshGodot coloredMeshNodeRight = new() { Name = "QuadMesh_Right" }; QuadMeshNode.AddChild(coloredMeshNodeRight);
+        KoreColorMeshGodot coloredMeshNodeUp = new() { Name = "QuadMesh_Up" }; QuadMeshNode.AddChild(coloredMeshNodeUp);
+        KoreColorMeshGodot coloredMeshNodeDown = new() { Name = "QuadMesh_Down" }; QuadMeshNode.AddChild(coloredMeshNodeDown);
+
+        coloredMeshNodeFront.UpdateMesh(tileFront.ColorMesh);
+        coloredMeshNodeBack.UpdateMesh(tileBack.ColorMesh);
+        coloredMeshNodeLeft.UpdateMesh(tileLeft.ColorMesh);
+        coloredMeshNodeRight.UpdateMesh(tileRight.ColorMesh);
+        coloredMeshNodeUp.UpdateMesh(tileUp.ColorMesh);
+        coloredMeshNodeDown.UpdateMesh(tileDown.ColorMesh);
+
+        // - - - -
+
+        KoreQuadCubeTileCode tileCodeFront0 = new KoreQuadCubeTileCode() { Face = KoreQuadFace.CubeFace.Front, Quadrants = new List<int> { 0 } };
+        KoreQuadCubeTileCode tileCodeFront1 = new KoreQuadCubeTileCode() { Face = KoreQuadFace.CubeFace.Front, Quadrants = new List<int> { 1 } };
+        KoreQuadCubeTileCode tileCodeFront2 = new KoreQuadCubeTileCode() { Face = KoreQuadFace.CubeFace.Front, Quadrants = new List<int> { 2 } };
+        KoreQuadCubeTileCode tileCodeFront3 = new KoreQuadCubeTileCode() { Face = KoreQuadFace.CubeFace.Front, Quadrants = new List<int> { 3 } };
+
+        KoreQuadCubeTile tileFront0 = KoreQuadCubeTileFactory.TileForCode(tileCodeFront0, radius: 1.1);
+        KoreQuadCubeTile tileFront1 = KoreQuadCubeTileFactory.TileForCode(tileCodeFront1, radius: 1.11);
+        KoreQuadCubeTile tileFront2 = KoreQuadCubeTileFactory.TileForCode(tileCodeFront2, radius: 1.12);
+        KoreQuadCubeTile tileFront3 = KoreQuadCubeTileFactory.TileForCode(tileCodeFront3, radius: 1.13);
+
+        KoreColorMeshOps.SetAllColors(tileFront0.ColorMesh, KoreColorPalette.RandomColor());
+        KoreColorMeshOps.SetAllColors(tileFront1.ColorMesh, KoreColorPalette.RandomColor());
+        KoreColorMeshOps.SetAllColors(tileFront2.ColorMesh, KoreColorPalette.RandomColor());
+        KoreColorMeshOps.SetAllColors(tileFront3.ColorMesh, KoreColorPalette.RandomColor());
+
+        KoreColorMeshGodot coloredMeshNodeFront0 = new() { Name = "QuadMesh_Front_0" }; QuadMeshNode.AddChild(coloredMeshNodeFront0);
+        KoreColorMeshGodot coloredMeshNodeFront1 = new() { Name = "QuadMesh_Front_1" }; QuadMeshNode.AddChild(coloredMeshNodeFront1);
+        KoreColorMeshGodot coloredMeshNodeFront2 = new() { Name = "QuadMesh_Front_2" }; QuadMeshNode.AddChild(coloredMeshNodeFront2);
+        KoreColorMeshGodot coloredMeshNodeFront3 = new() { Name = "QuadMesh_Front_3" }; QuadMeshNode.AddChild(coloredMeshNodeFront3);
+
+        coloredMeshNodeFront0.UpdateMesh(tileFront0.ColorMesh);
+        coloredMeshNodeFront1.UpdateMesh(tileFront1.ColorMesh);
+        coloredMeshNodeFront2.UpdateMesh(tileFront2.ColorMesh);
+        coloredMeshNodeFront3.UpdateMesh(tileFront3.ColorMesh);
+
+        // - - - -
+
+        KoreQuadCubeTileCode tileCodeFront00 = new KoreQuadCubeTileCode() { Face = KoreQuadFace.CubeFace.Front, Quadrants = new List<int> { 0, 0 } };
+        KoreQuadCubeTileCode tileCodeFront01 = new KoreQuadCubeTileCode() { Face = KoreQuadFace.CubeFace.Front, Quadrants = new List<int> { 0, 1 } };
+        KoreQuadCubeTileCode tileCodeFront02 = new KoreQuadCubeTileCode() { Face = KoreQuadFace.CubeFace.Front, Quadrants = new List<int> { 0, 2 } };
+        KoreQuadCubeTileCode tileCodeFront03 = new KoreQuadCubeTileCode() { Face = KoreQuadFace.CubeFace.Front, Quadrants = new List<int> { 0, 3 } };
+
+        KoreQuadCubeTile tileFront00 = KoreQuadCubeTileFactory.TileForCode(tileCodeFront00, radius: 1.15);
+        KoreQuadCubeTile tileFront01 = KoreQuadCubeTileFactory.TileForCode(tileCodeFront01, radius: 1.16);
+        KoreQuadCubeTile tileFront02 = KoreQuadCubeTileFactory.TileForCode(tileCodeFront02, radius: 1.17);
+        KoreQuadCubeTile tileFront03 = KoreQuadCubeTileFactory.TileForCode(tileCodeFront03, radius: 1.18);
+
+        KoreColorMeshOps.SetAllColors(tileFront00.ColorMesh, KoreColorPalette.RandomColor());
+        KoreColorMeshOps.SetAllColors(tileFront01.ColorMesh, KoreColorPalette.RandomColor());
+        KoreColorMeshOps.SetAllColors(tileFront02.ColorMesh, KoreColorPalette.RandomColor());
+        KoreColorMeshOps.SetAllColors(tileFront03.ColorMesh, KoreColorPalette.RandomColor());
+
+        KoreColorMeshGodot coloredMeshNodeFront00 = new() { Name = "QuadMesh_Front_00" }; QuadMeshNode.AddChild(coloredMeshNodeFront00);
+        KoreColorMeshGodot coloredMeshNodeFront01 = new() { Name = "QuadMesh_Front_01" }; QuadMeshNode.AddChild(coloredMeshNodeFront01);
+        KoreColorMeshGodot coloredMeshNodeFront02 = new() { Name = "QuadMesh_Front_02" }; QuadMeshNode.AddChild(coloredMeshNodeFront02);
+        KoreColorMeshGodot coloredMeshNodeFront03 = new() { Name = "QuadMesh_Front_03" }; QuadMeshNode.AddChild(coloredMeshNodeFront03);
+
+        coloredMeshNodeFront00.UpdateMesh(tileFront00.ColorMesh);
+        coloredMeshNodeFront01.UpdateMesh(tileFront01.ColorMesh);
+        coloredMeshNodeFront02.UpdateMesh(tileFront02.ColorMesh);
+        coloredMeshNodeFront03.UpdateMesh(tileFront03.ColorMesh);
+    }
 
 }

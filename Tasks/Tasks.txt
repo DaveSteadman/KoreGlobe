@@ -78,6 +78,87 @@ Ground clamping:
 
 
 
+New tile scoring and object organisation:
+    - We'll have a budget that can be spent, like 100 objects.
+    - Everything is a "scorable object", that will have a ranking.
+        - This includes real and potential tiles.
+        - Maybe create the scoring itself as a b-tree?
+            - Create a visualisation image at the same time? Show off a view frustum and tile layout?
+
+    - Objects generate alloc/dealloc actions based on scores.
+        - Dealloc action could maybe regenerate a parent tile?
+
+    - Maybe "only the scoring of child nodes is ever assessed".
+        - Avoid the wrenching of mid layer nodes by only building and deconstructing the object layers one by one.
+
+    - So for a lvl0 tile, that we may always want to be present fr full-globe consistency:
+        - But we turn visibility off when facing away
+        - So visibility and presence/scoring are different.
+
+    KoreScorableObject now exists.
+        - We can mechanically select our 100 valid tiles.
+
+A scorable object is a set of tiles, something actioned in one pass.
+    - lvl0World is the top level object, creating all lvl0 tiles.
+
+        - lvl1Tileset 
+            - A scorable object - say 10.
+            - A tilecode, such as Bf
+            - A list of subtiles
+
+                - lvl2 tileset
+                    - score
+                    - tilecode
+                    - subtileset
+
+                - 
+                - 
+                -
+                - 
+
+
+
+- Maybe each item has two layers
+    - Layer of the parent items, the tile resolution
+    - Layer of the subtile collections.
+    
+    - We an create/delete each layer as an action
+    - We always want one to be present
+        - when the 2 objct is present, we can delete the 1
+        - when the 1 is present we can delete the 2
+        
+        - So we can put the score on the individual tile in the set
+    
+- Maybe these "data explosions" I'm seeing are a consequence of the 1:25 allocation step changes. There is no way but to allocate 25x more data per step.
+
+- So we go to an inflated cube, with a quad tree split.
+    - We need to run an example with the XYZ positions of a cube-face, projected back to LLA, then the A fixed to radius+ele, then back to an XYZ for that point.
+    - So we have a cube position, a projected position, then a mesh position, for each 2D index on the cube surface.
+
+
+  1 | 2  - As oriented from the view of facing the surface from the outside.
+  -----
+  3 | 4
+
+QuadCubeTileCode
+- <Face>:[<Tilecode>] - Example F
+- Face is oriented with zeroLL through the middle of the front face. We then have Top, Left, Right, Bottom edged off to that, and Back edged off of right. Frt Top Lft Rgt "Bck" "Bot1321"
+
+QuadCubeTileFactory
+
+    - Each Quad tile will need an rwXYZ anchor point to place it and be scored against.
+
+
+
+QuadMeshTiles are working!
+- They will rely on resource services around elevation and color to create tiles
+- The divisions will not be even, with the pinched corner tiles being smaller than central ones.
+    - So we'll need a metric such as meters-per-point to define a consistant geometry per layer. Pinched corner meshes will be different sizes.
+
+
+
+
+
 Short Term Todo List:
 =====================
 
@@ -106,6 +187,8 @@ Short Term Todo List:
     - Route also.
     - Add an xbox controller input as an element.
     - Have a facility to add and remove them
+
+
 
 
 

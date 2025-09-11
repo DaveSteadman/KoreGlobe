@@ -84,6 +84,13 @@ public struct KoreLLAPoint
         this.RadiusM = KoreWorldConsts.EarthRadiusM;
     }
 
+    public KoreLLAPoint(KoreLLPoint llPoint, double radiusM)
+    {
+        this.LatRads = llPoint.LatRads;
+        this.LonRads = llPoint.LonRads;
+        this.RadiusM = radiusM;
+    }
+
     public static KoreLLAPoint Zero
     {
         get { return new KoreLLAPoint { LatRads = 0.0, LonRads = 0.0, RadiusM = 0.0 }; }
@@ -138,7 +145,7 @@ public struct KoreLLAPoint
         double radius = inputXYZ.Magnitude;
 
         // Protect against div0 radius
-        if (radius < KoreWorldConsts.MinCalculationRadiusM)
+        if (radius < KoreConsts.ArbitrarySmallDouble)
             return KoreLLAPoint.Zero;
 
         double latRads = Math.Asin(inputXYZ.Y / radius);

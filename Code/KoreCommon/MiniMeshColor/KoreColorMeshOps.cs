@@ -56,6 +56,28 @@ public static partial class KoreColorMeshOps
     }
 
     // --------------------------------------------------------------------------------------------
+    // MARK: Colors
+    // --------------------------------------------------------------------------------------------
+
+    // Usage: KoreColorMeshOps.SetAllColors(mesh, KoreColorRGB.Red);
+
+    public static void SetAllColors(KoreColorMesh mesh, KoreColorRGB color)
+    {
+        foreach (var kvp in mesh.Triangles.ToList()) // ToList() to avoid modification during iteration
+        {
+            int triId = kvp.Key;
+            var tri = kvp.Value;
+
+            // Create new struct with updated color
+            var updatedTri = tri with { Color = color }; // C# record syntax
+                                                         // OR if it's a regular struct:
+                                                         // var updatedTri = new KoreColorMeshTri(tri.A, tri.B, tri.C, color);
+
+            mesh.Triangles[triId] = updatedTri;
+        }
+    }
+
+    // --------------------------------------------------------------------------------------------
     // MARK: Triangles
     // --------------------------------------------------------------------------------------------
 
@@ -80,6 +102,48 @@ public static partial class KoreColorMeshOps
 
         return triangleIds;
     }
+
+    // --------------------------------------------------------------------------------------------
+    // MARK: Surfaces
+    // --------------------------------------------------------------------------------------------
+
+    // Usage:
+    // - KoreColorMesh mesh = new KoreColorMesh();
+    // - KoreXYZVector[,] surfaceArray = new KoreXYZVector[rows, cols];
+    // - KoreColorMeshOps.AddSurface(mesh, surfaceArray, color);
+
+    public static void AddSurface(KoreColorMesh mesh, KoreXYZVector[,] surfaceArray, KoreColorRGB color)
+    {
+        // Determine sizes
+        int rows = surfaceArray.GetLength(0);
+        int cols = surfaceArray.GetLength(1);
+
+        // Add vertices to the mesh and store their IDs
+        int[,] vertexIds = new int[rows, cols];
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < cols; j++)
+            {
+                vertexIds[i, j] = mesh.AddVertex(surfaceArray[i, j]);
+            }
+        }
+
+        // Create faces (quads) between the vertices
+        for (int i = 0; i < rows - 1; i++)
+        {
+            for (int j = 0; j < cols - 1; j++)
+            {
+                int a = vertexIds[i, j];
+                int b = vertexIds[i, j + 1];
+                int c = vertexIds[i + 1, j + 1];
+                int d = vertexIds[i + 1, j];
+
+                // Add the face to the mesh
+                AddFace(mesh, a, b, c, d, color);
+            }
+        }
+    }
+
 
 
 }

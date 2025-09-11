@@ -132,6 +132,24 @@ public static class KoreColorPalette
 
     // --------------------------------------------------------------------------------------------
 
+    // Pick a random color from the palette
+    // Usage: KoreColorRGB randCol = KoreColorPalette.RandomColor();
+
+    public static KoreColorRGB RandomColor()
+    {
+        var rand = new System.Random();
+        int index = rand.Next(Colors.Count);
+        foreach (var color in Colors.Values)
+        {
+            if (index == 0)
+                return color;
+            index--;
+        }
+        return DefaultColor; // Fallback, should not reach here
+    }
+    
+    // --------------------------------------------------------------------------------------------
+
     // Get the name and color of the closest match in the palette to the given color
     // Usage: (string name, KoreColorRGB col) = KoreColorPalette.ClosestColor(targetColor);
 

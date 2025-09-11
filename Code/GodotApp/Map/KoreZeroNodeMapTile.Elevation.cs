@@ -42,7 +42,7 @@ public partial class KoreZeroNodeMapTile : Node3D
             {
                 KoreCentralLog.AddEntry($"Failed to load: {Filepaths.EleArrFilepath}");
             }
-            eleData = eleData.CropToRange(new KoreNumericRange<float>(0f, 10000f));
+            eleData = eleData.CropValuesToRange(new KoreNumericRange<float>(0f, 10000f));
         }
         else
         {

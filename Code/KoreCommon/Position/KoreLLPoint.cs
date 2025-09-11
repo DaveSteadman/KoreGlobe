@@ -55,6 +55,22 @@ public struct KoreLLPoint
 
     // --------------------------------------------------------------------------------------------
 
+    // Usage: KoreLLPoint pos = KoreLLPoint.FromXYZ(xyz);
+    public static KoreLLPoint FromXYZ(KoreXYZVector inputXYZ)
+    {
+        double radius = inputXYZ.Magnitude;
+
+        // Protect against div0 radius
+        if (radius < KoreConsts.ArbitrarySmallDouble)
+            return KoreLLPoint.Zero;
+
+        double latRads = Math.Asin(inputXYZ.Y / radius);
+        double lonRads = Math.Atan2(inputXYZ.Z, inputXYZ.X);
+        return new KoreLLPoint(latRads, lonRads);
+    }
+
+    // --------------------------------------------------------------------------------------------
+
     public override string ToString()
     {
         return string.Format($"({LatDegs:F3}, {LonDegs:F3})");
