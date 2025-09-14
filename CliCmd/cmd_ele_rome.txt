@@ -1,0 +1,21 @@
+ele loadarc C:/Util/Godot/Globe4-Maps/ElePrep/Ele_Global_2500m.asc           -90 -180  90 180
+ele loadarc C:/Util/Godot/Globe4-Maps/ElePrep/Ele_BG_DC_50m.asc             40   10     45   15
+
+ele savetileset BG_DC_AA 1
+ele savetileset BG_DC_AB 2
+ele savetileset BG_DC_AC 1
+
+ele savetileset BG_DC_BA 1
+ele savetileset BG_DC_BB 2
+ele savetileset BG_DC_BC 2
+ele savetileset BG_DC_BD 1
+
+ele savetileset BG_DC_CA 1
+ele savetileset BG_DC_CB 2
+ele savetileset BG_DC_CC 2
+ele savetileset BG_DC_CD 2
+ele savetileset BG_DC_CE 1
+
+ele savetileset BG_DC_DC 2
+ele savetileset BG_DC_DD 2
+ele savetileset BG_DC_DE 1

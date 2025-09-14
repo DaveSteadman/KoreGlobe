@@ -38,7 +38,8 @@ public partial class KoreColorMeshGodot : MeshInstance3D
     public void UpdateMesh(KoreColorMesh newMesh)
     {
         // GD.Print("Updating KoreColorMeshGodot");
-        Name = $"ColorMeshSurface";
+        //Name = $"ColorMeshSurface";
+
 
         _surfaceTool.Clear();
         _surfaceTool.Begin(Mesh.PrimitiveType.Triangles);
@@ -220,7 +221,7 @@ public partial class KoreColorMeshGodot : MeshInstance3D
         // Clear the SurfaceTool to free memory - no longer needed
         _surfaceTool.Clear();
     }
-    
+
 }
 
 

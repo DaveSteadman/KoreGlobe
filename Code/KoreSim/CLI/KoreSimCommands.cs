@@ -5,7 +5,7 @@ namespace KoreSim;
 
 public static class KoreSimCommands
 {
-    
+
     // Usage: KoreSimCommands.RegisterCommands(console)
     public static void RegisterCommands(KoreConsole console)
     {
@@ -67,6 +67,8 @@ public static class KoreSimCommands
         console.AddCommandHandler(new KoreCommandSatCollate());
         console.AddCommandHandler(new KoreCommandSatDivide());
         console.AddCommandHandler(new KoreCommandSatDivideTo());
+
+        console.AddCommandHandler(new KoreCommandSatLoadTile());
 
 
     }

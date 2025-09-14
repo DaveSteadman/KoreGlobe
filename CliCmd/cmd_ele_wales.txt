@@ -1,0 +1,16 @@
+
+ele loadarc C:/Util/Godot/Globe4-Maps/ElePrep/ele_global_10km.asc      -90 -180     90    180
+ele loadarc C:/Util/Godot/Globe4-Maps/ElePrep/CentralEurope_500m.asc    40  -10     60     30
+ele loadarc C:/Util/Godot/Globe4-Maps/ElePrep/WestWales_10m.asc         52   -5     53.5   -3
+
+
+ele savetileset BF_BF 3
+
+
+
+
+
+
+
+
+

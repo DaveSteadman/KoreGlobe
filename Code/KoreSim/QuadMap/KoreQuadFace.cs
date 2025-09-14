@@ -26,4 +26,7 @@ public struct KoreQuadFace
     public KoreXYZVector bottomRight { get; set; } = KoreXYZVector.Zero;
 
     public KoreQuadFace() { }
+
+
+    public static KoreQuadFace Zero => new KoreQuadFace();
 }

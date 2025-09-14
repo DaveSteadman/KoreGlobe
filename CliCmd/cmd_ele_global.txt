@@ -1,0 +1,88 @@
+
+ele loadarc C:/Util/Godot/Globe4-Maps/ElePrep/ele_global_10km.asc       -90 -180     90    180
+ele loadarc C:/Util/Godot/Globe4-Maps/ElePrep/ele_global_2500m.asc      -90 -180     90    180
+
+ele savetileset AA 2
+ele savetileset AB 2
+ele savetileset AC 2
+ele savetileset AD 2
+ele savetileset AE 2
+ele savetileset AF 2
+ele savetileset AG 2
+ele savetileset AH 2
+ele savetileset AI 2
+ele savetileset AJ 2
+ele savetileset AK 2
+ele savetileset AL 2
+
+ele savetileset BA 2
+ele savetileset BB 2
+ele savetileset BC 2
+ele savetileset BD 2
+ele savetileset BE 2
+ele savetileset BF 2
+ele savetileset BG 2
+ele savetileset BH 2
+ele savetileset BI 2
+ele savetileset BJ 2
+ele savetileset BK 2
+ele savetileset BL 2
+
+ele savetileset CA 2
+ele savetileset CB 2
+ele savetileset CC 2
+ele savetileset CD 2
+ele savetileset CE 2
+ele savetileset CF 2
+ele savetileset CG 2
+ele savetileset CH 2
+ele savetileset CI 2
+ele savetileset CJ 2
+ele savetileset CK 2
+ele savetileset CL 2
+
+ele savetileset DA 2
+ele savetileset DB 2
+ele savetileset DC 2
+ele savetileset DD 2
+ele savetileset DE 2
+ele savetileset DF 2
+ele savetileset DG 2
+ele savetileset DH 2
+ele savetileset DI 2
+ele savetileset DJ 2
+ele savetileset DK 2
+ele savetileset DL 2
+
+ele savetileset EA 2
+ele savetileset EB 2
+ele savetileset EC 2
+ele savetileset ED 2
+ele savetileset EE 2
+ele savetileset EF 2
+ele savetileset EG 2
+ele savetileset EH 2
+ele savetileset EI 2
+ele savetileset EJ 2
+ele savetileset EK 2
+ele savetileset EL 2
+
+ele savetileset FA 1
+ele savetileset FB 1
+ele savetileset FC 1
+ele savetileset FD 1
+ele savetileset FE 1
+ele savetileset FF 1
+ele savetileset FG 1
+ele savetileset FH 1
+ele savetileset FI 1
+ele savetileset FJ 1
+ele savetileset FK 1
+ele savetileset FL 1
+
+
+
+
+
+
+

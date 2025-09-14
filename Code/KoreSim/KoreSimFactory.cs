@@ -31,7 +31,8 @@ public class KoreSimFactory
     public KoreSimTime          SimClock         { get; private set; }
     public KoreModelRun         ModelRun         { get; private set; }
     public KoreElevationManager EleManager       { get; private set; }
-    public KoreEventRegister    EventRegister    { get; private set; }
+    public KoreTerrainImageManager ImageManager  { get; private set; }
+    public KoreEventRegister EventRegister { get; private set; }
 
     // Usage: KoreStringDictionary kc = KoreSimFactory.Instance.KoreConfig;
     //        //        kc.SetParam("Key", "Value");
@@ -88,6 +89,7 @@ public class KoreSimFactory
         SimClock         = new KoreSimTime();
         ModelRun         = new KoreModelRun();
         EleManager       = new KoreElevationManager();
+        ImageManager     = new KoreTerrainImageManager();
 
 
         // Read the logfile path from the config and update the centralised logger with it.
@@ -95,7 +97,7 @@ public class KoreSimFactory
 
         KoreSimCommands.RegisterCommands(ConsoleInterface);
         ConsoleInterface.Start();
-        
+
         MessageManager.Start();
 
         KoreCentralLog.AddEntry("KoreSimFactory Construction - Done");
@@ -106,10 +108,10 @@ public class KoreSimFactory
 
     // --------------------------------------------------------------------------------------------
 
-    // Call to trigger constuctor 
+    // Call to trigger constuctor
     // This will trigger the constructor to run, if it hasn't already.
-   
-    
+
+
     // Usage: KoreSimFactory.TriggerInstance();
 
     public static void TriggerInstance()

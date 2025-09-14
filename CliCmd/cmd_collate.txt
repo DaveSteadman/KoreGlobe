@@ -1,0 +1,20 @@
+
+sat collate AA_DA
+sat collate AA_DD
+sat collate AA_DE
+sat collate AA_DF
+sat collate AA_EA
+sat collate AA_EB
+sat collate AA_EC
+sat collate AA_ED
+sat collate AA_EE
+sat collate AA_EF
+sat collate AA_FA
+sat collate AA_FB
+sat collate AA_FC
+sat collate AA_FD
+sat collate AA_FE
+sat collate AA_FF
+sat collate AA
+
+

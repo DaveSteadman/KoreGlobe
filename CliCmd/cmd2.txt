@@ -1,0 +1,26 @@
+
+network ii {"BeamLoad":{"PlatName":"HMS Glasgow","EmitName":"InjectShipRadar","ELNOT":"","BeamName":"NavRadar","Signal":"pulsed","Channel":1,"ERPdBW":90.0,"FreqMinHz":5000000000.0,"FreqMaxHz":5000000000.0,"PortRollDegs":0.0,"PortPitchDegs":0.0,"PortYawDegs":0.0,"Targeted":false,"TargetPlatName":"","DetectionRangeMtrs":120000.0,"DetectionRangeRxMtrs":150000,"AntennaPatternName":"SinX","HasHW":true}}
+
+network ii {"ScanPattern":{"PlatName":"HMS Glasgow,"EmitName":"InjectShipRadar","BeamName":"WeatherRadar","ScanType":"raster","PeriodSecs":0.5,"SegmentCount":1,"AzMinDegs":-22.5,"AzMaxDegs":22.5,"ElMinDegs":-7.5,"ElMaxDegs":7.5,"AzTrackOffsetDegs":0.0,"ElTrackOffsetDegs":0.0,"Clockwise":false,"Up":false,"UniDirectional":true,"Reversed":false,"MinorScanType":"none","MinorScanPeriodSecs":0.005,"MinorScanUniDir":true,"MinorScanUp":false}}
+
+
+
+
+runfile C:/Util/Godot/GiteaWC_3DViewer2/CliCmd/cmd_eletestlat.txt
+runfile C:/Util/Godot/GiteaWC_3DViewer2/CliCmd/cmd_eletestlon.txt
+
+runfile C:/Util/Godot/GiteaWC_3DViewer2/CliCmd/cmd_ele_global.txt
+runfile C:/Util/Godot/GiteaWC_3DViewer2/CliCmd/cmd_ele_europe.txt
+runfile C:/Util/Godot/GiteaWC_3DViewer2/CliCmd/cmd_ele_wales.txt
+runfile C:/Util/Godot/GiteaWC_3DViewer2/CliCmd/cmd_ele_wales2.txt
+
+runfile C:/Util/Godot/GiteaWC_3DViewer2/CliCmd/cmd_plattest.txt
+
+
+runfile C:/Util/Godot/GiteaWC_3DViewer2/CliCmd/collate_BB.txt
+runfile C:/Util/Godot/GiteaWC_3DViewer2/CliCmd/collate_BD.txt
+runfile C:/Util/Godot/GiteaWC_3DViewer2/CliCmd/collate_BH.txt
+
+runfile C:/Util/Godot/GiteaWC_3DViewer2/CliCmd/cmd_ele_rome.txt
+
+runfile C:/Util/Godot/GiteaWC_3DViewer2/CliCmd/cmd_plattest.txt

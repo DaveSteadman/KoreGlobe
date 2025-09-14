@@ -1,0 +1,15 @@
+
+
+
+ele loadarc C:/Util/Godot/Globe4-Maps/ElePrep/ele_global_TestPatternLat.asc      -90 -180     90    180
+ele forpos 90 0
+ele forpos 91 10
+ele forpos -90 10
+ele forpos -91 180
+ele forpos 30 81
+ele forpos -45 80
+ele forpos 0 81
+
+
+
+

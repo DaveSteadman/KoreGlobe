@@ -76,6 +76,12 @@ public static class KoreStringOps
         return false;
     }
 
+    // Usage: string str = $"{KoreStringOps.StringForBoolTF(val)}";
+    public static string StringForBoolTF(bool value) { return value ? "true" : "false"; }
+    public static string StringForBoolPF(bool value) { return value ? "pass" : "fail"; }
+    public static string StringForBoolYN(bool value) { return value ? "yes" : "no"; }
+    public static string StringForBool10(bool value) { return value ? "1" : "0"; }
+
     // --------------------------------------------------------------------------------------------
     // MARK: String to Time
     // --------------------------------------------------------------------------------------------

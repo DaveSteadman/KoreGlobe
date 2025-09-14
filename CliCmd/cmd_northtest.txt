@@ -1,0 +1,36 @@
+
+
+network ii {"ScenLoad":{"ScenName":"cmd_northtest.txt","LatDegs":53.0,"LongDegs":-4.0,"EarthModel":"XXX","RxName":"XXX","DFModel":""}}
+
+
+network ii {"PlatAdd":{"PlatName":"Su34-Lon10","PlatCategory":"airborne","ThreatType":"friendly","Display":true,"PlatClass":"Su34","PlatDisplaySymb":"<platDispSymb>","LatDegs":52.0,"LongDegs":10.0,"AltitudeMtrs":5000.0,"RollDegs":0.0,"PitchDegs":0.0,"HeadingDegs":0.0}}
+
+network ii {"PlatWayPoints":{"PlatName":"Su34-Lon10","Count":2,"Legs":[{"LatDegs":52.0,"LongDegs":10.0,"AltitudeMtrs":5000.0,"GrndSpeedMtrsSec":0.0,"WPType":"Origin"},{"LatDegs":55.0,"LongDegs":10.0,"AltitudeMtrs":5000.0,"GrndSpeedMtrsSec":0.0,"WPType":"linear"}]}}
+
+
+
+
+
+network ii {"PlatAdd":{"PlatName":"F16-Lon-5","PlatCategory":"airborne","ThreatType":"friendly","Display":true,"PlatClass":"F16","PlatDisplaySymb":"<platDispSymb>","LatDegs":45.0,"LongDegs":-5.0,"AltitudeMtrs":5000.0,"RollDegs":0.0,"PitchDegs":0.0,"HeadingDegs":0.0}}
+
+network ii {"PlatWayPoints":{"PlatName":"F16-Lon-5","Count":2,"Legs":[{"LatDegs":45.0,"LongDegs":-5.0,"AltitudeMtrs":5000.0,"GrndSpeedMtrsSec":0.0,"WPType":"Origin"},{"LatDegs":48.0,"LongDegs":-5.0,"AltitudeMtrs":5000.0,"GrndSpeedMtrsSec":0.0,"WPType":"linear"}]}}
+
+
+
+
+network ii {"PlatAdd":{"PlatName":"RX-C130","PlatCategory":"airborne","ThreatType":"friendly","Display":true,"PlatClass":"C-130","PlatDisplaySymb":"<platDispSymb>","LatDegs":61.725251,"LongDegs":18.136924,"AltitudeMtrs":3000.0,"RollDegs":0.0,"PitchDegs":0.0,"HeadingDegs":0.0}}
+
+network ii {"PlatWayPoints":{"PlatName":"RX-C130","Count":2,"Legs":[{"LatDegs":61.725251,"LongDegs":18.136924,"AltitudeMtrs":3000.0,"GrndSpeedMtrsSec":0.0,"WPType":"Origin"},{"LatDegs":64.409977,"LongDegs":18.732936,"AltitudeMtrs":3000.0,"GrndSpeedMtrsSec":70.0,"WPType":"linear"}]}}
+
+
+
+
+
+network ii {"ScenStart":{}}
+
+
+
+
+network ii {"PlatUpdate":{"PlatName":"Su34-Lon10","LatDegs":52.0,"LongDegs":10.0,"AltitudeMtrs":5000.0,"RollDegs":-0.0,"PitchDegs":-0.0,"YawDegs":0.0,"HeadingDegs":0.0,"GrndSpeedMtrSec":150.0,"ClimbRateMtrSec":0.0,"RollRateDegsSec":0.0,"PitchRateDegsSec":-0.0,"YawRateDegsSec":-0.0,"TurnRateDegsSec":-0.0}}
+
+network ii {"PlatUpdate":{"PlatName":"F16-Lon-5","LatDegs":45.0,"LongDegs":-5.0,"AltitudeMtrs":5000.0,"RollDegs":-0.0,"PitchDegs":-0.0,"YawDegs":0.0,"HeadingDegs":0.0,"GrndSpeedMtrSec":150.0,"ClimbRateMtrSec":0.0,"RollRateDegsSec":0.0,"PitchRateDegsSec":-0.0,"YawRateDegsSec":-0.0,"TurnRateDegsSec":-0.0}}

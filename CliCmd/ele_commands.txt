@@ -1,0 +1,168 @@
+
+C:/Util/GlobeLibrary_MapPrep/Europe/W005N45_FranceWest/Output/5Deg/5deg_50m.png
+
+
+C:/Util/GlobeLibrary_MapPrep/Europe/W005N55_UkScotlandEast/Output/5Deg/5deg_50m.png
+
+C:/Util/GlobeLibrary_MapPrep/Europe/W010N55_UkScotlandWest/Output/5Deg/5deg_50m.png
+
+C:/Util/GlobeLibrary_MapPrep/Europe/E005N40_Monaco/Output/5deg_50m.png
+
+C:/Util/GlobeLibrary_MapPrep/NorthAmerica/W125N35_SanFransisco/Output/5Deg/5deg_50m.png
+
+
+sat divide BG_DA C:/Util/GlobeLibrary_MapPrep/Europe/W000N40_Barcelona/Output/5Deg/5deg_50m.png
+
+
+sat divide BG_CB C:/Util/GlobeLibrary_MapPrep/Europe/E005N50_GermanyNorth/Output/5Deg/5deg_50m.png
+
+sat divide BG_CB C:/Util/GlobeLibrary_MapPrep/Europe/E005N45_Switzerland/Output/5Deg/5deg_150m.png
+
+ele loadarc C:/Util/Godot/Globe4-Maps/ElePrep/ele_global_10km.asc      -90 -180     90    180
+
+
+ele loadarc C:/Util/Godot/Globe4-Maps/ElePrep/Ele_Global_2500m.asc      -90 -180     90    180
+ele savetileset AA 1
+ele savetileset AB 1
+
+ele loadarc C:/Util/Godot/Globe4-Maps/ElePrep/Ele_Global_2500m.asc      -90 -180     90    180
+ele loadarc C:/Util/Godot/Globe4-Maps/ElePrep/Ele_UK_100m_50_-10_60_5.asc      50 -10    60 5
+ele savetileset BF_AE 2
+ele savetileset BF_AF 2
+ele savetileset BF_BE 2
+ele savetileset BG_BA 2
+
+
+
+
+
+-25
+-13
+
+63
+67
+
+ele loadarc C:/Util/Godot/Globe4-Maps/ElePrep/Ele_Iceland_50m_-25_63_-13_67.asc     -25 -13    63 67
+
+ele savetileset AF_FB 2
+ele savetileset AF_FC 2
+ele savetileset AF_FD 2
+
+ele savetileset AF_EB 2
+ele savetileset AF_EC 2
+ele savetileset AF_ED 2
+
+
+
+
+runfile C:/Util/Godot/GiteaWC_3DViewer2/CliCmd/cmd_ele_global.txt
+
+
+
+ele loadarc C:/Util/Godot/Globe4-Maps/ElePrep/Ele_BB_EF_50m.asc         35 -125     40   -120
+
+ele savetileset BB_EF 2
+
+
+
+
+
+
+
+
+
+
+ele loadarc C:/Util/Godot/Globe4-Maps/ElePrep/ele_global_10km.asc            -90 -180   90 180
+ele patch save C:/Util/Godot/Globe4-Maps/ElePrep/Ele_Global_10Km.elepatch    4000 -180 180    2000 -90 90
+
+ele loadarc C:/Util/Godot/Globe4-Maps/ElePrep/Ele_Global_2500m.asc           -90 -180  90 180
+ele patch save C:/Util/Godot/Globe4-Maps/ElePrep/Ele_Global_2500m.elepatch    16000 -180 180    8000 -90 90
+
+ele loadarc C:/Util/Godot/Globe4-Maps/ElePrep/WestWales_10m.asc         52   -5     53.5   -3
+ele patch save C:/Util/Godot/Globe4-Maps/ElePrep/Ele_WestWales_10m.elepatch    20000 -5 -3    15000 52 53.5
+
+
+ele patch load C:/Util/Godot/Globe4-Maps/ElePrep/Ele_Global_2500m.elepatch
+ele patch load C:/Util/Godot/Globe4-Maps/ElePrep/Ele_Global_10Km.elepatch
+ele patch load C:/Util/Godot/Globe4-Maps/ElePrep/Ele_WestWales_10m.elepatch
+
+
+
+
+ele loadarc C:/Util/Godot/Globe4-Maps/ElePrep/ele_Pyrenees_50m.asc            40 -5   44 4
+
+ele patch save C:/Util/Godot/Globe4-Maps/ElePrep/ele_Pyrenees_50m.elepatch    16000 -5 4    8000 -90 90
+
+
+
+9 x
+
+
+
+
+
+sat divide BF_CF C:/Util/GlobeLibrary_MapPrep/Europe/W005N45_FranceWest/Output/5Deg/5deg_50m.png
+
+sat divide BG_CA C:/Util/GlobeLibrary_MapPrep/Europe/W000N45_FranceCentral/Output/5Deg/5deg_50m.png
+                 C:/Util/GlobeLibrary_MapPrep/Europe/W000N45_FranceCentral/Output/5Deg
+
+
+sat divide BF_BF_CA C:/Util/GlobeLibrary_MapPrep/Europe/W005N50_UkCentral/Output/BF_BF_CA_10m.png
+
+sat divide BF_BF_CB C:/Util/GlobeLibrary_MapPrep/Europe/W005N50_UkCentral/Output/BF_BF_CB_10m.png
+
+
+
+sat divide BG_DB_AB C:/Util/GlobeLibrary_MapPrep/Europe/E005N40_Monaco/Input/Other/BG_DB_AB_1Deg_15m.png
+sat divide BG_DB_AC C:/Util/GlobeLibrary_MapPrep/Europe/E005N40_Monaco/Input/Other/BG_DB_AC_1Deg_15m.png
+sat collate BG_BD
+sat collate BG
+
+sat divide BG_DB_BB C:/Util/GlobeLibrary_MapPrep/Europe/E005N40_Monaco/Input/Other/BG_DB_BB_15m.png
+sat divide BG_DB_BC C:/Util/GlobeLibrary_MapPrep/Europe/E005N40_Monaco/Input/Other/BG_DB_Bc_15m.png
+sat collate BG_DB
+sat collate BG
+
+
+
+sat divide BF_BF_CA C:/Util/GlobeLibrary_MapPrep/Europe/W005N50_UkCentral/Output/BF_BF_CA_10m.png
+sat divide BF_BF_CB C:/Util/GlobeLibrary_MapPrep/Europe/W005N50_UkCentral/Output/BF_BF_CB_10m.png
+
+
+
+sat divide BG_DB_AB_CB C:/Util/GlobeLibrary_MapPrep/Europe/E005N40_Monaco/Output/BG_DB_AB_CB_8m.png
+sat collate BG_BD_AB
+sat collate BG_BD
+sat collate BG
+
+
+
+
+ele savetileset BG_BB_BD 1
+ele savetileset BG_BB_BE 1
+ele savetileset BG_BC_BA 1
+
+
+
+ele loadarc C:/Util/Godot/Globe4-Maps/ElePrep/Ele_Global_2500m.asc           -90 -180  90 180
+ele loadarc C:/Util/Godot/Globe4-Maps/ElePrep/Ele_BG_DC_50m.asc         40   10     45   15
+
+ele savetileset BG_DC_AA 1
+ele savetileset BG_DC_AB 1
+
+
+ele savetileset BG_DC_BA 1
+ele savetileset BG_DC_BB 1
+
+ele savetileset BG_DC_BC 1
+ele savetileset BG_DC_BD 1
+
+ele savetileset BG_DC_CA 1
+ele savetileset BG_DC_CB 1
+ele savetileset BG_DC_CC 2
+ele savetileset BG_DC_CD 1
+ele savetileset BG_DC_CE 1
+
+ele savetileset BG_DC_DC 1
+ele savetileset BG_DC_DD 1
+ele savetileset BG_DC_DE 1

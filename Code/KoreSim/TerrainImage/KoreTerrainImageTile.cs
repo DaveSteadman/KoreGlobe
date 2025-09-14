@@ -1,5 +1,7 @@
 
 
+using System.IO;
+using Godot;
 using KoreCommon;
 using KoreCommon.SkiaSharp;
 
@@ -7,14 +9,34 @@ using SkiaSharp;
 
 namespace KoreSim;
 
+#nullable enable
+
 public class KoreTerrainImageTile
 {
     public KoreLLBox LLBox = KoreLLBox.Zero;
     public string ImagePath = string.Empty;
+    SKBitmap? TileImage = null;
+
+    // Width resolution of the image, a ranking factor in the wider collection
+    // of satellite images, with higher resolution images preferred when requesting
+    // a value.
+    public float PixelsPerDegree = 0.0f;
 
     // --------------------------------------------------------------------------------------------
 
-    // Zero tile
+    public KoreTerrainImageTile(KoreLLBox llBox, string imagePath)
+    {
+        LLBox = llBox;
+        ImagePath = KoreFileOps.StandardizePath(imagePath);
+        LoadImage(ImagePath);
+    }
+
+    public KoreTerrainImageTile()
+    {
+        // Default constructor - zero values
+    }
+
+    // Zero tile - rely on the default constructor
     public static KoreTerrainImageTile Zero
     {
         get { return new KoreTerrainImageTile(); }
@@ -22,55 +44,74 @@ public class KoreTerrainImageTile
 
     // --------------------------------------------------------------------------------------------
 
-    public void LoadImage()
+    public void LoadImage(string fullFilePath)
     {
-        
+        string imagePath = KoreFileOps.StandardizePath(fullFilePath);
+
+        if (File.Exists(imagePath))
+        {
+            TileImage = KoreSkiaSharpBitmapOps.LoadBitmap(imagePath);
+
+            if (TileImage != null)
+            {
+                float imageWidthPixels = TileImage.Width;
+                float imageWidthDegrees = (float)LLBox.DeltaLonDegs;
+
+                // More pixels per degree is better resolution
+                PixelsPerDegree = imageWidthPixels / imageWidthDegrees;
+            }
+        }
     }
 
     // --------------------------------------------------------------------------------------------
 
     public void UnloadImage()
     {
-
+        // Dispose of the SKBitmap properly (if it exists)
+        TileImage?.Dispose();
+        TileImage = null;
     }
 
     // --------------------------------------------------------------------------------------------
 
-    public KoreColorRGB GetTerrainColor(double latDegs, double lonDegs, string mapLibraryPath)
+    public bool IsValid()
     {
-        KoreLLPoint pos = new() { LatDegs = latDegs, LonDegs = lonDegs };
+        return (TileImage != null);
+    }
 
-        if (LLBox.Contains(pos))
+    public bool ContainsPoint(KoreLLPoint checkPos)
+    {
+        return LLBox.Contains(checkPos);
+    }
+
+    public KoreColorRGB GetTerrainColor(KoreLLPoint checkPos)
+    {
+        if (LLBox.Contains(checkPos) && (TileImage != null))
         {
-            // Standardise and create the single path
-            string imagePath = KoreFileOps.JoinPaths(mapLibraryPath, ImagePath);
+            // Use the lat/lon values to get fractions across the image
+            double fracBottomToTop = LLBox.LatRangeDegs.FractionInRange(checkPos.LatDegs);
+            double fracLeftToRight = LLBox.LonRangeDegs.FractionInRange(checkPos.LonDegs);
+            double fracTopToBottom = 1 - fracBottomToTop;
 
-            // Load the file, with the using clause so its correctly disposed of afterwards
-            // Load the image (SkiaSharp) with proper disposal
-            using (SKBitmap tileImage = KoreSkiaSharpBitmapOps.LoadBitmap(imagePath))
-            {
-                // Use the lat/lon values to get fractions across the image
-                double fracBottomToTop = LLBox.LatRangeDegs.FractionInRange(pos.LatDegs);
-                double fracLeftToRight = LLBox.LonRangeDegs.FractionInRange(pos.LonDegs);
-                double fracTopToBottom = 1 - fracBottomToTop;
+            // Determine the pixel position we want to query
+            int tileImageWidth = TileImage.Width;
+            int tileImageHeight = TileImage.Height;
+            int pixelX = (int)(fracLeftToRight * (tileImageWidth - 1));
+            int pixelY = (int)(fracTopToBottom * (tileImageHeight - 1));
 
-                // Determine the pixel position we want to query
-                int tileImageWidth = tileImage.Width;
-                int tileImageHeight = tileImage.Height;
-                int pixelX = (int)(fracLeftToRight * (tileImageWidth - 1));
-                int pixelY = (int)(fracTopToBottom * (tileImageHeight - 1));
+            // Check we're in-bounds on the pixel positions
+            if (pixelX < 0) pixelX = 0;
+            if (pixelX >= tileImageWidth) pixelX = tileImageWidth - 1;
+            if (pixelY < 0) pixelY = 0;
+            if (pixelY >= tileImageHeight) pixelY = tileImageHeight - 1;
 
-                // Check we're in-bounds on the pixel positions
-                if (pixelX < 0) pixelX = 0;
-                if (pixelX >= tileImageWidth) pixelX = tileImageWidth - 1;
-                if (pixelY < 0) pixelY = 0;
-                if (pixelY >= tileImageHeight) pixelY = tileImageHeight - 1;
+            // Get and return the pixel color
+            SKColor pixelColor = TileImage.GetPixel(pixelX, pixelY);
+            KoreColorRGB returnColor = KoreSkiaSharpConv.ToKoreColorRGB(pixelColor);
 
-                // Get and return the pixel color
-                SKColor pixelColor = tileImage.GetPixel(pixelX, pixelY);
-                KoreColorRGB returnColor = KoreSkiaSharpConv.ToKoreColorRGB(pixelColor);
-                return returnColor;
-            }
+            GD.Print($" - {checkPos} = pixel {pixelX},{pixelY} color {KoreColorOps.ColorName(returnColor)}");
+
+            return returnColor;
         }
         return KoreColorRGB.Zero;
     }

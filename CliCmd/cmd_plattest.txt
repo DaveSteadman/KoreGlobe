@@ -1,0 +1,50 @@
+
+
+
+
+network ii {"PlatAdd":{"PlatName":"BlackHawk","PlatCategory":"BlackHawk","ThreatType":"friendly","Display":true,"PlatClass":"BlackHawk","PlatDisplaySymb":"<platDispSymb>","LatDegs":53.755,"LongDegs":-4.942,"AltitudeMtrs":500.0,"RollDegs":0.0,"PitchDegs":0.0,"HeadingDegs":5.0}}
+
+network ii {"PlatAdd":{"PlatName":"S400Radar","PlatCategory":"S400Radar","ThreatType":"friendly","Display":true,"PlatClass":"S400Radar","PlatDisplaySymb":"<platDispSymb>","LatDegs":52.826,"LongDegs":-4.606,"AltitudeMtrs":30.0,"RollDegs":0.0,"PitchDegs":0.0,"HeadingDegs":25.0}}
+
+network ii {"PlatAdd":{"PlatName":"C-130-RX","PlatCategory":"airborne","ThreatType":"friendly","Display":true,"PlatClass":"C-130","PlatDisplaySymb":"<platDispSymb>","LatDegs":53.655877,"LongDegs":-4.842,"AltitudeMtrs":5000.0,"RollDegs":0.0,"PitchDegs":0.0,"HeadingDegs":5.0}}
+
+network ii {"PlatAdd":{"PlatName":"F16-Test","PlatCategory":"airborne","ThreatType":"friendly","Display":true,"PlatClass":"F16","PlatDisplaySymb":"<platDispSymb>","LatDegs":52.655877,"LongDegs":-4.26842,"AltitudeMtrs":5000.0,"RollDegs":0.0,"PitchDegs":0.0,"HeadingDegs":5.0}}
+
+
+network ii {"PlatAdd":{"PlatName":"F18-Test","PlatCategory":"airborne","ThreatType":"friendly","Display":true,"PlatClass":"F18","PlatDisplaySymb":"<platDispSymb>","LatDegs":52.855877,"LongDegs":-4.86842,"AltitudeMtrs":6000.0,"RollDegs":0.0,"PitchDegs":0.0,"HeadingDegs":5.0}}
+
+
+network ii {"PlatAdd":{"PlatName":"Su34-Test","PlatCategory":"airborne","ThreatType":"friendly","Display":true,"PlatClass":"Su34","PlatDisplaySymb":"<platDispSymb>","LatDegs":54.355877,"LongDegs":-5.56842,"AltitudeMtrs":6000.0,"RollDegs":0.0,"PitchDegs":0.0,"HeadingDegs":5.0}}
+
+
+network ii {"PlatAdd":{"PlatName":"MQ9-Test","PlatCategory":"airborne","ThreatType":"friendly","Display":true,"PlatClass":"MQ9Reaper","PlatDisplaySymb":"<platDispSymb>","LatDegs":53.355877,"LongDegs":-5.26842,"AltitudeMtrs":6000.0,"RollDegs":0.0,"PitchDegs":0.0,"HeadingDegs":5.0}}
+
+
+network ii {"PlatAdd":{"PlatName":"Tornado-Test","PlatCategory":"airborne","ThreatType":"friendly","Display":true,"PlatClass":"Tornado","PlatDisplaySymb":"<platDispSymb>","LatDegs":52.455877,"LongDegs":-5.66842,"AltitudeMtrs":3000.0,"RollDegs":0.0,"PitchDegs":0.0,"HeadingDegs":5.0}}
+
+network ii {"PlatAdd":{"PlatName":"Yak130","PlatCategory":"airborne","ThreatType":"friendly","Display":true,"PlatClass":"Yak130","PlatDisplaySymb":"<platDispSymb>","LatDegs":53.155877,"LongDegs":-5.16842,"AltitudeMtrs":3000.0,"RollDegs":0.0,"PitchDegs":0.0,"HeadingDegs":5.0}}
+
+
+
+
+network ii {"PlatAdd":{"PlatName":"QE2AC","PlatCategory":"surface","ThreatType":"friendly","Display":true,"PlatClass":"QE2AC","PlatDisplaySymb":"<platDispSymb>","LatDegs":51.32,"LongDegs":-6.43,"AltitudeMtrs":0.0,"RollDegs":0.0,"PitchDegs":0.0,"HeadingDegs":340.0}}
+
+network ii {"PlatAdd":{"PlatName":"HMS Glasgow","PlatCategory":"surface","ThreatType":"friendly","Display":true,"PlatClass":"Type26","PlatDisplaySymb":"<platDispSymb>","LatDegs":51.33,"LongDegs":-6.4,"AltitudeMtrs":0.0,"RollDegs":0.0,"PitchDegs":0.0,"HeadingDegs":340.0}}
+
+
+network ii {"PlatAdd":{"PlatName":"ContainerShip","PlatCategory":"surface","ThreatType":"friendly","Display":true,"PlatClass":"ContainerShip","PlatDisplaySymb":"<platDispSymb>","LatDegs":53.37,"LongDegs":-4.66,"AltitudeMtrs":0.0,"RollDegs":0.0,"PitchDegs":0.0,"HeadingDegs":5.0}}
+
+
+network ii {"PlatAdd":{"PlatName":"SupportShip","PlatCategory":"surface","ThreatType":"friendly","Display":true,"PlatClass":"SupportShip","PlatDisplaySymb":"<platDispSymb>","LatDegs":52.31,"LongDegs":-4.89,"AltitudeMtrs":0.0,"RollDegs":0.0,"PitchDegs":0.0,"HeadingDegs":5.0}}
+
+network ii {"PlatAdd":{"PlatName":"RescueShip","PlatCategory":"surface","ThreatType":"friendly","Display":true,"PlatClass":"RescueShip","PlatDisplaySymb":"<platDispSymb>","LatDegs":53.8,"LongDegs":-3.85,"AltitudeMtrs":0.0,"RollDegs":0.0,"PitchDegs":0.0,"HeadingDegs":5.0}}
+
+
+network ii {"PlatAdd":{"PlatName":"LuxuryYacht","PlatCategory":"surface","ThreatType":"friendly","Display":true,"PlatClass":"LuxuryYacht","PlatDisplaySymb":"<platDispSymb>","LatDegs":53.6,"LongDegs":-5.4,"AltitudeMtrs":0.0,"RollDegs":0.0,"PitchDegs":0.0,"HeadingDegs":5.0}}
+
+network ii {"PlatAdd":{"PlatName":"SmallShip","PlatCategory":"surface","ThreatType":"friendly","Display":true,"PlatClass":"SmallShip","PlatDisplaySymb":"<platDispSymb>","LatDegs":52.355877,"LongDegs":-4.503,"AltitudeMtrs":0.0,"RollDegs":0.0,"PitchDegs":0.0,"HeadingDegs":5.0}}
+
+network ii {"PlatAdd":{"PlatName":"OldBoat","PlatCategory":"surface","ThreatType":"friendly","Display":true,"PlatClass":"OldBoat","PlatDisplaySymb":"<platDispSymb>","LatDegs":51.507,"LongDegs":0.643,"AltitudeMtrs":0.0,"RollDegs":0.0,"PitchDegs":0.0,"HeadingDegs":270.0}}
+
+
+

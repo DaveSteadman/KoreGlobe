@@ -77,6 +77,22 @@ public static partial class KoreColorMeshOps
         }
     }
 
+    public static void SetAllColorsWithNoise(KoreColorMesh mesh, KoreColorRGB color, float noiseAmount)
+    {
+        foreach (var kvp in mesh.Triangles.ToList()) // ToList() to avoid modification during iteration
+        {
+            int triId = kvp.Key;
+            var tri = kvp.Value;
+
+            // Add some noise to the base color
+            KoreColorRGB noiseCol = KoreColorOps.ColorWithRGBNoise(color, noiseAmount);
+
+            // Create new struct with updated color
+            var updatedTri = tri with { Color = noiseCol };
+
+            mesh.Triangles[triId] = updatedTri;
+        }
+    }
     // --------------------------------------------------------------------------------------------
     // MARK: Triangles
     // --------------------------------------------------------------------------------------------
@@ -144,6 +160,37 @@ public static partial class KoreColorMeshOps
         }
     }
 
+    public static void AddSurface(KoreColorMesh mesh, KoreXYZVector[,] surfaceArray, KoreColorRGB[,] colorArray)
+    {
+        // Determine sizes
+        int rows = surfaceArray.GetLength(0);
+        int cols = surfaceArray.GetLength(1);
+
+        // Add vertices to the mesh and store their IDs
+        int[,] vertexIds = new int[rows, cols];
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < cols; j++)
+            {
+                vertexIds[i, j] = mesh.AddVertex(surfaceArray[i, j]);
+            }
+        }
+
+        // Create faces (quads) between the vertices
+        for (int i = 0; i < rows - 1; i++)
+        {
+            for (int j = 0; j < cols - 1; j++)
+            {
+                int a = vertexIds[i, j];
+                int b = vertexIds[i, j + 1];
+                int c = vertexIds[i + 1, j + 1];
+                int d = vertexIds[i + 1, j];
+
+                // Add the face to the mesh
+                AddFace(mesh, a, b, c, d, colorArray[i, j]);
+            }
+        }
+    }
 
 
 }

@@ -1,0 +1,115 @@
+
+ele loadarc C:/Util/Godot/Globe4-Maps/ElePrep/ele_global_10km.asc      -90 -180     90    180
+ele loadarc C:/Util/Godot/Globe4-Maps/ElePrep/CentralEurope_500m.asc    40  -10     60     30
+ele loadarc C:/Util/Godot/Globe4-Maps/ElePrep/WestWales_10m.asc         52   -5     53.5   -3
+
+
+ele loadarc C:/Util/Godot/Globe4-Maps/ElePrep/Ele_BG_DB_p05_30m.asc     39.95   4.95   45.05   10.05
+ele savetileset BF_DB 0
+
+
+
+ele loadarc C:/Util/Godot/Globe4-Maps/ElePrep/ele_global_10km.asc      -90 -180     90    180
+ele loadarc C:/Util/Godot/Globe4-Maps/ElePrep/CentralEurope_100m_40_5_50_15.asc     40 5 50 15
+
+ele savetileset BG_DB 3
+
+
+ele savetileset BF_BF_BA 1
+
+
+
+ele savetile BF_BE
+ele savetile BF_BF
+
+
+ele loadarc C:/Util/Godot/Globe4-Maps/ElePrep/ele_global_2500m.asc      -90 -180     90    180
+
+ele savetile AA
+ele savetile AB
+ele savetile AC
+ele savetile AD
+ele savetile AE
+ele savetile AF
+ele savetile AG
+ele savetile AH
+ele savetile AI
+ele savetile AJ
+ele savetile AK
+ele savetile AL
+
+ele savetile BA
+ele savetile BB
+ele savetile BC
+ele savetile BD
+ele savetile BE
+ele savetile BF
+ele savetile BG
+ele savetile BH
+ele savetile BI
+ele savetile BJ
+ele savetile BK
+ele savetile BL
+
+ele savetile CA
+ele savetile CB
+ele savetile CC
+ele savetile CD
+ele savetile CE
+ele savetile CF
+ele savetile CG
+ele savetile CH
+ele savetile CI
+ele savetile CJ
+ele savetile CK
+ele savetile CL
+
+ele savetile DA
+ele savetile DB
+ele savetile DC
+ele savetile DD
+ele savetile DE
+ele savetile DF
+ele savetile DG
+ele savetile DH
+ele savetile DI
+ele savetile DJ
+ele savetile DK
+ele savetile DL
+
+ele savetile EA
+ele savetile EB
+ele savetile EC
+ele savetile ED
+ele savetile EE
+ele savetile EF
+ele savetile EG
+ele savetile EH
+ele savetile EI
+ele savetile EJ
+ele savetile EK
+ele savetile EL
+
+ele savetile FA
+ele savetile FB
+ele savetile FC
+ele savetile FD
+ele savetile FE
+ele savetile FF
+ele savetile FG
+ele savetile FH
+ele savetile FI
+ele savetile FJ
+ele savetile FK
+ele savetile FL
+
+
+
+
+
+
+
+
+
+
+

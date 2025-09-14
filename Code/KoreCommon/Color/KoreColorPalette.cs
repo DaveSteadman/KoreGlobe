@@ -115,10 +115,15 @@ public static class KoreColorPalette
 
     public static KoreColorRGB Find(string name)
     {
-        if (Colors.TryGetValue(name, out var color))
+        // Case-insensitive search through the colors dictionary
+        foreach (var kvp in Colors)
         {
-            return color;
+            if (string.Equals(kvp.Key, name, System.StringComparison.OrdinalIgnoreCase))
+            {
+                return kvp.Value;
+            }
         }
+
         return DefaultColor; // Default color
     }
 
@@ -147,7 +152,7 @@ public static class KoreColorPalette
         }
         return DefaultColor; // Fallback, should not reach here
     }
-    
+
     // --------------------------------------------------------------------------------------------
 
     // Get the name and color of the closest match in the palette to the given color

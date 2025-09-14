@@ -1,0 +1,16 @@
+network ii {"PlatAdd":{"PlatName":"Tornado Inject","PlatCategory":"airborne","ThreatType":"friendly","Display":true,"PlatClass":"Tornado","PlatDisplaySymb":"<platDispSymb>","LatDegs":53.25,"LongDegs":-4.54,"AltitudeMtrs":3000.0,"RollDegs":0.0,"PitchDegs":0.0,"HeadingDegs":180.0}}
+
+network ii {"PlatWayPoints":{"PlatName":"Tornado Inject","Count":4,"Legs":[{"LatDegs":53.25,"LongDegs":-4.54,"AltitudeMtrs":3000.0,"GrndSpeedMtrsSec":0.0,"WPType":"Origin"},{"LatDegs":52.95,"LongDegs":-4.54,"AltitudeMtrs":3000.0,"GrndSpeedMtrsSec":100.0,"WPType":"linear"},{"LatDegs":52.87,"LongDegs":-4.41,"AltitudeMtrs":3000.0,"GrndSpeedMtrsSec":100.0,"WPType":"linear"},{"LatDegs":51.75,"LongDegs":-1.58,"AltitudeMtrs":3000.0,"GrndSpeedMtrsSec":100.0,"WPType":"linear"}]}}
+
+network ii {"BeamLoad":{"PlatName":"Tornado Inject","EmitName":"TornNoseRadar","ELNOT":"","BeamName":"NavRadar","Signal":"pulsed","Channel":1,"ERPdBW":90.0,"FreqMinHz":5000000000.0,"FreqMaxHz":5000000000.0,"PortRollDegs":0.0,"PortPitchDegs":0.0,"PortYawDegs":0.0,"Targeted":false,"TargetPlatName":"","DetectionRangeMtrs":120000.0,"DetectionRangeRxMtrs":150000,"AntennaPatternName":"SinX","HasHW":true}}
+
+network ii {"ScanPattern":{"PlatName":"Tornado Inject","EmitName":"TornNoseRadar","BeamName":"NavRadar","ScanType":"raster","PeriodSecs":0.5,"SegmentCount":1,"AzMinDegs":-20.5,"AzMaxDegs":20.5,"ElMinDegs":-5.5,"ElMaxDegs":5.5,"AzTrackOffsetDegs":0.0,"ElTrackOffsetDegs":0.0,"Clockwise":false,"Up":false,"UniDirectional":true,"Reversed":false,"MinorScanType":"none","MinorScanPeriodSecs":0.005,"MinorScanUniDir":true,"MinorScanUp":false}}
+
+network ii {"BeamEnable":{"PlatName":"Tornado Inject","EmitName":"TornNoseRadar","BeamName":"NavRadar"}}
+
+
+network ii {"PlatUpdate":{"PlatName":"Tornado Inject","LatDegs":53.25,"LongDegs":-4.54,"AltitudeMtrs":3000.0,"RollDegs":0.0,"PitchDegs":11.0,"YawDegs":0.0,"HeadingDegs":180.0,"GrndSpeedMtrSec":100.0,"ClimbRateMtrSec":0.0,"RollRateDegsSec":0.0,"PitchRateDegsSec":-0.0,"YawRateDegsSec":-0.0,"TurnRateDegsSec":-0.0}}
+
+
+
+

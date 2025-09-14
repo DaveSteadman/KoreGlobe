@@ -1,0 +1,44 @@
+sat collate BH_AA
+sat collate BH_AB
+sat collate BH_AC
+sat collate BH_AD
+sat collate BH_AE
+sat collate BH_AF
+
+sat collate BH_BA
+sat collate BH_BB
+sat collate BH_BC
+sat collate BH_BD
+sat collate BH_BE
+sat collate BH_BF
+
+sat collate BH_CA
+sat collate BH_CB
+sat collate BH_CC
+sat collate BH_CD
+sat collate BH_CE
+sat collate BH_CF
+
+sat collate BH_DA
+sat collate BH_DB
+sat collate BH_DC
+sat collate BH_DD
+sat collate BH_DE
+sat collate BH_DF
+
+sat collate BH_EA
+sat collate BH_EB
+sat collate BH_EC
+sat collate BH_ED
+sat collate BH_EE
+sat collate BH_EF
+
+sat collate BH_FA
+sat collate BH_FB
+sat collate BH_FC
+sat collate BH_FD
+sat collate BH_FE
+sat collate BH_FF
+
+sat collate BH
+

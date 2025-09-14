@@ -1,0 +1,117 @@
+
+ele loadarc C:/Util/Godot/Globe4-Maps/ElePrep/ele_global_10km.asc      -90 -180     90    180
+ele loadarc C:/Util/Godot/Globe4-Maps/ElePrep/CentralEurope_500m.asc    40  -10     60     30
+ele loadarc C:/Util/Godot/Globe4-Maps/ElePrep/WestWales_10m.asc         52   -5     53.5   -3
+
+ele loadarc C:/Util/Godot/Globe4-Maps/ElePrep/Ele_Singapore5Deg100m.asc   0 100     5 105
+
+ele loadarc C:/Util/Godot/Globe4-Maps/ElePrep/IsleOfWight_10m.asc     50.55 -1.6   50.8 -1.05
+
+ele loadarc C:/Util/Godot/Globe4-Maps/ElePrep/Scotland_50m.asc     54.8 -1.3   59.6 -7.8
+
+
+ele loadarc C:/Util/GlobeLibrary_ElePrep/EleFilesASC/Ireland_BF_BE_50m.asc        51.3 -10.7   55.5   -5.3
+
+
+
+
+
+// ========================
+// Scotland Refresh
+
+ele loadarc C:/Util/GlobeLibrary_ElePrep/EleFilesASC/ele_global_10km.asc      -90 -180     90    180
+ele loadarc C:/Util/GlobeLibrary_ElePrep/EleFilesASC/Scotland_50m.asc        54.8 -7.8   59.6   -1.3
+
+
+ele loadarc C:/Util/GlobeLibrary_ElePrep/EleFilesASC/CentralUK_BF_BF_50m.asc        49.9 -5.1   55.1   0.1
+
+
+ele savetileset BF_BF 3
+
+ele savetileset BF_AE_CD_DE 2
+
+
+sat collate BF_AE_BC
+sat collate BF_AF_DB
+sat collate BF_AF_DC
+sat collate BF_AF_DD
+
+
+sat collate BF_AF
+
+
+ele savetileset BG_DB_CD 2
+
+
+ele savetile c:/util/_temp/Lvl0_Ele/Ele_AA.arr  60 -180 90 -150 30 30
+ele savetile c:/util/_temp/Lvl0_Ele/Ele_AB.arr  60 -150 90 -120 30 30
+ele savetile c:/util/_temp/Lvl0_Ele/Ele_AC.arr  60 -120 90  -90 30 30
+ele savetile c:/util/_temp/Lvl0_Ele/Ele_AD.arr  60  -90 90  -60 30 30
+ele savetile c:/util/_temp/Lvl0_Ele/Ele_AE.arr  60  -60 90  -30 30 30
+ele savetile c:/util/_temp/Lvl0_Ele/Ele_AF.arr  60  -30 90    0 30 30
+ele savetile c:/util/_temp/Lvl0_Ele/Ele_AG.arr  60    0 90   30 30 30
+ele savetile c:/util/_temp/Lvl0_Ele/Ele_AH.arr  60   30 90   60 30 30
+ele savetile c:/util/_temp/Lvl0_Ele/Ele_AI.arr  60   60 90   90 30 30
+ele savetile c:/util/_temp/Lvl0_Ele/Ele_AJ.arr  60   90 90  120 30 30
+ele savetile c:/util/_temp/Lvl0_Ele/Ele_AK.arr  60  120 90  150 30 30
+ele savetile c:/util/_temp/Lvl0_Ele/Ele_AL.arr  60  150 90  180 30 30
+
+ele savetile c:/util/_temp/Lvl1_Ele/Ele_BA.arr  30 -180 60 -150 30 30
+ele savetile c:/util/_temp/Lvl1_Ele/Ele_BB.arr  30 -150 60 -120 30 30
+ele savetile c:/util/_temp/Lvl1_Ele/Ele_BC.arr  30 -120 60  -90 30 30
+ele savetile c:/util/_temp/Lvl1_Ele/Ele_BD.arr  30  -90 60  -60 30 30
+ele savetile c:/util/_temp/Lvl1_Ele/Ele_BE.arr  30  -60 60  -30 30 30
+ele savetile c:/util/_temp/Lvl1_Ele/Ele_BF.arr  30  -30 60    0 30 30
+ele savetile c:/util/_temp/Lvl1_Ele/Ele_BG.arr  30    0 60   30 30 30
+ele savetile c:/util/_temp/Lvl1_Ele/Ele_BH.arr  30   30 60   60 30 30
+ele savetile c:/util/_temp/Lvl1_Ele/Ele_BI.arr  30   60 60   90 30 30
+ele savetile c:/util/_temp/Lvl1_Ele/Ele_BJ.arr  30   90 60  120 30 30
+ele savetile c:/util/_temp/Lvl1_Ele/Ele_BK.arr  30  120 60  150 30 30
+ele savetile c:/util/_temp/Lvl1_Ele/Ele_BL.arr  30  150 60  180 30 30
+
+ele savetile c:/util/_temp/Lvl2_Ele/Ele_CA.arr   0 -180 30 -150 30 30
+ele savetile c:/util/_temp/Lvl2_Ele/Ele_CB.arr   0 -150 30 -120 30 30
+ele savetile c:/util/_temp/Lvl2_Ele/Ele_CC.arr   0 -120 30  -90 30 30
+ele savetile c:/util/_temp/Lvl2_Ele/Ele_CD.arr   0  -90 30  -60 30 30
+ele savetile c:/util/_temp/Lvl2_Ele/Ele_CE.arr   0  -60 30  -30 30 30
+ele savetile c:/util/_temp/Lvl2_Ele/Ele_CF.arr   0  -30 30    0 30 30
+ele savetile c:/util/_temp/Lvl2_Ele/Ele_CG.arr   0    0 30   30 30 30
+ele savetile c:/util/_temp/Lvl2_Ele/Ele_CH.arr   0   30 30   60 30 30
+ele savetile c:/util/_temp/Lvl2_Ele/Ele_CI.arr   0   60 30   90 30 30
+ele savetile c:/util/_temp/Lvl2_Ele/Ele_CJ.arr   0   90 30  120 30 30
+ele savetile c:/util/_temp/Lvl2_Ele/Ele_CK.arr   0  120 30  150 30 30
+ele savetile c:/util/_temp/Lvl2_Ele/Ele_CL.arr   0  150 30  180 30 30
+
+ele savetile c:/util/_temp/Lvl3_Ele/Ele_DA.arr -30 -180   0 -150 30 30
+ele savetile c:/util/_temp/Lvl3_Ele/Ele_DB.arr -30 -150   0 -120 30 30
+ele savetile c:/util/_temp/Lvl3_Ele/Ele_DC.arr -30 -120   0  -90 30 30
+ele savetile c:/util/_temp/Lvl3_Ele/Ele_DD.arr -30  -90   0  -60 30 30
+ele savetile c:/util/_temp/Lvl3_Ele/Ele_DE.arr -30  -60   0  -30 30 30
+ele savetile c:/util/_temp/Lvl3_Ele/Ele_DF.arr -30  -30   0    0 30 30
+ele savetile c:/util/_temp/Lvl3_Ele/Ele_DG.arr -30    0   0   30 30 30
+ele savetile c:/util/_temp/Lvl3_Ele/Ele_DH.arr -30   30   0   60 30 30
+ele savetile c:/util/_temp/Lvl3_Ele/Ele_DI.arr -30   60   0   90 30 30
+ele savetile c:/util/_temp/Lvl3_Ele/Ele_DJ.arr -30   90   0  120 30 30
+ele savetile c:/util/_temp/Lvl3_Ele/Ele_DK.arr -30  120   0  150 30 30
+ele savetile c:/util/_temp/Lvl3_Ele/Ele_DL.arr -30  150   0  180 30 30
+
+ele savetile c:/util/_temp/Lvl4_Ele/Ele_EA.arr -60 -180 -30 -150 30 30
+ele savetile c:/util/_temp/Lvl4_Ele/Ele_EB.arr -60 -150 -30 -120 30 30
+ele savetile c:/util/_temp/Lvl4_Ele/Ele_EC.arr -60 -120 -30  -90 30 30
+ele savetile c:/util/_temp/Lvl4_Ele/Ele_ED.arr -60  -90 -30  -60 30 30
+ele savetile c:/util/_temp/Lvl4_Ele/Ele_EE.arr -60  -60 -30  -30 30 30
+ele savetile c:/util/_temp/Lvl4_Ele/Ele_EF.arr -60  -30 -30    0 30 30
+ele savetile c:/util/_temp/Lvl4_Ele/Ele_EG.arr -60    0 -30   30 30 30
+ele savetile c:/util/_temp/Lvl4_Ele/Ele_EH.arr -60   30 -30   60 30 30
+ele savetile c:/util/_temp/Lvl4_Ele/Ele_EI.arr -60   60 -30   90 30 30
+ele savetile c:/util/_temp/Lvl4_Ele/Ele_EJ.arr -60   90 -30  120 30 30
+ele savetile c:/util/_temp/Lvl4_Ele/Ele_EK.arr -60  120 -30  150 30 30
+ele savetile c:/util/_temp/Lvl4_Ele/Ele_EL.arr -60  150 -30  180 30 30
+
+
+
+
+
+
+ele savetileset BF_BF_ED_CD_AC 2
+

@@ -1,10 +1,8 @@
-
-
+using System;
 using System.Collections.Generic;
 using KoreCommon;
 
 namespace KoreSim;
-
 
 public static class KoreQuadFaceOps
 {
@@ -97,7 +95,7 @@ public static class KoreQuadFaceOps
             case 1: // Top-right quadrant
                 qf.topLeft = new KoreXYZVector(
                     (face.topLeft.X + face.topRight.X) / 2,
-                    face.topLeft.Y,  
+                    face.topLeft.Y,
                     (face.topLeft.Z + face.topRight.Z) / 2);
                 qf.topRight = face.topRight;
                 qf.bottomLeft = new KoreXYZVector(
@@ -146,6 +144,93 @@ public static class KoreQuadFaceOps
         return qf;
     }
 
+    // Given a tile code, return the KoreQuadFace that represents the area on the cube face
+    // represented by the tile code.
+    // The tile divisions are done by angle, to minimize distortion.
+
+    public static KoreQuadFace QuadrantOnFace(KoreQuadCubeTileCode tileCode)
+    {
+        // Protect ourselves from the maths going wrong with too many levels
+        int numTileLevels = tileCode.Quadrants.Count;
+        if (numTileLevels > 10) return KoreQuadFace.Zero;
+
+        // Angular Division
+        // We know that at the top level (level 0), each face spans 90 degrees,
+        // and each subsequent level halves the angle span of each tile.
+        int numDivisions = (int)Math.Pow(2, numTileLevels); // 2^n divisions for n levels: 0=1, 1=2, 2=4, 3=8, 4=16
+        double angleSpanDegs = 90.0 / numDivisions; // Each tile spans this many degrees
+
+        // Determine the angular position on the face based on the specific quadrants chosen at each level.
+        // We calculate the angular offset for both U and V axes separately.
+
+        List<int> axisOffsets = new(); // Angular offsets for each level
+        for (int i = 0; i < numTileLevels; i++)
+        {
+            // For each level, the offset is half of the previous level's offset
+            int numOffsetsThisLevel = numDivisions / (int)Math.Pow(2, i + 1);
+            axisOffsets.Add(numOffsetsThisLevel);
+        }
+
+        // Loop through each quadrant in the tile code to determine angular position
+        int uAngularPosition = 0;
+        int vAngularPosition = 0;
+        for (int i = 0; i < tileCode.Quadrants.Count; i++)
+        {
+            // Adjust angular positions based on the current quadrant and axis offsets
+            // Quadrant layout reminder:
+            // 0 | 1
+            // -----
+            // 2 | 3
+            int currQuadrant = tileCode.Quadrants[i];
+
+            // X (U) axis - angular position
+            if (currQuadrant == 1 || currQuadrant == 3)
+            {
+                uAngularPosition += axisOffsets[i];
+            }
+
+            // Y (V) axis - angular position
+            if (currQuadrant == 2 || currQuadrant == 3)
+            {
+                vAngularPosition += axisOffsets[i];
+            }
+        }
+
+        // Convert angular positions to angles (in radians, spanning -45° to +45° for each axis)
+        double uAngle0 = (uAngularPosition * angleSpanDegs - 45.0) * Math.PI / 180.0;
+        double vAngle0 = (vAngularPosition * angleSpanDegs - 45.0) * Math.PI / 180.0;
+        double uAngle1 = ((uAngularPosition + 1) * angleSpanDegs - 45.0) * Math.PI / 180.0;
+        double vAngle1 = ((vAngularPosition + 1) * angleSpanDegs - 45.0) * Math.PI / 180.0;
+
+        // Convert angles to cube face coordinates using trigonometry (-1 to +1 range)
+        double u0Fraction = (Math.Tan(uAngle0) + 1.0) / 2.0; // Convert from -1..+1 to 0..1
+        double v0Fraction = (Math.Tan(vAngle0) + 1.0) / 2.0;
+        double u1Fraction = (Math.Tan(uAngle1) + 1.0) / 2.0;
+        double v1Fraction = (Math.Tan(vAngle1) + 1.0) / 2.0;
+
+
+        // Create the face, so the overall XYZ orientations are known
+        KoreQuadFace startingFace = FaceForCubeFace(tileCode.Face);
+
+        // Lerp the corners of the face to get the position of the top-left corner of the tile
+        KoreXYZVector newTopLeft = PositionOnFace(startingFace, u0Fraction, v0Fraction);
+        KoreXYZVector newTopRight = PositionOnFace(startingFace, u1Fraction, v0Fraction);
+        KoreXYZVector newBottomLeft = PositionOnFace(startingFace, u0Fraction, v1Fraction);
+        KoreXYZVector newBottomRight = PositionOnFace(startingFace, u1Fraction, v1Fraction);
+
+        KoreQuadFace newFace = new()
+        {
+            topLeft = newTopLeft,
+            topRight = newTopRight,
+            bottomLeft = newBottomLeft,
+            bottomRight = newBottomRight
+        };
+        return newFace;
+    }
+
+
+
+
     // bilinear interpolation on the quad face
     // uFraction position from left (0.0) to right (1.0)
     // vFraction position from top (0.0) to bottom (1.0)
@@ -173,9 +258,53 @@ public static class KoreQuadFaceOps
             topInterp.Z + vFraction * (bottomInterp.Z - topInterp.Z)
         );
     }
-    
-    
+
+    // Angular interpolation on the quad face to match QuadrantOnFace's angular subdivision
+    // uFraction position from left (0.0) to right (1.0)
+    // vFraction position from top (0.0) to bottom (1.0)
+    public static KoreXYZVector PositionOnFace2(KoreQuadFace face, double uFraction, double vFraction)
+    {
+        // Convert fractions to angles (-45° to +45° range for each axis)
+        double uAngle = Math.Atan2(2.0 * uFraction - 1.0, 1.0); // Convert 0..1 fraction to angle
+        double vAngle = Math.Atan2(2.0 * vFraction - 1.0, 1.0);
+
+        // Convert angles back to cube coordinates (-1 to +1)
+        double uCoord = Math.Tan(uAngle);
+        double vCoord = Math.Tan(vAngle);
+
+        // Normalize back to 0..1 range for bilinear interpolation
+        double uNorm = (uCoord + 1.0) / 2.0;
+        double vNorm = (vCoord + 1.0) / 2.0;
+
+        // Clamp to valid range
+        uNorm = Math.Max(0.0, Math.Min(1.0, uNorm));
+        vNorm = Math.Max(0.0, Math.Min(1.0, vNorm));
+
+        // Now do standard bilinear interpolation with the corrected coordinates
+        // First interpolate along the top edge (v=0)
+        KoreXYZVector topInterp = new KoreXYZVector(
+            face.topLeft.X + uNorm * (face.topRight.X - face.topLeft.X),
+            face.topLeft.Y + uNorm * (face.topRight.Y - face.topLeft.Y),
+            face.topLeft.Z + uNorm * (face.topRight.Z - face.topLeft.Z)
+        );
+
+        // Then interpolate along the bottom edge (v=1)
+        KoreXYZVector bottomInterp = new KoreXYZVector(
+            face.bottomLeft.X + uNorm * (face.bottomRight.X - face.bottomLeft.X),
+            face.bottomLeft.Y + uNorm * (face.bottomRight.Y - face.bottomLeft.Y),
+            face.bottomLeft.Z + uNorm * (face.bottomRight.Z - face.bottomLeft.Z)
+        );
+
+        // Finally interpolate between top and bottom edges using vNorm
+        return new KoreXYZVector(
+            topInterp.X + vNorm * (bottomInterp.X - topInterp.X),
+            topInterp.Y + vNorm * (bottomInterp.Y - topInterp.Y),
+            topInterp.Z + vNorm * (bottomInterp.Z - topInterp.Z)
+        );
+    }
+
 }
+
 
 
 

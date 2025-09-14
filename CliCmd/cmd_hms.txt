@@ -1,0 +1,2 @@
+network ii {"PlatAdd":{"PlatName":"RiverBoat","PlatCategory":"surface","ThreatType":"friendly","Display":true,"PlatClass":"OldBoat","PlatDisplaySymb":"<platDispSymb>","LatDegs":52.89,"LongDegs":-4.31,"AltitudeMtrs":0.0,"RollDegs":0.0,"PitchDegs":0.0,"HeadingDegs":340.0}}
+

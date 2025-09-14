@@ -1,0 +1,44 @@
+sat collate BB_AA
+sat collate BB_AB
+sat collate BB_AC
+sat collate BB_AD
+sat collate BB_AE
+sat collate BB_AF
+
+sat collate BB_BA
+sat collate BB_BB
+sat collate BB_BC
+sat collate BB_BD
+sat collate BB_BE
+sat collate BB_BF
+
+sat collate BB_CA
+sat collate BB_CB
+sat collate BB_CC
+sat collate BB_CD
+sat collate BB_CE
+sat collate BB_CF
+
+sat collate BB_DA
+sat collate BB_DB
+sat collate BB_DC
+sat collate BB_DD
+sat collate BB_DE
+sat collate BB_DF
+
+sat collate BB_EA
+sat collate BB_EB
+sat collate BB_EC
+sat collate BB_ED
+sat collate BB_EE
+sat collate BB_EF
+
+sat collate BB_FA
+sat collate BB_FB
+sat collate BB_FC
+sat collate BB_FD
+sat collate BB_FE
+sat collate BB_FF
+
+sat collate BB
+
