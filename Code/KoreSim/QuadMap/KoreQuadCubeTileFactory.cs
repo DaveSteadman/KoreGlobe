@@ -87,11 +87,10 @@ public static class KoreQuadCubeTileFactory
         foreach (int quadrant in code.Quadrants)
             face = KoreQuadFaceOps.QuadrantForFace(face, quadrant);
 
-
         KoreQuadFace face2 = KoreQuadFaceOps.QuadrantOnFace(code);
 
-        int numU = 10; // Setup the number of points (not triangles, points) across and down
-        int numV = 10;
+        int numU = 100; // Setup the number of points (not triangles, points) across and down
+        int numV = 100;
         KoreNumeric1DArray<double> uArray = KoreNumeric1DArrayOps<double>.CreateArrayByCount(0, 1, numU);
         KoreNumeric1DArray<double> vArray = KoreNumeric1DArrayOps<double>.CreateArrayByCount(0, 1, numV);
 
@@ -113,6 +112,12 @@ public static class KoreQuadCubeTileFactory
 
                 // Convert to lat/lon
                 KoreLLPoint llpos = KoreLLPoint.FromXYZ(facepos);
+
+                // KoreXYZVector facepos2 = facepos;
+                // facepos2.Z *= -1; // Invert Z for the conversion
+                // KoreLLPoint surfaceLL = KoreLLPoint.FromXYZ(facepos2);
+                // surfaceLL.LonDegs -= 90;
+                // surfaceLL.LonDegs = KoreNumericRange<double>.ZeroTo360Degrees.Apply(surfaceLL.LonDegs);
 
                 // Grab the color for this lat long
                 colorlist[currVId, currUId] = KoreSimFactory.Instance.ImageManager.ColorForPoint(llpos);

@@ -76,9 +76,9 @@ public static class KoreSkiaSharpConv
 
     public static KoreColorRGB ToKoreColorRGB(this SKColor color)
     {
-        float colR = (float)color.Red;
-        float colG = (float)color.Green;
-        float colB = (float)color.Blue;
+        byte colR = (byte)color.Red;
+        byte colG = (byte)color.Green;
+        byte colB = (byte)color.Blue;
 
         return new KoreColorRGB(colR, colG, colB);
     }

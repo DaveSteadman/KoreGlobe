@@ -59,6 +59,8 @@ public class KoreTerrainImageTile
 
                 // More pixels per degree is better resolution
                 PixelsPerDegree = imageWidthPixels / imageWidthDegrees;
+
+                GD.Print($" - Loaded image: {imagePath} size {TileImage.Width}x{TileImage.Height} // pixels per degree {PixelsPerDegree:F1}");
             }
         }
     }
@@ -109,7 +111,7 @@ public class KoreTerrainImageTile
             SKColor pixelColor = TileImage.GetPixel(pixelX, pixelY);
             KoreColorRGB returnColor = KoreSkiaSharpConv.ToKoreColorRGB(pixelColor);
 
-            GD.Print($" - {checkPos} = pixel {pixelX},{pixelY} color {KoreColorOps.ColorName(returnColor)}");
+            GD.Print($" - {checkPos} = frac {fracLeftToRight:F2},{fracTopToBottom:F2} pixel {pixelX},{pixelY} color {KoreColorOps.ColorName(returnColor)}");
 
             return returnColor;
         }

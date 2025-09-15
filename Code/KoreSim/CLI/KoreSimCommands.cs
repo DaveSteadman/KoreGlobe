@@ -69,6 +69,7 @@ public static class KoreSimCommands
         console.AddCommandHandler(new KoreCommandSatDivideTo());
 
         console.AddCommandHandler(new KoreCommandSatLoadTile());
+        console.AddCommandHandler(new KoreCommandSatPosColor());
 
 
     }
