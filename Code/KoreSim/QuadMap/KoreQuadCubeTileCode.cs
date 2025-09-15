@@ -20,6 +20,8 @@ public struct KoreQuadCubeTileCode
     public List<int> Quadrants { get; set; } = new();
 
     public KoreQuadCubeTileCode() { }
+    
+    public static KoreQuadCubeTileCode Zero => new KoreQuadCubeTileCode();
 
     // --------------------------------------------------------------------------------------------
 

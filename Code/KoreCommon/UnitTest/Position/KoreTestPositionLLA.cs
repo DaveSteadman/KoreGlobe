@@ -11,6 +11,8 @@ public static class KoreTestPositionLLA
     {
         try
         {
+            TestKoreLLAxis(testLog);
+            TestKoreLLAAxis(testLog);
             TestKoreLLAPointCreation(testLog);
             TestKoreLLAPointMovement(testLog);
             TestKoreLLAPoint_RangeBearing(testLog);
@@ -20,6 +22,114 @@ public static class KoreTestPositionLLA
             testLog.AddResult("KoreTestPositionLLA RunTests", false, ex.Message);
         }
     }
+
+
+    private static void TestKoreLLAxis(KoreTestLog testLog)
+    {
+        {
+            // XYZ 0,0,1 = Lat 0, Lon 0
+            KoreXYZVector testLonXYZ = new KoreXYZVector(0, 0, 1);
+            KoreLLPoint testLonLL = KoreLLPoint.FromXYZ(testLonXYZ);
+
+            bool okLat = KoreValueUtils.EqualsWithinTolerance(testLonLL.LatDegs, 0.0);
+            bool okLon = KoreValueUtils.EqualsWithinTolerance(testLonLL.LonDegs, 0.0);
+
+            string xyzStr = $"XYZ({testLonXYZ.X:0.000},{testLonXYZ.Y:0.000},{testLonXYZ.Z:0.000})";
+            string llStr = $"LL({testLonLL.LatDegs:0.000},{testLonLL.LonDegs:0.000})";
+
+            string posStr = $"{xyzStr} -> {llStr}";
+
+            testLog.AddResult($"KoreLLPoint: {posStr}", okLat && okLon);
+        }
+
+        {
+            // XYZ 1,0,0 = Lat 0, Lon 90
+            KoreXYZVector testLonXYZ = new KoreXYZVector(1, 0, 0);
+            KoreLLPoint testLonLL = KoreLLPoint.FromXYZ(testLonXYZ);
+
+            bool okLat = KoreValueUtils.EqualsWithinTolerance(testLonLL.LatDegs, 0.0);
+            bool okLon = KoreValueUtils.EqualsWithinTolerance(testLonLL.LonDegs, 90.0);
+
+            string xyzStr = $"XYZ({testLonXYZ.X:0.000},{testLonXYZ.Y:0.000},{testLonXYZ.Z:0.000})";
+            string llStr = $"LL({testLonLL.LatDegs:0.000},{testLonLL.LonDegs:0.000})";
+
+            string posStr = $"{xyzStr} -> {llStr}";
+
+            testLog.AddResult($"KoreLLPoint: {posStr}", okLat && okLon);
+        }
+        
+        {
+            // XYZ -1,0,0 = Lat 0, Lon -90
+            KoreXYZVector testLonXYZ = new KoreXYZVector(-1, 0, 0);
+            KoreLLPoint testLonLL = KoreLLPoint.FromXYZ(testLonXYZ);
+
+            bool okLat = KoreValueUtils.EqualsWithinTolerance(testLonLL.LatDegs, 0.0);
+            bool okLon = KoreValueUtils.EqualsWithinTolerance(testLonLL.LonDegs, -90.0);
+
+            string xyzStr = $"XYZ({testLonXYZ.X:0.000},{testLonXYZ.Y:0.000},{testLonXYZ.Z:0.000})";
+            string llStr = $"LL({testLonLL.LatDegs:0.000},{testLonLL.LonDegs:0.000})";
+
+            string posStr = $"{xyzStr} -> {llStr}";
+
+            testLog.AddResult($"KoreLLPoint: {posStr}", okLat && okLon);
+        }        
+        
+    }
+
+
+    private static void TestKoreLLAAxis(KoreTestLog testLog)
+    {
+        {
+            // XYZ 0,0,1 = Lat 0, Lon 0
+            KoreXYZVector testLonXYZ = new KoreXYZVector(0, 0, 1);
+            KoreLLAPoint testLonLLA = KoreLLAPoint.FromXYZ(testLonXYZ);
+
+            bool okLat = KoreValueUtils.EqualsWithinTolerance(testLonLLA.LatDegs, 0.0);
+            bool okLon = KoreValueUtils.EqualsWithinTolerance(testLonLLA.LonDegs, 0.0);
+
+            string xyzStr = $"XYZ({testLonXYZ.X:0.000},{testLonXYZ.Y:0.000},{testLonXYZ.Z:0.000})";
+            string llStr = $"LLA({testLonLLA.LatDegs:0.000},{testLonLLA.LonDegs:0.000},{testLonLLA.AltMslM:0.000})";
+
+            string posStr = $"{xyzStr} -> {llStr}";
+
+            testLog.AddResult($"KoreLLAPoint: {posStr}", okLat && okLon);
+        }
+
+        {
+            // XYZ 1,0,0 = Lat 0, Lon 90
+            KoreXYZVector testLonXYZ = new KoreXYZVector(1, 0, 0);
+            KoreLLAPoint testLonLLA = KoreLLAPoint.FromXYZ(testLonXYZ);
+
+            bool okLat = KoreValueUtils.EqualsWithinTolerance(testLonLLA.LatDegs, 0.0);
+            bool okLon = KoreValueUtils.EqualsWithinTolerance(testLonLLA.LonDegs, 90.0);
+
+            string xyzStr = $"XYZ({testLonXYZ.X:0.000},{testLonXYZ.Y:0.000},{testLonXYZ.Z:0.000})";
+            string llStr = $"LLA({testLonLLA.LatDegs:0.000},{testLonLLA.LonDegs:0.000})";
+
+            string posStr = $"{xyzStr} -> {llStr}";
+
+            testLog.AddResult($"KoreLLAPoint: {posStr}", okLat && okLon);
+        }
+        
+        {
+            // XYZ -1,0,0 = Lat 0, Lon -90
+            KoreXYZVector testLonXYZ = new KoreXYZVector(-1, 0, 0);
+            KoreLLAPoint testLonLLA = KoreLLAPoint.FromXYZ(testLonXYZ);
+
+            bool okLat = KoreValueUtils.EqualsWithinTolerance(testLonLLA.LatDegs, 0.0);
+            bool okLon = KoreValueUtils.EqualsWithinTolerance(testLonLLA.LonDegs, -90.0);
+
+            string xyzStr = $"XYZ({testLonXYZ.X:0.000},{testLonXYZ.Y:0.000},{testLonXYZ.Z:0.000})";
+            string llStr = $"LLA({testLonLLA.LatDegs:0.000},{testLonLLA.LonDegs:0.000},{testLonLLA.AltMslM:0.000})";
+
+            string posStr = $"{xyzStr} -> {llStr}";
+
+            testLog.AddResult($"KoreLLAPoint: {posStr}", okLat && okLon);
+        }        
+        
+    }
+
+
 
     private static void TestKoreLLAPointCreation(KoreTestLog testLog)
     {

@@ -51,7 +51,7 @@ public static class KoreTestDatabase
         writer.WriteBytes(testBytes);
         byte[] data = writer.ToArray();
 
-        bool addResult = db.Add("test", data);
+        bool addResult = db.Set("test", data);
         testLog.AddResult("KoreBinaryDataManager Add()", addResult);
 
         // Read back

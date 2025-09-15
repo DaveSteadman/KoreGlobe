@@ -16,50 +16,50 @@ public static class KoreQuadFaceOps
         {
             case KoreQuadFace.CubeFace.Top:
                 // Looking down from above (Y=1), front is -Z, back is +Z
-                qf.topLeft = new KoreXYZVector(-1, 1, -1);    // Front-left
-                qf.topRight = new KoreXYZVector(1, 1, -1);    // Front-right
-                qf.bottomLeft = new KoreXYZVector(-1, 1, 1);  // Back-left
-                qf.bottomRight = new KoreXYZVector(1, 1, 1);  // Back-right
+                qf.TopLeft = new KoreXYZVector(-1, 1, -1);    // Front-left
+                qf.TopRight = new KoreXYZVector(1, 1, -1);    // Front-right
+                qf.BottomLeft = new KoreXYZVector(-1, 1, 1);  // Back-left
+                qf.BottomRight = new KoreXYZVector(1, 1, 1);  // Back-right
                 break;
 
             case KoreQuadFace.CubeFace.Bottom:
                 // Looking up from below (Y=-1), front is -Z, back is +Z
-                qf.topLeft = new KoreXYZVector(-1, -1, 1);    // Back-left
-                qf.topRight = new KoreXYZVector(1, -1, 1);    // Back-right
-                qf.bottomLeft = new KoreXYZVector(-1, -1, -1); // Front-left
-                qf.bottomRight = new KoreXYZVector(1, -1, -1); // Front-right
+                qf.TopLeft = new KoreXYZVector(-1, -1, 1);    // Back-left
+                qf.TopRight = new KoreXYZVector(1, -1, 1);    // Back-right
+                qf.BottomLeft = new KoreXYZVector(-1, -1, -1); // Front-left
+                qf.BottomRight = new KoreXYZVector(1, -1, -1); // Front-right
                 break;
 
             case KoreQuadFace.CubeFace.Left:
                 // Looking at left face (X=-1) from outside
-                qf.topLeft = new KoreXYZVector(-1, 1, -1);
-                qf.topRight = new KoreXYZVector(-1, 1, 1);
-                qf.bottomLeft = new KoreXYZVector(-1, -1, -1);
-                qf.bottomRight = new KoreXYZVector(-1, -1, 1);
+                qf.TopLeft = new KoreXYZVector(-1, 1, -1);
+                qf.TopRight = new KoreXYZVector(-1, 1, 1);
+                qf.BottomLeft = new KoreXYZVector(-1, -1, -1);
+                qf.BottomRight = new KoreXYZVector(-1, -1, 1);
                 break;
 
             case KoreQuadFace.CubeFace.Right:
                 // Looking at right face (X=1) from outside
-                qf.topLeft = new KoreXYZVector(1, 1, 1);
-                qf.topRight = new KoreXYZVector(1, 1, -1);
-                qf.bottomLeft = new KoreXYZVector(1, -1, 1);
-                qf.bottomRight = new KoreXYZVector(1, -1, -1);
+                qf.TopLeft = new KoreXYZVector(1, 1, 1);
+                qf.TopRight = new KoreXYZVector(1, 1, -1);
+                qf.BottomLeft = new KoreXYZVector(1, -1, 1);
+                qf.BottomRight = new KoreXYZVector(1, -1, -1);
                 break;
 
             case KoreQuadFace.CubeFace.Front:
-                // Looking at front face (Z=-1) from outside
-                qf.topLeft = new KoreXYZVector(-1, 1, 1);
-                qf.topRight = new KoreXYZVector(1, 1, 1);
-                qf.bottomLeft = new KoreXYZVector(-1, -1, 1);
-                qf.bottomRight = new KoreXYZVector(1, -1, 1);
+                // Looking at front face (Z=1) from outside. Godot has -ve Z forward/away
+                qf.TopLeft = new KoreXYZVector(-1, 1, 1);
+                qf.TopRight = new KoreXYZVector(1, 1, 1);
+                qf.BottomLeft = new KoreXYZVector(-1, -1, 1);
+                qf.BottomRight = new KoreXYZVector(1, -1, 1);
                 break;
 
             case KoreQuadFace.CubeFace.Back:
-                // Looking at back face (Z=1) from outside
-                qf.topLeft = new KoreXYZVector(1, 1, -1);
-                qf.topRight = new KoreXYZVector(-1, 1, -1);
-                qf.bottomLeft = new KoreXYZVector(1, -1, -1);
-                qf.bottomRight = new KoreXYZVector(-1, -1, -1);
+                // Looking at back face (Z=-1) from outside
+                qf.TopLeft = new KoreXYZVector(1, 1, -1);
+                qf.TopRight = new KoreXYZVector(-1, 1, -1);
+                qf.BottomLeft = new KoreXYZVector(1, -1, -1);
+                qf.BottomRight = new KoreXYZVector(-1, -1, -1);
                 break;
         }
         return qf;
@@ -77,76 +77,97 @@ public static class KoreQuadFaceOps
         switch (quadrant)
         {
             case 0: // Top-left quadrant
-                qf.topLeft = face.topLeft;
-                qf.topRight = new KoreXYZVector(
-                    (face.topLeft.X + face.topRight.X) / 2,
-                    face.topLeft.Y,
-                    (face.topLeft.Z + face.topRight.Z) / 2);
-                qf.bottomLeft = new KoreXYZVector(
-                    face.topLeft.X,
-                    (face.topLeft.Y + face.bottomLeft.Y) / 2,
-                    (face.topLeft.Z + face.bottomLeft.Z) / 2);
-                qf.bottomRight = new KoreXYZVector(
-                    (face.topLeft.X + face.topRight.X) / 2,
-                    (face.topLeft.Y + face.bottomLeft.Y) / 2,
-                    (face.topLeft.Z + face.bottomLeft.Z) / 2);
+                qf.TopLeft = face.TopLeft;
+                qf.TopRight = new KoreXYZVector(
+                    (face.TopLeft.X + face.TopRight.X) / 2,
+                    face.TopLeft.Y,
+                    (face.TopLeft.Z + face.TopRight.Z) / 2);
+                qf.BottomLeft = new KoreXYZVector(
+                    face.TopLeft.X,
+                    (face.TopLeft.Y + face.BottomLeft.Y) / 2,
+                    (face.TopLeft.Z + face.BottomLeft.Z) / 2);
+                qf.BottomRight = new KoreXYZVector(
+                    (face.TopLeft.X + face.TopRight.X) / 2,
+                    (face.TopLeft.Y + face.BottomLeft.Y) / 2,
+                    (face.TopLeft.Z + face.BottomLeft.Z) / 2);
                 break;
 
             case 1: // Top-right quadrant
-                qf.topLeft = new KoreXYZVector(
-                    (face.topLeft.X + face.topRight.X) / 2,
-                    face.topLeft.Y,
-                    (face.topLeft.Z + face.topRight.Z) / 2);
-                qf.topRight = face.topRight;
-                qf.bottomLeft = new KoreXYZVector(
-                    (face.topLeft.X + face.topRight.X) / 2,
-                    (face.topLeft.Y + face.bottomLeft.Y) / 2,
-                    (face.topLeft.Z + face.bottomLeft.Z) / 2);
-                qf.bottomRight = new KoreXYZVector(
-                    face.topRight.X,
-                    (face.topLeft.Y + face.bottomLeft.Y) / 2,
-                    (face.topRight.Z + face.bottomRight.Z) / 2);
+                qf.TopLeft = new KoreXYZVector(
+                    (face.TopLeft.X + face.TopRight.X) / 2,
+                    face.TopLeft.Y,
+                    (face.TopLeft.Z + face.TopRight.Z) / 2);
+                qf.TopRight = face.TopRight;
+                qf.BottomLeft = new KoreXYZVector(
+                    (face.TopLeft.X + face.TopRight.X) / 2,
+                    (face.TopLeft.Y + face.BottomLeft.Y) / 2,
+                    (face.TopLeft.Z + face.BottomLeft.Z) / 2);
+                qf.BottomRight = new KoreXYZVector(
+                    face.TopRight.X,
+                    (face.TopLeft.Y + face.BottomLeft.Y) / 2,
+                    (face.TopRight.Z + face.BottomRight.Z) / 2);
                 break;
 
             case 2: // Bottom-left quadrant
-                qf.topLeft = new KoreXYZVector(
-                    face.topLeft.X,
-                    (face.topLeft.Y + face.bottomLeft.Y) / 2,
-                    (face.topLeft.Z + face.bottomLeft.Z) / 2);
-                qf.topRight = new KoreXYZVector(
-                    (face.topLeft.X + face.topRight.X) / 2,
-                    (face.topLeft.Y + face.bottomLeft.Y) / 2,
-                    (face.topLeft.Z + face.bottomLeft.Z) / 2);
-                qf.bottomLeft = face.bottomLeft;
-                qf.bottomRight = new KoreXYZVector(
-                    (face.topLeft.X + face.topRight.X) / 2,
-                    face.bottomLeft.Y,
-                    (face.bottomLeft.Z + face.bottomRight.Z) / 2);
+                qf.TopLeft = new KoreXYZVector(
+                    face.TopLeft.X,
+                    (face.TopLeft.Y + face.BottomLeft.Y) / 2,
+                    (face.TopLeft.Z + face.BottomLeft.Z) / 2);
+                qf.TopRight = new KoreXYZVector(
+                    (face.TopLeft.X + face.TopRight.X) / 2,
+                    (face.TopLeft.Y + face.BottomLeft.Y) / 2,
+                    (face.TopLeft.Z + face.BottomLeft.Z) / 2);
+                qf.BottomLeft = face.BottomLeft;
+                qf.BottomRight = new KoreXYZVector(
+                    (face.TopLeft.X + face.TopRight.X) / 2,
+                    face.BottomLeft.Y,
+                    (face.BottomLeft.Z + face.BottomRight.Z) / 2);
                 break;
 
             case 3: // Bottom-right quadrant
-                qf.topLeft = new KoreXYZVector(
-                    (face.topLeft.X + face.topRight.X) / 2,
-                    (face.topLeft.Y + face.bottomLeft.Y) / 2,
-                    (face.topLeft.Z + face.bottomLeft.Z) / 2);
-                qf.topRight = new KoreXYZVector(
-                    face.topRight.X,
-                    (face.topLeft.Y + face.bottomLeft.Y) / 2,
-                    (face.topRight.Z + face.bottomRight.Z) / 2);
-                qf.bottomLeft = new KoreXYZVector(
-                    (face.topLeft.X + face.topRight.X) / 2,
-                    face.bottomLeft.Y,
-                    (face.bottomLeft.Z + face.bottomRight.Z) / 2);
-                qf.bottomRight = face.bottomRight;
+                qf.TopLeft = new KoreXYZVector(
+                    (face.TopLeft.X + face.TopRight.X) / 2,
+                    (face.TopLeft.Y + face.BottomLeft.Y) / 2,
+                    (face.TopLeft.Z + face.BottomLeft.Z) / 2);
+                qf.TopRight = new KoreXYZVector(
+                    face.TopRight.X,
+                    (face.TopLeft.Y + face.BottomLeft.Y) / 2,
+                    (face.TopRight.Z + face.BottomRight.Z) / 2);
+                qf.BottomLeft = new KoreXYZVector(
+                    (face.TopLeft.X + face.TopRight.X) / 2,
+                    face.BottomLeft.Y,
+                    (face.BottomLeft.Z + face.BottomRight.Z) / 2);
+                qf.BottomRight = face.BottomRight;
                 break;
         }
 
         return qf;
     }
 
+    // --------------------------------------------------------------------------------------------
+
+    public static KoreXYZVector AverageXYZ(KoreQuadFace face)
+    {
+        return new KoreXYZVector(
+            (face.TopLeft.X + face.TopRight.X + face.BottomLeft.X + face.BottomRight.X) / 4,
+            (face.TopLeft.Y + face.TopRight.Y + face.BottomLeft.Y + face.BottomRight.Y) / 4,
+            (face.TopLeft.Z + face.TopRight.Z + face.BottomLeft.Z + face.BottomRight.Z) / 4
+        );
+    }
+
+    // Usage: KoreLLPoint centerLL = KoreQuadFaceOps.AverageLL(face);
+    public static KoreLLPoint AverageLL(KoreQuadFace face)
+    {
+        return KoreLLPoint.FromXYZ(AverageXYZ(face));
+    }
+
+    // --------------------------------------------------------------------------------------------
+
     // Given a tile code, return the KoreQuadFace that represents the area on the cube face
     // represented by the tile code.
     // The tile divisions are done by angle, to minimize distortion.
+
+    // Usage: KoreQuadFace tileFace = KoreQuadFaceOps.QuadrantOnFace(tileCode);
 
     public static KoreQuadFace QuadrantOnFace(KoreQuadCubeTileCode tileCode)
     {
@@ -220,10 +241,10 @@ public static class KoreQuadFaceOps
 
         KoreQuadFace newFace = new()
         {
-            topLeft = newTopLeft,
-            topRight = newTopRight,
-            bottomLeft = newBottomLeft,
-            bottomRight = newBottomRight
+            TopLeft = newTopLeft,
+            TopRight = newTopRight,
+            BottomLeft = newBottomLeft,
+            BottomRight = newBottomRight
         };
         return newFace;
     }
@@ -239,16 +260,16 @@ public static class KoreQuadFaceOps
         // Bilinear interpolation on the quad face
         // First interpolate along the top edge (v=0)
         KoreXYZVector topInterp = new KoreXYZVector(
-            face.topLeft.X + uFraction * (face.topRight.X - face.topLeft.X),
-            face.topLeft.Y + uFraction * (face.topRight.Y - face.topLeft.Y),
-            face.topLeft.Z + uFraction * (face.topRight.Z - face.topLeft.Z)
+            face.TopLeft.X + uFraction * (face.TopRight.X - face.TopLeft.X),
+            face.TopLeft.Y + uFraction * (face.TopRight.Y - face.TopLeft.Y),
+            face.TopLeft.Z + uFraction * (face.TopRight.Z - face.TopLeft.Z)
         );
 
         // Then interpolate along the bottom edge (v=1)
         KoreXYZVector bottomInterp = new KoreXYZVector(
-            face.bottomLeft.X + uFraction * (face.bottomRight.X - face.bottomLeft.X),
-            face.bottomLeft.Y + uFraction * (face.bottomRight.Y - face.bottomLeft.Y),
-            face.bottomLeft.Z + uFraction * (face.bottomRight.Z - face.bottomLeft.Z)
+            face.BottomLeft.X + uFraction * (face.BottomRight.X - face.BottomLeft.X),
+            face.BottomLeft.Y + uFraction * (face.BottomRight.Y - face.BottomLeft.Y),
+            face.BottomLeft.Z + uFraction * (face.BottomRight.Z - face.BottomLeft.Z)
         );
 
         // Finally interpolate between top and bottom edges using vFraction
@@ -283,16 +304,16 @@ public static class KoreQuadFaceOps
         // Now do standard bilinear interpolation with the corrected coordinates
         // First interpolate along the top edge (v=0)
         KoreXYZVector topInterp = new KoreXYZVector(
-            face.topLeft.X + uNorm * (face.topRight.X - face.topLeft.X),
-            face.topLeft.Y + uNorm * (face.topRight.Y - face.topLeft.Y),
-            face.topLeft.Z + uNorm * (face.topRight.Z - face.topLeft.Z)
+            face.TopLeft.X + uNorm * (face.TopRight.X - face.TopLeft.X),
+            face.TopLeft.Y + uNorm * (face.TopRight.Y - face.TopLeft.Y),
+            face.TopLeft.Z + uNorm * (face.TopRight.Z - face.TopLeft.Z)
         );
 
         // Then interpolate along the bottom edge (v=1)
         KoreXYZVector bottomInterp = new KoreXYZVector(
-            face.bottomLeft.X + uNorm * (face.bottomRight.X - face.bottomLeft.X),
-            face.bottomLeft.Y + uNorm * (face.bottomRight.Y - face.bottomLeft.Y),
-            face.bottomLeft.Z + uNorm * (face.bottomRight.Z - face.bottomLeft.Z)
+            face.BottomLeft.X + uNorm * (face.BottomRight.X - face.BottomLeft.X),
+            face.BottomLeft.Y + uNorm * (face.BottomRight.Y - face.BottomLeft.Y),
+            face.BottomLeft.Z + uNorm * (face.BottomRight.Z - face.BottomLeft.Z)
         );
 
         // Finally interpolate between top and bottom edges using vNorm

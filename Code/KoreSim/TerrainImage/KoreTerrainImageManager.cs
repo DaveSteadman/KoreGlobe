@@ -1,7 +1,7 @@
 
 using System.Collections.Generic;
 using System.IO;
-
+using Godot;
 using KoreCommon;
 
 namespace KoreSim;
@@ -27,6 +27,7 @@ public class KoreTerrainImageManager
         if (newTile.IsValid())
         {
             TerrainImageTileList.Add(newTile);
+            SortTilesByResolution();
             return (true, $"- Loaded image: {imagePath}");
         }
 
@@ -39,6 +40,13 @@ public class KoreTerrainImageManager
     public void SortTilesByResolution()
     {
         TerrainImageTileList.Sort((a, b) => b.PixelsPerDegree.CompareTo(a.PixelsPerDegree));
+
+        // debug print the tiles in order
+        foreach (KoreTerrainImageTile tile in TerrainImageTileList)
+        {
+            string resStr = $"{tile.PixelsPerDegree:0.00} ppd - {tile.ImagePath}";
+            GD.Print(resStr);
+        }
     }
 
     // --------------------------------------------------------------------------------------------

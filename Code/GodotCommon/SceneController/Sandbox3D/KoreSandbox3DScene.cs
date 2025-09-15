@@ -892,20 +892,42 @@ public partial class KoreSandbox3DScene : Node3D
 
         // - - - -
 
-        KoreQuadCubeTileCode tileCodeFront00 = new KoreQuadCubeTileCode() { Face = KoreQuadFace.CubeFace.Front, Quadrants = new List<int> { 0, 0 } };
-        KoreQuadCubeTileCode tileCodeFront01 = new KoreQuadCubeTileCode() { Face = KoreQuadFace.CubeFace.Front, Quadrants = new List<int> { 0, 1 } };
-        KoreQuadCubeTileCode tileCodeFront02 = new KoreQuadCubeTileCode() { Face = KoreQuadFace.CubeFace.Front, Quadrants = new List<int> { 0, 2 } };
-        KoreQuadCubeTileCode tileCodeFront03 = new KoreQuadCubeTileCode() { Face = KoreQuadFace.CubeFace.Front, Quadrants = new List<int> { 0, 3 } };
+        KoreQuadCubeTileCode tileCodeTop0 = new KoreQuadCubeTileCode() { Face = KoreQuadFace.CubeFace.Top, Quadrants = new List<int> { 0 } };
+        KoreQuadCubeTileCode tileCodeTop1 = new KoreQuadCubeTileCode() { Face = KoreQuadFace.CubeFace.Top, Quadrants = new List<int> { 1 } };
+        KoreQuadCubeTileCode tileCodeTop2 = new KoreQuadCubeTileCode() { Face = KoreQuadFace.CubeFace.Top, Quadrants = new List<int> { 2 } };
+        KoreQuadCubeTileCode tileCodeTop3 = new KoreQuadCubeTileCode() { Face = KoreQuadFace.CubeFace.Top, Quadrants = new List<int> { 3 } };
 
-        KoreQuadCubeTile tileFront00 = KoreQuadCubeTileFactory.TileForCode(tileCodeFront00, radius: 1.15);
-        KoreQuadCubeTile tileFront01 = KoreQuadCubeTileFactory.TileForCode(tileCodeFront01, radius: 1.16);
-        KoreQuadCubeTile tileFront02 = KoreQuadCubeTileFactory.TileForCode(tileCodeFront02, radius: 1.17);
-        KoreQuadCubeTile tileFront03 = KoreQuadCubeTileFactory.TileForCode(tileCodeFront03, radius: 1.18);
+        KoreQuadCubeTile tileTop0 = KoreQuadCubeTileFactory.TileForCode2(tileCodeTop0, radius: 1.1);
+        KoreQuadCubeTile tileTop1 = KoreQuadCubeTileFactory.TileForCode2(tileCodeTop1, radius: 1.11);
+        KoreQuadCubeTile tileTop2 = KoreQuadCubeTileFactory.TileForCode2(tileCodeTop2, radius: 1.12);
+        KoreQuadCubeTile tileTop3 = KoreQuadCubeTileFactory.TileForCode2(tileCodeTop3, radius: 1.13);
 
-        KoreColorMeshOps.SetAllColorsWithNoise(tileFront00.ColorMesh, KoreColorPalette.RandomColor(), 0.25f);
-        KoreColorMeshOps.SetAllColorsWithNoise(tileFront01.ColorMesh, KoreColorPalette.RandomColor(), 0.25f);
-        KoreColorMeshOps.SetAllColorsWithNoise(tileFront02.ColorMesh, KoreColorPalette.RandomColor(), 0.25f);
-        KoreColorMeshOps.SetAllColorsWithNoise(tileFront03.ColorMesh, KoreColorPalette.RandomColor(), 0.25f);
+        // KoreColorMeshOps.SetAllColors(tileFront0.ColorMesh, KoreColorPalette.RandomColor());
+        // KoreColorMeshOps.SetAllColors(tileFront1.ColorMesh, KoreColorPalette.RandomColor());
+        // KoreColorMeshOps.SetAllColors(tileFront2.ColorMesh, KoreColorPalette.RandomColor());
+        // KoreColorMeshOps.SetAllColors(tileFront3.ColorMesh, KoreColorPalette.RandomColor());
+
+        KoreColorMeshGodot coloredMeshNodeTop0 = new() { Name = "QuadMesh_Top_0" }; QuadMeshNode.AddChild(coloredMeshNodeTop0);
+        KoreColorMeshGodot coloredMeshNodeTop1 = new() { Name = "QuadMesh_Top_1" }; QuadMeshNode.AddChild(coloredMeshNodeTop1);
+        KoreColorMeshGodot coloredMeshNodeTop2 = new() { Name = "QuadMesh_Top_2" }; QuadMeshNode.AddChild(coloredMeshNodeTop2);
+        KoreColorMeshGodot coloredMeshNodeTop3 = new() { Name = "QuadMesh_Top_3" }; QuadMeshNode.AddChild(coloredMeshNodeTop3);
+
+        coloredMeshNodeTop0.UpdateMesh(tileTop0.ColorMesh);
+        coloredMeshNodeTop1.UpdateMesh(tileTop1.ColorMesh);
+        coloredMeshNodeTop2.UpdateMesh(tileTop2.ColorMesh);
+        coloredMeshNodeTop3.UpdateMesh(tileTop3.ColorMesh);
+
+        // - - - -
+
+        KoreQuadCubeTileCode tileCodeFront00 = new KoreQuadCubeTileCode() { Face = KoreQuadFace.CubeFace.Front, Quadrants = new List<int> { 0, 1, 1, 0 } };
+        KoreQuadCubeTileCode tileCodeFront01 = new KoreQuadCubeTileCode() { Face = KoreQuadFace.CubeFace.Front, Quadrants = new List<int> { 0, 1, 1, 1 } };
+        KoreQuadCubeTileCode tileCodeFront02 = new KoreQuadCubeTileCode() { Face = KoreQuadFace.CubeFace.Front, Quadrants = new List<int> { 0, 1, 1, 2 } };
+        KoreQuadCubeTileCode tileCodeFront03 = new KoreQuadCubeTileCode() { Face = KoreQuadFace.CubeFace.Front, Quadrants = new List<int> { 0, 1, 1, 3 } };
+
+        KoreQuadCubeTile tileFront00 = KoreQuadCubeTileFactory.TileForCode2(tileCodeFront00, radius: 1.15);
+        KoreQuadCubeTile tileFront01 = KoreQuadCubeTileFactory.TileForCode2(tileCodeFront01, radius: 1.16);
+        KoreQuadCubeTile tileFront02 = KoreQuadCubeTileFactory.TileForCode2(tileCodeFront02, radius: 1.17);
+        KoreQuadCubeTile tileFront03 = KoreQuadCubeTileFactory.TileForCode2(tileCodeFront03, radius: 1.18);
 
         KoreColorMeshGodot coloredMeshNodeFront00 = new() { Name = "QuadMesh_Front_00" }; QuadMeshNode.AddChild(coloredMeshNodeFront00);
         KoreColorMeshGodot coloredMeshNodeFront01 = new() { Name = "QuadMesh_Front_01" }; QuadMeshNode.AddChild(coloredMeshNodeFront01);
@@ -916,6 +938,11 @@ public partial class KoreSandbox3DScene : Node3D
         coloredMeshNodeFront01.UpdateMesh(tileFront01.ColorMesh);
         coloredMeshNodeFront02.UpdateMesh(tileFront02.ColorMesh);
         coloredMeshNodeFront03.UpdateMesh(tileFront03.ColorMesh);
+
+        KoreQuadZNMapTileDBManager.CreateOrOpenDB();
+        byte[] x = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+        
+        KoreQuadZNMapTileDBManager.SetBytesForName("TestSeq", x);
     }
 
 }

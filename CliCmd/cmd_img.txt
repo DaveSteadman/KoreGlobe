@@ -1,2 +1,7 @@
 
-sat loadtile C:/Util/Dropbox/3DViewerProject/MapLib/WorldTile.webp      -90 -180     90    180
+sat loadtile UnitTestArtefacts/bluemarble_2000x1000.webp     -90 -180     90    180
+sat loadtile UnitTestArtefacts/Sat_BF_EE.webp   35  -10   40 -5
+
+
+
+

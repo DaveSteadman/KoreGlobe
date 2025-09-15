@@ -20,13 +20,14 @@ public struct KoreQuadFace
         { CubeFace.Back, "Bak" }
     };
 
-    public KoreXYZVector topLeft { get; set; } = KoreXYZVector.Zero;
-    public KoreXYZVector topRight { get; set; } = KoreXYZVector.Zero;
-    public KoreXYZVector bottomLeft { get; set; } = KoreXYZVector.Zero;
-    public KoreXYZVector bottomRight { get; set; } = KoreXYZVector.Zero;
+    // Cube face corner positions
+    public KoreXYZVector TopLeft { get; set; } = KoreXYZVector.Zero;
+    public KoreXYZVector TopRight { get; set; } = KoreXYZVector.Zero;
+    public KoreXYZVector BottomLeft { get; set; } = KoreXYZVector.Zero;
+    public KoreXYZVector BottomRight { get; set; } = KoreXYZVector.Zero;
 
     public KoreQuadFace() { }
 
 
-    public static KoreQuadFace Zero => new KoreQuadFace();
+    public static KoreQuadFace Zero => new KoreQuadFace(); 
 }

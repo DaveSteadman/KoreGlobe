@@ -134,7 +134,7 @@ public partial class KoreZeroNodeMapManager : Node3D
                 //tile.CountChildTiles();
                 totalTileCount += tile.TileCount;
             }
-            GD.Print($"Total Tile Count: {totalTileCount} // {Lvl0Tiles.Count}");
+            //GD.Print($"Total Tile Count: {totalTileCount} // {Lvl0Tiles.Count}");
         }
     }
 

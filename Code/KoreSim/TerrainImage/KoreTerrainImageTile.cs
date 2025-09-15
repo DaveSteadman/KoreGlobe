@@ -111,7 +111,7 @@ public class KoreTerrainImageTile
             SKColor pixelColor = TileImage.GetPixel(pixelX, pixelY);
             KoreColorRGB returnColor = KoreSkiaSharpConv.ToKoreColorRGB(pixelColor);
 
-            GD.Print($" - {checkPos} = frac {fracLeftToRight:F2},{fracTopToBottom:F2} pixel {pixelX},{pixelY} color {KoreColorOps.ColorName(returnColor)}");
+            //GD.Print($" - {checkPos} = frac {fracLeftToRight:F2},{fracTopToBottom:F2} pixel {pixelX},{pixelY} color {KoreColorOps.ColorName(returnColor)}");
 
             return returnColor;
         }

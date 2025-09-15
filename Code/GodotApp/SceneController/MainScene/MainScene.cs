@@ -160,7 +160,7 @@ public partial class MainScene : Node3D
 
         // 5. Log memory usage
         long memoryAfter = GC.GetTotalMemory(false);
-        GD.Print($"Memory after aggressive cleanup: {memoryAfter / 1024 / 1024}MB");
+        //GD.Print($"Memory after aggressive cleanup: {memoryAfter / 1024 / 1024}MB");
     }
 
     // // ---------------------------------------------------------------------------------------------
