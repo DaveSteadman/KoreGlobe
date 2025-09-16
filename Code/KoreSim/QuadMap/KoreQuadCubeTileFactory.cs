@@ -183,8 +183,8 @@ public static class KoreQuadCubeTileFactory
         KoreLLAPoint centerLLA = new(centerLL, radius);
         KoreXYZVector centerXYZ = centerLLA.ToXYZ();
 
-        int numU = 50; // Setup the number of points (not triangles, points) across and down from a top-left 0,0
-        int numV = 55;
+        int numU = 10; // Setup the number of points (not triangles, points) across and down from a top-left 0,0
+        int numV = 11;
         KoreNumeric1DArray<double> uArray = KoreNumeric1DArrayOps<double>.CreateArrayByCount(0, 1, numU);
         KoreNumeric1DArray<double> vArray = KoreNumeric1DArrayOps<double>.CreateArrayByCount(0, 1, numV);
 
@@ -218,12 +218,6 @@ public static class KoreQuadCubeTileFactory
                 // Convert to lat/lon
                 KoreLLPoint llpos = KoreLLPoint.FromXYZ(facepos);
 
-                // KoreXYZVector facepos2 = facepos;
-                // facepos2.Z *= -1; // Invert Z for the conversion
-                // KoreLLPoint surfaceLL = KoreLLPoint.FromXYZ(facepos2);
-                // surfaceLL.LonDegs -= 90;
-                // surfaceLL.LonDegs = KoreNumericRange<double>.ZeroTo360Degrees.Apply(surfaceLL.LonDegs);
-
                 // Grab the color for this lat long
                 colorlist[currVId, currUId] = KoreSimFactory.Instance.ImageManager.ColorForPoint(llpos);
 
@@ -240,10 +234,10 @@ public static class KoreQuadCubeTileFactory
                 KoreXYZVector xyzToCenterPoint = centerXYZ.XYZTo(surfaceXYZ);
 
                 // report a few positions from the top corner
-                // if (currUId + currVId < 3)
-                // {
-                //     GD.Print($"UV:({currUId}, {currVId}) // LL {llpos.LatDegs:0.000},{llpos.LonDegs:0.000} // XYZ {xyzToCenterPoint.X:0.000},{xyzToCenterPoint.Y:0.000},{xyzToCenterPoint.Z:0.000}");
-                // }
+                if (currUId + currVId < 3)
+                {
+                    GD.Print($"UV:({currUId}, {currVId}) // LL {llpos.LatDegs:0.000},{llpos.LonDegs:0.000} // XYZ {xyzToCenterPoint.X:0.000},{xyzToCenterPoint.Y:0.000},{xyzToCenterPoint.Z:0.000}");
+                }
 
                 // y,x to match [v,u]
                 points[currVId, currUId] = xyzToCenterPoint;
@@ -263,9 +257,6 @@ public static class KoreQuadCubeTileFactory
 
         return tile;
     }
-
-
-
 }
 
 

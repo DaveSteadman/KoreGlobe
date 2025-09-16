@@ -35,7 +35,6 @@ public partial class KoreZeroNodeMapTile : Node3D
 
         //     //GD.Print($"Setting visibility for {TileCode} to {visible}");
 
-            //     bool showDebug = KoreGodotFactory.Instance.UIState.ShowTileInfo  && visible;
 
             //     if (MeshInstance  != null) MeshInstance.Visible  = visible;
             //     if (MeshInstanceW != null) MeshInstanceW.Visible = showDebug;

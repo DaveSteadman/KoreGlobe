@@ -252,8 +252,6 @@ public partial class KoreZeroNodeMapTile : Node3D
 
     public bool GrabbedActionCounter()
     {
-        // if (KoreGodotFactory.Instance == null) return false;
-        // if (KoreGodotFactory.Instance.ZeroNodeMapManager == null) return false;
         
         return KoreZeroNodeMapManager.ActionCounter.TryConsume();
     }

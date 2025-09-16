@@ -60,6 +60,7 @@ public partial class KoreQuadZNMapTile : Node3D
         // Set the core Tilecode and node name.
         TileCode = tileCode;
         TileCodeStr = TileCode.CodeToString();
+        Name = TileCodeStr;
 
         // Initial flag state
         ConstructionComplete = false;
@@ -87,7 +88,13 @@ public partial class KoreQuadZNMapTile : Node3D
         // TileVisibilityStats.LatestValue = new KoreZeroTileVisibilityStats();
 
         // Kick-off the background tile processing (for issues like visibility).
-        Task.Run(() => BackgroundProcessing());
+        // Task.Run(() => BackgroundProcessing());
+
+        // Define the real world tile center positions that we use to anchor the tile in the GE world.
+        RwTileCenterLLA = new KoreLLAPoint(KoreQuadFaceOps.AverageLL(TileQuadFace), KoreWorldConsts.EarthRadiusM);
+        RwTileCenterXYZ = RwTileCenterLLA.ToXYZ();
+
+        CreateTileFromData();
 
         //     // KoreColorMesh colorMesh = KoreColorMeshPrimitives.Tile(TileCode, tileEleData, colormap);
         //     // //KoreColorMesh colorMesh = KoreColorMeshPrimitives.BasicSphere(KoreXYZVector.Zero, 1f, colormap);
@@ -103,13 +110,13 @@ public partial class KoreQuadZNMapTile : Node3D
     // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(double delta)
     {
-        //     // GD.Print($"Tile Process: {TileCode} - Stage: {ConstructionStage} // {ConstructionComplete} {BackgroundConstructionComplete}");
+        // GD.Print($"Tile Process: {TileCode} - Stage: {ConstructionStage} // {ConstructionComplete} {BackgroundConstructionComplete}");
 
-        if (!ConstructionComplete)
-        {
+        // if (!ConstructionComplete)
+        // {
 
-        }
-        else
+        // }
+        // else
         {
             // IF we're in a pos-change cycle, update the tile location
             if (KoreZeroOffset.IsPosChangeCycle)
@@ -183,13 +190,6 @@ public partial class KoreQuadZNMapTile : Node3D
     // // MARK: Action Counter
     // // --------------------------------------------------------------------------------------------
 
-    // public bool GrabbedActionCounter()
-    // {
-    //     // if (KoreGodotFactory.Instance == null) return false;
-    //     // if (KoreGodotFactory.Instance.ZeroNodeMapManager == null) return false;
-
-    //     return KoreZeroNodeMapManager.ActionCounter.TryConsume();
-    // }
 
     // --------------------------------------------------------------------------------------------
     // MARK: Background
@@ -207,19 +207,16 @@ public partial class KoreQuadZNMapTile : Node3D
             // Pause the thread, being a good citizen with lots of tasks around.
             await Task.Yield();
 
-            // Define he tile's quadrant face
-            KoreQuadFace TileQuadFace = KoreQuadFaceOps.QuadrantOnFace(TileCode);
+            // // Define he tile's quadrant face
+            // KoreQuadFace TileQuadFace = KoreQuadFaceOps.QuadrantOnFace(TileCode);
 
-            // Define the real world tile center positions that we use to anchor the tile in the GE world.
-            RwTileCenterLLA = new KoreLLAPoint(KoreQuadFaceOps.AverageLL(TileQuadFace), KoreWorldConsts.EarthRadiusM);
-            RwTileCenterXYZ = RwTileCenterLLA.ToXYZ();
 
-            bool tileinDB = KoreQuadZNMapTileDBManager.HasBytesForName(TileCodeStr);
+            // bool tileinDB = false; // KoreQuadZNMapTileDBManager.HasBytesForName(TileCodeStr);
 
-            if (tileinDB)
-                LoadTileFromDB();
-            else
-                CreateTileFromData();
+            // if (tileinDB)
+            //     LoadTileFromDB();
+            // else
+            //     CreateTileFromData();
 
         }
         catch (Exception ex)
@@ -266,7 +263,12 @@ public partial class KoreQuadZNMapTile : Node3D
 
     private void CreateTileFromData()
     {
-        KoreQuadCubeTile tile = KoreQuadCubeTileFactory.TileForCode(TileCode, radius: 10);
+        KoreQuadCubeTile tile = KoreQuadCubeTileFactory.TileForCode3(TileCode, radius: KoreZeroOffset.GeEarthRadius);
+
+        KoreColorMeshGodot coloredMeshNode = new() { Name = $"QuadMesh_{TileCodeStr}" };
+        AddChild(coloredMeshNode);
+
+        coloredMeshNode.UpdateMesh(tile.ColorMesh);
     }
 
     // --------------------------------------------------------------------------------------------
@@ -294,15 +296,24 @@ public partial class KoreQuadZNMapTile : Node3D
 
     private void DebugSphere()
     {
+        float sphereRadius = 1f;
+        
         // Create a debug sphere at the tile center
         var sphereMesh = new SphereMesh();
-        sphereMesh.Radius = 0.1f;
-        sphereMesh.Height = 0.2f;
+        sphereMesh.Radius = sphereRadius;
+        sphereMesh.Height = sphereRadius * 2;
         sphereMesh.RadialSegments = 8;
         sphereMesh.Rings = 4;
 
-        var sphereInstance = new MeshInstance3D();
+        var sphereInstance = new MeshInstance3D() { Name = $"DebugSphere_{TileCodeStr}" };
         sphereInstance.Mesh = sphereMesh;
+        
+        sphereInstance.MaterialOverlay = new StandardMaterial3D()
+        {
+            AlbedoColor = new Color(1, 0, 0, 0.5f),
+            Metallic = 0.0f,
+            Roughness = 0.5f       
+        };
         // sphereInstance.Translation = new Vector3(0, 0, 0);
         AddChild(sphereInstance);
     }

@@ -1,6 +1,6 @@
 
 // KoreGodotMainSceneFactory is a central global class managing access to internal modelling element.
-// KoreGodotFactory is a class that manages the creation of Godot entities.
+
 
 using System;
 using System.Collections.Generic;
@@ -22,6 +22,7 @@ public static class KoreGodotMainSceneFactory
     // Service Nodes
     public static KoreZeroNodeMapManager? MapManagerNode    { get; private set; } = null;
     public static KoreGodotEntityManager? EntityManagerNode { get; private set; } = null;
+    public static KoreQuadZNMapManager? QuadZNMapManager { get; private set; } = null;
 
     // KoreGodotMainSceneFactory.WorldCameraMount
     public static KoreWorldMoverNode2? WorldCameraMount { get; private set; } = null;
@@ -56,9 +57,17 @@ public static class KoreGodotMainSceneFactory
         MapManagerNode = new KoreZeroNodeMapManager(ZeroNode);
         ZeroNode?.AddChild(MapManagerNode);
 
+        QuadZNMapManager = new KoreQuadZNMapManager(ZeroNode);
+        ZeroNode?.AddChild(QuadZNMapManager);
+
         EntityManagerNode = new KoreGodotEntityManager();
         ZeroNode?.AddChild(EntityManagerNode);
 
+
+
+        KoreZeroNodeSphere zeroSphere = new KoreZeroNodeSphere(10f, KoreColorRGB.Black);
+        ZeroNode?.AddChild(zeroSphere);
+        
         // Internal Model initialization
 
         KoreSimFactory.TriggerInstance();

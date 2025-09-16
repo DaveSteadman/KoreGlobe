@@ -22,7 +22,6 @@ public partial class KoreMessageManager
     private void ProcessMessage_EntityFocus(EntityFocus msg)
     {
         KoreCentralLog.AddEntry($"KoreMessageManager.ProcessMessage_EntityFocus: {msg.EntityName}");
-        //KoreGodotFactory.Instance.UIMsgQueue.EnqueueMessage(msg);
     }
 
     // --------------------------------------------------------------------------------------------

@@ -30,64 +30,6 @@ public partial class KoreQuadZNMapManager : Node3D
 
     public KoreQuadZNMapManager(Node zeroNode)
     {
-        //     ///ZeroNode = zeroNode;
-
-        //     // Read the debug flag from config
-        //     if (KoreGodotFactory.Instance.Config == null)
-        //     {
-        //         GD.PrintErr("KoreZeroNodeMapManager: Config is null, cannot read settings.");
-        //         return;
-        //     }
-
-        //     GD.Print($"KoreZeroNodeMapManager: Constructor");
-
-        //     // Create and debug draw a lvl0 tile
-        //     // Lvl0Tiles.Add(new KoreZeroNodeMapTile(new KoreMapTileCode("BF")));
-        //     // Lvl0Tiles.Add(new KoreZeroNodeMapTile(new KoreMapTileCode("AG")));
-        //     // Lvl0Tiles.Add(new KoreZeroNodeMapTile(new KoreMapTileCode("BG")));
-        //     // Lvl0Tiles.Add(new KoreZeroNodeMapTile(new KoreMapTileCode("CG")));
-        //     // Lvl0Tiles.Add(new KoreZeroNodeMapTile(new KoreMapTileCode("BH")));
-
-
-        //     List<KoreMapTileCode> lvl0CodesList = KoreMapTileCode.Lvl0Codes();
-        //     foreach (KoreMapTileCode lvl0Code in lvl0CodesList)
-        //     {
-        //         KoreZeroNodeMapTile tile = new KoreZeroNodeMapTile(lvl0Code);
-        //         Lvl0Tiles.Add(tile);
-        //     }
-
-
-        //     // Loop through the tiles and rotate them onto their center longitude
-        //    // int i = 0;
-        //     foreach (KoreZeroNodeMapTile tile in Lvl0Tiles)
-        //     {
-        //         //i++;
-        //         AddChild(tile);
-        //         double lon = tile.TileCode.LLBox.CenterPoint.LonRads;
-        //         //tile.Rotation = new Vector3(0, (float)lon, 0);
-
-        //         //if (i > 20) break;
-        //     }
-
-
-
-
-
-        //     //CreateLvl0Tiles();
-
-        //     CurrMaxMapLvl = 0;
-        //     if (KoreGodotFactory.Instance.Config.Has("MaxMapLvl"))
-        //         CurrMaxMapLvl = KoreStringDictionaryOps.ReadInt(KoreGodotFactory.Instance.Config, "MaxMapLvl");
-        //     else
-        //         KoreStringDictionaryOps.WriteInt(KoreGodotFactory.Instance.Config, "MaxMapLvl", 0);
-
-        //     MapRootPath = "";
-        //     if (KoreGodotFactory.Instance.Config.Has("MapRootPath"))
-        //         MapRootPath = KoreGodotFactory.Instance.Config.Get("MapRootPath");
-        //     else
-        //         KoreGodotFactory.Instance.Config.Set("MapRootPath", MapRootPath);
-
-        //     KoreSimFactory.Instance.SaveConfig(KoreSimFactory.ConfigPath);
     }
 
     // --------------------------------------------------------------------------------------------
@@ -140,8 +82,10 @@ public partial class KoreQuadZNMapManager : Node3D
     {
         KoreCentralLog.AddEntry("KoreQuadZNMapManager: Creating the 8 Lvl0 Face Tiles");
 
-        foreach (KoreQuadFace.CubeFace currFace in Enum.GetValues(typeof(KoreQuadFace.CubeFace)))
+        // foreach (KoreQuadFace.CubeFace currFace in Enum.GetValues(typeof(KoreQuadFace.CubeFace)))
         {
+            KoreQuadFace.CubeFace currFace = KoreQuadFace.CubeFace.Front;
+
             // Create the face tile code
             KoreQuadCubeTileCode currFaceTileCode = new() { Face = currFace, Quadrants = new List<int> { } };
 
@@ -152,6 +96,23 @@ public partial class KoreQuadZNMapManager : Node3D
             Lvl0Tiles.Add(currZNMapTile);
             AddChild(currZNMapTile);
         }
+
+        {
+            KoreQuadFace.CubeFace currFace = KoreQuadFace.CubeFace.Top;
+
+            // Create the face tile code
+            KoreQuadCubeTileCode currFaceTileCode = new() { Face = currFace, Quadrants = new List<int> { } };
+
+            // Create the tile object, that will kickstart its own tile loading and display process.
+            KoreQuadZNMapTile currZNMapTile = new(currFaceTileCode);
+
+            // Add the tile to the scene and our internal list
+            Lvl0Tiles.Add(currZNMapTile);
+            AddChild(currZNMapTile);
+        }
+
+
+        
     }
 
     // --------------------------------------------------------------------------------------------
@@ -197,39 +158,6 @@ public partial class KoreQuadZNMapManager : Node3D
     // // --------------------------------------------------------------------------------------------
     // // MARK: Visibility
     // // --------------------------------------------------------------------------------------------
-
-    // public static void SetLoadRefLLA(KoreLLAPoint newLoadRefLLA)
-    // {
-    //     LoadRefLLA = newLoadRefLLA;
-
-    //     DistanceToHorizonM = (float)(KoreWorldOps.DistanceToHorizonM(LoadRefLLA.AltMslM));
-
-    //     if (DistanceToHorizonM < 10000) KoreZeroNodeMapManager.DistanceToHorizonM = 10000; // minimise value at 10km
-    // }
-
-
-
-
-    // public static void SetMaxMapLvl(int maxMapLvl)
-    // {
-    //     CurrMaxMapLvl = KoreValueUtils.Clamp(maxMapLvl, 0, KoreMapTileCode.MaxMapLvl);
-
-    //     // Save the max map level to config
-
-    //     var config = KoreGodotFactory.Instance.Config;
-    //     config.Set("MaxMapLvl", CurrMaxMapLvl);
-    // }
-
-    // public void UpdateInfoVisibility(bool infoVisible)
-    // {
-    //     GD.Print($"KoreZeroNodeMapManager: UpdateInfoVisibility {infoVisible}");
-
-    //     foreach (KoreZeroNodeMapTile tile in Lvl0Tiles)
-    //     {
-    //         tile.UpdateInfoVisibility(infoVisible);
-    //         tile.UpdateChildInfoVisibility(infoVisible);
-    //     }
-    // }
 
 
 }

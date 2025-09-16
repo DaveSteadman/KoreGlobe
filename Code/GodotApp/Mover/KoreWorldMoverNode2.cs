@@ -30,7 +30,7 @@ public partial class KoreWorldMoverNode2 : Node3D
     private bool _isRightMouseDown = false;
     private bool _isMiddleMouseDown = false;
     private HashSet<Key> _currentKeys = new();
-    private const double PitchLimit = 1.55334; // ~89.0 deg to avoid gimbal weirdness
+    private const double PitchLimitRads = 1.55334; // ~89.0 deg to avoid gimbal weirdness
 
     // --------------------------------------------------------------------------------------------
     // MARK: Node3D
@@ -182,7 +182,7 @@ public partial class KoreWorldMoverNode2 : Node3D
                 CurrAim.ElRads += mm.Relative.Y * MouseSensitivityRadsPerPx * 1.0; // invert to feel natural
 
                 CurrAim.AzRads = WrapAngle(CurrAim.AzRads);
-                CurrAim.ElRads = Mathf.Clamp((float)CurrAim.ElRads, (float)-PitchLimit, (float)PitchLimit);
+                CurrAim.ElRads = Mathf.Clamp((float)CurrAim.ElRads, (float)-PitchLimitRads, (float)PitchLimitRads);
             }
         }
     }
@@ -236,7 +236,7 @@ public partial class KoreWorldMoverNode2 : Node3D
         if (_currentKeys.Contains(Key.S)) CurrAim.ElRads -= pitRate;
 
         CurrAim.AzRads = WrapAngle(CurrAim.AzRads);
-        CurrAim.ElRads = Mathf.Clamp((float)CurrAim.ElRads, (float)-PitchLimit, (float)PitchLimit);
+        CurrAim.ElRads = Mathf.Clamp((float)CurrAim.ElRads, (float)-PitchLimitRads, (float)PitchLimitRads);
     }
 
     // --------------------------------------------------------------------------------------------

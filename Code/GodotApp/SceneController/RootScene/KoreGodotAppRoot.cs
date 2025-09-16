@@ -91,6 +91,5 @@ public partial class KoreGodotAppRoot : Node
     {
         KoreCentralLog.AddEntry("AppInitActions");
         KoreCentralLog.SetFilename($"Log-{KoreCentralTime.RuntimeStartTimestampUTC}.log");
-        //KoreGodotFactory.TriggerInstance();
     }
 }

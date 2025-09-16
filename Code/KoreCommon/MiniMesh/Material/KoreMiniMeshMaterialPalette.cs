@@ -35,6 +35,8 @@ public static class KoreMiniMeshMaterialPalette
         new ("MattOrange", new KoreColorRGB(255, 100, 0), 0f, 1f),
 
         new ("MattDarkRed", new KoreColorRGB(130, 0, 0), 0f, 1f),
+        new ("MattDarkGreen", new KoreColorRGB(0, 130, 0), 0f, 1f),
+        new ("MattDarkBlue", new KoreColorRGB(0, 0, 130), 0f, 1f),
 
         // ----------------------------------------------------------------------------------------
         // MARK: Metallic Materials
@@ -106,6 +108,7 @@ public static class KoreMiniMeshMaterialPalette
     // --------------------------------------------------------------------------------------------
 
     // Find material by name, returns MattWhite if not found
+    // Usage: KoreMiniMeshMaterial mat = KoreMiniMeshMaterialPalette.Find("MattDarkGreen");
     public static KoreMiniMeshMaterial Find(string name)
     {
         foreach (var material in MaterialsList)

@@ -37,7 +37,7 @@ public static class KoreZeroOffset
     // public static KoreXYZVector RwZeroPointXYZ = new KoreXYZVector(0, 0, 0);
 
     // Game engine earth radius and conversion around it.
-    public static double GeEarthRadius = 6000; // Earth radius in Game Engine units // KoreZeroOffset.GeEarthRadius
+    public static double GeEarthRadius = 60; // Earth radius in Game Engine units // KoreZeroOffset.GeEarthRadius
     public static double RwToGeDistanceMultiplier = GeEarthRadius / KoreWorldConsts.EarthRadiusM;
     public static double GeToRwDistanceMultiplier = 1 / RwToGeDistanceMultiplier;
 
@@ -123,7 +123,7 @@ public static class KoreZeroOffset
         // 2 - Invert the Z axis to match the Godot engine orientation.
         double x = rwOffsetXYZ.X;
         double y = rwOffsetXYZ.Y;
-        double z = rwOffsetXYZ.Z * -1;
+        double z = rwOffsetXYZ.Z;
 
         // 3 - Scale the XYZ by the GE distance multiplier.
         x = x * RwToGeDistanceMultiplier;

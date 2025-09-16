@@ -72,13 +72,13 @@ public partial class KoreGodotEntityManager : Node3D
             AddEntity(entityName);
         }
     }
-    
+
     public void AddEntity(string entityName)
     {
         KoreGodotEntity newEntity = new KoreGodotEntity() { EntityName = entityName, Name = entityName };
         EntityRootNode.AddChild(newEntity);
     }
-   
+
     // --------------------------------------------------------------------------------------------
 
     public void DeleteEntities(List<string> entityNames)

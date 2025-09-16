@@ -41,11 +41,7 @@ public partial class KoreZeroNodeMapManager : Node3D
         ///ZeroNode = zeroNode;
 
         // Read the debug flag from config
-        if (KoreGodotFactory.Instance.Config == null)
-        {
-            GD.PrintErr("KoreZeroNodeMapManager: Config is null, cannot read settings.");
-            return;
-        }
+
 
         GD.Print($"KoreZeroNodeMapManager: Constructor");
 
@@ -84,16 +80,6 @@ public partial class KoreZeroNodeMapManager : Node3D
         //CreateLvl0Tiles();
 
         CurrMaxMapLvl = 0;
-        if (KoreGodotFactory.Instance.Config.Has("MaxMapLvl"))
-            CurrMaxMapLvl = KoreStringDictionaryOps.ReadInt(KoreGodotFactory.Instance.Config, "MaxMapLvl");
-        else
-            KoreStringDictionaryOps.WriteInt(KoreGodotFactory.Instance.Config, "MaxMapLvl", 0);
-
-        MapRootPath = "";
-        if (KoreGodotFactory.Instance.Config.Has("MapRootPath"))
-            MapRootPath = KoreGodotFactory.Instance.Config.Get("MapRootPath");
-        else
-            KoreGodotFactory.Instance.Config.Set("MapRootPath", MapRootPath);
 
         KoreSimFactory.Instance.SaveConfig(KoreSimFactory.ConfigPath);
     }
@@ -226,11 +212,6 @@ public partial class KoreZeroNodeMapManager : Node3D
     public static void SetMaxMapLvl(int maxMapLvl)
     {
         CurrMaxMapLvl = KoreValueUtils.Clamp(maxMapLvl, 0, KoreMapTileCode.MaxMapLvl);
-
-        // Save the max map level to config
-
-        var config = KoreGodotFactory.Instance.Config;
-        config.Set("MaxMapLvl", CurrMaxMapLvl);
     }
 
     public void UpdateInfoVisibility(bool infoVisible)
