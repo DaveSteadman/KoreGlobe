@@ -26,12 +26,13 @@ public class KoreGodotFactory
 
     //public KoreGodotEntityManager GodotEntityManager { get; private set; }
     public KoreZeroNodeMapManager? ZeroNodeMapManager { get; private set; }
+    public KoreQuadZNMapManager? QuadZNMapManager { get; private set; }
     //public GloTextureLoader       TextureLoader      { get; private set; }
     //public Kore3DModelLibrary     ModelLibrary       { get; private set; } // KoreGodotFactory.Instance.ModelLibrary
     //public GloUIState             UIState            { get; private set; }
 
     // Singleton pattern
-    private static readonly object   lockObject        = new object();
+    private static readonly object lockObject = new object();
     private static KoreGodotFactory? SingletonInstance = null;
     private static bool              IsInitialised     = false;
     private static bool              IsCreating        = false;
@@ -146,8 +147,10 @@ public class KoreGodotFactory
                         ZeroNodeMapManager = new KoreZeroNodeMapManager(ZeroNode);
                         SceneRootNode.AddChild(ZeroNodeMapManager);
 
+                        QuadZNMapManager = new KoreQuadZNMapManager(ZeroNode);
+                        SceneRootNode.AddChild(QuadZNMapManager);
                     }
-                    
+
 
                     // GodotEntityManager = new KoreGodotEntityManager();
                     // ZeroNode.AddChild(GodotEntityManager);

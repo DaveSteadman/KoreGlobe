@@ -97,9 +97,9 @@ public partial class KoreQuadZNMapManager : Node3D
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
-    //     // Initialise the Manager node itself
-    //     Name = "ZeroNodeMapManager";
-    //     //CreateLvl0Tiles();
+        // Initialise the Manager node itself
+        Name = "QuadZNMapManager";
+        CreateLvl0Tiles();
 
     //     GodotMeshPrimitives.AddChildDebugSphere(this, 0.1f, KoreColorPalette.Colors["DarkBlue"]);
 
@@ -138,25 +138,20 @@ public partial class KoreQuadZNMapManager : Node3D
 
     public void CreateLvl0Tiles()
     {
-        // // if (ZeroNode == null)
-        // // {
-        // //     GD.PrintErr("ERROR: ZeroNodeMapManager ZeroNode Null");
-        // //     return;
-        // // }
+        KoreCentralLog.AddEntry("KoreQuadZNMapManager: Creating the 8 Lvl0 Face Tiles");
 
-        // KoreCentralLog.AddEntry("Creating Lvl0 Tiles");
+        foreach (KoreQuadFace.CubeFace currFace in Enum.GetValues(typeof(KoreQuadFace.CubeFace)))
+        {
+            // Create the face tile code
+            KoreQuadCubeTileCode currFaceTileCode = new() { Face = currFace, Quadrants = new List<int> { } };
 
-        // for (int latId = 0; latId < 6; latId++)
-        // {
-        //     for (int lonId = 0; lonId < 12; lonId++)
-        //     {
-        //         KoreMapTileCode currTileCode = new KoreMapTileCode(lonId, latId);
+            // Create the tile object, that will kickstart its own tile loading and display process.
+            KoreQuadZNMapTile currZNMapTile = new(currFaceTileCode);
 
-        //         KoreZeroNodeMapTile tile = new KoreZeroNodeMapTile(currTileCode);
-        //         AddChild(tile);
-        //         Lvl0Tiles.Add(tile);
-        //     }
-        // }
+            // Add the tile to the scene and our internal list
+            Lvl0Tiles.Add(currZNMapTile);
+            AddChild(currZNMapTile);
+        }
     }
 
     // --------------------------------------------------------------------------------------------

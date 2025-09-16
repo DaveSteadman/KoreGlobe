@@ -8,6 +8,7 @@ namespace KoreSim;
 
 public struct KoreQuadFace
 {
+    // KoreQuadFace.CubeFace
     public enum CubeFace { Top, Bottom, Left, Right, Front, Back }
 
     static public Dictionary<CubeFace, string> CubeFaceNames = new()
@@ -29,5 +30,5 @@ public struct KoreQuadFace
     public KoreQuadFace() { }
 
 
-    public static KoreQuadFace Zero => new KoreQuadFace(); 
+    public static KoreQuadFace Zero => new KoreQuadFace();
 }
