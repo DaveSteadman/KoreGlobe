@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Godot;
 
 #nullable enable
 
@@ -15,7 +14,7 @@ public static partial class KoreMiniMeshOps
     // MARK: VariateGroup
     // --------------------------------------------------------------------------------------------
 
-    // VariateGroup: An experiment in creating additional materials/groups on a mesh as minor variations 
+    // VariateGroup: An experiment in creating additional materials/groups on a mesh as minor variations
     // on a stated group, then assigning the group triangles across new groups. The aspiration is to create
     // some presentation variation on the model, making plain materials more interesting.
 
@@ -51,7 +50,7 @@ public static partial class KoreMiniMeshOps
                 newRough
             );
             mesh.AddMaterial(newMaterial);
-            GD.Print($"Created variation material: {newMaterial.Name}");
+            KoreCentralLog.AddEntry($"Created variation material: {newMaterial.Name}");
 
             // Create a new group for this variation
             string newGroupName = $"{groupName}_var{i + 1}";

@@ -121,7 +121,7 @@ public struct KoreLLAPoint
     public KoreLLAPoint WrapValues()
     {
         double newLonRads = KoreNumericRange<double>.MinusPiToPiRadians.Apply(LonRads);
-        
+
         return new KoreLLAPoint(LatRads, newLonRads, RadiusM);
     }
 
@@ -131,16 +131,16 @@ public struct KoreLLAPoint
     // --------------------------------------------------------------------------------------------
 
     // Convert To/From XYZ coordinates
-    // - Where X = right to longitude 90° (East)
-    // -       Y = up to North Pole (lat 90°) and Y-ve to South Pole (lat -90°)
+    // - Where X = right to longitude 90� (East)
+    // -       Y = up to North Pole (lat 90�) and Y-ve to South Pole (lat -90�)
     // -       Z = forward to zero lat/long and Z-ve to longitude 180 (date line)
 
     public KoreXYZVector ToXYZ()
     {
         KoreXYZVector retXYZ = new KoreXYZVector(
-            RadiusM * Math.Cos(LatRads) * Math.Sin(LonRads),   // X = r·cos(lat)·sin(lon) - to match +X=lon90°
-            RadiusM * Math.Sin(LatRads),                       // Y = r·sin(lat) ✅
-            RadiusM * Math.Cos(LatRads) * Math.Cos(LonRads));  // Z = r·cos(lat)·cos(lon) - to match +Z=lon0°
+            RadiusM * Math.Cos(LatRads) * Math.Sin(LonRads),   // X = r.cos(lat).sin(lon) - to match +X=lon90
+            RadiusM * Math.Sin(LatRads),                       // Y = r.sin(lat)
+            RadiusM * Math.Cos(LatRads) * Math.Cos(LonRads));  // Z = r.cos(lat).cos(lon) - to match +Z=lon0
         return retXYZ;
     }
 
@@ -154,7 +154,7 @@ public struct KoreLLAPoint
             return KoreLLAPoint.Zero;
 
         double latRads = Math.Asin(inputXYZ.Y / radius);
-        double lonRads = Math.Atan2(inputXYZ.X, inputXYZ.Z);  // Fixed to match comment: +Z=lon0°, +X=lon90°
+        double lonRads = Math.Atan2(inputXYZ.X, inputXYZ.Z);  // Fixed to match comment: +Z=lon0, +X=lon90
         return new KoreLLAPoint(latRads, lonRads, radius);
     }
 

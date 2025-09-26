@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,8 +16,16 @@ public static partial class KoreTestSkiaSharp
     // KoreTestSkiaSharp.TestPlane
     private static void TestImage(KoreTestLog testLog)
     {
-        // Load an image from file
         string imagePath = "UnitTestArtefacts/TestImage_Input.png";
+
+        // check the file exists
+        if (!File.Exists(imagePath))
+        {
+            testLog.AddResult("Test Image", false, "Input image file does not exist.");
+            return;
+        }
+
+        // Load an image from file
         SKBitmap image = KoreSkiaSharpBitmapOps.LoadBitmap(imagePath);
 
         // Get the list of colors in the image
@@ -24,7 +33,7 @@ public static partial class KoreTestSkiaSharp
 
         // Reduce the number of colors by merging similar colors
         colorList.ReduceColorCount(70);
-        
+
         // Apply the color list to the image
         KoreSkiaSharpBitmapOps.ApplyColorListToBitmap(image, colorList);
 

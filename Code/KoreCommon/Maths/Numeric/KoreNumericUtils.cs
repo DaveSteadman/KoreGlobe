@@ -145,6 +145,8 @@ public static class KoreNumericUtils
         return min + (max - min) * t;
     }
 
+    // ---------------------------------------------------------------------------------------------
+
     // Usage: float  val = KoreNumericUtils.ValuePlusNoise(9.5f, 0.01f);
     public static T ValuePlusNoise<T>(T value, T amplitude) where T : INumber<T>
     {

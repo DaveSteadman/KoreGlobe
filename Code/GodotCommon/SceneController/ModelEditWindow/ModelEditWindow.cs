@@ -163,7 +163,7 @@ public partial class ModelEditWindow : Window
     {
         GD.Print("ModelEditWindow: Import Oil Barrel button pressed");
         // Implement the logic to import the oil barrel glTF
-        TestGltfImport();
+        //TestGltfImport();
     }
 
 }

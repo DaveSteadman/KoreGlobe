@@ -4,7 +4,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using Godot;
 
 namespace KoreCommon;
 
@@ -48,7 +47,7 @@ public static partial class KoreColorMeshPrimitives
 
                 double ele = radius + tileEleData.InterpolatedValue(lonFraction, latFraction);
 
-                //GD.Print($"lat: {latDegs:F2}, lon: {lonDegs:F2}, rad: {radius:F2}, ele: {tileEleData.InterpolatedValue(lonFraction, latFraction)}");
+                //KoreCentralLog.AddEntry($"lat: {latDegs:F2}, lon: {lonDegs:F2}, rad: {radius:F2}, ele: {tileEleData.InterpolatedValue(lonFraction, latFraction)}");
 
                 KoreLLAPoint rwLLAPointPos = new KoreLLAPoint() { LatDegs = latDegs, LonDegs = lonDegs, RadiusM = ele };
                 KoreXYZVector rwXYZPointPos = rwLLAPointPos.ToXYZ();
@@ -144,7 +143,7 @@ public static partial class KoreColorMeshPrimitives
             // flip the lat, to go from top to bottom
             int usedLat = lat;
 
-            double latDegs = llBox.MaxLatDegs - (stepLatDegs * lat); 
+            double latDegs = llBox.MaxLatDegs - (stepLatDegs * lat);
             //latDegs = latListDegs[lat];
             float latFraction =  ((float)lat / latSegments);
 
@@ -164,7 +163,7 @@ public static partial class KoreColorMeshPrimitives
                 // Scale to game engine radius
                 double gameEngineRadius = (realWorldRadiusWithElevation / KoreWorldConsts.EarthRadiusM) * radius;
 
-                //GD.Print($"lat: {latDegs:F2}, lon: {lonDegs:F2}, rad: {radius:F2}, ele: {tileEleData.InterpolatedValue(lonFraction, latFraction)}");
+                //KoreCentralLog.AddEntry($"lat: {latDegs:F2}, lon: {lonDegs:F2}, rad: {radius:F2}, ele: {tileEleData.InterpolatedValue(lonFraction, latFraction)}");
 
                 KoreLLAPoint rwLLAPointPos = new KoreLLAPoint() { LatDegs = latDegs, LonDegs = lonDegs, RadiusM = gameEngineRadius };
                 KoreXYZVector rwXYZPointPos = rwLLAPointPos.ToXYZ();

@@ -12,7 +12,6 @@ namespace KoreCommon;
 
 public struct KoreMeshMaterial : IEquatable<KoreMeshMaterial>
 {
-
     public string       Name      { get; set; }     // Material name for GLTF export/import and identification
     public string?      Filename  { get; set; }     // Optional texture filename - if not null or empty, overrides BaseColor
     public KoreColorRGB BaseColor { get; set; }     // Includes RGBA - alpha channel handles transparency

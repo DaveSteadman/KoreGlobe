@@ -20,7 +20,7 @@ public static class KoreLLAPointOps
 
         double latDegs = fromPoint.LatDegs + (toPoint.LatDegs - fromPoint.LatDegs) * fraction;
         double lonDegs = fromPoint.LonDegs + (toPoint.LonDegs - fromPoint.LonDegs) * fraction;
-        double alt = fromPoint.AltMslM + (toPoint.AltMslM - fromPoint.AltMslM) * fraction;
+        double alt     = fromPoint.AltMslM + (toPoint.AltMslM - fromPoint.AltMslM) * fraction;
 
         return new KoreLLAPoint() { LatDegs = latDegs, LonDegs = lonDegs, AltMslM = alt };
     }
@@ -95,8 +95,8 @@ public static class KoreLLAPointOps
 
     public static KoreLLAPoint StraightLineInterpolation(KoreLLAPoint fromPoint, KoreLLAPoint toPoint, double fraction)
     {
-        KoreXYZVector fromXYZ = fromPoint.ToXYZ();
-        KoreXYZVector toXYZ = toPoint.ToXYZ();
+        KoreXYZVector fromXYZ   = fromPoint.ToXYZ();
+        KoreXYZVector toXYZ     = toPoint.ToXYZ();
         KoreXYZVector interpXYZ = KoreXYZVectorOps.Lerp(fromXYZ, toXYZ, fraction);
 
         return KoreLLAPoint.FromXYZ(interpXYZ);

@@ -1,106 +1,85 @@
 using System;
 using System.Collections.Generic;
-using System.Data.SQLite;
+using System.Data;
 using System.Threading;
-using System.Threading.Tasks;
+using Microsoft.Data.Sqlite;
 
 #nullable enable
 
 namespace KoreCommon;
 
-// KoreBinaryDataManager: A class for managing binary data storage in SQLite.
-// - We can access blocks of data with a name, then use KoreByteArrayWriter/KoreByteArrayReader to write and read the data.
-
-public class KoreBinaryDataManager : IDisposable
+public sealed class KoreBinaryDataManager : IDisposable
 {
-    private string _connectionString;
-    private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
-    private bool _disposed = false;
+    private readonly string        _connectionString;
+    private readonly SemaphoreSlim _semaphore      = new(1, 1);
+    private bool                   _disposed;
 
-    // Centralized lock for one-time schema creation per instance.
-    private readonly object _schemaLock = new object();
-    private bool _schemaCreated = false;
-
-    // --------------------------------------------------------------------------------------------
-    // Constructor: Initializes the connection and ensures schema exists.
     // --------------------------------------------------------------------------------------------
 
     public KoreBinaryDataManager(string dbFilePath)
     {
-        _connectionString = $"Data Source={dbFilePath};Version=3;";
-        EnsureSchemaCreated();
+        _connectionString = $"Data Source={dbFilePath};Mode=ReadWriteCreate;Cache=Shared";
+        EnsureSchema();
     }
 
     // --------------------------------------------------------------------------------------------
-    // One-time schema creation using a static lock.
-    // --------------------------------------------------------------------------------------------
 
-    private void EnsureSchemaCreated()
+    private void EnsureSchema()
     {
-        if (!_schemaCreated)
-        {
-            lock (_schemaLock)
-            {
-                if (!_schemaCreated)
-                {
-                    using (var connection = new SQLiteConnection(_connectionString))
-                    {
-                        connection.Open();
-                        string createTableQuery = @"
-                            CREATE TABLE IF NOT EXISTS BlobTable (
-                                Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                                DataName  TEXT UNIQUE,
-                                DataBytes BLOB
-                            )";
-                        using (var command = new SQLiteCommand(createTableQuery, connection))
-                        {
-                            command.ExecuteNonQuery();
-                        }
+        using var connection = new SqliteConnection(_connectionString);
+        connection.Open();
 
-                        string createIndexQuery = "CREATE INDEX IF NOT EXISTS idx_DataName ON BlobTable (DataName);";
-                        using (var command = new SQLiteCommand(createIndexQuery, connection))
-                        {
-                            command.ExecuteNonQuery();
-                        }
-                    }
-                    _schemaCreated = true;
-                }
-            }
+        using (var cmd = connection.CreateCommand())
+        {
+            cmd.CommandText = "PRAGMA journal_mode=WAL; PRAGMA synchronous=NORMAL;";
+            cmd.ExecuteNonQuery();
+        }
+
+        using (var cmd = connection.CreateCommand())
+        {
+            cmd.CommandText =
+            @"
+            CREATE TABLE IF NOT EXISTS BlobTable
+            (
+                DataName  TEXT PRIMARY KEY,
+                DataBytes BLOB NOT NULL
+            );
+            ";
+            cmd.ExecuteNonQuery();
         }
     }
 
     // --------------------------------------------------------------------------------------------
-    // MARK: Set
-    // --------------------------------------------------------------------------------------------
 
-    public bool Set(string dataName, byte[] dataBytes)
+    public bool Set(string dataName, ReadOnlySpan<byte> dataBytes)
     {
-        if (dataBytes == null || dataBytes.Length == 0 || string.IsNullOrEmpty(dataName))
-            return false;
+        if (string.IsNullOrWhiteSpace(dataName) || dataBytes.Length == 0) return false;
 
         _semaphore.Wait();
         try
         {
-            using (var connection = new SQLiteConnection(_connectionString))
-            {
-                connection.Open();
-                string insertQuery = "INSERT OR REPLACE INTO BlobTable (DataName, DataBytes) VALUES (@dataName, @dataBytes)";
-                using (var command = new SQLiteCommand(insertQuery, connection))
-                {
-                    command.Parameters.AddWithValue("@dataName", dataName);
-                    command.Parameters.AddWithValue("@dataBytes", dataBytes);
-                    int result = command.ExecuteNonQuery();
-                    return result > 0;
-                }
-            }
+            using var connection = new SqliteConnection(_connectionString);
+            connection.Open();
+
+            using var cmd = connection.CreateCommand();
+            cmd.CommandText =
+            @"
+            INSERT INTO BlobTable (DataName, DataBytes)
+            VALUES ($name, $bytes)
+            ON CONFLICT(DataName) DO UPDATE SET DataBytes=excluded.DataBytes;
+            ";
+
+            var pName = cmd.CreateParameter(); pName.ParameterName = "$name"; pName.DbType = DbType.String; pName.Value = dataName;
+            var pBytes = cmd.CreateParameter(); pBytes.ParameterName = "$bytes"; pBytes.DbType = DbType.Binary; pBytes.Value = dataBytes.ToArray();
+
+            cmd.Parameters.Add(pName);
+            cmd.Parameters.Add(pBytes);
+
+            return cmd.ExecuteNonQuery() > 0;
         }
-        finally
-        {
-            _semaphore.Release();
-        }
+        finally { _semaphore.Release(); }
     }
-    // --------------------------------------------------------------------------------------------
-    // MARK: Delete
+
     // --------------------------------------------------------------------------------------------
 
     public bool Delete(string dataName)
@@ -108,26 +87,18 @@ public class KoreBinaryDataManager : IDisposable
         _semaphore.Wait();
         try
         {
-            using (var connection = new SQLiteConnection(_connectionString))
-            {
-                connection.Open();
-                string deleteQuery = "DELETE FROM BlobTable WHERE DataName = @dataName";
-                using (var command = new SQLiteCommand(deleteQuery, connection))
-                {
-                    command.Parameters.AddWithValue("@dataName", dataName);
-                    int result = command.ExecuteNonQuery();
-                    return result > 0;
-                }
-            }
+            using var connection = new SqliteConnection(_connectionString);
+            connection.Open();
+
+            using var cmd = connection.CreateCommand();
+            cmd.CommandText = "DELETE FROM BlobTable WHERE DataName=$name;";
+            cmd.Parameters.AddWithValue("$name", dataName);
+
+            return cmd.ExecuteNonQuery() > 0;
         }
-        finally
-        {
-            _semaphore.Release();
-        }
+        finally { _semaphore.Release(); }
     }
 
-    // --------------------------------------------------------------------------------------------
-    // MARK: Get
     // --------------------------------------------------------------------------------------------
 
     public byte[] Get(string dataName)
@@ -135,92 +106,63 @@ public class KoreBinaryDataManager : IDisposable
         _semaphore.Wait();
         try
         {
-            using (var connection = new SQLiteConnection(_connectionString))
-            {
-                connection.Open();
-                string selectQuery = "SELECT DataBytes FROM BlobTable WHERE DataName = @dataName";
-                using (var command = new SQLiteCommand(selectQuery, connection))
-                {
-                    command.Parameters.AddWithValue("@dataName", dataName);
-                    using (SQLiteDataReader reader = command.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            return (byte[])reader["DataBytes"];
-                        }
-                    }
-                }
-            }
-            return Array.Empty<byte>();
+            using var connection = new SqliteConnection(_connectionString);
+            connection.Open();
+
+            using var cmd = connection.CreateCommand();
+            cmd.CommandText = "SELECT DataBytes FROM BlobTable WHERE DataName=$name;";
+            cmd.Parameters.AddWithValue("$name", dataName);
+
+            using var reader = cmd.ExecuteReader(CommandBehavior.SequentialAccess);
+            if (!reader.Read()) return Array.Empty<byte>();
+
+            // Efficient read for medium blobs (~150 KB)
+            return (byte[])reader["DataBytes"];
         }
-        finally
-        {
-            _semaphore.Release();
-        }
+        finally { _semaphore.Release(); }
     }
 
-    // --------------------------------------------------------------------------------------------
-    // MARK: List & Exists
     // --------------------------------------------------------------------------------------------
 
     public int NumEntries()
     {
-        int count = 0;
-
         _semaphore.Wait();
         try
         {
-            using (var connection = new SQLiteConnection(_connectionString))
-            {
-                connection.Open();
-                string countQuery = "SELECT COUNT(*) FROM BlobTable";
-                using (var command = new SQLiteCommand(countQuery, connection))
-                {
-                    count = Convert.ToInt32(command.ExecuteScalar());
-                }
-            }
-        }
-        finally
-        {
-            _semaphore.Release();
-        }
+            using var connection = new SqliteConnection(_connectionString);
+            connection.Open();
 
-        return count;
+            using var cmd = connection.CreateCommand();
+            cmd.CommandText = "SELECT COUNT(*) FROM BlobTable;";
+
+            return Convert.ToInt32(cmd.ExecuteScalar());
+        }
+        finally { _semaphore.Release(); }
     }
 
     // --------------------------------------------------------------------------------------------
 
     public List<string> List()
     {
-        var fileList = new List<string>();
+        var result = new List<string>();
 
         _semaphore.Wait();
         try
         {
-            using (var connection = new SQLiteConnection(_connectionString))
-            {
-                connection.Open();
-                string selectQuery = "SELECT DataName FROM BlobTable";
-                using (var command = new SQLiteCommand(selectQuery, connection))
-                {
-                    using (SQLiteDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            fileList.Add(reader.GetString(0));
-                        }
-                    }
-                }
-            }
-        }
-        finally
-        {
-            _semaphore.Release();
-        }
+            using var connection = new SqliteConnection(_connectionString);
+            connection.Open();
 
-        return fileList;
+            using var cmd = connection.CreateCommand();
+            cmd.CommandText = "SELECT DataName FROM BlobTable ORDER BY DataName;";
+
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read()) result.Add(reader.GetString(0));
+        }
+        finally { _semaphore.Release(); }
+
+        return result;
     }
-    
+
     // --------------------------------------------------------------------------------------------
 
     public bool DataExists(string dataName)
@@ -228,34 +170,25 @@ public class KoreBinaryDataManager : IDisposable
         _semaphore.Wait();
         try
         {
-            using (var connection = new SQLiteConnection(_connectionString))
-            {
-                connection.Open();
-                string selectQuery = "SELECT COUNT(*) FROM BlobTable WHERE DataName = @dataName";
-                using (var command = new SQLiteCommand(selectQuery, connection))
-                {
-                    command.Parameters.AddWithValue("@dataName", dataName);
-                    long count = (long)command.ExecuteScalar();
-                    return count > 0;
-                }
-            }
+            using var connection = new SqliteConnection(_connectionString);
+            connection.Open();
+
+            using var cmd = connection.CreateCommand();
+            cmd.CommandText = "SELECT 1 FROM BlobTable WHERE DataName=$name LIMIT 1;";
+            cmd.Parameters.AddWithValue("$name", dataName);
+
+            using var reader = cmd.ExecuteReader();
+            return reader.Read();
         }
-        finally
-        {
-            _semaphore.Release();
-        }
+        finally { _semaphore.Release(); }
     }
 
-    // --------------------------------------------------------------------------------------------
-    // MARK: Dispose
     // --------------------------------------------------------------------------------------------
 
     public void Dispose()
     {
-        if (!_disposed)
-        {
-            _semaphore.Dispose();
-            _disposed = true;
-        }
+        if (_disposed) return;
+        _semaphore.Dispose();
+        _disposed = true;
     }
 }

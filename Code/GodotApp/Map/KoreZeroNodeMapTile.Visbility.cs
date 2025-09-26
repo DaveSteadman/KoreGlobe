@@ -175,8 +175,8 @@ public partial class KoreZeroNodeMapTile : Node3D
 
             // Get the camera LLA
             KoreLLAPoint camLla = KoreZeroNodeMapManager.LoadRefLLA;
-            if (KoreGodotMainSceneFactory.WorldCameraMount != null)
-                camLla = KoreGodotMainSceneFactory.WorldCameraMount.CurrAimLLA;
+            // if (KoreGodotMainSceneFactory.WorldCameraMount != null)
+            //     camLla = KoreGodotMainSceneFactory.WorldCameraMount.CurrAimLLA;
 
             KoreXYZVector refXYZ = camLla.ToXYZ();
 

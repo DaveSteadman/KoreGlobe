@@ -44,6 +44,7 @@ public static class KoreCentralLog
         WriteTimer = new System.Threading.Timer(WriteLogEntries, null, TimeSpan.Zero, TimeSpan.FromSeconds(1));
     }
 
+    // Usage: KoreCentralLog.SetFilename("mylogfile.log");
     public static void SetFilename(string filename)
     {
         if (string.IsNullOrEmpty(filename))

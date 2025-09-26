@@ -19,8 +19,8 @@ public struct KoreXYZPlane
     {
         PntOrigin = pO;
         VecNormal = vN;
-        VecX = vX;
-        VecY = vY;
+        VecX      = vX;
+        VecY      = vY;
     }
 
     // ---------------------------------------------------------------------------------------------

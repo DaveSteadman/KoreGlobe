@@ -8,7 +8,6 @@ using KoreCommon;
 
 public static class GodotMeshPrimitives
 {
-
     // Add a debug sphere to any Node3D.
     // Usage: GodotMeshPrimitives.AddChildDebugSphere(parentNode, 1.0f, KoreColorPalette.Colors["DarkYellow"]);
     public static void AddChildDebugSphere(Node3D parentNode, float radius, KoreColorRGB color)
@@ -17,12 +16,15 @@ public static class GodotMeshPrimitives
         var cubeMesh1 = KoreMeshDataPrimitives.BasicSphere(radius, color, 8);
 
         // create the surface and line mesh nodes
-        KoreGodotLineMesh lineMeshNode = new KoreGodotLineMesh() { Name = "SphereLines" };
+        KoreGodotLineMesh lineMeshNode = new KoreGodotLineMesh() { Name = $"Lines" };
+
         lineMeshNode.UpdateMesh(cubeMesh1);
         parentNode.AddChild(lineMeshNode);
 
-        KoreGodotSurfaceMesh surfaceMeshNode = new KoreGodotSurfaceMesh() { Name = "SphereSurface" };
+        KoreGodotSurfaceMesh surfaceMeshNode = new KoreGodotSurfaceMesh() { Name = $"Surface" };
         surfaceMeshNode.UpdateMesh(cubeMesh1);
         parentNode.AddChild(surfaceMeshNode);
     }
 }
+
+

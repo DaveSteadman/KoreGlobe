@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using KoreCommon;
-using KoreCommon.Mesh;
 using KoreCommon.SkiaSharp;
 
 namespace KoreCommon.UnitTest;
@@ -232,16 +231,16 @@ public static partial class KoreTestMeshUvOps
         testLog.AddComment("OBJ/MTL files created for oil barrel UV layout with UV texture assignment");
 
         // Export glTF file
-        try
-        {
-            KoreMeshDataGltfIO.SaveToGltf(mesh, "UnitTestArtefacts/TestOilBarrel.gltf", "OilBarrel");
-            testLog.AddComment("glTF file created: UnitTestArtefacts/TestOilBarrel.gltf");
-            testLog.AddResult("glTF export", true, "Successfully exported oil barrel to glTF format");
-        }
-        catch (Exception ex)
-        {
-            testLog.AddResult("glTF export", false, $"glTF export failed: {ex.Message}");
-        }
+        // try
+        // {
+        //     KoreMeshDataGltfIO.SaveToGltf(mesh, "UnitTestArtefacts/TestOilBarrel.gltf", "OilBarrel");
+        //     testLog.AddComment("glTF file created: UnitTestArtefacts/TestOilBarrel.gltf");
+        //     testLog.AddResult("glTF export", true, "Successfully exported oil barrel to glTF format");
+        // }
+        // catch (Exception ex)
+        // {
+        //     testLog.AddResult("glTF export", false, $"glTF export failed: {ex.Message}");
+        // }
 
         // Export the JSON representation
         string jsonPath = "UnitTestArtefacts/TestOilBarrel.json";

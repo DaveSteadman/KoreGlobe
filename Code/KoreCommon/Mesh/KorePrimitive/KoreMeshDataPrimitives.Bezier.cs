@@ -32,7 +32,7 @@ public static partial class KoreMeshDataPrimitives
 
         // debug print the fractions list
         // string fractionsStr = string.Join(", ", fractionList);
-        // GD.Print($"Fraction List: {fractionsStr}");
+        // KoreCentralLog.AddEntry($"Fraction List: {fractionsStr}");
 
 
         List<int> pointIds = new List<int>();

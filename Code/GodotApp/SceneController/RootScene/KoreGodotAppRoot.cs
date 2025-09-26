@@ -90,6 +90,11 @@ public partial class KoreGodotAppRoot : Node
     private void AppInitActions()
     {
         KoreCentralLog.AddEntry("AppInitActions");
-        KoreCentralLog.SetFilename($"Log-{KoreCentralTime.RuntimeStartTimestampUTC}.log");
+
+        // Ensure the log directory exists
+        KoreFileOps.CreateDirectory("Log");
+
+        // Set the Central Log filename
+        KoreCentralLog.SetFilename($"Log/Log-{KoreCentralTime.RuntimeStartTimestampUTC}.log");
     }
 }

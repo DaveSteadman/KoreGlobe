@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using Godot;
 using KoreCommon;
 namespace KoreCommon.UnitTest;
 
@@ -15,23 +14,8 @@ public static class KoreTestCenter
 
         try
         {
-            // Use a proper path - either absolute or relative with proper separators
-            // Option 1: Relative to current directory
-            string testDir = Path.Combine(Directory.GetCurrentDirectory(), "UnitTestArtefacts");
-            GD.Print("Attempting to create directory at: " + testDir);
-
-            KoreFileOps.CreateDirectory(testDir);
-
-            // Verify the directory was actually created
-            if (Directory.Exists(testDir))
-            {
-                GD.Print("✅ Test directory successfully created at: " + testDir);
-            }
-            else
-            {
-                GD.PrintErr("❌ Test directory was NOT created at: " + testDir);
-            }
-
+            if (!EnsureTestDirectory(testLog))
+                return testLog;
 
             KoreTestMath.RunTests(testLog);
             KoreTestXYZVector.RunTests(testLog);
@@ -69,9 +53,8 @@ public static class KoreTestCenter
     // --------------------------------------------------------------------------------------------
 
     // Usage: KoreTestCenter.RunAdHocTests()
-    public static KoreTestLog RunAdHocTests()
+    public static KoreTestLog RunAdHocTests(KoreTestLog testLog)
     {
-        KoreTestLog testLog = new KoreTestLog();
 
         try
         {
@@ -84,5 +67,33 @@ public static class KoreTestCenter
 
         return testLog;
     }
+
+    // --------------------------------------------------------------------------------------------
+
+    private static bool EnsureTestDirectory(KoreTestLog testLog)
+    {
+        bool retval = false;
+
+        // Use a proper path - either absolute or relative with proper separators
+        // Option 1: Relative to current directory
+        string testDir = Path.Combine(Directory.GetCurrentDirectory(), "UnitTestArtefacts");
+        testLog.AddComment("Attempting to create directory at: " + testDir);
+
+        KoreFileOps.CreateDirectory(testDir);
+
+        // Verify the directory was actually created
+        if (Directory.Exists(testDir))
+        {
+            testLog.AddComment("? Test directory successfully created at: " + testDir);
+            retval = true;
+        }
+        else
+        {
+            testLog.AddResult("Test Directory Creation", false, $"? Test directory was NOT created at: {testDir}");
+        }
+
+        return retval;
+    }
+
 }
 

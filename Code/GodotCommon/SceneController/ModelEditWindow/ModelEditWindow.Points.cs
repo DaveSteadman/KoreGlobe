@@ -3,7 +3,7 @@ using System;
 using System.Linq;
 
 using KoreCommon;
-using KoreCommon.Mesh;
+//using KoreCommon.Mesh;
 using System.Collections.Generic;
 using System.IO;
 
@@ -495,67 +495,67 @@ public partial class ModelEditWindow
     // --------------------------------------------------------------------------------------------
 
     // Usage: ModelEditWindow.TestGltfImport()
-    public void TestGltfImport()
-    {
-        GD.Print("=== glTF Import Test ===");
+    // public void TestGltfImport()
+    // {
+    //     GD.Print("=== glTF Import Test ===");
 
-        try
-        {
-            // Load the glTF file from UnitTestArtefacts
-            string gltfPath = "UnitTestArtefacts/TestOilBarrel.gltf";
+    //     try
+    //     {
+    //         // Load the glTF file from UnitTestArtefacts
+    //         string gltfPath = "UnitTestArtefacts/TestOilBarrel.gltf";
 
-            if (!File.Exists(gltfPath))
-            {
-                GD.PrintErr($"glTF file not found: {gltfPath}");
-                GD.PrintErr("Make sure to run the unit tests first to generate the oil barrel glTF file");
-                return;
-            }
+    //         if (!File.Exists(gltfPath))
+    //         {
+    //             GD.PrintErr($"glTF file not found: {gltfPath}");
+    //             GD.PrintErr("Make sure to run the unit tests first to generate the oil barrel glTF file");
+    //             return;
+    //         }
 
-            // Import the glTF using our import functionality
-            var meshData = KoreMeshDataGltfIO.LoadFromGltf(gltfPath);
+    //         // Import the glTF using our import functionality
+    //         var meshData = KoreMeshDataGltfIO.LoadFromGltf(gltfPath);
 
-            //meshData.SetNormalsFromTriangles();
+    //         //meshData.SetNormalsFromTriangles();
 
-            // Update the window mesh data and source path
-            WindowMeshData = meshData;
-            SourceFilePath = gltfPath;
+    //         // Update the window mesh data and source path
+    //         WindowMeshData = meshData;
+    //         SourceFilePath = gltfPath;
 
-            // Debug: Print material count and details
-            GD.Print($"=== glTF Import Results ===");
-            GD.Print($"Vertices count: {meshData.Vertices.Count}");
-            GD.Print($"Triangles count: {meshData.Triangles.Count}");
-            GD.Print($"Materials count: {meshData.Materials.Count}");
+    //         // Debug: Print material count and details
+    //         GD.Print($"=== glTF Import Results ===");
+    //         GD.Print($"Vertices count: {meshData.Vertices.Count}");
+    //         GD.Print($"Triangles count: {meshData.Triangles.Count}");
+    //         GD.Print($"Materials count: {meshData.Materials.Count}");
 
-            for (int i = 0; i < meshData.Materials.Count; i++)
-            {
-                var material = meshData.Materials[i];
-                GD.Print($"Material {i}: {material.Name} - Color: {material.BaseColor} - Filename: {material.Filename}");
-            }
+    //         for (int i = 0; i < meshData.Materials.Count; i++)
+    //         {
+    //             var material = meshData.Materials[i];
+    //             GD.Print($"Material {i}: {material.Name} - Color: {material.BaseColor} - Filename: {material.Filename}");
+    //         }
 
-            // Convert to JSON and display in editor
-            string jsonStr = KoreMeshDataIO.ToJson(meshData, dense: false);
-            GD.Print($"Imported glTF Mesh Data JSON:\n{jsonStr}");
+    //         // Convert to JSON and display in editor
+    //         string jsonStr = KoreMeshDataIO.ToJson(meshData, dense: false);
+    //         GD.Print($"Imported glTF Mesh Data JSON:\n{jsonStr}");
 
-            // Put the new text in the edit window
-            MeshJsonEdit!.SetText(jsonStr);
+    //         // Put the new text in the edit window
+    //         MeshJsonEdit!.SetText(jsonStr);
 
-            // Clear existing debug visuals
-            DeleteAllDebug();
+    //         // Clear existing debug visuals
+    //         DeleteAllDebug();
 
-            // Update the 3D mesh visualization using material groups
-            DrawMeshWithGroups(meshData);
+    //         // Update the 3D mesh visualization using material groups
+    //         DrawMeshWithGroups(meshData);
 
-            // Also visualize the points and lines in the 3D scene
-            DrawPoints(meshData);
-            DrawLines(meshData);
+    //         // Also visualize the points and lines in the 3D scene
+    //         DrawPoints(meshData);
+    //         DrawLines(meshData);
 
-            GD.Print("=== glTF Import Test Complete ===");
-        }
-        catch (Exception ex)
-        {
-            GD.PrintErr($"glTF Import failed: {ex.Message}");
-            GD.PrintErr($"Stack trace: {ex.StackTrace}");
-        }
-    }
+    //         GD.Print("=== glTF Import Test Complete ===");
+    //     }
+    //     catch (Exception ex)
+    //     {
+    //         GD.PrintErr($"glTF Import failed: {ex.Message}");
+    //         GD.PrintErr($"Stack trace: {ex.StackTrace}");
+    //     }
+    // }
 
 }

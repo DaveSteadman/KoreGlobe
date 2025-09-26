@@ -40,17 +40,10 @@ public static class KoreConvPos
     // ---------------------------------------------------------------------------------------------------
 
     // Converts Godot Vector3 to KoreXYZVector
-    // Usage: KoreXYZVector koreVec = KoreConvPos.FromV3(godotVec);
+    // Usage: KoreXYZVector koreVec = KoreConvPos.V3ToVec(godotVec);
     public static KoreXYZVector V3ToVec(Vector3 vec)
     {
         return new KoreXYZVector { X = vec.X, Y = vec.Y, Z = vec.Z };
-    }
-
-    // Converts Godot Vector3 to KoreXYZVector
-    // Usage: KoreXYZVector korePos = KoreConvPos.FromV3(godotPos);
-    public static KoreXYZVector V3ToPos(Vector3 pos)
-    {
-        return new KoreXYZVector { X = pos.X, Y = pos.Y, Z = pos.Z };
     }
 
     // ---------------------------------------------------------------------------------------------------

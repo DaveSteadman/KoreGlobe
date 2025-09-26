@@ -1,5 +1,4 @@
 using System;
-using System.Data.Entity.Hierarchy;
 
 using KoreCommon;
 namespace KoreCommon.UnitTest;
@@ -57,7 +56,7 @@ public static class KoreTestPositionLLA
 
             testLog.AddResult($"KoreLLPoint: {posStr}", okLat && okLon);
         }
-        
+
         {
             // XYZ -1,0,0 = Lat 0, Lon -90
             KoreXYZVector testLonXYZ = new KoreXYZVector(-1, 0, 0);
@@ -72,8 +71,40 @@ public static class KoreTestPositionLLA
             string posStr = $"{xyzStr} -> {llStr}";
 
             testLog.AddResult($"KoreLLPoint: {posStr}", okLat && okLon);
-        }        
-        
+        }
+
+        {
+            // XYZ 0,1,0 = Lat 90, Lon 0 (North Pole, longitude is actually undefined)
+            KoreXYZVector testLonXYZ = new KoreXYZVector(0, 1, 0);
+            KoreLLPoint testLonLL = KoreLLPoint.FromXYZ(testLonXYZ);
+
+            bool okLat = KoreValueUtils.EqualsWithinTolerance(testLonLL.LatDegs, 90.0);
+            bool okLon = KoreValueUtils.EqualsWithinTolerance(testLonLL.LonDegs, 0.0);
+
+            string xyzStr = $"XYZ({testLonXYZ.X:0.000},{testLonXYZ.Y:0.000},{testLonXYZ.Z:0.000})";
+            string llStr = $"LL({testLonLL.LatDegs:0.000},{testLonLL.LonDegs:0.000})";
+
+            string posStr = $"{xyzStr} -> {llStr}";
+
+            testLog.AddResult($"KoreLLPoint: {posStr}", okLat && okLon);
+        }
+
+        {
+            // XYZ 0,-1,0 = Lat -90, Lon 0 (South Pole, longitude is actually undefined)
+            KoreXYZVector testLonXYZ = new KoreXYZVector(0, -1, 0);
+            KoreLLPoint testLonLL = KoreLLPoint.FromXYZ(testLonXYZ);
+
+            bool okLat = KoreValueUtils.EqualsWithinTolerance(testLonLL.LatDegs, -90.0);
+            bool okLon = KoreValueUtils.EqualsWithinTolerance(testLonLL.LonDegs, 0.0);
+
+            string xyzStr = $"XYZ({testLonXYZ.X:0.000},{testLonXYZ.Y:0.000},{testLonXYZ.Z:0.000})";
+            string llStr = $"LL({testLonLL.LatDegs:0.000},{testLonLL.LonDegs:0.000})";
+
+            string posStr = $"{xyzStr} -> {llStr}";
+
+            testLog.AddResult($"KoreLLPoint: {posStr}", okLat && okLon);
+        }
+
     }
 
 
@@ -110,7 +141,7 @@ public static class KoreTestPositionLLA
 
             testLog.AddResult($"KoreLLAPoint: {posStr}", okLat && okLon);
         }
-        
+
         {
             // XYZ -1,0,0 = Lat 0, Lon -90
             KoreXYZVector testLonXYZ = new KoreXYZVector(-1, 0, 0);
@@ -125,8 +156,8 @@ public static class KoreTestPositionLLA
             string posStr = $"{xyzStr} -> {llStr}";
 
             testLog.AddResult($"KoreLLAPoint: {posStr}", okLat && okLon);
-        }        
-        
+        }
+
     }
 
 

@@ -567,7 +567,7 @@ public partial class KoreSandbox3DScene : Node3D
 
             KoreMiniMeshGodotColoredSurface coloredMeshNode = new KoreMiniMeshGodotColoredSurface();
             MiniMeshSphereNode.AddChild(coloredMeshNode);
-            coloredMeshNode.UpdateMesh(miniMesh);
+            coloredMeshNode.UpdateMesh(miniMesh, "All");
 
 
             // KoreMiniMeshGodotSurface childSurfaceMeshNode1 = new KoreMiniMeshGodotSurface();

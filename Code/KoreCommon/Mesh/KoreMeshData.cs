@@ -65,14 +65,14 @@ public partial class KoreMeshData
     // Deep Copy constructor
     public KoreMeshData(KoreMeshData mesh)
     {
-        this.Vertices            = new Dictionary<int, KoreXYZVector>(mesh.Vertices);
-        this.Lines               = new Dictionary<int, KoreMeshLine>(mesh.Lines);
-        this.Triangles           = new Dictionary<int, KoreMeshTriangle>(mesh.Triangles);
-        this.Normals             = new Dictionary<int, KoreXYZVector>(mesh.Normals);
-        this.UVs                 = new Dictionary<int, KoreXYVector>(mesh.UVs);
-        this.VertexColors        = new Dictionary<int, KoreColorRGB>(mesh.VertexColors);
-        this.LineColors          = new Dictionary<int, KoreMeshLineColour>(mesh.LineColors);
-        this.Materials           = new List<KoreMeshMaterial>();
+        this.Vertices = new Dictionary<int, KoreXYZVector>(mesh.Vertices);
+        this.Lines = new Dictionary<int, KoreMeshLine>(mesh.Lines);
+        this.Triangles = new Dictionary<int, KoreMeshTriangle>(mesh.Triangles);
+        this.Normals = new Dictionary<int, KoreXYZVector>(mesh.Normals);
+        this.UVs = new Dictionary<int, KoreXYVector>(mesh.UVs);
+        this.VertexColors = new Dictionary<int, KoreColorRGB>(mesh.VertexColors);
+        this.LineColors = new Dictionary<int, KoreMeshLineColour>(mesh.LineColors);
+        this.Materials = new List<KoreMeshMaterial>();
         this.NamedTriangleGroups = new Dictionary<string, KoreMeshTriangleGroup>(mesh.NamedTriangleGroups);
 
         this.NextVertexId   = mesh.NextVertexId;
@@ -135,9 +135,9 @@ public partial class KoreMeshData
         int id = NextVertexId++;
         Vertices[id] = vertex;
 
-        if (normal.HasValue) Normals[id]      = normal.Value;
-        if (color.HasValue)  VertexColors[id] = color.Value;
-        if (uv.HasValue)     UVs[id]          = uv.Value;
+        if (normal.HasValue) Normals[id] = normal.Value;
+        if (color.HasValue) VertexColors[id] = color.Value;
+        if (uv.HasValue) UVs[id] = uv.Value;
 
         return id;
     }
@@ -546,7 +546,7 @@ public partial class KoreMeshData
     }
 
     // Explicit UV mapping for rotated/oriented faces
-    // Maps: a→uvA, b→uvB, c→uvC, d→uvD directly
+    // Maps: a?uvA, b?uvB, c?uvC, d?uvD directly
     public void AddFace(KoreXYZVector a, KoreXYZVector b, KoreXYZVector c, KoreXYZVector d,
                        KoreXYVector uvA, KoreXYVector uvB, KoreXYVector uvC, KoreXYVector uvD,
                        string? groupName = null)
@@ -735,7 +735,7 @@ public partial class KoreMeshData
         }
         NamedTriangleGroups[groupName] = group;
     }
-    
+
     public void AddTrianglesToGroup(List<int> triangleIds, string groupName)
     {
         if (!NamedTriangleGroups.ContainsKey(groupName))
