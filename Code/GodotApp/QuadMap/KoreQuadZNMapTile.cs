@@ -48,6 +48,8 @@ public partial class KoreQuadZNMapTile : Node3D
     public KoreQuadZNMapTile? ParentTile = null;
     public List<KoreQuadZNMapTile> ChildTiles = new List<KoreQuadZNMapTile>();
 
+    public double DrawRadius = 0.0;
+
     private bool tileValid = true; // internal validity flag - set false when the tile should be deleted and background processing stopped
     private bool ConstructionComplete = false; // Flag set when the tile is fully constructed
 
@@ -91,8 +93,11 @@ public partial class KoreQuadZNMapTile : Node3D
         // Task.Run(() => BackgroundProcessing());
 
         // Define the real world tile center positions that we use to anchor the tile in the GE world.
-        RwTileCenterLLA = new KoreLLAPoint(KoreQuadFaceOps.AverageLL(TileQuadFace), KoreWorldConsts.EarthRadiusM);
+        RwTileCenterLLA = new KoreLLAPoint(KoreQuadFaceOps.AverageLL(TileQuadFace), DrawRadius);
         RwTileCenterXYZ = RwTileCenterLLA.ToXYZ();
+
+        //RwTileCenterXYZ = TileQuadFace.Center;
+        //RwTileCenterXYZ.Magnitude = DrawRadius;
 
         CreateTileFromData();
 
@@ -119,7 +124,7 @@ public partial class KoreQuadZNMapTile : Node3D
         // else
         {
             // IF we're in a pos-change cycle, update the tile location
-            if (KoreZeroOffset.IsPosChangeCycle)
+            if (KoreRelocateOps.IsChangePeriod())
                 UpdateTileLocation();
         }
 
@@ -263,7 +268,7 @@ public partial class KoreQuadZNMapTile : Node3D
 
     private void CreateTileFromData()
     {
-        KoreQuadCubeTile tile = KoreQuadCubeTileFactory.TileForCode3(TileCode, radius: KoreZeroOffset.GeEarthRadius);
+        KoreQuadCubeTile tile = KoreQuadCubeTileFactory.TileForCode3(TileCode, radius: DrawRadius);
 
         KoreColorMeshGodot coloredMeshNode = new() { Name = $"QuadMesh_{TileCodeStr}" };
         AddChild(coloredMeshNode);
@@ -282,11 +287,12 @@ public partial class KoreQuadZNMapTile : Node3D
     private void UpdateTileLocation()
     {
         // Set the local position from the parent object
-        Vector3 newPos = KoreGeoConvOps.RwToOffsetGe(RwTileCenterLLA);
+        //Vector3 newPos = KoreGeoConvOps.RwToOffsetGe(RwTileCenterLLA);
+        var gePos = KoreRelocateOps.RWtoGE(RwTileCenterXYZ);
 
         // Set the local position from the parent object
         var transform = GlobalTransform;
-        transform.Origin = newPos;
+        transform.Origin = gePos;
         GlobalTransform = transform;
     }
 
@@ -297,7 +303,7 @@ public partial class KoreQuadZNMapTile : Node3D
     private void DebugSphere()
     {
         float sphereRadius = 1f;
-        
+
         // Create a debug sphere at the tile center
         var sphereMesh = new SphereMesh();
         sphereMesh.Radius = sphereRadius;
@@ -307,12 +313,12 @@ public partial class KoreQuadZNMapTile : Node3D
 
         var sphereInstance = new MeshInstance3D() { Name = $"DebugSphere_{TileCodeStr}" };
         sphereInstance.Mesh = sphereMesh;
-        
+
         sphereInstance.MaterialOverlay = new StandardMaterial3D()
         {
             AlbedoColor = new Color(1, 0, 0, 0.5f),
             Metallic = 0.0f,
-            Roughness = 0.5f       
+            Roughness = 0.5f
         };
         // sphereInstance.Translation = new Vector3(0, 0, 0);
         AddChild(sphereInstance);

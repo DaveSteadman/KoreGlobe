@@ -27,6 +27,8 @@ public struct KoreQuadFace
     public KoreXYZVector BottomLeft { get; set; } = KoreXYZVector.Zero;
     public KoreXYZVector BottomRight { get; set; } = KoreXYZVector.Zero;
 
+    public KoreXYZVector Center => (TopLeft + TopRight + BottomLeft + BottomRight) / 4.0;
+
     public KoreQuadFace() { }
 
 

@@ -77,7 +77,10 @@ public partial class Kore3DRelocatableSceneNode : Node3D
             // Set the new position
             KoreXYZVector newZeroXYZ = camLLA.ToXYZ();
 
-            DemoNode?.SetPosition(KoreConvPos.VecToV3(newZeroXYZ));
+            //DemoNode?.SetPosition(KoreConvPos.VecToV3(newZeroXYZ));
+
+            KoreRelocateOps.QueueNewOffset(newZeroXYZ);
+
 
             //KoreZeroOffset.SetLLA(newZeroPos);
 
@@ -101,8 +104,8 @@ public partial class Kore3DRelocatableSceneNode : Node3D
         AddChild(SceneObjects.ZeroNode);
 
         // Construct the quad ZN map manager (requires zero node as parameter)
-        //SceneObjects.QuadZNMapManager = new KoreQuadZNMapManager(SceneObjects.ZeroNode);
-        //SceneObjects.ZeroNode.AddChild(SceneObjects.QuadZNMapManager);
+        SceneObjects.QuadZNMapManager = new KoreQuadZNMapManager(SceneObjects.ZeroNode);
+        SceneObjects.ZeroNode.AddChild(SceneObjects.QuadZNMapManager);
 
         // Construct the world camera mount
         {
@@ -114,7 +117,7 @@ public partial class Kore3DRelocatableSceneNode : Node3D
             camera.Far = 100_000f;
 
             // Create the camera mount
-            SceneObjects.WorldCameraMount = new KoreNodeMoverPlus();
+            SceneObjects.WorldCameraMount = new KoreRelocatableXYZMoverNode();
             SceneObjects.WorldCameraMount.Name = "CameraMount";
             //SceneObjects.WorldCameraMount.CurrLLA = new KoreLLAPoint(50, 0, 5000);
             SceneObjects.WorldCameraMount.AddChild(camera);

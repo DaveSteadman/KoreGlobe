@@ -55,6 +55,7 @@ public static class KoreRelocateOps
 
     // --------------------------------------------------------------------------------------------
 
+    // Usage: if (KoreRelocateOps.IsChangePeriod()) { ... }
     public static bool IsChangePeriod() => ChangePeriod;
     public static void ClearChangePeriod() => ChangePeriod = false;
 

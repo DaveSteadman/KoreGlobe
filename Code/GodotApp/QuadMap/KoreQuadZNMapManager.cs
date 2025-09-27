@@ -90,29 +90,29 @@ public partial class KoreQuadZNMapManager : Node3D
             KoreQuadCubeTileCode currFaceTileCode = new() { Face = currFace, Quadrants = new List<int> { } };
 
             // Create the tile object, that will kickstart its own tile loading and display process.
-            KoreQuadZNMapTile currZNMapTile = new(currFaceTileCode);
+            KoreQuadZNMapTile currZNMapTile = new(currFaceTileCode) { DrawRadius = 13 };
 
             // Add the tile to the scene and our internal list
             Lvl0Tiles.Add(currZNMapTile);
             AddChild(currZNMapTile);
         }
 
-        {
-            KoreQuadFace.CubeFace currFace = KoreQuadFace.CubeFace.Top;
+        // {
+        //     KoreQuadFace.CubeFace currFace = KoreQuadFace.CubeFace.Left;
 
-            // Create the face tile code
-            KoreQuadCubeTileCode currFaceTileCode = new() { Face = currFace, Quadrants = new List<int> { } };
+        //     // Create the face tile code
+        //     KoreQuadCubeTileCode currFaceTileCode = new() { Face = currFace, Quadrants = new List<int> { } };
 
-            // Create the tile object, that will kickstart its own tile loading and display process.
-            KoreQuadZNMapTile currZNMapTile = new(currFaceTileCode);
+        //     // Create the tile object, that will kickstart its own tile loading and display process.
+        //     KoreQuadZNMapTile currZNMapTile = new(currFaceTileCode) { DrawRadius = 13.1 };
 
-            // Add the tile to the scene and our internal list
-            Lvl0Tiles.Add(currZNMapTile);
-            AddChild(currZNMapTile);
-        }
+        //     // Add the tile to the scene and our internal list
+        //     Lvl0Tiles.Add(currZNMapTile);
+        //     AddChild(currZNMapTile);
+        // }
 
 
-        
+
     }
 
     // --------------------------------------------------------------------------------------------
