@@ -37,11 +37,11 @@ public partial class KoreQuadZNMapTile : Node3D
 {
     public KoreQuadCubeTileCode TileCode { get; set; } = KoreQuadCubeTileCode.Zero;
     public string TileCodeStr { get; set; } = "Zero";
-    public KoreQuadFace TileQuadFace => KoreQuadFace.Zero;
+    public KoreQuadFace TileQuadFace { get; set; } = KoreQuadFace.Zero;
 
     // Tile Code and tile centre positions - Setup early in tile creation and then fixed.
     private KoreLLAPoint RwTileCenterLLA = KoreLLAPoint.Zero; // Shortcut from the tilecode center
-    private KoreXYZVector RwTileCenterXYZ = KoreXYZVector.Zero; // Shortcut from the tilecode center
+    public KoreXYZVector RwTileCenterXYZ = KoreXYZVector.Zero; // Shortcut from the tilecode center
     // private KoreLLBox        RwTileLLBox     = KoreLLBox.Zero; // Shortcut from the tilecode center
 
     // Parent/child tiles relationships
@@ -68,6 +68,11 @@ public partial class KoreQuadZNMapTile : Node3D
         ConstructionComplete = false;
         tileValid = true;
 
+        // Get the face from the tilecode
+        TileQuadFace = KoreQuadFaceOps.QuadrantOnFace(TileCode);
+        RwTileCenterXYZ = TileQuadFace.Center;
+        RwTileCenterXYZ.Magnitude = (float)DrawRadius;
+
         // Debug
         DebugSphere();
 
@@ -93,8 +98,8 @@ public partial class KoreQuadZNMapTile : Node3D
         // Task.Run(() => BackgroundProcessing());
 
         // Define the real world tile center positions that we use to anchor the tile in the GE world.
-        RwTileCenterLLA = new KoreLLAPoint(KoreQuadFaceOps.AverageLL(TileQuadFace), DrawRadius);
-        RwTileCenterXYZ = RwTileCenterLLA.ToXYZ();
+        // RwTileCenterLLA = new KoreLLAPoint(KoreQuadFaceOps.AverageLL(TileQuadFace), DrawRadius);
+        // RwTileCenterXYZ = RwTileCenterLLA.ToXYZ();
 
         //RwTileCenterXYZ = TileQuadFace.Center;
         //RwTileCenterXYZ.Magnitude = DrawRadius;

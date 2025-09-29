@@ -92,24 +92,30 @@ public partial class KoreQuadZNMapManager : Node3D
             // Create the tile object, that will kickstart its own tile loading and display process.
             KoreQuadZNMapTile currZNMapTile = new(currFaceTileCode) { DrawRadius = 13 };
 
+            string vecstr = KoreXYZVectorIO.ToStringWithDP(currZNMapTile.RwTileCenterXYZ, 4);
+            GD.Print($"KoreQuadZNMapManager: Tile: {currZNMapTile.TileCodeStr} Created {vecstr}");
+
             // Add the tile to the scene and our internal list
             Lvl0Tiles.Add(currZNMapTile);
             AddChild(currZNMapTile);
         }
 
-        // {
-        //     KoreQuadFace.CubeFace currFace = KoreQuadFace.CubeFace.Left;
+        {
+            KoreQuadFace.CubeFace currFace = KoreQuadFace.CubeFace.Left;
 
-        //     // Create the face tile code
-        //     KoreQuadCubeTileCode currFaceTileCode = new() { Face = currFace, Quadrants = new List<int> { } };
+            // Create the face tile code
+            KoreQuadCubeTileCode currFaceTileCode = new() { Face = currFace, Quadrants = new List<int> { } };
 
-        //     // Create the tile object, that will kickstart its own tile loading and display process.
-        //     KoreQuadZNMapTile currZNMapTile = new(currFaceTileCode) { DrawRadius = 13.1 };
+            // Create the tile object, that will kickstart its own tile loading and display process.
+            KoreQuadZNMapTile currZNMapTile = new(currFaceTileCode) { DrawRadius = 13.1 };
 
-        //     // Add the tile to the scene and our internal list
-        //     Lvl0Tiles.Add(currZNMapTile);
-        //     AddChild(currZNMapTile);
-        // }
+            string vecstr = KoreXYZVectorIO.ToStringWithDP(currZNMapTile.RwTileCenterXYZ, 4);
+            GD.Print($"KoreQuadZNMapManager: Tile: {currZNMapTile.TileCodeStr} Created {vecstr}");
+
+            // Add the tile to the scene and our internal list
+            Lvl0Tiles.Add(currZNMapTile);
+            AddChild(currZNMapTile);
+        }
 
 
 

@@ -20,6 +20,8 @@ public static class KoreXYZVectorIO
 
     // --------------------------------------------------------------------------------------------
 
+    // Usage: string vecstr = KoreXYVectorIO.ToStringWithDP(new KoreXYZVector(1.0, 2.0, 3.0), 4);
+
     public static string ToStringWithDP(KoreXYZVector vector, int decimalPlaces = 7)
     {
         int limitedDP = KoreNumericUtils.LimitToRange<int>(decimalPlaces, 1, 7);

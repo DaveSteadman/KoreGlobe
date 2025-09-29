@@ -18,7 +18,7 @@ public partial class KoreRelocatableXYZMoverNode : Node3D
     Vector3 CamRotation = new Vector3();
     Vector3 MouseMovement = new Vector3(); // Accumulated mouse movement for this frame
     public float RotateSpeedDegsPerSec = 1.0f;
-    public float MoveSpeedUnitsPerSec = 5.0f;
+    public float MoveSpeedUnitsPerSec = 15.0f;
 
     KoreXYZVector RwPosition = KoreXYZVector.Zero;  // Real-world position in meters
     KoreXYZVector RwOrientation = KoreXYZVector.Zero; // Real-world orientation (pitch, yaw, roll)
