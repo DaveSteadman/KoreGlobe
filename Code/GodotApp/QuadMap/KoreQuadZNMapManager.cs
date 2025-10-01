@@ -82,6 +82,20 @@ public partial class KoreQuadZNMapManager : Node3D
     {
         KoreCentralLog.AddEntry("KoreQuadZNMapManager: Creating the 8 Lvl0 Face Tiles");
 
+
+        // ----------------------------
+
+        // Debug inject a command line to load a global image for the tile generation
+        string cmd = "sat loadtile UnitTestArtefacts/bluemarble_2000x1000.webp     -90 -180     90    180";
+        (bool success, string response) = KoreSimFactory.Instance.ConsoleInterface.RunSingleCommand(cmd);
+
+        GD.Print($"Calling: ConsoleInterface.RunSingleCommand() = {success} : {response}");
+
+        // sleep for a second to let the command process
+        System.Threading.Thread.Sleep(1000);
+
+        // ----------------------------
+
         // foreach (KoreQuadFace.CubeFace currFace in Enum.GetValues(typeof(KoreQuadFace.CubeFace)))
         {
             KoreQuadFace.CubeFace currFace = KoreQuadFace.CubeFace.Front;
@@ -90,10 +104,10 @@ public partial class KoreQuadZNMapManager : Node3D
             KoreQuadCubeTileCode currFaceTileCode = new() { Face = currFace, Quadrants = new List<int> { } };
 
             // Create the tile object, that will kickstart its own tile loading and display process.
-            KoreQuadZNMapTile currZNMapTile = new(currFaceTileCode) { DrawRadius = 13 };
+            KoreQuadZNMapTile currZNMapTile = new(currFaceTileCode, 13);
 
-            string vecstr = KoreXYZVectorIO.ToStringWithDP(currZNMapTile.RwTileCenterXYZ, 4);
-            GD.Print($"KoreQuadZNMapManager: Tile: {currZNMapTile.TileCodeStr} Created {vecstr}");
+            string vecstr1 = KoreXYZVectorIO.ToStringWithDP(currZNMapTile.RwTileCenterXYZ, 4);
+            GD.Print($"KoreQuadZNMapManager: Tile: {currZNMapTile.TileCodeStr} Created {vecstr1}");
 
             // Add the tile to the scene and our internal list
             Lvl0Tiles.Add(currZNMapTile);
@@ -107,7 +121,7 @@ public partial class KoreQuadZNMapManager : Node3D
             KoreQuadCubeTileCode currFaceTileCode = new() { Face = currFace, Quadrants = new List<int> { } };
 
             // Create the tile object, that will kickstart its own tile loading and display process.
-            KoreQuadZNMapTile currZNMapTile = new(currFaceTileCode) { DrawRadius = 13.1 };
+            KoreQuadZNMapTile currZNMapTile = new(currFaceTileCode, 13.1);
 
             string vecstr = KoreXYZVectorIO.ToStringWithDP(currZNMapTile.RwTileCenterXYZ, 4);
             GD.Print($"KoreQuadZNMapManager: Tile: {currZNMapTile.TileCodeStr} Created {vecstr}");
@@ -116,8 +130,6 @@ public partial class KoreQuadZNMapManager : Node3D
             Lvl0Tiles.Add(currZNMapTile);
             AddChild(currZNMapTile);
         }
-
-
 
     }
 

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace KoreCommon;
 
@@ -250,4 +251,31 @@ public static class KoreXYZVectorOps
             && KoreValueUtils.EqualsWithinTolerance(a.Y, b.Y, tolerance)
             && KoreValueUtils.EqualsWithinTolerance(a.Z, b.Z, tolerance);
     }
+
+    // --------------------------------------------------------------------------------------------
+
+    // Usage: KoreXYZVector avg = KoreXYZVectorOps.Average(listOfPoints);
+    //        KoreXYZVector avg = KoreXYZVectorOps.Average(new List<KoreXYZVector> { p1, p2, p3 });
+
+    public static KoreXYZVector Average(List<KoreXYZVector> points)
+    {
+        if (points == null || points.Count == 0)
+            throw new ArgumentException("Point list cannot be null or empty.", nameof(points));
+
+        double sumX = 0;
+        double sumY = 0;
+        double sumZ = 0;
+
+        foreach (var point in points)
+        {
+            sumX += point.X;
+            sumY += point.Y;
+            sumZ += point.Z;
+        }
+
+        int count = points.Count;
+        return new KoreXYZVector(sumX / count, sumY / count, sumZ / count);
+    }
+
+
 }

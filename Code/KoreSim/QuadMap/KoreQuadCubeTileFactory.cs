@@ -168,9 +168,9 @@ public static class KoreQuadCubeTileFactory
 
     // Usage: KoreQuadCubeTile tile = KoreQuadCubeTileFactory.TileForCode(tileCode, radius: 10);
 
-    // Create the tile mesh, with the origin point at the LL center of the tile, so we add an additional 
+    // Create the tile mesh, with the origin point at the LL center of the tile, so we add an additional
     // offset to the mesh points. This is part of the relocatable geometry.
-    
+
     public static KoreQuadCubeTile TileForCode3(KoreQuadCubeTileCode code, double radius = 10)
     {
         KoreQuadCubeTile tile = new();
@@ -183,8 +183,8 @@ public static class KoreQuadCubeTileFactory
         KoreLLAPoint centerLLA = new(centerLL, radius);
         KoreXYZVector centerXYZ = centerLLA.ToXYZ();
 
-        int numU = 10; // Setup the number of points (not triangles, points) across and down from a top-left 0,0
-        int numV = 11;
+        int numU = 30; // Setup the number of points (not triangles, points) across and down from a top-left 0,0
+        int numV = 32;
         KoreNumeric1DArray<double> uArray = KoreNumeric1DArrayOps<double>.CreateArrayByCount(0, 1, numU);
         KoreNumeric1DArray<double> vArray = KoreNumeric1DArrayOps<double>.CreateArrayByCount(0, 1, numV);
 

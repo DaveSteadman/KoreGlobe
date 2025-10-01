@@ -147,6 +147,23 @@ public class KoreConsole
         }
     }
 
+    public (bool, string) RunSingleCommand(string commandLine)
+    {
+        var inputParts = commandLine.Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+
+        // Go through each of the registered command handlers looking for a match
+        foreach (var currCmd in commandHandlers)
+        {
+            if (currCmd.Matches(inputParts))
+            {
+                // Pass remaining parts as parameters to the command
+                string responseStr = currCmd.Execute(inputParts.Skip(currCmd.SignatureCount).ToList());
+                return (true, responseStr);
+            }
+        }
+        return (false, $"Command Not Found.");
+    }
+
     // ---------------------------------------------------------------------------------------------
     // MARK: Input
     // ---------------------------------------------------------------------------------------------
@@ -244,7 +261,7 @@ public class KoreConsole
                 {
                     // Run unit tests
                     OutputQueue.AddString("Running unit tests...");
-                    
+
                     KoreTestLog testLog = KoreTestCenter.RunCoreTests();
                     OutputQueue.AddString(testLog.FullReport());
                     OutputQueue.AddString("==================================================================");
@@ -252,7 +269,7 @@ public class KoreConsole
                     OutputQueue.AddString("==================================================================");
                     return true;
                 }
-                
+
 
             default:
                 return false;

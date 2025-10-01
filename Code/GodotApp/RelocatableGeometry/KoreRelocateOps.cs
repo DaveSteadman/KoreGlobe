@@ -71,7 +71,7 @@ public static class KoreRelocateOps
         KoreXYZVector rwOffset = GeoOffset.XYZTo(rwPos);
 
         // 1 - Scale the real-world position to game-engine units
-        KoreXYZVector gePos = rwOffset * RwToGeScaleMultiplier;
+        KoreXYZVector gePos = rwOffset;// * RwToGeScaleMultiplier;
 
         // 3 - Convert to Vector3 (float precision)
         return new Godot.Vector3((float)gePos.X, (float)gePos.Y, (float)gePos.Z);

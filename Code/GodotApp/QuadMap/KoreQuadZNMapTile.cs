@@ -57,12 +57,14 @@ public partial class KoreQuadZNMapTile : Node3D
     // MARK: Constructor
     // --------------------------------------------------------------------------------------------
 
-    public KoreQuadZNMapTile(KoreQuadCubeTileCode tileCode)
+    public KoreQuadZNMapTile(KoreQuadCubeTileCode tileCode, double drawRadius)
     {
         // Set the core Tilecode and node name.
         TileCode = tileCode;
         TileCodeStr = TileCode.CodeToString();
         Name = TileCodeStr;
+
+        DrawRadius = drawRadius;
 
         // Initial flag state
         ConstructionComplete = false;
@@ -71,12 +73,14 @@ public partial class KoreQuadZNMapTile : Node3D
         // Get the face from the tilecode
         TileQuadFace = KoreQuadFaceOps.QuadrantOnFace(TileCode);
         RwTileCenterXYZ = TileQuadFace.Center;
-        RwTileCenterXYZ.Magnitude = (float)DrawRadius;
+        RwTileCenterXYZ = RwTileCenterXYZ.Scale(DrawRadius);
+        //RwTileCenterXYZ = new KoreXYZVector(0,0,13.0f); // Place the tile at a fixed radius for now
 
         // Debug
         DebugSphere();
 
-        KoreCentralLog.AddEntry($"Creating KoreQuadZNMapTile: {TileCodeStr}");
+        string vecstr = KoreXYZVectorIO.ToStringWithDP(RwTileCenterXYZ, 4);
+        GD.Print($"Creating KoreQuadZNMapTile: {TileCodeStr} at {vecstr}");
 
         // Fire off the fully background task of creating/loading the tile elements asap.
         Task.Run(() => BackgroundTileCreation());
