@@ -183,8 +183,8 @@ public static class KoreQuadCubeTileFactory
         KoreLLAPoint centerLLA = new(centerLL, radius);
         KoreXYZVector centerXYZ = centerLLA.ToXYZ();
 
-        int numU = 30; // Setup the number of points (not triangles, points) across and down from a top-left 0,0
-        int numV = 32;
+        int numU = 130; // Setup the number of points (not triangles, points) across and down from a top-left 0,0
+        int numV = 132;
         KoreNumeric1DArray<double> uArray = KoreNumeric1DArrayOps<double>.CreateArrayByCount(0, 1, numU);
         KoreNumeric1DArray<double> vArray = KoreNumeric1DArrayOps<double>.CreateArrayByCount(0, 1, numV);
 

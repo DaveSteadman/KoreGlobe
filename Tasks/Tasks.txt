@@ -1,9 +1,9 @@
 
-Vision:
-=======
-A 3D world to explore and visualise customer data.
+Vision/Why:
+===========
+We endeavour to be curious, creative people, looking at the world from a different point of view.
 
-
+We create 3D visualisations of the world and data to add value you can't see in a simple number
 
 Target of current iteration:
 ============================
@@ -44,7 +44,7 @@ Assessment:
 
 - ColorMesh, plus a number of optimisations around serialisation size and tile creation, does not deliver the required level
   of performance and quality.
-    - The RAM usage it too high, even after optimisations. The visual compromise needs to deliver a 100x improvement elsewhere. 
+    - The RAM usage it too high, even after optimisations. The visual compromise needs to deliver a 100x improvement elsewhere.
         - Can't just trade VRAM for RAM usage.
     - The step changes in resolution are too high for a consistent aesthetic. This would need a tile-code rework into a b-tree.
         - This is a whole rework of tilecode, map tiles, everything.
@@ -101,7 +101,7 @@ New tile scoring and object organisation:
 A scorable object is a set of tiles, something actioned in one pass.
     - lvl0World is the top level object, creating all lvl0 tiles.
 
-        - lvl1Tileset 
+        - lvl1Tileset
             - A scorable object - say 10.
             - A tilecode, such as Bf
             - A list of subtiles
@@ -111,24 +111,24 @@ A scorable object is a set of tiles, something actioned in one pass.
                     - tilecode
                     - subtileset
 
-                - 
-                - 
                 -
-                - 
+                -
+                -
+                -
 
 
 
 - Maybe each item has two layers
     - Layer of the parent items, the tile resolution
     - Layer of the subtile collections.
-    
+
     - We an create/delete each layer as an action
     - We always want one to be present
         - when the 2 objct is present, we can delete the 1
         - when the 1 is present we can delete the 2
-        
+
         - So we can put the score on the individual tile in the set
-    
+
 - Maybe these "data explosions" I'm seeing are a consequence of the 1:25 allocation step changes. There is no way but to allocate 25x more data per step.
 
 - So we go to an inflated cube, with a quad tree split.
@@ -155,6 +155,32 @@ QuadMeshTiles are working!
 - The divisions will not be even, with the pinched corner tiles being smaller than central ones.
     - So we'll need a metric such as meters-per-point to define a consistant geometry per layer. Pinched corner meshes will be different sizes.
 
+
+
+Tile Levels:
+============
+1 - Can child tiles be considered?
+    - lvl0 always exists
+    - Lets not consider screen size for a while
+    - So camera distance defines creation of map tile objects
+
+2 - Can a map tile have a mesh?
+    - distance from land point in front of camera, prioritising closer tiles and higher map levels
+    - Rank the scores for the top X values
+
+- Map tiles are wholesale removed if their levels are not considered
+- Tiles are retired in they cannot be considered, then flag themselves as removable once they
+  are not displayed and can be removed.
+
+- states and transitions
+    - bare-created
+        - populated
+            - populated-displayed
+
+    - not-sanctioned
+        - not-displayed
+        - not-populated
+    - deletable
 
 
 
