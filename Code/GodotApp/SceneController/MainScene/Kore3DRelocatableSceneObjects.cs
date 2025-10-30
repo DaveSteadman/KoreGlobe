@@ -15,7 +15,11 @@ public class Kore3DRelocatableSceneObjects
 {
     // MainScene.UIMount
     public KoreZeroNode? ZeroNode { get; set; } = null;
+
+    // Map Managers
     public KoreQuadZNMapManager? QuadZNMapManager { get; set; } = null;
+    public KoreZeroNodeMapManager? ZeroNodeMapManager { get; set; } = null;
+
     public KoreRelocatableXYZMoverNode? WorldCameraMount { get; set; } = null;
     public KoreZeroNodeSphere? ZeroNodeSphere { get; set; } = null;
 }

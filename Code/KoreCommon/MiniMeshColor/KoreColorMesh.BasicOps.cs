@@ -38,5 +38,4 @@ public partial class KoreColorMesh
     public bool HasTriangle(int triangleId) { return Triangles.ContainsKey(triangleId); }
     public KoreColorMeshTri GetTriangle(int triangleId) { return Triangles[triangleId]; }
     public void RemoveTriangle(int triangleId) { Triangles.Remove(triangleId); }
-
 }

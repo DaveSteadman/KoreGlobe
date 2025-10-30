@@ -1,3 +1,5 @@
+// <fileheader>
+
 using System;
 
 // KoreXYZPolarOffset: Class represents an angle defined offset in the abstract XYZ space.

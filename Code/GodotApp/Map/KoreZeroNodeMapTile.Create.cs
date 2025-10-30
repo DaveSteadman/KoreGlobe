@@ -71,9 +71,9 @@ public partial class KoreZeroNodeMapTile : Node3D
             if (ColorMeshNode != null)
                 ColorMeshNode.PostCreateTidyUp();
 
-            TileColorMesh = null;  // free up memory                
+            TileColorMesh = null;  // free up memory
             Filepaths.Init();
-            
+
             // Clear any temporary objects
             GC.Collect(0, GCCollectionMode.Optimized);
         }
@@ -100,14 +100,14 @@ public partial class KoreZeroNodeMapTile : Node3D
                 dummyAzCount = 10;
                 dummyElCount = 10;
             }
-            
+
             // Source the key ele and color data
             KoreColorRGB[,] colorMap = TileImage(dummyAzCount, dummyElCount);
 
             // create the color mesh
             TileColorMesh = KoreColorMeshPrimitives.CenteredSphereSection(
                     llBox: RwTileLLBox,
-                    radius: KoreZeroOffset.GeEarthRadius,//(float)KoreWorldConsts.EarthRadiusM,
+                    radius: 50, //KoreZeroOffset.GeEarthRadius,//(float)KoreWorldConsts.EarthRadiusM,
                     colormap: colorMap,
                     tileEleData: eleData);
 
@@ -157,9 +157,9 @@ public partial class KoreZeroNodeMapTile : Node3D
             case 0:
                 // if (GrabbedActionCounter())
                 // {
-                    // CreateMeshTileSurfacePoints();
-                    ConstructionStage = 1;
-                    MainThreadColorMesh();
+                // CreateMeshTileSurfacePoints();
+                ConstructionStage = 1;
+                MainThreadColorMesh();
                 // }
 
                 // start a timer
@@ -199,7 +199,7 @@ public partial class KoreZeroNodeMapTile : Node3D
     private void AddDebugOriginSphere()
     {
         float sphereRad = 1f / (float)((TileCode.MapLvl * 4) + 1);
-        var sphereInstance = new MeshInstance3D { Name = "TestSphere", Mesh = new SphereMesh { Radius = sphereRad, Height = sphereRad*2f } };
+        var sphereInstance = new MeshInstance3D { Name = "TestSphere", Mesh = new SphereMesh { Radius = sphereRad, Height = sphereRad * 2f } };
         AddChild(sphereInstance);
 
         GEElements.Add(sphereInstance);
@@ -245,5 +245,68 @@ public partial class KoreZeroNodeMapTile : Node3D
         // TileCodeLabel.Rotation  = new Vector3(rotEl, rotAz, 0);
     }
 
+    // --------------------------------------------------------------------------------------------
+    // MARK: Grids
+    // --------------------------------------------------------------------------------------------
+
+    // [az,el]
+    public KoreLLAPoint[,] TileGridLLAs(int azCount, int elCount)
+    {
+        KoreLLAPoint[,] gridPoints = new KoreLLAPoint[azCount, elCount];
+
+        for (int azIdx = 0; azIdx < azCount; azIdx++)
+        {
+            double azFrac = (double)azIdx / (double)(azCount - 1);
+
+            for (int elIdx = 0; elIdx < elCount; elIdx++)
+            {
+                double elFrac = (double)elIdx / (double)(elCount - 1);
+
+                // Get the lat/lon for this grid point
+                double latDegs = RwTileLLBox.MinLatDegs + (elFrac * RwTileLLBox.DeltaLatDegs);
+                double lonDegs = RwTileLLBox.MinLonDegs + (azFrac * RwTileLLBox.DeltaLonDegs);
+
+                gridPoints[azIdx, elIdx] = new KoreLLAPoint() { LatDegs = latDegs, LonDegs = lonDegs, AltMslM = 0 };
+            }
+        }
+
+        return gridPoints;
+    }
+
+    // [az,el]
+    public static KoreXYZVector[,] TileGridXYZs(KoreLLAPoint[,] llPoints)
+    {
+        int azCount = llPoints.GetLength(0);
+        int elCount = llPoints.GetLength(1);
+        KoreXYZVector[,] xyzPoints = new KoreXYZVector[azCount, elCount];
+
+        for (int azIdx = 0; azIdx < azCount; azIdx++)
+        {
+            for (int elIdx = 0; elIdx < elCount; elIdx++)
+            {
+                xyzPoints[azIdx, elIdx] = llPoints[azIdx, elIdx].ToXYZ();
+            }
+        }
+
+        return xyzPoints;
+    }
+
+    // [az,el]
+    public static Godot.Vector3[,] TileGridGeXYZs(KoreLLAPoint[,] llPoints)
+    {
+        int azCount = llPoints.GetLength(0);
+        int elCount = llPoints.GetLength(1);
+        Godot.Vector3[,] xyzPoints = new Godot.Vector3[azCount, elCount];
+
+        for (int azIdx = 0; azIdx < azCount; azIdx++)
+        {
+            for (int elIdx = 0; elIdx < elCount; elIdx++)
+            {
+                xyzPoints[azIdx, elIdx] = KoreGeoConvOps.RwToGe(llPoints[azIdx, elIdx]);
+            }
+        }
+
+        return xyzPoints;
+    }
 
 }

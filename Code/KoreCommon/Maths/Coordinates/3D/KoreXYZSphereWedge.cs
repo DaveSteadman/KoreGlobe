@@ -1,3 +1,5 @@
+// <fileheader>
+
 // KoreXYZSphereWedge: Class representing a 3D "wedge", based on an inner and outer radius, height, and start and end angles.
 // Will have operations around the creation and manipulation of these wedges.
 

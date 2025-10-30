@@ -1,3 +1,5 @@
+// <fileheader>
+
 using System;
 
 // Class defining a simple 2D rectangle, with no rotation

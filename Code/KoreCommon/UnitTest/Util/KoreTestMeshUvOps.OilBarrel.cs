@@ -1,3 +1,5 @@
+// <fileheader>
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -31,9 +33,9 @@ public static partial class KoreTestMeshUvOps
         var bottomCenterV = 0.25; // Flipped: was 0.25, now 0.75 (top of image in bottom-left coordinate system)
         var uvRadius = 0.24;  // Slightly smaller than 0.25 to avoid edge bleeding
 
-        var wrapTLU = 0;
+        //var wrapTLU = 0;
         var wrapTLV = 0.5;
-        var wrapBRU = 1;
+        //var wrapBRU = 1;
         var wrapBRV = 1;
 
         // Create ring vertices for top and bottom caps

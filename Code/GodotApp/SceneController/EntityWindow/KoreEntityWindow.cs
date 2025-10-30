@@ -225,7 +225,7 @@ public partial class KoreEntityWindow : Window
         string? selectedEntity = GetSelectedEntityName();
         if (!string.IsNullOrEmpty(selectedEntity))
         {
-            List<string> elementNames = KoreEventDriver.ElementNameList(selectedEntity);
+            List<string> elementNames = KoreEventDriver.EntityElementNames(selectedEntity);
 
             // refresh the tree view with the string list, and allow for a selection
 

@@ -1,3 +1,5 @@
+// <fileheader>
+
 // KoreLatestHolderClass:
 // - A simple thread-safe holder for a single value of type T. It uses a lock to ensure that the latest value can be safely updated and read from multiple threads.
 // - Use Case: The background thread updates the value, and the main thread gets the latest value regardless of when it was last updated.

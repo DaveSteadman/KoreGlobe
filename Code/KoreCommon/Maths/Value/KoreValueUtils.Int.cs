@@ -1,3 +1,5 @@
+// <fileheader>
+
 using System;
 
 // KoreValueUtils: A static class for common (double precision) math routines, useful as helper routines for higher-level functionality.

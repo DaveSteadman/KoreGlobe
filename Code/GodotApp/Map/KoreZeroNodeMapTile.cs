@@ -141,8 +141,8 @@ public partial class KoreZeroNodeMapTile : Node3D
     public KoreZeroNodeMapTile(KoreMapTileCode tileCode)
     {
         // Set the core Tilecode and node name.
-        TileCode    = tileCode;
-        Name        = tileCode.ToString();
+        TileCode = tileCode;
+        Name     = tileCode.ToString();
 
         KoreCentralLog.AddEntry($"Creating KoreZeroNodeMapTile: {TileCode}");
 
@@ -219,30 +219,30 @@ public partial class KoreZeroNodeMapTile : Node3D
         // TileColormap = null;
         // TileEleData = new KoreNumeric2DArray<float>(); // Reset to empty
         TileColorMesh = null;
-        
+
         // Aggressively clear child collections
         foreach (var child in ChildTiles)
         {
             child?.QueueFree();
         }
         ChildTiles.Clear();
-        
+
         foreach (var element in GEElements)
         {
             element?.QueueFree();
         }
         GEElements.Clear();
-        
+
         // Free Godot nodes
         ColorMeshNode?.QueueFree();
         ColorMeshNode = null;
-        
+
         TileCodeLabel?.QueueFree();
         TileCodeLabel = null;
-        
+
         // Force immediate cleanup
         GC.Collect(0, GCCollectionMode.Optimized);
-        
+
         base._ExitTree();
     }
 
@@ -252,7 +252,7 @@ public partial class KoreZeroNodeMapTile : Node3D
 
     public bool GrabbedActionCounter()
     {
-        
+
         return KoreZeroNodeMapManager.ActionCounter.TryConsume();
     }
 
@@ -279,11 +279,11 @@ public partial class KoreZeroNodeMapTile : Node3D
             currChildTile.ParentTile = this;
         }
     }
-    
+
     public void CountChildTiles()
     {
         TileCount = 1; // Count this tile
-        
+
         foreach (var child in ChildTiles)
         {
             child.CountChildTiles();

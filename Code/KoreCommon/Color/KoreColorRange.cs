@@ -1,3 +1,5 @@
+// <fileheader>
+
 
 
 // KoreColorRange - A class to contain a list of numeric values associated colors, then provide

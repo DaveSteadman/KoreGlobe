@@ -53,25 +53,25 @@ public partial class KoreZeroNodeMapManager : Node3D
         // Lvl0Tiles.Add(new KoreZeroNodeMapTile(new KoreMapTileCode("BH")));
 
 
-        List<KoreMapTileCode> lvl0CodesList = KoreMapTileCode.Lvl0Codes();
-        foreach (KoreMapTileCode lvl0Code in lvl0CodesList)
-        {
-            KoreZeroNodeMapTile tile = new KoreZeroNodeMapTile(lvl0Code);
-            Lvl0Tiles.Add(tile);
-        }
+    //     List<KoreMapTileCode> lvl0CodesList = KoreMapTileCode.Lvl0Codes();
+    //     foreach (KoreMapTileCode lvl0Code in lvl0CodesList)
+    //     {
+    //         KoreZeroNodeMapTile tile = new KoreZeroNodeMapTile(lvl0Code);
+    //         Lvl0Tiles.Add(tile);
+    //     }
 
 
-        // Loop through the tiles and rotate them onto their center longitude
-       // int i = 0;
-        foreach (KoreZeroNodeMapTile tile in Lvl0Tiles)
-        {
-            //i++;
-            AddChild(tile);
-            double lon = tile.TileCode.LLBox.CenterPoint.LonRads;
-            //tile.Rotation = new Vector3(0, (float)lon, 0);
+    //     // Loop through the tiles and rotate them onto their center longitude
+    //    // int i = 0;
+    //     foreach (KoreZeroNodeMapTile tile in Lvl0Tiles)
+    //     {
+    //         //i++;
+    //         AddChild(tile);
+    //         //double lon = tile.TileCode.LLBox.CenterPoint.LonRads;
+    //         //tile.Rotation = new Vector3(0, (float)lon, 0);
 
-            //if (i > 20) break;
-        }
+    //         //if (i > 20) break;
+    //     }
 
 
 
@@ -79,7 +79,7 @@ public partial class KoreZeroNodeMapManager : Node3D
 
         //CreateLvl0Tiles();
 
-        CurrMaxMapLvl = 0;
+        // CurrMaxMapLvl = 0;
 
         KoreSimFactory.Instance.SaveConfig(KoreSimFactory.ConfigPath);
     }
@@ -93,9 +93,10 @@ public partial class KoreZeroNodeMapManager : Node3D
     {
         // Initialise the Manager node itself
         Name = "ZeroNodeMapManager";
-        //CreateLvl0Tiles();
+        CreateLvl0Tiles();
 
         GodotMeshPrimitives.AddChildDebugSphere(this, 0.1f, KoreColorPalette.Colors["DarkBlue"]);
+
 
     }
 
@@ -132,25 +133,26 @@ public partial class KoreZeroNodeMapManager : Node3D
 
     public void CreateLvl0Tiles()
     {
-        // if (ZeroNode == null)
-        // {
-        //     GD.PrintErr("ERROR: ZeroNodeMapManager ZeroNode Null");
-        //     return;
-        // }
-
         KoreCentralLog.AddEntry("Creating Lvl0 Tiles");
 
-        for (int latId = 0; latId < 6; latId++)
-        {
-            for (int lonId = 0; lonId < 12; lonId++)
-            {
-                KoreMapTileCode currTileCode = new KoreMapTileCode(lonId, latId);
+        KoreMapTileCode currTileCode = new KoreMapTileCode(5, 1);
+        KoreZeroNodeMapTile tile = new KoreZeroNodeMapTile(currTileCode);
+        AddChild(tile);
+        Lvl0Tiles.Add(tile);
 
-                KoreZeroNodeMapTile tile = new KoreZeroNodeMapTile(currTileCode);
-                AddChild(tile);
-                Lvl0Tiles.Add(tile);
-            }
-        }
+
+
+        // for (int latId = 0; latId < 6; latId++)
+        // {
+        //     for (int lonId = 0; lonId < 12; lonId++)
+        //     {
+        //         KoreMapTileCode currTileCode = new KoreMapTileCode(lonId, latId);
+
+        //         KoreZeroNodeMapTile tile = new KoreZeroNodeMapTile(currTileCode);
+        //         AddChild(tile);
+        //         Lvl0Tiles.Add(tile);
+        //     }
+        // }
     }
 
     // --------------------------------------------------------------------------------------------

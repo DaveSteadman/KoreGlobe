@@ -83,7 +83,6 @@ public class KoreEntityKinetics
                 PositionLog.Enqueue(CurrPosition);
         }
 
-        CurrPosition = CurrPosition.WrapValues();
     }
 
     // --------------------------------------------------------------------------------------------

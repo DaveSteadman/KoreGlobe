@@ -1,3 +1,5 @@
+// <fileheader>
+
 using System;
 
 // KoreXYZPolarOffsetOps: Common operations on KoreXYZPolarOffset objects, but outside of direct class responsibilities.

@@ -1,3 +1,5 @@
+// <fileheader>
+
 using System;
 
 // KoreXYVectorIO: Converts the KoreXYVector struct to and from various formats, such as JSON or binary.

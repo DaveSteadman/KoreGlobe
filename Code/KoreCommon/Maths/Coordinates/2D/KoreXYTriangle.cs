@@ -1,3 +1,5 @@
+// <fileheader>
+
 using System;
 
 // Represents a triangle in 2D space defined by three points (A, B, C).

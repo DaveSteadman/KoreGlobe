@@ -1,3 +1,5 @@
+// <fileheader>
+
 using System;
 using System.IO;
 using KoreCommon;
@@ -37,6 +39,7 @@ public static class KoreTestCenter
             // Run tests that depend on external libraries: DB & SkiaSharp
             KoreTestDatabase.RunTests(testLog);
             KoreTestSkiaSharp.RunTests(testLog);
+            KoreTestWorldPlotter.RunTests(testLog);
             KoreTestMeshUvOps.RunTests(testLog);
 
             KoreTestMiniMesh.RunTests(testLog);

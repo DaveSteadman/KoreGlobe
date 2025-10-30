@@ -1,3 +1,5 @@
+// <fileheader>
+
 using SkiaSharp;
 using System;
 using System.IO;
@@ -56,20 +58,12 @@ public static class KoreSkiaSharpConv
 
     public static SKColor ToSKColor(this KoreColorRGB color)
     {
-        return new SKColor(
-            (byte)(color.R * 255),
-            (byte)(color.G * 255),
-            (byte)(color.B * 255),
-            255);
+        return new SKColor(color.R, color.G, color.B, color.A);
     }
 
     public static SKColor ToSKColor(this KoreColorRGB color, float alpha)
     {
-        return new SKColor(
-            (byte)(color.R * 255),
-            (byte)(color.G * 255),
-            (byte)(color.B * 255),
-            (byte)(alpha * 255));
+        return new SKColor(color.R, color.G, color.B, (byte)(alpha * 255));
     }
 
     // Usage: KoreColorRGB kCol = KoreSkiaSharpConv.ToKoreColorRGB(skCol);

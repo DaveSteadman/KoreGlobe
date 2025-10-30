@@ -1,3 +1,5 @@
+// <fileheader>
+
 using System;
 using System.Collections.Generic;
 
@@ -129,6 +131,34 @@ public struct KoreLLBox
     public static KoreLLBox GlobalBox => new KoreLLBox(-Math.PI / 2.0, -Math.PI, Math.PI, 2.0 * Math.PI);
 
     public static KoreLLBox Zero => new KoreLLBox(0.0, 0.0, 0.0, 0.0);
+
+    // --------------------------------------------------------------------------------------------
+
+    // Create a new KoreLLBox that encompasses all the given points
+    // Usage: KoreLLBox box = KoreLLBox.FromList(pointList);
+    public static KoreLLBox FromList(List<KoreLLPoint> inPoints)
+    {
+        double minLat = double.MaxValue;
+        double maxLat = double.MinValue;
+        double minLon = double.MaxValue;
+        double maxLon = double.MinValue;
+
+        foreach (var p in inPoints)
+        {
+            minLat = Math.Min(minLat, p.LatRads);
+            maxLat = Math.Max(maxLat, p.LatRads);
+            minLon = Math.Min(minLon, p.LonRads);
+            maxLon = Math.Max(maxLon, p.LonRads);
+        }
+
+        return new KoreLLBox()
+        {
+            MinLatRads = minLat,
+            MaxLatRads = maxLat,
+            MinLonRads = minLon,
+            MaxLonRads = maxLon
+        };
+    }
 
     // --------------------------------------------------------------------------------------------
 

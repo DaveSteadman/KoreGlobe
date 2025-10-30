@@ -60,18 +60,18 @@ public class KoreCommandSatLoadTile : KoreCommand
 
         // -------------------------------------------------
 
-        if (validOperation)
-        {
-            sb.AppendLine($"Valid operation: Progressing...");
+        // if (validOperation)
+        // {
+        //     sb.AppendLine($"Valid operation: Progressing...");
 
-            (bool success, string message) = KoreSimFactory.Instance.ImageManager.LoadTile(llBox, inImageFilename);
+        //     (bool success, string message) = KoreSimFactory.Instance.ImageManager.LoadTile(llBox, inImageFilename);
 
-            sb.AppendLine($"- LoadTile: {KoreStringOps.StringForBoolPF(success)} - {message}");
+        //     sb.AppendLine($"- LoadTile: {KoreStringOps.StringForBoolPF(success)} - {message}");
 
-            //float testEleVal = newTile!.ElevationData[1,1];
+        //     //float testEleVal = newTile!.ElevationData[1,1];
 
-            //sb.AppendLine($"ele[1,1] = {testEleVal}");
-        }
+        //     //sb.AppendLine($"ele[1,1] = {testEleVal}");
+        // }
 
         // -------------------------------------------------
 

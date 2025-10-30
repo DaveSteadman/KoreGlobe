@@ -18,14 +18,14 @@ public static partial class KoreMiniMeshOps
     // KoreMiniMeshOps.AddCirclePoints(mesh, center, normal, radius, numSides, referenceDirection);
     public static List<int> AddCirclePoints(
         KoreMiniMesh mesh,
-        KoreXYZVector center, 
-        KoreXYZVector normal, 
-        double radius, 
+        KoreXYZVector center,
+        KoreXYZVector normal,
+        double radius,
         int numSides,
         KoreXYZVector? referenceDirection = null)
     {
         if (numSides < 3) throw new ArgumentException("Circle must have at least 3 sides");
-        
+
         List<int> pointIds = new List<int>();
 
         // Create a plane for the circle using KoreXYZPlane
@@ -114,10 +114,10 @@ public static partial class KoreMiniMeshOps
         for (int i = 0; i < sides; i++)
         {
             int next = (i + 1) % sides;
-            
+
             // Create a quad between corresponding points on the two circles
             int v1 = circle1[i];      // current circle1
-            int v2 = circle2[i];      // current circle2  
+            int v2 = circle2[i];      // current circle2
             int v3 = circle2[next];   // next circle2
             int v4 = circle1[next];   // next circle1
 
@@ -184,7 +184,7 @@ public static partial class KoreMiniMeshOps
     }
 
     // --------------------------------------------------------------------------------------------
-    // 
+    //
     // --------------------------------------------------------------------------------------------
 
 }

@@ -1,3 +1,5 @@
+// <fileheader>
+
 using System;
 
 namespace KoreCommon;
@@ -95,4 +97,115 @@ public struct KoreLLPoint
         return string.Format($"({LatDegs:F3}, {LonDegs:F3})");
     }
 
+    // --------------------------------------------------------------------------------------------
+    // MARK: Range Bearing
+    // --------------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// Calculate range and bearing to another point using haversine formula
+    /// Assumes calculation at Earth's mean radius (MSL)
+    /// </summary>
+    public KoreRangeBearing RangeBearingTo(KoreLLPoint destPos)
+    {
+        double lat1 = this.LatRads;
+        double lon1 = this.LonRads;
+        double lat2 = destPos.LatRads;
+        double lon2 = destPos.LonRads;
+
+        double dLat = lat2 - lat1;
+        double dLon = lon2 - lon1;
+
+        double a = Math.Pow(Math.Sin(dLat / 2), 2) +
+                Math.Cos(lat1) * Math.Cos(lat2) * Math.Pow(Math.Sin(dLon / 2), 2);
+
+        double calcRadius = KoreWorldConsts.EarthRadiusM;
+        double distanceM = 2 * calcRadius * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+
+        // Calculate bearing
+        double y = Math.Sin(dLon) * Math.Cos(lat2);
+        double x = Math.Cos(lat1) * Math.Sin(lat2) - Math.Sin(lat1) * Math.Cos(lat2) * Math.Cos(dLon);
+        double bearingRads = Math.Atan2(y, x);
+
+        return new KoreRangeBearing { RangeM = distanceM, BearingRads = bearingRads };
+    }
+
+    /// <summary>
+    /// Calculate a new position by adding range and bearing to this point
+    /// Uses spherical earth model at mean radius
+    /// </summary>
+    public KoreLLPoint PlusRangeBearing(KoreRangeBearing inputRB)
+    {
+        // Setup working variables
+        double LatRads = this.LatRads;
+        double LonRads = this.LonRads;
+        double CalcRadius = KoreWorldConsts.EarthRadiusM;
+        double InputRangeM = inputRB.RangeM;
+        double InputBearingRads = inputRB.BearingRads;
+
+        // Shortcut calculations, avoid repetition.
+        double SinLatRads = Math.Sin(LatRads);
+        double RangeDividedByRadius = InputRangeM / CalcRadius;
+
+        double NewLatRads =
+            Math.Asin(
+                SinLatRads * Math.Cos(RangeDividedByRadius) +
+                Math.Cos(LatRads) * Math.Sin(RangeDividedByRadius) *
+                Math.Cos(InputBearingRads)
+            );
+
+        double NewLonRads =
+            LonRads + Math.Atan2(
+                Math.Sin(InputBearingRads) * Math.Sin(RangeDividedByRadius) * Math.Cos(LatRads),
+                Math.Cos(RangeDividedByRadius) - SinLatRads * Math.Sin(NewLatRads)
+            );
+
+        return new KoreLLPoint(NewLatRads, NewLonRads);
+    }
+
+    /// <summary>
+    /// Calculate bearing to another point
+    /// </summary>
+    public double BearingToRads(KoreLLPoint destPos)
+    {
+        double lat1 = this.LatRads;
+        double lon1 = this.LonRads;
+        double lat2 = destPos.LatRads;
+        double lon2 = destPos.LonRads;
+
+        // Calculate difference in coordinates
+        double dLon = lon2 - lon1;
+
+        // Calculate bearing
+        double y = Math.Sin(dLon) * Math.Cos(lat2);
+        double x = Math.Cos(lat1) * Math.Sin(lat2) - Math.Sin(lat1) * Math.Cos(lat2) * Math.Cos(dLon);
+        double bearingRads = Math.Atan2(y, x);
+
+        // Ensure bearing is between 0 and 2pi
+        bearingRads = (bearingRads + 2 * Math.PI) % (2 * Math.PI);
+
+        return bearingRads;
+    }
+
+    /// <summary>
+    /// Calculate curved distance to another point using haversine formula
+    /// Assumes calculation at Earth's mean radius (MSL)
+    /// </summary>
+    public double CurvedDistanceToM(KoreLLPoint destPos)
+    {
+        double radius = KoreWorldConsts.EarthRadiusM;
+
+        double dLat = KoreValueUtils.AngleDiffRads(destPos.LatRads, this.LatRads);
+        double dLon = KoreValueUtils.AngleDiffRads(destPos.LonRads, this.LonRads);
+
+        double a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
+                Math.Cos(this.LatRads) * Math.Cos(destPos.LatRads) *
+                Math.Sin(dLon / 2) * Math.Sin(dLon / 2);
+        double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+
+        double distance = radius * c;
+
+        return distance;
+    }
+
 }
+

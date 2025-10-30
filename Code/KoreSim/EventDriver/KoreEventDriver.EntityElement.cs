@@ -95,17 +95,6 @@ public static partial class KoreEventDriver
         return Entity.ElementForName(elemName);
     }
 
-    public static List<string> ElementNameList(string entityName)
-    {
-        if (string.IsNullOrEmpty(entityName))
-            return new List<string>();
 
-        KoreEntity? Entity = KoreSimFactory.Instance.EntityManager.EntityForName(entityName);
-
-        if (Entity == null)
-            return new List<string>();
-
-        return Entity.ElementNames();
-    }
 
 }

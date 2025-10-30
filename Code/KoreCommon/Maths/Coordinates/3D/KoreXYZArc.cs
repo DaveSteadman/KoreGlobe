@@ -1,3 +1,5 @@
+// <fileheader>
+
 // KoreXYZArc: Class representing a 3D arc, based on an origin point, start azimuth and elevation, and deltas for azimuth and elevation.
 
 // Design Decisions:

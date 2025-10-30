@@ -1,3 +1,5 @@
+// <fileheader>
+
 // Kore1DMappedRange: A class of a range of input values, mapped to a list of output values.
 // Allows a caller to define a range of input and outputs that are accessible through linear interpolation.
 

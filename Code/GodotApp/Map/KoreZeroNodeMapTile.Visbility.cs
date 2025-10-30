@@ -216,7 +216,7 @@ public partial class KoreZeroNodeMapTile : Node3D
 
             //GD.Print($"UpdateVisbilityRules: {TileCode} // DistFrac:{distanceFraction:F3} // ChildDist:{(withinChildDisplayDistance?"In":"Out")} // Create:{(shouldCreateChildTiles?"Yes":"No")}");
 
-
+            shouldCreateChildTiles = false; // TEMP DISABLE CHILD CREATION
 
             // Events to hide/show self to improve performance. Over the horizon tiles are not visible etc.
             if (hideSelfEvent) SetVisibility(false);

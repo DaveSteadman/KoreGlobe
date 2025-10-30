@@ -1,3 +1,5 @@
+// <fileheader>
+
 using System;
 
 // Static class to convert color structs

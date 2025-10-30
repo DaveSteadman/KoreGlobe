@@ -1,3 +1,5 @@
+// <fileheader>
+
 using System;
 using System.Collections.Generic;
 
@@ -107,4 +109,30 @@ public static class KoreLLPointOps
         return true;
     }
 
+    // --------------------------------------------------------------------------------------------
+
+    // Determines if a point is inside a polygon ring using the ray-casting algorithm
+    // NOTE: Winding direction (clockwise vs counter-clockwise) does not matter for this algorithm
+    // The ray-casting method counts edge intersections regardless of polygon orientation
+    // ring: The polygon ring (list of points defining the boundary)
+    // point: The point to test
+    // returns: True if the point is inside the ring, false otherwise
+    public static bool IsPointInRing(List<KoreLLPoint> ring, KoreLLPoint point)
+    {
+        int n = ring.Count;
+        bool inside = false;
+        for (int i = 0, j = n - 1; i < n; j = i++)
+        {
+            if (((ring[i].LatDegs > point.LatDegs) != (ring[j].LatDegs > point.LatDegs)) &&
+                (point.LonDegs < (ring[j].LonDegs - ring[i].LonDegs) * (point.LatDegs - ring[i].LatDegs) / (ring[j].LatDegs - ring[i].LatDegs) + ring[i].LonDegs))
+            {
+                inside = !inside;
+            }
+        }
+        return inside;
+    }
+
 }
+
+
+

@@ -1,10 +1,11 @@
+// <fileheader>
+
 using System;
 using System.Collections.Generic;
 
 #nullable enable
 
 namespace KoreCommon;
-
 
 // KoreMeshDataEditOps: A static class to hold functions to edit a mesh
 
@@ -43,5 +44,4 @@ public static partial class KoreMeshDataEditOps
 
         return new KoreXYZBox(center, width, height, length);
     }
-
 }

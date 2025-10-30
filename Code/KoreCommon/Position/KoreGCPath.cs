@@ -1,4 +1,6 @@
-﻿using System;
+// <fileheader>
+
+using System;
 
 namespace KoreCommon;
 

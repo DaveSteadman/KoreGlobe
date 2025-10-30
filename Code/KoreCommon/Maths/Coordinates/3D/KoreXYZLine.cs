@@ -1,3 +1,5 @@
+// <fileheader>
+
 using System;
 
 // KoreXYZVector: A class to hold an XYZ position. Units are abstract.

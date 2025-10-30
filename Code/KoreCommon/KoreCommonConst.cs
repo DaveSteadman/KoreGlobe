@@ -1,3 +1,5 @@
+// <fileheader>
+
 namespace KoreCommon;
 
 public static class KoreCommonConst

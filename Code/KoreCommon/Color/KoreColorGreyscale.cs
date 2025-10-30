@@ -1,3 +1,5 @@
+// <fileheader>
+
 
 
 // Custom colour class, protable between frameworks.

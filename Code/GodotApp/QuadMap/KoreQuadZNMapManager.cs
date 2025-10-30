@@ -118,6 +118,30 @@ public partial class KoreQuadZNMapManager : Node3D
             drawRadius += 0.1;
         }
 
+        // Create one set of child tile faces for testing
+        KoreQuadCubeTileCode rootTileCode = new() { Face = KoreQuadFace.CubeFace.Front, Quadrants = new List<int> { } };
+
+        // Generate child tile codes
+        List<KoreQuadCubeTileCode> childTileCodes = rootTileCode.GenerateChildTileCodes();
+
+        foreach (var childCode in childTileCodes)
+        {
+            GD.Print($"Child Tile Code: {childCode.CodeToString()}");
+
+            // Create the tile object, that will kickstart its own tile loading and display process.
+            KoreQuadZNMapTile currZNMapTile = new(childCode, 13.4);
+
+            string vecstr1 = KoreXYZVectorIO.ToStringWithDP(currZNMapTile.RwTileCenterXYZ, 4);
+            GD.Print($"KoreQuadZNMapManager: Tile: {currZNMapTile.TileCodeStr} Created {vecstr1}");
+
+            // Add the tile to the scene and our internal list
+            //Lvl0Tiles.Add(currZNMapTile);
+            AddChild(currZNMapTile);
+
+            //drawRadius += 0.1;
+
+        }
+
         // {
         //     KoreQuadFace.CubeFace currFace = KoreQuadFace.CubeFace.Left;
 

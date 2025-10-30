@@ -20,7 +20,7 @@ public struct KoreQuadCubeTileCode
     public List<int> Quadrants { get; set; } = new();
 
     public KoreQuadCubeTileCode() { }
-    
+
     public static KoreQuadCubeTileCode Zero => new KoreQuadCubeTileCode();
 
     // --------------------------------------------------------------------------------------------
@@ -40,7 +40,7 @@ public struct KoreQuadCubeTileCode
 
         // if the string is less than three characters, it's plainly invalid
         if (code.Length < 3) return (false, newCode);
-        
+
         // Extract the face part (first three characters)
         string facePart = code.Substring(0, 3);
         string quadPart = code.Substring(3);
@@ -76,6 +76,24 @@ public struct KoreQuadCubeTileCode
 
         return (success, newCode);
     }
-    
 
+    // --------------------------------------------------------------------------------------------
+
+    // List of child codes
+    public List<KoreQuadCubeTileCode> GenerateChildTileCodes()
+    {
+        List<KoreQuadCubeTileCode> childCodes = new();
+
+        for (int i = 0; i < 4; i++)
+        {
+            KoreQuadCubeTileCode childCode = new()
+            {
+                Face = this.Face,
+                Quadrants = new List<int>(this.Quadrants) { i }
+            };
+            childCodes.Add(childCode);
+        }
+
+        return childCodes;
+    }
 }

@@ -1,3 +1,5 @@
+// <fileheader>
+
 using System;
 
 // KoreValueUtils: A static class for common (bool) value routines, useful as helper routines for higher-level functionality.

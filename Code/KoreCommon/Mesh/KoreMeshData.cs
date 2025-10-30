@@ -1,3 +1,5 @@
+// <fileheader>
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +18,7 @@ public record struct KoreMeshTriangleGroup(string MaterialName, List<int> Triang
 // - points, lines, triangles, normals, UVs, vertex colors, line colors, and materials.
 
 // COORDINATE SYSTEM SPECIFICATION:
-// - X+: Right, Y+: Up, Z-: Forward (Godot native)
+// - X+: Right, Y+: Up, Z-: Forward (Godot native // Right handed)
 // - UVs use top-left origin (Godot/OpenGL style): U (X) incrementing right, V (Y) incrementing down to a 1,1 bottom right
 // - Triangle winding: clockwise when viewed from outside (Godot native)
 
@@ -65,19 +67,19 @@ public partial class KoreMeshData
     // Deep Copy constructor
     public KoreMeshData(KoreMeshData mesh)
     {
-        this.Vertices = new Dictionary<int, KoreXYZVector>(mesh.Vertices);
-        this.Lines = new Dictionary<int, KoreMeshLine>(mesh.Lines);
-        this.Triangles = new Dictionary<int, KoreMeshTriangle>(mesh.Triangles);
-        this.Normals = new Dictionary<int, KoreXYZVector>(mesh.Normals);
-        this.UVs = new Dictionary<int, KoreXYVector>(mesh.UVs);
-        this.VertexColors = new Dictionary<int, KoreColorRGB>(mesh.VertexColors);
-        this.LineColors = new Dictionary<int, KoreMeshLineColour>(mesh.LineColors);
-        this.Materials = new List<KoreMeshMaterial>();
+        this.Vertices            = new Dictionary<int, KoreXYZVector>(mesh.Vertices);
+        this.Lines               = new Dictionary<int, KoreMeshLine>(mesh.Lines);
+        this.Triangles           = new Dictionary<int, KoreMeshTriangle>(mesh.Triangles);
+        this.Normals             = new Dictionary<int, KoreXYZVector>(mesh.Normals);
+        this.UVs                 = new Dictionary<int, KoreXYVector>(mesh.UVs);
+        this.VertexColors        = new Dictionary<int, KoreColorRGB>(mesh.VertexColors);
+        this.LineColors          = new Dictionary<int, KoreMeshLineColour>(mesh.LineColors);
+        this.Materials           = new List<KoreMeshMaterial>(mesh.Materials);
         this.NamedTriangleGroups = new Dictionary<string, KoreMeshTriangleGroup>(mesh.NamedTriangleGroups);
 
-        this.NextVertexId   = mesh.NextVertexId;
-        this.NextLineId     = mesh.NextLineId;
-        this.NextTriangleId = mesh.NextTriangleId;
+        this.NextVertexId        = mesh.NextVertexId;
+        this.NextLineId          = mesh.NextLineId;
+        this.NextTriangleId      = mesh.NextTriangleId;
     }
 
     // Initialises the mesh data with empty dictionaries
@@ -108,8 +110,8 @@ public partial class KoreMeshData
     public void ResetMaxIDs()
     {
         // Reset the next IDs based on the current max values in the dictionaries
-        NextVertexId   = Vertices.Count > 0 ? Vertices.Keys.Max() + 1 : 0;
-        NextLineId     = Lines.Count > 0 ? Lines.Keys.Max() + 1 : 0;
+        NextVertexId   = Vertices.Count  > 0 ? Vertices.Keys.Max()  + 1 : 0;
+        NextLineId     = Lines.Count     > 0 ? Lines.Keys.Max()     + 1 : 0;
         NextTriangleId = Triangles.Count > 0 ? Triangles.Keys.Max() + 1 : 0;
     }
 

@@ -1,3 +1,5 @@
+// <fileheader>
+
 
 // global using KoreFloat2DArray  = KoreNumeric2DArray<float>;
 // global using KoreDouble2DArray = KoreNumeric2DArray<double>;

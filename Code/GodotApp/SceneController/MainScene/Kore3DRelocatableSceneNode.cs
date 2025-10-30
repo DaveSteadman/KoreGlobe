@@ -104,8 +104,12 @@ public partial class Kore3DRelocatableSceneNode : Node3D
         AddChild(SceneObjects.ZeroNode);
 
         // Construct the quad ZN map manager (requires zero node as parameter)
-        SceneObjects.QuadZNMapManager = new KoreQuadZNMapManager(SceneObjects.ZeroNode);
-        SceneObjects.ZeroNode.AddChild(SceneObjects.QuadZNMapManager);
+        // SceneObjects.QuadZNMapManager = new KoreQuadZNMapManager(SceneObjects.ZeroNode);
+        // SceneObjects.ZeroNode.AddChild(SceneObjects.QuadZNMapManager);
+
+        // Construct the zero node map manager (requires zero node as parameter)
+        SceneObjects.ZeroNodeMapManager = new KoreZeroNodeMapManager(SceneObjects.ZeroNode);
+        SceneObjects.ZeroNode.AddChild(SceneObjects.ZeroNodeMapManager);
 
         // Construct the world camera mount
         {

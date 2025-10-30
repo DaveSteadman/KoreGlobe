@@ -1,3 +1,5 @@
+// <fileheader>
+
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -11,7 +13,7 @@ namespace KoreCommon;
 public sealed class KoreBinaryDataManager : IDisposable
 {
     private readonly string        _connectionString;
-    private readonly SemaphoreSlim _semaphore      = new(1, 1);
+    private readonly SemaphoreSlim _semaphore = new(1, 1);
     private bool                   _disposed;
 
     // --------------------------------------------------------------------------------------------

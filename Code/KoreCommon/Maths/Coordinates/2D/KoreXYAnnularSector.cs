@@ -1,3 +1,5 @@
+// <fileheader>
+
 // KoreXYArcSegmentBox: Class representing a 2D "box", based on an inner and outer radius, and start and end angles.
 // Will have operations around the creation and manipulation of these boxes.
 

@@ -1,3 +1,5 @@
+// <fileheader>
+
 using System;
 
 // A class that provides a simple pseudo-random number generator using a looped list of pre-generated random numbers.
