@@ -142,6 +142,15 @@ public partial class KoreZeroNodeMapTile : Node3D
     }
 
     // --------------------------------------------------------------------------------------------
+    // MARK: Image Mesh
+    // --------------------------------------------------------------------------------------------
+
+    private void BackgroundImageMesh()
+    {
+        KoreNumeric2DArray<float> eleData = LoadTileEleArr();
+    }
+
+    // --------------------------------------------------------------------------------------------
     // MARK: Main Thread
     // --------------------------------------------------------------------------------------------
 
@@ -273,6 +282,35 @@ public partial class KoreZeroNodeMapTile : Node3D
         return gridPoints;
     }
 
+
+    public KoreLLAPoint[,] TileGridLLAs(KoreNumeric2DArray<float> eleData, KoreLLBox tileLLBox)
+    {
+        int azCount = eleData.Width;
+        int elCount = eleData.Height;
+        KoreLLAPoint[,] gridPoints = new KoreLLAPoint[azCount, elCount];
+
+        for (int azIdx = 0; azIdx < azCount; azIdx++)
+        {
+            double azFrac = (double)azIdx / (double)(azCount - 1);
+
+            for (int elIdx = 0; elIdx < elCount; elIdx++)
+            {
+                double elFrac = (double)elIdx / (double)(elCount - 1);
+
+                // Get the lat/lon for this grid point
+                double latDegs = RwTileLLBox.MinLatDegs + (elFrac * RwTileLLBox.DeltaLatDegs);
+                double lonDegs = RwTileLLBox.MinLonDegs + (azFrac * RwTileLLBox.DeltaLonDegs);
+                float eleM = eleData[azIdx, elIdx];
+
+                gridPoints[azIdx, elIdx] = new KoreLLAPoint() { LatDegs = latDegs, LonDegs = lonDegs, AltMslM = eleM };
+            }
+        }
+
+        return gridPoints;
+    }
+
+
+
     // [az,el]
     public static KoreXYZVector[,] TileGridXYZs(KoreLLAPoint[,] llPoints)
     {
@@ -307,6 +345,26 @@ public partial class KoreZeroNodeMapTile : Node3D
         }
 
         return xyzPoints;
+    }
+
+    // [az,el]
+    public static Godot.Vector2[,] TileGridUVs(KoreLLAPoint[,] llPoints)
+    {
+        int azCount = llPoints.GetLength(0);
+        int elCount = llPoints.GetLength(1);
+        Godot.Vector2[,] uvPoints = new Godot.Vector2[azCount, elCount];
+
+        for (int azIdx = 0; azIdx < azCount; azIdx++)
+        {
+            for (int elIdx = 0; elIdx < elCount; elIdx++)
+            {
+                uvPoints[azIdx, elIdx] = new Godot.Vector2(
+                    (float)(azIdx / (double)(azCount - 1)),
+                    (float)(elIdx / (double)(elCount - 1)));
+            }
+        }
+
+        return uvPoints;
     }
 
 }
