@@ -7,11 +7,11 @@ public static class KoreSimCommands
 {
 
     // Usage: KoreSimCommands.RegisterCommands(console)
-    public static void RegisterCommands(KoreConsole console)
+    public static void RegisterCommands(KoreCommandHandler console)
     {
 
         // Register commands and their handlers here
-        KoreCentralLog.AddEntry("KoreConsole: Initializing commands...");
+        KoreCentralLog.AddEntry("KoreCommandHandler: Initializing commands...");
 
         // General app control commands
         console.AddCommandHandler(new KoreCommandExit());
@@ -37,6 +37,7 @@ public static class KoreSimCommands
         // Entity control
         console.AddCommandHandler(new KoreCommandEntityTestScenario());
         console.AddCommandHandler(new KoreCommandEntityAdd());
+        console.AddCommandHandler(new KoreCommandEntityAddBatch());
         console.AddCommandHandler(new KoreCommandEntityDelete());
         console.AddCommandHandler(new KoreCommandEntityDeleteAll());
 

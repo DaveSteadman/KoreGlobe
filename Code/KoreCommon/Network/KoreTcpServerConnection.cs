@@ -42,7 +42,7 @@ class KoreTcpServerConnection : KoreCommonConnection
         serverThread = null;
     }
 
-    public void setConnectionDetails(string inIpAddrStr, int inPort)
+    public void SetConnectionDetails(string inIpAddrStr, int inPort)
     {
         ipAddrStr = inIpAddrStr;
         ipAddress = IPAddress.Parse(ipAddrStr);
@@ -53,30 +53,27 @@ class KoreTcpServerConnection : KoreCommonConnection
     // override methods
     // ========================================================================================
 
-    public override string type()
-    {
-        return "TcpServer";
-    }
+    public override KoreConnectionType Type() => KoreConnectionType.TcpServer;
 
     // ------------------------------------------------------------------------------------------------------------
 
-    public override string connectionDetailsString()
+    public override string ConnectionDetailsString()
     {
         return $"type:TcpServer // name:{Name} // addr:{ipAddrStr}:{port} // Status:{StatusString}";
     }
 
     // ------------------------------------------------------------------------------------------------------------
 
-    public override void startConnection()
+    public override void StartConnection()
     {
         // Process the client connection in a new thread.
-        serverThread = new Thread(new ThreadStart(serverThreadFunc));
+        serverThread = new Thread(new ThreadStart(ServerThreadFunc));
         serverThread?.Start();
     }
 
     // ------------------------------------------------------------------------------------------------------------
 
-    public override void stopConnection()
+    public override void StopConnection()
     {
         // Set the running flag to false.
         running = false;
@@ -85,7 +82,7 @@ class KoreTcpServerConnection : KoreCommonConnection
 
     // ------------------------------------------------------------------------------------------------------------
 
-    public override void sendMessage(string msgData)
+    public override void SendMessage(string msgData)
     {
         // byte[] messageBuffer = Encoding.ASCII.GetBytes(msgData);
         // clientConfig.stream.Write(messageBuffer, 0, messageBuffer.Length);
@@ -93,7 +90,7 @@ class KoreTcpServerConnection : KoreCommonConnection
 
     // ========================================================================================
 
-    private void serverThreadFunc()
+    private void ServerThreadFunc()
     {
         KoreCentralLog.AddEntry($"Server Thread: Starting");
 
@@ -157,14 +154,14 @@ class KoreTcpServerConnection : KoreCommonConnection
             newClientConnection.stream = newClient.GetStream();
             newClientConnection.client = newClient;
             newClientConnection.lastUpdateTime = DateTime.Now;
-            newClientConnection.setupIncomingQueue(IncomingQueue);
+            newClientConnection.SetupIncomingQueue(IncomingQueue);
             newClientConnection.ParentConnectionName = Name;
 
             if (commsHub != null)
                 commsHub.connections.Add(newClientConnection);
 
             // Start the connection
-            newClientConnection.startConnection();
+            newClientConnection.StartConnection();
         }
 
         // Stop the listener.

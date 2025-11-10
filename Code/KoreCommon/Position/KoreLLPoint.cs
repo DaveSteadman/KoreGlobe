@@ -101,10 +101,8 @@ public struct KoreLLPoint
     // MARK: Range Bearing
     // --------------------------------------------------------------------------------------------
 
-    /// <summary>
-    /// Calculate range and bearing to another point using haversine formula
-    /// Assumes calculation at Earth's mean radius (MSL)
-    /// </summary>
+    // Calculate range and bearing to another point using haversine formula
+    // Assumes calculation at Earth's mean radius (MSL)
     public KoreRangeBearing RangeBearingTo(KoreLLPoint destPos)
     {
         double lat1 = this.LatRads;
@@ -129,10 +127,8 @@ public struct KoreLLPoint
         return new KoreRangeBearing { RangeM = distanceM, BearingRads = bearingRads };
     }
 
-    /// <summary>
-    /// Calculate a new position by adding range and bearing to this point
-    /// Uses spherical earth model at mean radius
-    /// </summary>
+    // Calculate a new position by adding range and bearing to this point
+    // Uses spherical earth model at mean radius
     public KoreLLPoint PlusRangeBearing(KoreRangeBearing inputRB)
     {
         // Setup working variables
@@ -162,9 +158,7 @@ public struct KoreLLPoint
         return new KoreLLPoint(NewLatRads, NewLonRads);
     }
 
-    /// <summary>
-    /// Calculate bearing to another point
-    /// </summary>
+    // Calculate bearing to another point
     public double BearingToRads(KoreLLPoint destPos)
     {
         double lat1 = this.LatRads;
@@ -186,10 +180,8 @@ public struct KoreLLPoint
         return bearingRads;
     }
 
-    /// <summary>
-    /// Calculate curved distance to another point using haversine formula
-    /// Assumes calculation at Earth's mean radius (MSL)
-    /// </summary>
+    // Calculate curved distance to another point using haversine formula
+    // Assumes calculation at Earth's mean radius (MSL)
     public double CurvedDistanceToM(KoreLLPoint destPos)
     {
         double radius = KoreWorldConsts.EarthRadiusM;

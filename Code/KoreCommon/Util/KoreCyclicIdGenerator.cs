@@ -4,7 +4,6 @@ using System;
 
 namespace KoreCommon;
 
-
 public class KoreCyclicIdGenerator
 {
     private readonly int _maxEntries;

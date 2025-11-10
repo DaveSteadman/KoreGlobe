@@ -5,11 +5,9 @@ using System.Collections.Generic;
 
 namespace KoreCommon;
 
-/// <summary>
-/// Represents an immutable 2D polygon on a Kore. The polygon is considered closed,
-/// with an implicit final line connecting the last and first points. There's no need
-/// to repeat the first point at the end of the vertices list.
-/// </summary>
+// Represents an immutable 2D polygon on a Kore. The polygon is considered closed,
+// with an implicit final line connecting the last and first points. There's no need
+// to repeat the first point at the end of the vertices list.
 public struct KoreXYPolygon
 {
     public IReadOnlyList<KoreXYVector> Vertices { get; }

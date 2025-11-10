@@ -9,13 +9,13 @@ public abstract class KoreCommonConnection
 {
     public string Name { set; get; } = "DefaultConnection";
 
-    public abstract string type();
-    public abstract string connectionDetailsString();
+    public abstract KoreConnectionType Type();
+    public abstract string ConnectionDetailsString();
 
-    public abstract void sendMessage(string msgData);
+    public abstract void SendMessage(string msgData);
 
-    public abstract void startConnection();
-    public abstract void stopConnection();
+    public abstract void StartConnection();
+    public abstract void StopConnection();
 
     // ========================================================================================
     // Incoming message queue
@@ -24,7 +24,7 @@ public abstract class KoreCommonConnection
     public BlockingCollection<KoreMessageText> IncomingQueue = new BlockingCollection<KoreMessageText>();
     public List<KoreMessageText> IncomingMessageLog = new List<KoreMessageText>();
 
-    public void setupIncomingQueue(BlockingCollection<KoreMessageText> newIncomingQueue)
+    public void SetupIncomingQueue(BlockingCollection<KoreMessageText> newIncomingQueue)
     {
         IncomingQueue = newIncomingQueue;
         IncomingMessageLog = new List<KoreMessageText>();
@@ -47,12 +47,12 @@ public abstract class KoreCommonConnection
         IncomingQueue.Add(newMsg);
     }
 
-    public bool hasIncomingMessage()
+    public bool HasIncomingMessage()
     {
         return IncomingQueue.Count > 0;
     }
 
-    public KoreMessageText getNextIncomingMessage()
+    public KoreMessageText GetNextIncomingMessage()
     {
         return IncomingQueue.Take();
     }

@@ -19,31 +19,34 @@ public static class KoreTestCenter
             if (!EnsureTestDirectory(testLog))
                 return testLog;
 
+            // Test Core maths and data structures
             KoreTestMath.RunTests(testLog);
             KoreTestXYZVector.RunTests(testLog);
             KoreTestLine.RunTests(testLog);
             KoreTestTriangle.RunTests(testLog);
+            KoreTestList1D.RunTests(testLog);
+            KoreTestList2D.RunTests(testLog);
+            KoreTestStringDictionary.RunTests(testLog);
 
+            // Test geographic and position classes
             KoreTestPosition.RunTests(testLog);
             KoreTestPositionLLA.RunTests(testLog);
             KoreTestRoute.RunTests(testLog);
-            //KoreTestPlotter.RunTests(testLog);
-            KoreTestList1D.RunTests(testLog);
-            KoreTestList2D.RunTests(testLog);
-            KoreTestMesh.RunTests(testLog);
 
+            // Graphics: Mesh and color tests
             KoreTestColor.RunTests(testLog);
-
-            KoreTestStringDictionary.RunTests(testLog);
-
-            // Run tests that depend on external libraries: DB & SkiaSharp
-            KoreTestDatabase.RunTests(testLog);
-            KoreTestSkiaSharp.RunTests(testLog);
-            KoreTestWorldPlotter.RunTests(testLog);
+            KoreTestMesh.RunTests(testLog);
             KoreTestMeshUvOps.RunTests(testLog);
-
             KoreTestMiniMesh.RunTests(testLog);
 
+            // Database tests
+            KoreTestDatabase.RunTests(testLog);
+
+            // SkiaSharp Plotter tests
+            KoreTestPlotter.RunTests(testLog);
+            KoreTestSkiaSharp.RunTests(testLog);
+            KoreTestWorldPlotter.RunTests(testLog);
+            KoreTestNatoSymbolPlotter.RunTests(testLog);
         }
         catch (Exception)
         {

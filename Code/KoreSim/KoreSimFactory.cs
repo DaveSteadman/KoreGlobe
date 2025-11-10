@@ -22,7 +22,7 @@ public class KoreSimFactory
     // --------------------------------------------------------------------------------------------
 
     // Outside EventDriver
-    public KoreConsole          ConsoleInterface { get; private set; }
+    public KoreCommandHandler   ConsoleInterface { get; private set; }
     public KoreNetworkHub       NetworkHub       { get; private set; }
     public KoreMessageManager   MessageManager   { get; private set; }
 
@@ -31,8 +31,8 @@ public class KoreSimFactory
     public KoreSimTime          SimClock         { get; private set; }
     public KoreModelRun         ModelRun         { get; private set; }
     public KoreElevationManager EleManager       { get; private set; }
-    public KoreTerrainImageManager ImageManager  { get; private set; }
-    public KoreEventRegister EventRegister { get; private set; }
+    public KoreTerrainImageManager ImageManager { get; private set; }
+    public KoreEventRegister    EventRegister    { get; private set; }
 
     // Usage: KoreStringDictionary kc = KoreSimFactory.Instance.KoreConfig;
     //        //        kc.SetParam("Key", "Value");
@@ -80,7 +80,7 @@ public class KoreSimFactory
         // Create the objects
         KoreCentralLog.AddEntry("Creating KoreSimFactory objects");
 
-        ConsoleInterface = new KoreConsole();
+        ConsoleInterface = new KoreCommandHandler();
         NetworkHub       = new KoreNetworkHub();
         MessageManager   = new KoreMessageManager();
 
@@ -169,12 +169,6 @@ public class KoreSimFactory
     }
 
     // --------------------------------------------------------------------------------------------
-
-    // Usage: KoreSimFactory.Instance.SaveConfig();
-    public void SaveConfig()
-    {
-        SaveConfig(ConfigPath);
-    }
 
     // Save the config:
     // Usage: KoreSimFactory.Instance.SaveConfig(KoreSimFactory.ConfigPath);

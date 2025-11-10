@@ -23,6 +23,7 @@ public partial class KoreMessageManager
 
         // Start the thread
         Thread t = new Thread(IncomingMessageMonitor);
+        t.IsBackground = true; // Allow app to exit even if this thread is still running
         t.Start();
     }
 

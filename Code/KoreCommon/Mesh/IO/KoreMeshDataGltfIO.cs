@@ -91,9 +91,7 @@
 //         return mesh;
 //     }
 
-//     /// <summary>
 //     /// Creates glTF materials from KoreMeshMaterial collection
-//     /// </summary>
 //     /// <param name="model">The glTF model root</param>
 //     /// <param name="materials">Collection of Kore materials to convert</param>
 //     /// <param name="outputDirectory">Directory where the glTF file will be saved (for texture path resolution)</param>
@@ -173,9 +171,7 @@
 //         return gltfMaterials;
 //     }
 
-//     /// <summary>
 //     /// Converts KoreMeshData to glTF mesh format with coordinate system conversion
-//     /// </summary>
 //     private static void ConvertKoreMeshToGltf(
 //         KoreMeshData koreMesh,
 //         MeshBuilder<VertexPositionNormal, VertexTexture1, VertexEmpty> meshBuilder,

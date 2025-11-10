@@ -50,7 +50,7 @@ public class KoreNetworkHub
         // Stop all threads
         foreach (KoreCommonConnection connection in connections)
         {
-            connection.stopConnection();
+            connection.StopConnection();
         }
         connections.Clear();
 
@@ -62,74 +62,88 @@ public class KoreNetworkHub
     // MARK: Connections
     // ------------------------------------------------------------------------------------------------------------
 
-    public void createConnection(string connName, string connType, string ipAddrStr, int port)
+    public void CreateConnection(string connName, KoreConnectionType connType, string ipAddrStr, int port)
     {
         // End any pre-existing connection with the name we would look to use.
-        endConnection(connName);
+        EndConnection(connName);
 
-        if (connType == "UdpSender")
+        switch (connType)
         {
-            // Create connection
-            KoreUdpSender UdpSender = new KoreUdpSender()
-            {
-                Name = connName,
-                IncomingQueue = IncomingQueue,
-                IncomingMessageLog = new List<KoreMessageText>() // Assuming IncomingMessageLog is a List<CommsMessage>.
-            };
+            case KoreConnectionType.UdpSender:
+                {
+                    // Create connection
+                    KoreUdpSender UdpSender = new KoreUdpSender()
+                    {
+                        Name = connName,
+                        IncomingQueue = IncomingQueue,
+                        IncomingMessageLog = new List<KoreMessageText>() // Assuming IncomingMessageLog is a List<CommsMessage>.
+                    };
 
-            connections.Add(UdpSender);
-            UdpSender.setConnectionDetails(ipAddrStr, port);
-            UdpSender.startConnection();
-        }
-        else if (connType == "UdpReceiver")
-        {
-            // Create connection
-            KoreUdpReceiver UdpReceiver = new KoreUdpReceiver()
-            {
-                Name = connName,
-                IncomingQueue = IncomingQueue,
-                IncomingMessageLog = new List<KoreMessageText>()
-            };
+                    connections.Add(UdpSender);
+                    UdpSender.SetConnectionDetails(ipAddrStr, port);
+                    UdpSender.StartConnection();
+                    break;
+                }
 
-            connections.Add(UdpReceiver);
-            UdpReceiver.setConnectionDetails(port);
-            UdpReceiver.startConnection();
-        }
-        else if (connType == "TcpClient")
-        {
-            // Create connection
-            KoreTcpClientConnection clientConnection = new KoreTcpClientConnection()
-            {
-                Name = connName,
-                IncomingQueue = IncomingQueue,
-                IncomingMessageLog = new List<KoreMessageText>()
-            };
+            case KoreConnectionType.UdpReceiver:
+                {
+                    // Create connection
+                    KoreUdpReceiver UdpReceiver = new KoreUdpReceiver()
+                    {
+                        Name = connName,
+                        IncomingQueue = IncomingQueue,
+                        IncomingMessageLog = new List<KoreMessageText>()
+                    };
 
-            connections.Add(clientConnection);
-            clientConnection.setConnectionDetails(ipAddrStr, port);
-            // clientConnection.startConnection(); Let the watchdog do it.
-        }
-        else if (connType == "TcpServer")
-        {
-            // Create connection
-            KoreTcpServerConnection serverConnection = new KoreTcpServerConnection()
-            {
-                Name = connName,
-                IncomingQueue = IncomingQueue,
-                IncomingMessageLog = new List<KoreMessageText>()
-            };
+                    connections.Add(UdpReceiver);
+                    UdpReceiver.SetConnectionDetails(port);
+                    UdpReceiver.StartConnection();
+                    break;
+                }
 
-            serverConnection.commsHub = this;
+            case KoreConnectionType.TcpClient:
+                {
+                    // Create connection
+                    KoreTcpClientConnection clientConnection = new KoreTcpClientConnection()
+                    {
+                        Name = connName,
+                        IncomingQueue = IncomingQueue,
+                        IncomingMessageLog = new List<KoreMessageText>()
+                    };
 
-            connections.Add(serverConnection);
-            serverConnection.setConnectionDetails(ipAddrStr, port);
-            serverConnection.startConnection();
+                    connections.Add(clientConnection);
+                    clientConnection.SetConnectionDetails(ipAddrStr, port);
+                    // clientConnection.startConnection(); Let the watchdog do it.
+                    break;
+                }
+
+            case KoreConnectionType.TcpServer:
+                {
+                    // Create connection
+                    KoreTcpServerConnection serverConnection = new KoreTcpServerConnection()
+                    {
+                        Name = connName,
+                        IncomingQueue = IncomingQueue,
+                        IncomingMessageLog = new List<KoreMessageText>()
+                    };
+
+                    serverConnection.commsHub = this;
+
+                    connections.Add(serverConnection);
+                    serverConnection.SetConnectionDetails(ipAddrStr, port);
+                    serverConnection.StartConnection();
+                    break;
+                }
+
+            default:
+                KoreCentralLog.AddEntry($"Unsupported connection type: {connType}");
+                break;
         }
     }
 
     // -------------------------------------------------------------------------------------------------------
 
-    public void endConnection(string connName)
+    public void EndConnection(string connName)
     {
         // We may be removing a server connection, so first block deals with removing children on that connection:
         {
@@ -157,7 +171,7 @@ public class KoreNetworkHub
 
             foreach (var conn in toRemove)
             {
-                conn.stopConnection();
+                conn.StopConnection();
                 connections.Remove(conn);
             }
         }
@@ -167,7 +181,7 @@ public class KoreNetworkHub
         {
             if (conn.Name == connName)
             {
-                conn.stopConnection();
+                conn.StopConnection();
                 return true;
             }
             return false;
@@ -176,12 +190,12 @@ public class KoreNetworkHub
 
     // -------------------------------------------------------------------------------------------------------
 
-    public void endAllConnections()
+    public void EndAllConnections()
     {
         while (connections.Count > 0)
         {
             KoreCommonConnection currConn = connections.First();
-            currConn.stopConnection();
+            currConn.StopConnection();
             connections.Remove(currConn);
         }
     }
@@ -190,14 +204,14 @@ public class KoreNetworkHub
     // MARK: Send/output messages
     // ------------------------------------------------------------------------------------------------------------
 
-    public void sendMessage(string connName, string msgData)
+    public void SendMessage(string connName, string msgData)
     {
         bool messageSent = false;
         foreach (KoreCommonConnection conn in connections)
         {
             if (conn.Name == connName)
             {
-                conn.sendMessage(msgData);
+                conn.SendMessage(msgData);
                 messageSent = true;
             }
         }
@@ -237,7 +251,7 @@ public class KoreNetworkHub
     // MARK: Misc Functions
     // ------------------------------------------------------------------------------------------------------------
 
-    public string localIPAddrStr()
+    public string LocalIPAddrStr()
     {
         string hostName = Dns.GetHostName();
         IPHostEntry hostEntry = Dns.GetHostEntry(hostName);
@@ -257,12 +271,12 @@ public class KoreNetworkHub
     {
         string outTxt = "NetworkHub Report:\n";
 
-        outTxt += $"- LocalIP {localIPAddrStr()}\n";
+        outTxt += $"- LocalIP {LocalIPAddrStr()}\n";
         outTxt += $"- WatchDogActivityCount {WatchDogActivityCount}\n";
 
         foreach (KoreCommonConnection conn in connections)
         {
-            outTxt += "- " + conn.connectionDetailsString() + "\n";
+            outTxt += "- " + conn.ConnectionDetailsString() + "\n";
         }
 
         return outTxt;
@@ -284,8 +298,8 @@ public class KoreNetworkHub
 
                     if (currConnTcp != null && !currConnTcp.connected)
                     {
-                        KoreCentralLog.AddEntry("Watchdog starting: " + currConnTcp.connectionDetailsString());
-                        currConnTcp.startConnection();
+                        KoreCentralLog.AddEntry("Watchdog starting: " + currConnTcp.ConnectionDetailsString());
+                        currConnTcp.StartConnection();
                     }
                 }
             }

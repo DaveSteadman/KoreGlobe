@@ -22,11 +22,16 @@ public static partial class KoreEventDriver
     }
 
     // Usage: KoreEventDriver.NetworkConnect("TcpClient", "TcpClient", "127.0.0.1", 12345);
-    public static void NetworkConnect(string connName, string connType, string ipAddrStr, int port) => KoreSimFactory.Instance.NetworkHub.createConnection(connName, connType, ipAddrStr, port);
+    public static void NetworkConnect(string connName, string connType, string ipAddrStr, int port)
+    {
+        var success = KoreConnectionTypeExtensions.TryParse(connType, out var type);
+        if (success)
+            KoreSimFactory.Instance.NetworkHub.CreateConnection(connName, type, ipAddrStr, port);
+    }
 
-    public static void NetworkDisconnect(string connName) => KoreSimFactory.Instance.NetworkHub.endConnection(connName);
+    public static void NetworkDisconnect(string connName) => KoreSimFactory.Instance.NetworkHub.EndConnection(connName);
 
-    public static string ReportLocalIP() => KoreSimFactory.Instance.NetworkHub.localIPAddrStr();
+    public static string ReportLocalIP() => KoreSimFactory.Instance.NetworkHub.LocalIPAddrStr();
 
     // Usage: KoreEventDriver.NetworkReport
     public static string NetworkReport() => KoreSimFactory.Instance.NetworkHub.Report();

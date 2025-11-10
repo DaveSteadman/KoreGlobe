@@ -18,14 +18,12 @@ public static partial class KoreTestMeshUvOps
         TestOilBarrelUVLayout(testLog);
     }
 
-    /// <summary>
     /// Creates a cube with UV layout like an unfolded dice
     /// Layout:
     ///     [2]
     /// [4] [1] [3] [6]
     ///     [5]
     /// Where numbers represent the dice faces
-    /// </summary>
     private static void TestDiceCubeUVLayout(KoreTestLog testLog)
     {
         var mesh = CreateDiceCube();
@@ -46,7 +44,7 @@ public static partial class KoreTestMeshUvOps
 
         // Assign the UV layout image as texture to all materials for visual verification
         //AssignUVLayoutAsTexture(mesh, "dice_cube_uv_clean.png");
-        
+
         {
             KoreMeshMaterial m = mesh.GetMaterial("DiceCubeFaces");
             m.Filename = "dice_cube_uv_clean2.png";
@@ -63,28 +61,26 @@ public static partial class KoreTestMeshUvOps
     {
         // Create a simple quad for basic UV testing
         var mesh = new KoreMeshData();
-        
+
         // Add vertices forming a square with UVs covering the full 0-1 space
         int v1 = mesh.AddCompleteVertex(new KoreXYZVector(-1, -1, 0), null, null, new KoreXYVector(0, 0)); // Bottom-left
         int v2 = mesh.AddCompleteVertex(new KoreXYZVector( 1, -1, 0), null, null, new KoreXYVector(1, 0)); // Bottom-right
         int v3 = mesh.AddCompleteVertex(new KoreXYZVector( 1,  1, 0), null, null, new KoreXYVector(1, 1)); // Top-right
         int v4 = mesh.AddCompleteVertex(new KoreXYZVector(-1,  1, 0), null, null, new KoreXYVector(0, 1)); // Top-left
-        
+
         // Add two triangles to form the quad
         mesh.AddTriangle(v1, v2, v3); // Bottom-right triangle
         mesh.AddTriangle(v1, v3, v4); // Top-left triangle
-        
+
         string filePath = "UnitTestArtefacts/simple_quad_uv.png";
         KoreFileOps.CreateDirectoryForFile(filePath);
         KoreMeshDataUvOps.SaveUVLayout(mesh, filePath, 512, true, true);
-        
+
         testLog.AddResult("Simple quad UV layout", true, $"Created simple quad with full UV coverage");
     }
 
-    /// <summary>
     /// Assigns the UV layout image as texture to all materials in the mesh.
     /// This allows visual verification of UV mapping when the OBJ is opened in Blender.
-    /// </summary>
     // private static void AssignUVLayoutAsTexture(KoreMeshData mesh, string uvImageFilename)
     // {
     //     // Update existing materials or create default material if none exist
@@ -98,7 +94,7 @@ public static partial class KoreTestMeshUvOps
     //     {
     //         // Update all existing materials to use the UV layout as texture
     //         var updatedMaterials = new List<KoreMeshMaterial>();
-            
+
     //         foreach (var material in mesh.Materials)
     //         {
     //             var updatedMaterial = new KoreMeshMaterial(
@@ -110,7 +106,7 @@ public static partial class KoreTestMeshUvOps
     //             );
     //             updatedMaterials.Add(updatedMaterial);
     //         }
-            
+
     //         // Replace materials in mesh
     //         mesh.Materials.Clear();
     //         foreach (var material in updatedMaterials)
@@ -123,16 +119,16 @@ public static partial class KoreTestMeshUvOps
     private static KoreMeshData CreateDiceCube()
     {
         var mesh = new KoreMeshData();
-        
+
         // Define the UV layout for a dice unfolded:
         //     [2]
         // [4] [1] [3] [6]
         //     [5]
-        
+
         // Each face is 0.25 x 0.25 in UV space, so half face size is 0.125
         double faceSize = 0.25;
         double halfFaceSize = faceSize / 2.0; // 0.125
-        
+
         // UV positions for each face center - positioned at multiples of halfFaceSize
         // Centers range from 1*halfFaceSize to 7*halfFaceSize (0.125 to 0.875)
         var faceUVs = new[]
@@ -147,32 +143,32 @@ public static partial class KoreTestMeshUvOps
 
         // Create vertices for each face
         var faceVertices = new int[6, 4]; // 6 faces, 4 vertices each
-        
+
         for (int face = 0; face < 6; face++)
         {
             var uvCenter = faceUVs[face];
-            
+
             // Calculate UV coordinates for the four corners of this face
             double u1 = uvCenter.centerU - faceSize / 2;
             double u2 = uvCenter.centerU + faceSize / 2;
             double v1 = uvCenter.centerV - faceSize / 2;
             double v2 = uvCenter.centerV + faceSize / 2;
-            
+
             // Create 3D positions for the cube face
             var positions = GetCubeFacePositions(face);
-            
+
             // Add vertices: bottom-left, bottom-right, top-right, top-left
             faceVertices[face, 0] = mesh.AddCompleteVertex(positions[0], null, null, new KoreXYVector(u1, v1));
             faceVertices[face, 1] = mesh.AddCompleteVertex(positions[1], null, null, new KoreXYVector(u2, v1));
             faceVertices[face, 2] = mesh.AddCompleteVertex(positions[2], null, null, new KoreXYVector(u2, v2));
             faceVertices[face, 3] = mesh.AddCompleteVertex(positions[3], null, null, new KoreXYVector(u1, v2));
-            
+
             // Add two triangles for this face
             int vert0 = faceVertices[face, 0];
             int vert1 = faceVertices[face, 1];
             int vert2 = faceVertices[face, 2];
             int vert3 = faceVertices[face, 3];
-            
+
             mesh.AddTriangle(vert0, vert1, vert2); // Bottom-right triangle
             mesh.AddTriangle(vert0, vert2, vert3); // Top-left triangle
         }
@@ -189,7 +185,7 @@ public static partial class KoreTestMeshUvOps
     {
         // Return the 3D positions for the four corners of each cube face
         // Each face returns: bottom-left, bottom-right, top-right, top-left
-        
+
         return face switch
         {
             0 => [ // Front face (Z+)

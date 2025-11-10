@@ -9,6 +9,7 @@ namespace KoreCommon;
 
 public static class KoreXYPolarOffsetOps
 {
+    // Orientation: A zero angle is "east" (3 o'clock) and angles increase anti-clockwise.
     public static KoreXYVector ToXY(KoreXYPolarOffset o)
     {
         double x = o.Distance * Math.Cos(o.AngleRads);

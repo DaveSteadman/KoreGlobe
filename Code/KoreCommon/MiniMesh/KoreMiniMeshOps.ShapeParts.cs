@@ -68,9 +68,7 @@ public static partial class KoreMiniMeshOps
 
     // --------------------------------------------------------------------------------------------
 
-    /// <summary>
-    /// Find a vector perpendicular to the given vector using a consistent strategy
-    /// </summary>
+    // Find a vector perpendicular to the given vector using a consistent strategy
     private static KoreXYZVector FindPerpendicularVector(KoreXYZVector vector)
     {
         // Strategy: Try standard basis vectors and pick the one that's most perpendicular
@@ -97,9 +95,7 @@ public static partial class KoreMiniMeshOps
     // MARK: Shape Parts
     // --------------------------------------------------------------------------------------------
 
-    /// <summary>
-    /// Create a ribbon surface connecting two circles of vertices
-    /// </summary>
+    // Create a ribbon surface connecting two circles of vertices
     public static List<int> AddRibbon(
         KoreMiniMesh mesh,
         List<int> circle1,
@@ -130,9 +126,7 @@ public static partial class KoreMiniMeshOps
 
     // --------------------------------------------------------------------------------------------
 
-    /// <summary>
-    /// Create a fan surface from a center point to a circle of vertices
-    /// </summary>
+    // Create a fan surface from a center point to a circle of vertices
     public static List<int> AddFan(
         KoreMiniMesh mesh,
         int centerVertex,
@@ -168,9 +162,7 @@ public static partial class KoreMiniMeshOps
 
     // --------------------------------------------------------------------------------------------
 
-    /// <summary>
-    /// Add circle lines connecting vertices in a circle
-    /// </summary>
+    // Add circle lines connecting vertices in a circle
     public static void AddCircleLines(
         KoreMiniMesh mesh,
         List<int> circleVertices,

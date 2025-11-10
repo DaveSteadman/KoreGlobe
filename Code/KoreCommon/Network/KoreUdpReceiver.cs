@@ -49,7 +49,7 @@ class KoreUdpReceiver : KoreCommonConnection
         _cancellationTokenSource = null;
     }
 
-    public void setConnectionDetails(int inPort)
+    public void SetConnectionDetails(int inPort)
     {
         port = inPort;
     }
@@ -58,14 +58,11 @@ class KoreUdpReceiver : KoreCommonConnection
     // override methods
     // ========================================================================================
 
-    public override string type()
-    {
-        return "UdpReceiver";
-    }
+    public override KoreConnectionType Type() => KoreConnectionType.UdpReceiver;
 
     // ------------------------------------------------------------------------------------------------------------
 
-    public override string connectionDetailsString()
+    public override string ConnectionDetailsString()
     {
         string addr = "<null>";
         if (localEndPoint != null)
@@ -76,7 +73,7 @@ class KoreUdpReceiver : KoreCommonConnection
 
     // ------------------------------------------------------------------------------------------------------------
 
-    public override void startConnection()
+    public override void StartConnection()
     {
         // create Udp Port
         UdpClient = new UdpClient(new IPEndPoint(IPAddress.Any, port));
@@ -88,7 +85,7 @@ class KoreUdpReceiver : KoreCommonConnection
 
     // ------------------------------------------------------------------------------------------------------------
 
-    public override void stopConnection()
+    public override void StopConnection()
     {
         _cancellationTokenSource?.Cancel();
         UdpClient?.Close();
@@ -96,7 +93,7 @@ class KoreUdpReceiver : KoreCommonConnection
 
     // ------------------------------------------------------------------------------------------------------------
 
-    public override void sendMessage(string msgData)
+    public override void SendMessage(string msgData)
     {
         // A receiver class, should be used to send.
     }

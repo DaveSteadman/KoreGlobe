@@ -48,7 +48,7 @@ class KoreTcpServerClientConnection : KoreCommonConnection
         stream = null;
     }
 
-    public void setConnectionDetails(TcpClient newTcpClient, NetworkStream newStream)
+    public void SetConnectionDetails(TcpClient newTcpClient, NetworkStream newStream)
     {
         client = newTcpClient;
         stream = newStream;
@@ -58,35 +58,32 @@ class KoreTcpServerClientConnection : KoreCommonConnection
     // override methods
     // ========================================================================================
 
-    public override string type()
-    {
-        return "TcpServerClient";
-    }
+    public override KoreConnectionType Type() => KoreConnectionType.TcpServerClient;
 
     // ------------------------------------------------------------------------------------------------------------
 
-    public override string connectionDetailsString()
+    public override string ConnectionDetailsString()
     {
         return $"type:TcpServerClient // name:{Name} // count:{NumMsgsHandled}";
     }
 
     // ------------------------------------------------------------------------------------------------------------
 
-    public override void startConnection()
+    public override void StartConnection()
     {
         running = true;
 
         // Process the client connection in a new thread.
-        sendThread = new Thread(new ThreadStart(sendThreadFunc));
+        sendThread = new Thread(new ThreadStart(SendThreadFunc));
         sendThread?.Start();
 
-        receiveThread = new Thread(new ThreadStart(receiveThreadFunc));
+        receiveThread = new Thread(new ThreadStart(ReceiveThreadFunc));
         receiveThread?.Start();
     }
 
     // ------------------------------------------------------------------------------------------------------------
 
-    public override void stopConnection()
+    public override void StopConnection()
     {
         // Set the running flag to false.
         running = false;
@@ -115,7 +112,7 @@ class KoreTcpServerClientConnection : KoreCommonConnection
         //     receiveThread.Join();
     }
 
-    private void finaliseConnection()
+    private void FinaliseConnection()
     {
         if (!running)
         {
@@ -140,7 +137,7 @@ class KoreTcpServerClientConnection : KoreCommonConnection
     // The call to send a message adds it to a queue. The send operation may be blocking, so the
     // send thread will unblock on the collection getting a new element and send it on its own
     // timeline.
-    public override void sendMessage(string msgData)
+    public override void SendMessage(string msgData)
     {
         if (running)
             sendMsgQueue.Add(msgData);
@@ -148,9 +145,9 @@ class KoreTcpServerClientConnection : KoreCommonConnection
 
     // ========================================================================================
 
-    void sendThreadFunc()
+    void SendThreadFunc()
     {
-        KoreCentralLog.AddEntry($"Start ServerClient Send Thread {connectionDetailsString()}");
+        KoreCentralLog.AddEntry($"Start ServerClient Send Thread {ConnectionDetailsString()}");
 
         // Enter an infinite loop to process client connections.
         while (running)
@@ -171,9 +168,9 @@ class KoreTcpServerClientConnection : KoreCommonConnection
 
     // ------------------------------------------------------------------------------------------------------------
 
-    void receiveThreadFunc()
+    void ReceiveThreadFunc()
     {
-        KoreCentralLog.AddEntry($"Start ServerClient Receive Thread {connectionDetailsString()}");
+        KoreCentralLog.AddEntry($"Start ServerClient Receive Thread {ConnectionDetailsString()}");
 
         // Enter a loop to continuously process client requests.
         while (running)
@@ -183,7 +180,7 @@ class KoreTcpServerClientConnection : KoreCommonConnection
             {
                 if (!client.Connected)
                 {
-                    KoreCentralLog.AddEntry($"ServerClient Disconnected {connectionDetailsString()}");
+                    KoreCentralLog.AddEntry($"ServerClient Disconnected {ConnectionDetailsString()}");
                     client?.Close();
                     break;
                 }
@@ -193,7 +190,7 @@ class KoreTcpServerClientConnection : KoreCommonConnection
             DateTime currentTime = DateTime.UtcNow;
             if (currentTime.Subtract(lastUpdateTime).TotalSeconds > 10)
             {
-                KoreCentralLog.AddEntry($"ServerClient Inactive {connectionDetailsString()} (10secs)");
+                KoreCentralLog.AddEntry($"ServerClient Inactive {ConnectionDetailsString()} (10secs)");
                 client?.Close();
                 break;
             }
@@ -240,7 +237,7 @@ class KoreTcpServerClientConnection : KoreCommonConnection
             Thread.Sleep(waitTime);
         }
 
-        finaliseConnection();
+        FinaliseConnection();
     }
 
 } // class

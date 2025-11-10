@@ -8,10 +8,8 @@ using System.Linq;
 
 namespace KoreCommon;
 
-/// <summary>
 /// Static validity and cleanup operations for KoreMeshData
 /// Contains methods for mesh validation, cleanup, and population of missing data
-/// </summary>
 public static partial class KoreMeshDataEditOps
 {
     // --------------------------------------------------------------------------------------------
@@ -101,12 +99,8 @@ public static partial class KoreMeshDataEditOps
     // MARK: TRIANGLES
     // --------------------------------------------------------------------------------------------
 
-
-
-    /// <summary>
-    /// Isolates a triangle by creating duplicate vertices if they are shared with other triangles.
-    /// This ensures the triangle has its own unique vertices that can be modified independently.
-    /// </summary>
+    // Isolates a triangle by creating duplicate vertices if they are shared with other triangles.
+    // This ensures the triangle has its own unique vertices that can be modified independently.
     public static void IsolateTriangle(KoreMeshData mesh, int triId)
     {
         if (!mesh.Triangles.ContainsKey(triId))
@@ -126,9 +120,7 @@ public static partial class KoreMeshDataEditOps
         mesh.Triangles[triId] = new KoreMeshTriangle(newA, newB, newC);
     }
 
-    /// <summary>
     /// Finds vertices of a triangle that are shared with other triangles
-    /// </summary>
     private static HashSet<int> FindSharedVertices(KoreMeshData mesh, int targetTriangleId)
     {
         if (!mesh.Triangles.ContainsKey(targetTriangleId))
@@ -166,7 +158,7 @@ public static partial class KoreMeshDataEditOps
     // --------------------------------------------------------------------------------------------
     // MARK: Delete
     // --------------------------------------------------------------------------------------------
-    
+
     // Deletes the triangle definition and any use in groups.
 
     // Usage: KoreMeshDataEditOps.DeleteTriangle(mesh, triangleId);

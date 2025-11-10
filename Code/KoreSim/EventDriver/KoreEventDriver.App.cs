@@ -11,20 +11,21 @@ namespace KoreSim;
 
 public static partial class KoreEventDriver
 {
-    // ---------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     // Command Execution
-    // ---------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
 
     public static void ExitApplication()
     {
         KoreSimFactory.Instance.ConsoleInterface.Stop();
-        KoreSimFactory.Instance.NetworkHub.endAllConnections();
+        KoreSimFactory.Instance.MessageManager.EndThread();
+        KoreSimFactory.Instance.NetworkHub.EndAllConnections();
         //KoreSimFactory.Instance.NetworkHub.EndAllThread();
     }
 
-    // ---------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     // MARK: Config
-    // ---------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
 
     public static string ConfigReport()
     {
@@ -32,9 +33,9 @@ public static partial class KoreEventDriver
         return KoreSimFactory.Instance.KoreConfig.Report();
     }
 
-    // ---------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
     // MARK: Sidebar view settings
-    // ---------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
 
     // Usage: KoreEventDriver.SidebarSetBeamVisibility(true, true);
 
@@ -45,7 +46,7 @@ public static partial class KoreEventDriver
     //     GloGodotFactory.Instance.UIState.ShowTx = txVisible;
     // }
 
-    // ---------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
 
     // Usage: KoreEventDriver.SidebarSetRouteVisibility(true);
     //        KoreEventDriver.SidebarSetEmitterVisibility(true);
@@ -60,7 +61,7 @@ public static partial class KoreEventDriver
     // public void SetCameraModeAlignCam() => GloGodotFactory.Instance.UIState.SetCameraModeAlignCam();
 
 
-    // ---------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
 
 }
 

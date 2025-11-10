@@ -57,7 +57,7 @@ class KoreTcpClientConnection : KoreCommonConnection
 
     // ------------------------------------------------------------------------------------------------------------
 
-    public void setConnectionDetails(string inIpAddrStr, int inPort)
+    public void SetConnectionDetails(string inIpAddrStr, int inPort)
     {
         ipAddrStr = inIpAddrStr;
         port = inPort;
@@ -68,14 +68,11 @@ class KoreTcpClientConnection : KoreCommonConnection
     // override methods
     // ========================================================================================
 
-    public override string type()
-    {
-        return "TcpClient";
-    }
+    public override KoreConnectionType Type() => KoreConnectionType.TcpClient;
 
     // ------------------------------------------------------------------------------------------------------------
 
-    public override string connectionDetailsString()
+    public override string ConnectionDetailsString()
     {
         string strConn = (connected) ? "Yes" : "No";
         return $"type:TcpClient // name:{Name} // addr:{ipAddrStr}:{port} // count:{NumMsgsHandled} // connected?:{strConn} // StartActivityCount:{StartActivityCount} // StatusString:{StatusString}";
@@ -83,7 +80,7 @@ class KoreTcpClientConnection : KoreCommonConnection
 
     // ------------------------------------------------------------------------------------------------------------
 
-    public override void startConnection()
+    public override void StartConnection()
     {
         connected = false;
         StartActivityCount = (StartActivityCount + 1) % 1000;
@@ -94,7 +91,7 @@ class KoreTcpClientConnection : KoreCommonConnection
         client.BeginConnect(ipAddress!, port, ConnectCallback, client);
     }
 
-    public override void stopConnection()
+    public override void StopConnection()
     {
         // Stop threads and close UDP client
         connected = false;
@@ -111,7 +108,7 @@ class KoreTcpClientConnection : KoreCommonConnection
 
     // ------------------------------------------------------------------------------------------------------------
 
-    public override void sendMessage(string msgData)
+    public override void SendMessage(string msgData)
     {
         //byte[] messageBuffer = Encoding.ASCII.GetBytes(msgData);
         //stream.Write(messageBuffer, 0, messageBuffer.Length);
@@ -147,8 +144,8 @@ class KoreTcpClientConnection : KoreCommonConnection
                 KoreCentralLog.AddEntry("Network: Connection success: " + ipAddrStr + ":" + port);
                 StatusString = "Connected successfully";
 
-                sendThread = new Thread(new ThreadStart(sendThreadFunc));
-                receiveThread = new Thread(new ThreadStart(receiveThreadFunc));
+                sendThread = new Thread(new ThreadStart(SendThreadFunc));
+                receiveThread = new Thread(new ThreadStart(ReceiveThreadFunc));
                 sendThread.Start();
                 receiveThread.Start();
             }
@@ -178,7 +175,7 @@ class KoreTcpClientConnection : KoreCommonConnection
 
     // ------------------------------------------------------------------------------------------------------------
 
-    private void sendThreadFunc()
+    private void SendThreadFunc()
     {
         KoreCentralLog.AddEntry("Network: THREAD FUNC START: TcpClientConnection.sendThreadFunc() : " + Name);
 
@@ -212,7 +209,7 @@ class KoreTcpClientConnection : KoreCommonConnection
 
     // ------------------------------------------------------------------------------------------------------------
 
-    private void receiveThreadFunc()
+    private void ReceiveThreadFunc()
     {
         KoreCentralLog.AddEntry("Network: THREAD FUNC START: TcpClientConnection.receiveThreadFunc() : " + Name);
 

@@ -35,7 +35,8 @@ public class KoreNumericRange<T> where T : INumber<T>
     public static readonly KoreNumericRange<T> ZeroToOne            = new KoreNumericRange<T>(T.CreateChecked(0),    T.CreateChecked(1),   RangeBehavior.Limit);
     public static readonly KoreNumericRange<T> ZeroTo360Degrees     = new KoreNumericRange<T>(T.CreateChecked(0),    T.CreateChecked(360), RangeBehavior.Wrap);
     public static readonly KoreNumericRange<T> Minus180To180Degrees = new KoreNumericRange<T>(T.CreateChecked(-180), T.CreateChecked(180), RangeBehavior.Wrap);
-    public static readonly KoreNumericRange<T> ZeroToTwoPiRadians   = new KoreNumericRange<T>(T.CreateChecked(0),    KoreConsts<T>.kTwoPi,  RangeBehavior.Wrap);
+    public static readonly KoreNumericRange<T> Minus90To90Degrees   = new KoreNumericRange<T>(T.CreateChecked(-90),  T.CreateChecked(90),  RangeBehavior.Limit);
+    public static readonly KoreNumericRange<T> ZeroToTwoPiRadians   = new KoreNumericRange<T>(T.CreateChecked(0), KoreConsts<T>.kTwoPi, RangeBehavior.Wrap);
     public static readonly KoreNumericRange<T> ZeroToPiRadians      = new KoreNumericRange<T>(T.CreateChecked(0),    KoreConsts<T>.kPi,     RangeBehavior.Wrap);
     public static readonly KoreNumericRange<T> MinusPiToPiRadians   = new KoreNumericRange<T>(-KoreConsts<T>.kPi,    KoreConsts<T>.kPi,     RangeBehavior.Wrap); // -180 to 180
     public static readonly KoreNumericRange<T> MinusHalfPiToHalfPiRadians = new KoreNumericRange<T>(-KoreConsts<T>.kHalfPi, KoreConsts<T>.kHalfPi, RangeBehavior.Limit); // -90 to 90

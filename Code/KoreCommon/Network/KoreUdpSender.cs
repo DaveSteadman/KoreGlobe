@@ -29,7 +29,7 @@ class KoreUdpSender : KoreCommonConnection
         UdpClient = null;
     }
 
-    public void setConnectionDetails(string inIpAddrStr, int inPort)
+    public void SetConnectionDetails(string inIpAddrStr, int inPort)
     {
         ipAddrStr = inIpAddrStr;
         port = inPort;
@@ -40,21 +40,18 @@ class KoreUdpSender : KoreCommonConnection
     // override methods
     // ========================================================================================
 
-    public override string type()
-    {
-        return "UdpSender";
-    }
+    public override KoreConnectionType Type() => KoreConnectionType.UdpSender;
 
     // ------------------------------------------------------------------------------------------------------------
 
-    public override string connectionDetailsString()
+    public override string ConnectionDetailsString()
     {
         return "type:UdpSender // name:" + Name + " // " + ipAddrStr + ":" + port;
     }
 
     // ------------------------------------------------------------------------------------------------------------
 
-    public override void startConnection()
+    public override void StartConnection()
     {
         // create Udp Port
         UdpClient = new UdpClient();
@@ -66,7 +63,7 @@ class KoreUdpSender : KoreCommonConnection
 
     // ------------------------------------------------------------------------------------------------------------
 
-    public override void stopConnection()
+    public override void StopConnection()
     {
         // Stop threads and close Udp client
         UdpClient?.Close();
@@ -74,14 +71,14 @@ class KoreUdpSender : KoreCommonConnection
 
     // ========================================================================================
 
-    public override void sendMessage(string msgData)
+    public override void SendMessage(string msgData)
     {
         // Start the async task, but don't wait for it to complete.
         // Be aware that this means exceptions from the task will be ignored.
-        var _ = sendMessageAsync(msgData);
+        var _ = SendMessageAsync(msgData);
     }
 
-    private async Task sendMessageAsync(string msgData)
+    private async Task SendMessageAsync(string msgData)
     {
         try
         {

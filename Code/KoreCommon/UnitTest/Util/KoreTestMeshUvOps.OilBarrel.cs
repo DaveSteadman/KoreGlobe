@@ -10,13 +10,12 @@ namespace KoreCommon.UnitTest;
 
 public static partial class KoreTestMeshUvOps
 {
-    /// <summary>
     /// Creates an oil barrel mesh with proper UV mapping for texture application.
     /// UV Layout:
     /// - Top circle: Center at (0.25, 0.75) with 0.20 radius
     /// - Bottom circle: Center at (0.75, 0.75) with 0.20 radius
     /// - Cylinder sides: Rectangle in lower half (0.0-1.0, 0.0-0.5)
-    /// </summary>
+
     /// <param name="segments">Number of segments around the cylinder (default 16)</param>
     /// <param name="radius">Radius of the barrel (default 1.0)</param>
     /// <param name="height">Height of the barrel (default 2.0)</param>
@@ -49,7 +48,7 @@ public static partial class KoreTestMeshUvOps
 
         // Create center vertices for top and bottom caps
         int topCenterVertex = mesh.AddCompleteVertex(
-            new KoreXYZVector(0, height/2, 0),
+            new KoreXYZVector(0, height / 2, 0),
             null, null,
             new KoreXYVector(topCenterU, topCenterV)
         );
@@ -84,7 +83,7 @@ public static partial class KoreTestMeshUvOps
         // --- BOTTOM ---
 
         int bottomCenterVertex = mesh.AddCompleteVertex(
-            new KoreXYZVector(0, -height/2, 0),
+            new KoreXYZVector(0, -height / 2, 0),
             null, null,
             new KoreXYVector(bottomCenterU, bottomCenterV)
         );
@@ -164,8 +163,8 @@ public static partial class KoreTestMeshUvOps
 
 
             // replace your two AddTriangle calls in the WRAP loop with:
-            mesh.AddTriangle(sideTopVertices[i],    sideTopVertices[next],    sideBottomVertices[next]); // upper-left tri
-            mesh.AddTriangle(sideTopVertices[i],    sideBottomVertices[next], sideBottomVertices[i]);    // lower-right tri
+            mesh.AddTriangle(sideTopVertices[i], sideTopVertices[next], sideBottomVertices[next]); // upper-left tri
+            mesh.AddTriangle(sideTopVertices[i], sideBottomVertices[next], sideBottomVertices[i]);    // lower-right tri
 
         }
 
@@ -192,9 +191,7 @@ public static partial class KoreTestMeshUvOps
         return mesh;
     }
 
-    /// <summary>
-    /// Test method for creating and visualizing an oil barrel with UV mapping
-    /// </summary>
+    // Test method for creating and visualizing an oil barrel with UV mapping
     public static void TestOilBarrelUVLayout(KoreTestLog testLog)
     {
         var mesh = CreateOilBarrelWithUV(16, 1.0, 3.0);

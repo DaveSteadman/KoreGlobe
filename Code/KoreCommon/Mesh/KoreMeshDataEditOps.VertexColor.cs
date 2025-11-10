@@ -8,19 +8,15 @@ using System.Linq;
 
 namespace KoreCommon;
 
-/// <summary>
-/// Static validity and cleanup operations for KoreMeshData
-/// Contains methods for mesh validation, cleanup, and population of missing data
-/// </summary>
+// Static validity and cleanup operations for KoreMeshData
+// Contains methods for mesh validation, cleanup, and population of missing data
 public static partial class KoreMeshDataEditOps
 {
     // --------------------------------------------------------------------------------------------
     // MARK: Vertex Colors
     // --------------------------------------------------------------------------------------------
 
-    /// <summary>
-    /// Create missing vertex colors
-    /// </summary>
+    // Create missing vertex colors
     public static void CreateMissingVertexColors(KoreMeshData mesh, KoreColorRGB? defaultColor = null)
     {
         KoreColorRGB color = defaultColor ?? KoreColorRGB.White;
