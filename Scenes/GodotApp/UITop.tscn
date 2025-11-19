@@ -8,7 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://dgxm1rjf0glu2" path="res://Resources/WhiteIcons/Plane.png" id="4_eic0c"]
 [ext_resource type="Texture2D" uid="uid://dspcjji6qc1em" path="res://Resources/WhiteIcons/White_Connections.png" id="5_761q3"]
 
-[node name="UiTop" type="Control"]
+[node name="UiTop" type="Control" unique_id=75354704]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -17,7 +17,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_lqaa4")
 
-[node name="UITopFrame" type="VBoxContainer" parent="."]
+[node name="UITopFrame" type="VBoxContainer" parent="." unique_id=1328962572]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -25,7 +25,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="HeaderMarginFrame" type="MarginContainer" parent="UITopFrame"]
+[node name="HeaderMarginFrame" type="MarginContainer" parent="UITopFrame" unique_id=641616117]
 layout_mode = 2
 size_flags_vertical = 0
 theme_override_constants/margin_left = 5
@@ -33,11 +33,11 @@ theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
-[node name="HBoxContainer" type="HBoxContainer" parent="UITopFrame/HeaderMarginFrame"]
+[node name="HBoxContainer" type="HBoxContainer" parent="UITopFrame/HeaderMarginFrame" unique_id=1940780723]
 layout_mode = 2
 size_flags_horizontal = 0
 
-[node name="CLIButton" type="Button" parent="UITopFrame/HeaderMarginFrame/HBoxContainer"]
+[node name="CLIButton" type="Button" parent="UITopFrame/HeaderMarginFrame/HBoxContainer" unique_id=1106136159]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 size_flags_horizontal = 0
@@ -46,7 +46,7 @@ theme = ExtResource("3_761q3")
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 text = "CLI"
 
-[node name="NetworkButton" type="Button" parent="UITopFrame/HeaderMarginFrame/HBoxContainer"]
+[node name="NetworkButton" type="Button" parent="UITopFrame/HeaderMarginFrame/HBoxContainer" unique_id=16982917]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 size_flags_horizontal = 2
@@ -55,7 +55,7 @@ theme = ExtResource("3_761q3")
 icon = ExtResource("3_4h5jm")
 expand_icon = true
 
-[node name="EntityButton" type="Button" parent="UITopFrame/HeaderMarginFrame/HBoxContainer"]
+[node name="EntityButton" type="Button" parent="UITopFrame/HeaderMarginFrame/HBoxContainer" unique_id=1432552301]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 size_flags_horizontal = 2
@@ -64,7 +64,7 @@ theme = ExtResource("3_761q3")
 icon = ExtResource("4_eic0c")
 expand_icon = true
 
-[node name="MeshButton" type="Button" parent="UITopFrame/HeaderMarginFrame/HBoxContainer"]
+[node name="MeshButton" type="Button" parent="UITopFrame/HeaderMarginFrame/HBoxContainer" unique_id=1221509602]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 size_flags_horizontal = 0
@@ -74,7 +74,7 @@ theme_override_colors/font_color = Color(1, 1, 1, 1)
 icon = ExtResource("5_761q3")
 expand_icon = true
 
-[node name="DbgButton" type="Button" parent="UITopFrame/HeaderMarginFrame/HBoxContainer"]
+[node name="DbgButton" type="Button" parent="UITopFrame/HeaderMarginFrame/HBoxContainer" unique_id=1483727246]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 size_flags_horizontal = 0
@@ -83,11 +83,11 @@ theme = ExtResource("2_emxrp")
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 text = "DBG"
 
-[node name="BodyMarginFrame" type="HBoxContainer" parent="UITopFrame"]
+[node name="BodyMarginFrame" type="HBoxContainer" parent="UITopFrame" unique_id=1887421076]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="FooterMarginFrame" type="MarginContainer" parent="UITopFrame"]
+[node name="FooterMarginFrame" type="MarginContainer" parent="UITopFrame" unique_id=1013576631]
 layout_mode = 2
 size_flags_vertical = 0
 theme_override_constants/margin_left = 5
@@ -95,7 +95,7 @@ theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
-[node name="Label" type="Label" parent="UITopFrame/FooterMarginFrame"]
+[node name="Label" type="Label" parent="UITopFrame/FooterMarginFrame" unique_id=195658257]
 layout_mode = 2
-size_flags_horizontal = 8
+size_flags_horizontal = 0
 script = ExtResource("2_h4igh")

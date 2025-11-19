@@ -14,7 +14,12 @@ public class KoreCommandVersion : KoreCommand
 
     public override string Execute(List<string> parameters)
     {
-        return KoreGlobals.VersionString;
+        string Text = $"{KoreAppConst.Version}";
+        Text += $"\n{KoreGodotCommonConst.Version}";
+        Text += $"\n{KoreSimConst.Version}";
+        Text += $"\n{KoreCommonConst.Version}";
+
+        return Text;
     }
 
 }
