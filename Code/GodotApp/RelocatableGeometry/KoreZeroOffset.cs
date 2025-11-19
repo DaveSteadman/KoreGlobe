@@ -20,13 +20,11 @@ public static class KoreZeroOffset
     public static bool ZeroPosChangePending = false; // KoreZeroOffset.ZeroPosChangePending
 
     // APPLIED values
-    public static KoreLLAPoint AppliedZeroPosLLA = KoreLLAPoint.Zero; // KoreZeroOffset.AppliedZeroPosLLA
+    public static KoreLLAPoint  AppliedZeroPosLLA = KoreLLAPoint.Zero; // KoreZeroOffset.AppliedZeroPosLLA
     public static KoreXYZVector AppliedZeroPosXYZ = KoreXYZVector.Zero; // KoreZeroOffset.AppliedZeroPosXYZ
 
-
+    // Flag if this is a game-engine update cycle immediately following a position change.
     public static bool IsPosChangeCycle = false; // KoreZeroOffset.IsPosChangeCycle
-
-
 
 
     // // Real World Earth Center is 0,0,0. We create an offset 0,0,0 for the purposes og focussing the
@@ -37,7 +35,7 @@ public static class KoreZeroOffset
     // public static KoreXYZVector RwZeroPointXYZ = new KoreXYZVector(0, 0, 0);
 
     // Game engine earth radius and conversion around it.
-    public static double GeEarthRadius = 60; // Earth radius in Game Engine units // KoreZeroOffset.GeEarthRadius
+    public static double GeEarthRadius = 10; // Earth radius in Game Engine units // KoreZeroOffset.GeEarthRadius
     public static double RwToGeDistanceMultiplier = GeEarthRadius / KoreWorldConsts.EarthRadiusM;
     public static double GeToRwDistanceMultiplier = 1 / RwToGeDistanceMultiplier;
 

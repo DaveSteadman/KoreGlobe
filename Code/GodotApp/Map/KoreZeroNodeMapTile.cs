@@ -305,6 +305,9 @@ public partial class KoreZeroNodeMapTile : Node3D
         var llPos = TileCode.LLBox.CenterPoint;
         RwTileCenterLLA = new KoreLLAPoint() { LatRads = llPos.LatRads, LonRads = llPos.LonRads, AltMslM = 0 };
 
+
+        //RwTileCenterLLA.RadiusM = 11;
+
         // Set the local position from the parent object
         Vector3 newPos = KoreGeoConvOps.RwToOffsetGe(RwTileCenterLLA);
 

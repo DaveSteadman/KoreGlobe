@@ -13,7 +13,7 @@ public partial class KoreZeroNodeMapManager : Node3D
 {
     // Root game engine on which to parent map tiles
     //private Node ZeroNode;
-    public static int CurrMaxMapLvl = 5; // default value - updated from config in constructor
+    public static int CurrMaxMapLvl = 2; // default value - updated from config in constructor
 
     // Common map path point (save the config being queried excessively) // KoreZeroNodeMapManager.MapRootPath
     public static string MapRootPath = "";
@@ -46,32 +46,32 @@ public partial class KoreZeroNodeMapManager : Node3D
         GD.Print($"KoreZeroNodeMapManager: Constructor");
 
         // Create and debug draw a lvl0 tile
-        // Lvl0Tiles.Add(new KoreZeroNodeMapTile(new KoreMapTileCode("BF")));
+        Lvl0Tiles.Add(new KoreZeroNodeMapTile(new KoreMapTileCode("BF")));
         // Lvl0Tiles.Add(new KoreZeroNodeMapTile(new KoreMapTileCode("AG")));
         // Lvl0Tiles.Add(new KoreZeroNodeMapTile(new KoreMapTileCode("BG")));
         // Lvl0Tiles.Add(new KoreZeroNodeMapTile(new KoreMapTileCode("CG")));
         // Lvl0Tiles.Add(new KoreZeroNodeMapTile(new KoreMapTileCode("BH")));
 
 
-    //     List<KoreMapTileCode> lvl0CodesList = KoreMapTileCode.Lvl0Codes();
-    //     foreach (KoreMapTileCode lvl0Code in lvl0CodesList)
-    //     {
-    //         KoreZeroNodeMapTile tile = new KoreZeroNodeMapTile(lvl0Code);
-    //         Lvl0Tiles.Add(tile);
-    //     }
+        // List<KoreMapTileCode> lvl0CodesList = KoreMapTileCode.Lvl0Codes();
+        // foreach (KoreMapTileCode lvl0Code in lvl0CodesList)
+        // {
+        //     KoreZeroNodeMapTile tile = new KoreZeroNodeMapTile(lvl0Code);
+        //     Lvl0Tiles.Add(tile);
+        // }
 
 
-    //     // Loop through the tiles and rotate them onto their center longitude
-    //    // int i = 0;
-    //     foreach (KoreZeroNodeMapTile tile in Lvl0Tiles)
-    //     {
-    //         //i++;
-    //         AddChild(tile);
-    //         //double lon = tile.TileCode.LLBox.CenterPoint.LonRads;
-    //         //tile.Rotation = new Vector3(0, (float)lon, 0);
+        // Loop through the tiles and rotate them onto their center longitude
+       // int i = 0;
+        foreach (KoreZeroNodeMapTile tile in Lvl0Tiles)
+        {
+            //i++;
+            AddChild(tile);
+            //double lon = tile.TileCode.LLBox.CenterPoint.LonRads;
+            //tile.Rotation = new Vector3(0, (float)lon, 0);
 
-    //         //if (i > 20) break;
-    //     }
+            //if (i > 20) break;
+        }
 
 
 

@@ -95,6 +95,25 @@ public static class KoreSkiaSharpBitmapOps
         }
     }
 
+    // Usage: KoreSkiaSharpBitmapOps.SaveImageAsWebp(string filenamein, string filenameout)
+    public static void SaveImageAsWebp(string inputFilePath, string outputFilePath)
+    {
+        // Load the image
+        SKBitmap bitmap = LoadBitmap(inputFilePath);
+
+        // Check the bitmap is valid
+        if (bitmap == null)
+        {
+            throw new Exception($"SaveImageAsWebp: Failed to load image from {inputFilePath}");
+        }
+
+        // Save as WebP
+        SaveBitmapAsWebp(bitmap, outputFilePath);
+
+        // Dispose of the bitmap to free memory
+        bitmap.Dispose();
+    }
+
     // --------------------------------------------------------------------------------------------
 
     // Usage: KoreSkiaSharpBitmapOps.SaveBitmapAsWebp(myBitmap, string)
@@ -273,11 +292,11 @@ public static class KoreSkiaSharpBitmapOps
                 // Get the actual pixel color
                 SKColor pixelColor = bitmap.GetPixel(x, y);
                 KoreColorRGB koreColor = new KoreColorRGB(pixelColor.Red, pixelColor.Green, pixelColor.Blue);
-                
+
                 // Find the closest color in the list
                 KoreColorRGB closestColor = colorList.ClosestColor(koreColor);
                 SKColor skiaClosest = new SKColor(closestColor.R, closestColor.G, closestColor.B, pixelColor.Alpha);
-                
+
                 // Apply the new color back to the bitmap
                 bitmap.SetPixel(x, y, skiaClosest);
             }

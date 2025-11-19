@@ -166,6 +166,7 @@ public static partial class KoreColorMeshPrimitives
                 //KoreCentralLog.AddEntry($"lat: {latDegs:F2}, lon: {lonDegs:F2}, rad: {radius:F2}, ele: {tileEleData.InterpolatedValue(lonFraction, latFraction)}");
 
                 KoreLLAPoint rwLLAPointPos = new KoreLLAPoint() { LatDegs = latDegs, LonDegs = lonDegs, RadiusM = gameEngineRadius };
+
                 KoreXYZVector rwXYZPointPos = rwLLAPointPos.ToXYZ();
 
                 KoreXYZVector rwXYZCenterOffset = rwXYZZeroLonCenter.XYZTo(rwXYZPointPos);

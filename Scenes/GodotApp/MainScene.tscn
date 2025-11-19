@@ -15,10 +15,10 @@ frustum_far = 400000.0
 
 [sub_resource type="Compositor" id="Compositor_6t1o7"]
 
-[node name="MainScene" type="Node3D"]
+[node name="MainScene" type="Node3D" unique_id=910379481]
 script = ExtResource("1_i0f6g")
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1653069205]
 environment = SubResource("Environment_8ju71")
 camera_attributes = SubResource("CameraAttributesPhysical_xb4mg")
 compositor = SubResource("Compositor_6t1o7")

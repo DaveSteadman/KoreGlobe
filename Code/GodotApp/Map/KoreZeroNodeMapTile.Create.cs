@@ -92,8 +92,8 @@ public partial class KoreZeroNodeMapTile : Node3D
             KoreNumeric2DArray<float> eleData = LoadTileEleArr();
 
             // create a color map
-            int dummyAzCount = 60;
-            int dummyElCount = 60;
+            int dummyAzCount = 20;
+            int dummyElCount = 20;
 
             if (eleData.MaxVal() < 0.01)
             {
@@ -104,10 +104,14 @@ public partial class KoreZeroNodeMapTile : Node3D
             // Source the key ele and color data
             KoreColorRGB[,] colorMap = TileImage(dummyAzCount, dummyElCount);
 
+            // Debug print the LLBox for each tile code
+            GD.Print($"Tile {TileCode.ToString()} // LLBox: {RwTileLLBox}");
+
+
             // create the color mesh
             TileColorMesh = KoreColorMeshPrimitives.CenteredSphereSection(
                     llBox: RwTileLLBox,
-                    radius: 50, //KoreZeroOffset.GeEarthRadius,//(float)KoreWorldConsts.EarthRadiusM,
+                    radius: 11, //KoreZeroOffset.GeEarthRadius,//(float)KoreWorldConsts.EarthRadiusM,
                     colormap: colorMap,
                     tileEleData: eleData);
 

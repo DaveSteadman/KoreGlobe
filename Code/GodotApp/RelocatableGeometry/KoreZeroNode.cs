@@ -69,7 +69,7 @@ public partial class KoreZeroNode : Node3D
 
     private void CreateDebugMarker()
     {
-        float debugRadius = 0.5f;
+        float debugRadius = 0.25f;
         // Core Sphere
         {
             KoreMiniMeshMaterial mat = KoreMiniMeshMaterialPalette.Find("MattYellow");
