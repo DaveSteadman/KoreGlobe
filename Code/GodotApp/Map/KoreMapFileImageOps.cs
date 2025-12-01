@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 
 using Godot;
+
 using KoreCommon;
+using KoreGIS;
 using KoreSim;
 
 #nullable enable

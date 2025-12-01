@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 
 using Godot;
 using KoreCommon;
+using KoreGIS;
 using KoreSim;
 
 #nullable enable
@@ -47,7 +48,7 @@ public partial class KoreZeroNodeMapTile : Node3D
         else
         {
             eleData = new KoreFloat2DArray(20, 20);
-            //eleData.SetAllNoise(2.0f, (float)(KoreWorldConsts.EarthRadiusM / 100.0));            
+            //eleData.SetAllNoise(2.0f, (float)(KoreWorldConsts.EarthRadiusM / 100.0));
         }
 
         return eleData;

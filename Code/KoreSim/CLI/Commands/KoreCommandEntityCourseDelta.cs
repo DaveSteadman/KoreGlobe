@@ -2,6 +2,7 @@ using System.Collections.Generic;
 
 // KoreCommandEntityCourseDelta
 using KoreCommon;
+using KoreGIS;
 
 namespace KoreSim;
 

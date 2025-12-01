@@ -1,5 +1,6 @@
 using Godot;
 using KoreCommon;
+using KoreGIS;
 using System.Collections.Generic;
 
 public partial class KoreWorldMoverNode2 : Node3D
@@ -64,7 +65,7 @@ public partial class KoreWorldMoverNode2 : Node3D
 
         // Keep transform in sync with CurrLLA/CurrAim
         UpdateTransformFromLLAAndAim();
-        
+
         // Update a position on the ground where the camera is looking
         UpdateProjectedGroundPoint();
     }
@@ -245,39 +246,39 @@ public partial class KoreWorldMoverNode2 : Node3D
 
     private void UpdateTransformFromLLAAndAim()
     {
-        // GE-space frame at CurrLLA
-        var posStruct = KoreGeoConvOps.RwToGeStruct(CurrLLA);
-        Vector3 up = posStruct.VecUp.Normalized();        // surface normal (already in GE space)
-        Vector3 north = posStruct.VecNorth.Normalized();     // +lat direction (GE space)
+        // // GE-space frame at CurrLLA
+        // var posStruct = KoreGeoConvOps.RwToGeStruct(CurrLLA);
+        // Vector3 up = posStruct.VecUp.Normalized();        // surface normal (already in GE space)
+        // Vector3 north = posStruct.VecNorth.Normalized();     // +lat direction (GE space)
 
-        // East from N×U (works with your Z-inverted GE space)
-        Vector3 east = north.Cross(up).Normalized();
+        // // East from N×U (works with your Z-inverted GE space)
+        // Vector3 east = north.Cross(up).Normalized();
 
-        // Aim
-        float yaw = (float)CurrAim.AzRads;  // 0 = north, +ve turns toward east
-        float pitch = (float)CurrAim.ElRads;  // 0 = horizon, +up
+        // // Aim
+        // float yaw = (float)CurrAim.AzRads;  // 0 = north, +ve turns toward east
+        // float pitch = (float)CurrAim.ElRads;  // 0 = horizon, +up
 
-        // Yaw-only forward on tangent plane
-        Vector3 fFlat = (north * Mathf.Cos(yaw) + east * Mathf.Sin(yaw)).Normalized();
+        // // Yaw-only forward on tangent plane
+        // Vector3 fFlat = (north * Mathf.Cos(yaw) + east * Mathf.Sin(yaw)).Normalized();
 
-        // Full forward (pitch relative to horizon)
-        Vector3 fwd = (fFlat * Mathf.Cos(pitch) + up * Mathf.Sin(pitch)).Normalized();
+        // // Full forward (pitch relative to horizon)
+        // Vector3 fwd = (fFlat * Mathf.Cos(pitch) + up * Mathf.Sin(pitch)).Normalized();
 
-        // Right derived from yaw (stable even when pitch ≈ ±90°)
-        Vector3 right = (east * Mathf.Cos(yaw) - north * Mathf.Sin(yaw)).Normalized();
+        // // Right derived from yaw (stable even when pitch ≈ ±90°)
+        // Vector3 right = (east * Mathf.Cos(yaw) - north * Mathf.Sin(yaw)).Normalized();
 
-        // Re-orthonormalize up to kill drift (right-handed: up = fwd × right)
-        Vector3 upOrtho = fwd.Cross(right).Normalized();
+        // // Re-orthonormalize up to kill drift (right-handed: up = fwd × right)
+        // Vector3 upOrtho = fwd.Cross(right).Normalized();
 
-        // Position in GE space (already applies Z flip internally)
-        Vector3 v3Pos = KoreGeoConvOps.RwToOffsetGe(CurrLLA);
+        // // Position in GE space (already applies Z flip internally)
+        // Vector3 v3Pos = KoreGeoConvOps.RwToOffsetGe(CurrLLA);
 
-        // Godot basis columns: X=right, Y=up, Z=forwardAxis
-        // We want local -Z to look along world fwd ⇒ put -fwd in Z.
-        // Because GE uses Z-inverted coordinates, flip Y to keep view upright.
-        Basis basis = new Basis(right, -upOrtho, -fwd).Orthonormalized();
+        // // Godot basis columns: X=right, Y=up, Z=forwardAxis
+        // // We want local -Z to look along world fwd ⇒ put -fwd in Z.
+        // // Because GE uses Z-inverted coordinates, flip Y to keep view upright.
+        // Basis basis = new Basis(right, -upOrtho, -fwd).Orthonormalized();
 
-        GlobalTransform = new Transform3D(basis, v3Pos);
+        // GlobalTransform = new Transform3D(basis, v3Pos);
     }
 
     // --------------------------------------------------------------------------------------------

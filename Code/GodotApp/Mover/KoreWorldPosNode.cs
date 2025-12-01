@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 
 using KoreCommon;
+using KoreGIS;
 using KoreSim;
 
 using Godot;
@@ -25,7 +26,7 @@ public partial class KoreWorldPosNode : Node3D
     // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(double delta)
     {
-        if (KoreZeroOffset.IsPosChangeCycle || PosMoved)
+        if (KoreMovingOrigin.IsChangePeriod() || PosMoved)
         {
             UpdateOffsetPosition();
         }
@@ -43,16 +44,16 @@ public partial class KoreWorldPosNode : Node3D
 
     public void UpdateOffsetPosition()
     {
-        // Set the local position from the parent object
-        Vector3 newPos = KoreGeoConvOps.RwToOffsetGe(CurrLLA);
+        // // Set the local position from the parent object
+        // Vector3 newPos = KoreGeoConvOps.RwToOffsetGe(CurrLLA);
 
-        // Set the local position from the parent object
-        var transform    = GlobalTransform;
-        transform.Origin = newPos;
-        GlobalTransform  = transform;
+        // // Set the local position from the parent object
+        // var transform    = GlobalTransform;
+        // transform.Origin = newPos;
+        // GlobalTransform  = transform;
 
-        // Clear the moved flag
-        PosMoved = false;
+        // // Clear the moved flag
+        // PosMoved = false;
     }
 
     // --------------------------------------------------------------------------------------------

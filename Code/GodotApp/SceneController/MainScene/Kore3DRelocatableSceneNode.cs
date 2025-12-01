@@ -1,10 +1,13 @@
-using Godot;
 using System;
 using System.Runtime;
+using System.Collections.Generic;
+
+using Godot;
 
 using KoreCommon;
+using KoreGIS;
 using KoreSim;
-using System.Collections.Generic;
+
 
 #nullable enable
 
@@ -15,7 +18,7 @@ public partial class Kore3DRelocatableSceneNode : Node3D
     // MainScene.UIMount
     public Kore3DRelocatableSceneObjects SceneObjects { get; private set; } = new Kore3DRelocatableSceneObjects();
 
-    Node3D? DemoNode = null;
+    Node3D? DebugMarkerNode = null;
 
     // UI Timers
     private float UITimer = 0.0f;
@@ -53,8 +56,7 @@ public partial class Kore3DRelocatableSceneNode : Node3D
             // KoreLLAPoint zeroPosLLA = KoreZeroOffset.AppliedZeroPosLLA;
 
 
-            // Get the XYZ of the camera position, turn that back into a lat-long, and then
-            // creep the zero point towards that position, at a fixed radius.
+            // Get the XYZ of the camera position
             Vector3 geXYZ = SceneObjects.WorldCameraMount!.Position;
             KoreXYZVector geXYZ2 = KoreConvPos.V3ToVec(geXYZ);
 
@@ -63,7 +65,10 @@ public partial class Kore3DRelocatableSceneNode : Node3D
 
             // Turn that into a lat-long-alt
             KoreLLPoint camLLPos = KoreLLPoint.FromXYZ(vecZeroPToCam);
-            KoreLLAPoint camLLA = new KoreLLAPoint() { LatDegs = camLLPos.LatDegs, LonDegs = camLLPos.LonDegs, RadiusM = 10 };
+            KoreLLAPoint camLLA = new KoreLLAPoint() {
+                LatDegs = camLLPos.LatDegs,
+                LonDegs = camLLPos.LonDegs,
+                RadiusM = KoreZeroOffset.GeEarthRadius };
 
             GD.Print($"XYZOffset:{vecZeroPToCam.X:F2},{vecZeroPToCam.Y:F2},{vecZeroPToCam.Z:F2} // CamLLA:{camLLA.LatDegs:F2},{camLLA.LonDegs:F2},{camLLA.RadiusM:F2}");
 
@@ -104,8 +109,8 @@ public partial class Kore3DRelocatableSceneNode : Node3D
         AddChild(SceneObjects.ZeroNode);
 
         // Construct the quad ZN map manager (requires zero node as parameter)
-        SceneObjects.QuadZNMapManager = new KoreQuadZNMapManager(SceneObjects.ZeroNode);
-        SceneObjects.ZeroNode.AddChild(SceneObjects.QuadZNMapManager);
+        // SceneObjects.QuadZNMapManager = new KoreQuadZNMapManager(SceneObjects.ZeroNode);
+        // SceneObjects.ZeroNode.AddChild(SceneObjects.QuadZNMapManager);
 
         // Construct the zero node map manager (requires zero node as parameter)
         // SceneObjects.ZeroNodeMapManager = new KoreZeroNodeMapManager(SceneObjects.ZeroNode);
@@ -116,9 +121,9 @@ public partial class Kore3DRelocatableSceneNode : Node3D
             // Create a new camera node
             Camera3D camera = new Camera3D();
             camera.Name = "WorldCamera";
-            camera.Fov = 35f;
+            camera.Fov  = 35f;
             camera.Near = 0.1f;
-            camera.Far = 100_000f;
+            camera.Far  = 100_000f;
 
             // Create the camera mount
             SceneObjects.WorldCameraMount = new KoreRelocatableXYZMoverNode();
@@ -128,11 +133,7 @@ public partial class Kore3DRelocatableSceneNode : Node3D
             SceneObjects.ZeroNode.AddChild(SceneObjects.WorldCameraMount);
         }
 
-        // Add a zero node sphere for reference
-        SceneObjects.ZeroNodeSphere = new KoreZeroNodeSphere(10f, KoreColorPalette.Find("Yellow"));
-        SceneObjects.ZeroNode.AddChild(SceneObjects.ZeroNodeSphere);
-
-        //KoreAppCommands.RegisterCommands(KoreSimFactory.Instance.ConsoleInterface);
+        KoreAppCommands.RegisterCommands(KoreSimFactory.Instance.ConsoleInterface);
     }
 
     // --------------------------------------------------------------------------------------------
@@ -180,13 +181,18 @@ public partial class Kore3DRelocatableSceneNode : Node3D
     // }
 
 
+    // --------------------------------------------------------------------------------------------
+    // MARK: Debug Marker
+    // --------------------------------------------------------------------------------------------
+
+    // Create a debug Magenta sphere at the zero point
 
     private void CreateDebugMarker()
     {
         float debugRadius = 0.25f;
 
-        DemoNode = new Node3D() { Name = "DemoNode" };
-        AddChild(DemoNode);
+        DebugMarkerNode = new Node3D() { Name = "ZeroNodeDebugMarker - Magenta" };
+        AddChild(DebugMarkerNode);
 
         // Core Sphere
         {
@@ -196,11 +202,11 @@ public partial class Kore3DRelocatableSceneNode : Node3D
 
             KoreMiniMeshGodotColoredSurface coloredMeshNode = new KoreMiniMeshGodotColoredSurface() { Name = "ZoneNodeMarker" };
             coloredMeshNode.UpdateMesh(sphereMesh, "All");
-            DemoNode.AddChild(coloredMeshNode);
+            DebugMarkerNode.AddChild(coloredMeshNode);
 
             KoreMiniMeshGodotLine lineMeshNode1 = new KoreMiniMeshGodotLine() { Name = "ZoneNodeMarker - Wire" };
             lineMeshNode1.UpdateMesh(sphereMesh, "All");
-            DemoNode.AddChild(lineMeshNode1);
+            DebugMarkerNode.AddChild(lineMeshNode1);
         }
     }
 

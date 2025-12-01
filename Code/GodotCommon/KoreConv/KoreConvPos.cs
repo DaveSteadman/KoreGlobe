@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 using KoreCommon;
+using KoreGIS;
 using Godot;
 
 public static class KoreConvPos
@@ -11,7 +12,7 @@ public static class KoreConvPos
     // ---------------------------------------------------------------------------------------------------
 
     // Converts KoreXYZVector to Godot Vector3
-    // Usage: Vector3 godotPos = KoreConvPos.ToGodotVector3(koreVect);
+    // Usage: Vector3 godotPos = KoreConvPos.VecToV3(koreVect);
     public static Vector3 VecToV3(KoreXYZVector pos)
     {
         return new Vector3((float)pos.X, (float)pos.Y, (float)pos.Z);

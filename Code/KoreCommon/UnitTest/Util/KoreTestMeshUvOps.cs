@@ -18,23 +18,23 @@ public static partial class KoreTestMeshUvOps
         TestOilBarrelUVLayout(testLog);
     }
 
-    /// Creates a cube with UV layout like an unfolded dice
-    /// Layout:
-    ///     [2]
-    /// [4] [1] [3] [6]
-    ///     [5]
-    /// Where numbers represent the dice faces
+    // Creates a cube with UV layout like an unfolded dice
+    // Layout:
+    //     [2]
+    // [4] [1] [3] [6]
+    //     [5]
+    // Where numbers represent the dice faces
     private static void TestDiceCubeUVLayout(KoreTestLog testLog)
     {
         var mesh = CreateDiceCube();
 
         // Save debug version with vertex numbers
-        string debugPath = "UnitTestArtefacts/dice_cube_uv_debug.png";
+        string debugPath = KoreFileOps.JoinPaths(KoreTestCenter.TestPath, "dice_cube_uv_debug.png");
         KoreFileOps.CreateDirectoryForFile(debugPath);
         KoreMeshDataUvOps.SaveUVLayout(mesh, debugPath, 2048, true, true);
 
         // Save clean version without vertex numbers
-        string cleanPath = "UnitTestArtefacts/dice_cube_uv_clean.png";
+        string cleanPath = KoreFileOps.JoinPaths(KoreTestCenter.TestPath, "dice_cube_uv_clean.png");
         KoreMeshDataUvOps.SaveUVLayout(mesh, cleanPath, 1024, false, true);
 
         testLog.AddResult("Dice cube UV layout", true,
@@ -52,8 +52,8 @@ public static partial class KoreTestMeshUvOps
         }
 
         var (objContent, mtlContent) = KoreMeshDataIO.ToObjMtl(mesh, "TestUVCube", "TestUVCubeMats");
-        File.WriteAllText("UnitTestArtefacts/TestUVCube.obj", objContent);
-        File.WriteAllText("UnitTestArtefacts/TestUVCubeMats.mtl", mtlContent);
+        File.WriteAllText(KoreFileOps.JoinPaths(KoreTestCenter.TestPath, "TestUVCube.obj"), objContent);
+        File.WriteAllText(KoreFileOps.JoinPaths(KoreTestCenter.TestPath, "TestUVCubeMats.mtl"), mtlContent);
         testLog.AddComment("OBJ/MTL files created for dice cube UV layout with UV texture assignment");
     }
 
@@ -72,15 +72,15 @@ public static partial class KoreTestMeshUvOps
         mesh.AddTriangle(v1, v2, v3); // Bottom-right triangle
         mesh.AddTriangle(v1, v3, v4); // Top-left triangle
 
-        string filePath = "UnitTestArtefacts/simple_quad_uv.png";
+        string filePath = KoreFileOps.JoinPaths(KoreTestCenter.TestPath, "simple_quad_uv.png");
         KoreFileOps.CreateDirectoryForFile(filePath);
         KoreMeshDataUvOps.SaveUVLayout(mesh, filePath, 512, true, true);
 
         testLog.AddResult("Simple quad UV layout", true, $"Created simple quad with full UV coverage");
     }
 
-    /// Assigns the UV layout image as texture to all materials in the mesh.
-    /// This allows visual verification of UV mapping when the OBJ is opened in Blender.
+    // Assigns the UV layout image as texture to all materials in the mesh.
+    // This allows visual verification of UV mapping when the OBJ is opened in Blender.
     // private static void AssignUVLayoutAsTexture(KoreMeshData mesh, string uvImageFilename)
     // {
     //     // Update existing materials or create default material if none exist

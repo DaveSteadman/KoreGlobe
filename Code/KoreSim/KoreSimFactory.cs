@@ -1,6 +1,7 @@
 using System;
 
 using KoreCommon;
+using KoreGIS;
 
 
 // Class to construct the main classes in the application and link them together, in lieu
@@ -31,7 +32,6 @@ public class KoreSimFactory
     public KoreSimTime          SimClock         { get; private set; }
     public KoreModelRun         ModelRun         { get; private set; }
     public KoreElevationManager EleManager       { get; private set; }
-    public KoreTerrainImageManager ImageManager { get; private set; }
     public KoreEventRegister    EventRegister    { get; private set; }
 
     // Usage: KoreStringDictionary kc = KoreSimFactory.Instance.KoreConfig;
@@ -89,12 +89,12 @@ public class KoreSimFactory
         SimClock         = new KoreSimTime();
         ModelRun         = new KoreModelRun();
         EleManager       = new KoreElevationManager();
-        ImageManager     = new KoreTerrainImageManager();
-
 
         // Read the logfile path from the config and update the centralised logger with it.
         LoadConfig("AppConfig.json");
 
+        KoreCommonCommands.RegisterCommands(ConsoleInterface);
+        KoreGISCommands.RegisterCommands(ConsoleInterface);
         KoreSimCommands.RegisterCommands(ConsoleInterface);
         ConsoleInterface.Start();
 
@@ -105,12 +105,10 @@ public class KoreSimFactory
         // KoreTestCenter.RunAdHocTests();
     }
 
-
     // --------------------------------------------------------------------------------------------
 
     // Call to trigger constuctor
     // This will trigger the constructor to run, if it hasn't already.
-
 
     // Usage: KoreSimFactory.TriggerInstance();
 
@@ -145,7 +143,7 @@ public class KoreSimFactory
     // ----------------------------------------------------------------------------------------------
 
     // Load the config:
-    // - Read a file into a tring, then parse the string as JSON into the dictionary
+    // - Read a file into a string, then parse the string as JSON into the dictionary
 
     public void LoadConfig(string configFilePath)
     {
@@ -160,7 +158,7 @@ public class KoreSimFactory
         // Read the file into a string
         string configFileContent = System.IO.File.ReadAllText(configFilePath);
 
-        // Read teh content (dictionary is cleared as an init step)
+        // Read the content (dictionary is cleared as an init step)
         KoreConfig.ImportJson(configFileContent);
 
         // Log how many items were loaded

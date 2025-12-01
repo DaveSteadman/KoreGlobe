@@ -5,6 +5,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 
+using KoreGIS;
+
 namespace KoreCommon;
 
 // Static class to create KoreMeshData primitives

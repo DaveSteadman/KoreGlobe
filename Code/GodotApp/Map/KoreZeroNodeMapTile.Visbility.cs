@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Godot;
 using KoreCommon;
 using KoreSim;
+using KoreGIS;
+
 #nullable enable
 
 // ZeroNode map tile:

@@ -6,6 +6,7 @@ using Godot.NativeInterop;
 
 using Godot;
 using KoreCommon;
+using KoreGIS;
 using KoreSim;
 
 #nullable enable

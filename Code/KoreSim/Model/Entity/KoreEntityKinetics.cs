@@ -9,6 +9,8 @@ using System;
 // in a route element and re-applied to the current position by external logic.
 
 using KoreCommon;
+using KoreGIS;
+
 namespace KoreSim;
 
 public class KoreEntityKinetics

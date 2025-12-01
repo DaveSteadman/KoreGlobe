@@ -1,5 +1,6 @@
 using Godot;
 using KoreCommon;
+using KoreGIS;
 using System;
 
 #nullable enable
@@ -90,13 +91,13 @@ public partial class KoreWorldMoverNode3 : Node3D
 
     private void UpdatePosition()
     {
-        // Convert LLA to XYZ relative to zero offset
-        KoreXYZVector worldXYZ = CurrLLA.ToXYZ();
-        KoreXYZVector zeroXYZ = KoreZeroOffset.AppliedZeroPosXYZ;
-        KoreXYZVector relativeXYZ = worldXYZ - zeroXYZ;
+        // // Convert LLA to XYZ relative to zero offset
+        // KoreXYZVector worldXYZ = CurrLLA.ToXYZ();
+        // KoreXYZVector zeroXYZ = KoreZeroOffset.AppliedZeroPosXYZ;
+        // KoreXYZVector relativeXYZ = worldXYZ - zeroXYZ;
 
-        // Update Godot position
-        Position = new Vector3((float)relativeXYZ.X, (float)relativeXYZ.Y, (float)relativeXYZ.Z);
+        // // Update Godot position
+        // Position = new Vector3((float)relativeXYZ.X, (float)relativeXYZ.Y, (float)relativeXYZ.Z);
     }
 
     private void LookAtZeroNode()

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 
 using KoreCommon;
+using KoreGIS;
 using KoreSim.JSON;
 
 namespace KoreSim;

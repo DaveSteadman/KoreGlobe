@@ -3,6 +3,7 @@ using System.Collections.Generic;
 // KoreCommandEntityDelete
 
 using KoreCommon;
+using KoreGIS;
 
 namespace KoreSim;
 

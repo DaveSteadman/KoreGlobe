@@ -11,6 +11,7 @@ using KoreCommon;
 using KoreCommon.UnitTest;
 using KoreCommon.SkiaSharp;
 using KoreSim;
+using KoreGIS;
 
 #nullable enable
 
@@ -748,15 +749,15 @@ public partial class KoreSandbox3DScene : Node3D
             KoreLLBox llBox = tileCode.LLBox;
 
 
-            KoreColorMesh sphereSectionMesh = KoreColorMeshPrimitives.SphereSection(KoreXYZVector.Zero, llBox, 0.83, colormap, tileEleData);
+            // KoreColorMesh sphereSectionMesh = KoreColorMeshPrimitives.SphereSection(KoreXYZVector.Zero, llBox, 0.83, colormap, tileEleData);
 
 
-            //KoreColorMesh colorMesh = KoreColorMeshPrimitives.Tile(tileCode, tileEleData, colormap);
-            //KoreColorMesh colorMesh = KoreColorMeshPrimitives.BasicSphere(KoreXYZVector.Zero, 1f, colormap);
-            KoreColorMeshGodot colorMeshNode = new KoreColorMeshGodot();
-            colorMeshNode.Name = "TileExperiment";
-            ColorMeshSphereNode.AddChild(colorMeshNode);
-            colorMeshNode.UpdateMesh(sphereSectionMesh);
+            // //KoreColorMesh colorMesh = KoreColorMeshPrimitives.Tile(tileCode, tileEleData, colormap);
+            // //KoreColorMesh colorMesh = KoreColorMeshPrimitives.BasicSphere(KoreXYZVector.Zero, 1f, colormap);
+            // KoreColorMeshGodot colorMeshNode = new KoreColorMeshGodot();
+            // colorMeshNode.Name = "TileExperiment";
+            // ColorMeshSphereNode.AddChild(colorMeshNode);
+            // colorMeshNode.UpdateMesh(sphereSectionMesh);
         }
     }
 
@@ -836,11 +837,11 @@ public partial class KoreSandbox3DScene : Node3D
         KoreQuadCubeTileCode tileCodeDown = new KoreQuadCubeTileCode() { Face = KoreQuadFace.CubeFace.Bottom };
 
         KoreQuadCubeTile tileFront = KoreQuadCubeTileFactory.TileForCode(tileCodeFront, radius: 1.0);
-        KoreQuadCubeTile tileBack = KoreQuadCubeTileFactory.TileForCode(tileCodeBack, radius: 1.01);
-        KoreQuadCubeTile tileLeft = KoreQuadCubeTileFactory.TileForCode(tileCodeLeft, radius: 1.02);
+        KoreQuadCubeTile tileBack  = KoreQuadCubeTileFactory.TileForCode(tileCodeBack, radius: 1.01);
+        KoreQuadCubeTile tileLeft  = KoreQuadCubeTileFactory.TileForCode(tileCodeLeft, radius: 1.02);
         KoreQuadCubeTile tileRight = KoreQuadCubeTileFactory.TileForCode(tileCodeRight, radius: 1.03);
-        KoreQuadCubeTile tileUp = KoreQuadCubeTileFactory.TileForCode(tileCodeUp, radius: 1.04);
-        KoreQuadCubeTile tileDown = KoreQuadCubeTileFactory.TileForCode(tileCodeDown, radius: 1.05);
+        KoreQuadCubeTile tileUp    = KoreQuadCubeTileFactory.TileForCode(tileCodeUp, radius: 1.04);
+        KoreQuadCubeTile tileDown  = KoreQuadCubeTileFactory.TileForCode(tileCodeDown, radius: 1.05);
 
         KoreColorMeshOps.SetAllColors(tileFront.ColorMesh, KoreColorPalette.RandomColor());
         KoreColorMeshOps.SetAllColors(tileBack.ColorMesh, KoreColorPalette.RandomColor());

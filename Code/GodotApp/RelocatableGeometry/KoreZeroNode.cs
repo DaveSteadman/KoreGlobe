@@ -1,25 +1,29 @@
 using System;
-using KoreCommon;
+
 using Godot;
+
+using KoreCommon;
 
 #nullable enable
 
 // ------------------------------------------------------------------------------------------------
 // KoreZeroNode:
-// - Point off of which all the relocatable geometry is ANCHORED.
-// - Holds MINIMAL FUNCTIONALITY/TIMING to drive the move from "set" to "applied" position in KoreRelocateOps.
+// - Point off of which all the relocatable geometry is ANCHORED in the game engine.
+// - Holds MINIMAL FUNCTIONALITY/TIMING to drive the move from "pending" to "applied" position in KoreRelocateOps.
 // - Class maintains the concept of the frame in which a new offset is applied.
 // ------------------------------------------------------------------------------------------------
 
 public partial class KoreZeroNode : Node3D
 {
     // Internal timer to check for a position change - avoid running check every frame
-    private float CheckTimer = 0.0f;
+    private float CheckTimer              = 0.0f;
     private float CheckTimerIntervalsSecs = 0.1f;
 
     // An extra trigger to update expedite the application of a new zero position.
     // Usage: KoreZeroNode.UpdateTrigger
     static public bool UpdateTrigger = false;
+
+    //public KoreMovingOrigin MovingOrigin = new KoreMovingOrigin();
 
     // --------------------------------------------------------------------------------------------
     // MARK: Node Functions
@@ -42,17 +46,21 @@ public partial class KoreZeroNode : Node3D
         {
             // Clear any manual trigger (even if there is no position change).
             // Likely a camera of scene change requires a quicker update, this is the purpose of the trigger.
-            UpdateTrigger = false;
+            if (UpdateTrigger)
+            {
+                UpdateTrigger = false;
+                KoreCentralTime.ResetTimer(ref CheckTimer, CheckTimerIntervalsSecs);
+            }
 
             // If the ZeroPosChangePending is set, apply the new position, with a deferred call to the end-of-frame.
-            if (KoreRelocateOps.IsNewOffsetPending())
+            if (KoreMovingOrigin.IsNewOffsetPending())
             {
                 CallDeferred(nameof(ApplyOffsetDeferred));
             }
         }
 
         // Clear down a change cycle after one frame - not its set in a deferred call, and cleared in a deferred call.
-        if (KoreZeroOffset.IsPosChangeCycle)
+        if (KoreMovingOrigin.IsChangePeriod())
         {
             CallDeferred(nameof(ClearUpdateDeferred));
         }
@@ -60,8 +68,8 @@ public partial class KoreZeroNode : Node3D
 
     // --------------------------------------------------------------------------------------------
 
-    private void ApplyOffsetDeferred() => KoreRelocateOps.ApplyOffset();
-    private void ClearUpdateDeferred() => KoreRelocateOps.ClearChangePeriod();
+    private void ApplyOffsetDeferred() => KoreMovingOrigin.ApplyOffset();
+    private void ClearUpdateDeferred() => KoreMovingOrigin.ClearChangePeriod();
 
     // --------------------------------------------------------------------------------------------
     // MARK: Internals
@@ -73,8 +81,8 @@ public partial class KoreZeroNode : Node3D
         // Core Sphere
         {
             KoreMiniMeshMaterial mat = KoreMiniMeshMaterialPalette.Find("MattYellow");
-            KoreColorRGB lineCol = KoreColorRGB.White;
-            KoreMiniMesh sphereMesh = KoreMiniMeshPrimitives.BasicSphere(KoreXYZVector.Zero, debugRadius, 16, mat, lineCol);
+            KoreColorRGB lineCol     = KoreColorRGB.White;
+            KoreMiniMesh sphereMesh  = KoreMiniMeshPrimitives.BasicSphere(KoreXYZVector.Zero, debugRadius, 16, mat, lineCol);
 
             KoreMiniMeshGodotColoredSurface coloredMeshNode = new KoreMiniMeshGodotColoredSurface() { Name = "ZoneNodeMarker - Yellow" };
             coloredMeshNode.UpdateMesh(sphereMesh, "All");

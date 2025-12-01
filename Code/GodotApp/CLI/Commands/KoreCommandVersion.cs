@@ -3,7 +3,8 @@ using System.Collections.Generic;
 // KoreCommandVersion
 
 using KoreCommon;
-
+using KoreSim;
+using KoreGIS;
 
 public class KoreCommandVersion : KoreCommand
 {
@@ -17,6 +18,7 @@ public class KoreCommandVersion : KoreCommand
         string Text = $"{KoreAppConst.Version}";
         Text += $"\n{KoreGodotCommonConst.Version}";
         Text += $"\n{KoreSimConst.Version}";
+        Text += $"\n{KoreGISConst.Version}";
         Text += $"\n{KoreCommonConst.Version}";
 
         return Text;

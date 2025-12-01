@@ -7,6 +7,7 @@ using System.IO;
 using System.Threading.Tasks;
 
 using KoreCommon;
+using KoreGIS;
 using KoreSim.JSON;
 
 namespace KoreSim;

@@ -7,6 +7,7 @@ using SkiaSharp;
 
 using KoreCommon;
 using KoreCommon.SkiaSharp;
+using KoreGIS;
 using KoreSim;
 
 
@@ -109,15 +110,15 @@ public partial class KoreZeroNodeMapTile : Node3D
 
 
             // create the color mesh
-            TileColorMesh = KoreColorMeshPrimitives.CenteredSphereSection(
-                    llBox: RwTileLLBox,
-                    radius: 11, //KoreZeroOffset.GeEarthRadius,//(float)KoreWorldConsts.EarthRadiusM,
-                    colormap: colorMap,
-                    tileEleData: eleData);
+            // TileColorMesh = KoreColorMeshPrimitives.CenteredSphereSection(
+            //         llBox: RwTileLLBox,
+            //         radius: 11, //KoreZeroOffset.GeEarthRadius,//(float)KoreWorldConsts.EarthRadiusM,
+            //         colormap: colorMap,
+            //         tileEleData: eleData);
 
-            // serialise the mesh to a binary file
-            byte[] meshdata = KoreColorMeshIO.ToBytes(TileColorMesh, KoreColorMeshIO.DataSize.AsFloat);
-            System.IO.File.WriteAllBytes(Filepaths.MeshFilepath, meshdata);
+            // // serialise the mesh to a binary file
+            // byte[] meshdata = KoreColorMeshIO.ToBytes(TileColorMesh, KoreColorMeshIO.DataSize.AsFloat);
+            // System.IO.File.WriteAllBytes(Filepaths.MeshFilepath, meshdata);
         }
         else
         {

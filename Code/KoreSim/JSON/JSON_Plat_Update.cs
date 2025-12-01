@@ -3,6 +3,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 
 using KoreCommon;
+using KoreGIS;
 
 namespace KoreSim.JSON;
 

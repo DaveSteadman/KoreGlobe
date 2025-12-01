@@ -2,6 +2,7 @@ using System.Collections.Generic;
 
 // KoreCommandEntityAdd
 using KoreCommon;
+using KoreGIS;
 
 namespace KoreSim;
 

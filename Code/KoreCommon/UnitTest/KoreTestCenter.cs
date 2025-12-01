@@ -10,14 +10,18 @@ namespace KoreCommon.UnitTest;
 
 public static class KoreTestCenter
 {
-    public static KoreTestLog RunCoreTests()
-    {
-        KoreTestLog testLog = new KoreTestLog();
+    // Central path for all unit test output files
+    public static string TestPath => KoreFileOps.JoinPaths(Directory.GetCurrentDirectory(), "UnitTestArtefacts");
 
+    public static void RunTests(KoreTestLog testLog)
+    {
         try
         {
             if (!EnsureTestDirectory(testLog))
-                return testLog;
+            {
+                testLog.AddResult("Test Centre Run", false, "Failed to create test directory.");
+                return;
+            }
 
             // Test Core maths and data structures
             KoreTestMath.RunTests(testLog);
@@ -27,11 +31,6 @@ public static class KoreTestCenter
             KoreTestList1D.RunTests(testLog);
             KoreTestList2D.RunTests(testLog);
             KoreTestStringDictionary.RunTests(testLog);
-
-            // Test geographic and position classes
-            KoreTestPosition.RunTests(testLog);
-            KoreTestPositionLLA.RunTests(testLog);
-            KoreTestRoute.RunTests(testLog);
 
             // Graphics: Mesh and color tests
             KoreTestColor.RunTests(testLog);
@@ -45,23 +44,19 @@ public static class KoreTestCenter
             // SkiaSharp Plotter tests
             KoreTestPlotter.RunTests(testLog);
             KoreTestSkiaSharp.RunTests(testLog);
-            KoreTestWorldPlotter.RunTests(testLog);
             KoreTestNatoSymbolPlotter.RunTests(testLog);
         }
         catch (Exception)
         {
             testLog.AddResult("Test Centre Run", false, "Exception");
         }
-
-        return testLog;
     }
 
     // --------------------------------------------------------------------------------------------
 
     // Usage: KoreTestCenter.RunAdHocTests()
-    public static KoreTestLog RunAdHocTests(KoreTestLog testLog)
+    public static void RunAdHocTests(KoreTestLog testLog)
     {
-
         try
         {
             KoreTestXYZVector.TestArbitraryPerpendicular(testLog);
@@ -70,32 +65,29 @@ public static class KoreTestCenter
         {
             testLog.AddResult("Test Centre Run", false, "Exception");
         }
-
-        return testLog;
     }
 
     // --------------------------------------------------------------------------------------------
 
-    private static bool EnsureTestDirectory(KoreTestLog testLog)
+    // Called from the higher level namespace Unit Test Centers to ensure the test directory exists
+    // Usage: bool success = KoreTestCenter.EnsureTestDirectory(testLog);
+    public static bool EnsureTestDirectory(KoreTestLog testLog)
     {
         bool retval = false;
 
-        // Use a proper path - either absolute or relative with proper separators
-        // Option 1: Relative to current directory
-        string testDir = Path.Combine(Directory.GetCurrentDirectory(), "UnitTestArtefacts");
-        testLog.AddComment("Attempting to create directory at: " + testDir);
+        testLog.AddComment("Attempting to create directory at: " + TestPath);
 
-        KoreFileOps.CreateDirectory(testDir);
+        KoreFileOps.CreateDirectory(TestPath);
 
         // Verify the directory was actually created
-        if (Directory.Exists(testDir))
+        if (Directory.Exists(TestPath))
         {
-            testLog.AddComment("? Test directory successfully created at: " + testDir);
+            testLog.AddComment("? Test directory successfully created at: " + TestPath);
             retval = true;
         }
         else
         {
-            testLog.AddResult("Test Directory Creation", false, $"? Test directory was NOT created at: {testDir}");
+            testLog.AddResult("Test Directory Creation", false, $"? Test directory was NOT created at: {TestPath}");
         }
 
         return retval;

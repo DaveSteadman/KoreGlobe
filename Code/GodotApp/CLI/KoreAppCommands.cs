@@ -3,7 +3,6 @@ using KoreCommon;
 
 public static class KoreAppCommands
 {
-
     // Usage: KoreAppCommands.RegisterCommands(console)
     public static void RegisterCommands(KoreCommandHandler console)
     {
@@ -12,8 +11,5 @@ public static class KoreAppCommands
 
         // General app control commands
         console.AddCommandHandler(new KoreCommandVersion());
-
-        // Zero Node
-        console.AddCommandHandler(new KoreCliCmdZeroPosSet());
     }
 }

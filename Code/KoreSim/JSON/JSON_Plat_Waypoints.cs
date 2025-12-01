@@ -6,6 +6,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 
 using KoreCommon;
+using KoreGIS;
 
 
 //  {"EntityWayPoints":{"EntityName":"Red Leader","Count":4,

@@ -1,5 +1,6 @@
 using System;
 using KoreCommon;
+using KoreGIS;
 using Godot;
 
 #nullable enable
@@ -17,6 +18,7 @@ public partial class KoreZeroNodeSphere : Node3D
     private KoreColorRGB SphereColor = KoreColorRGB.White;
 
     private KoreLLAPoint EarthZeroLLA = new() { LatDegs = 0, LonDegs = 0, AltMslM = 0 };
+
 
     // --------------------------------------------------------------------------------------------
 
@@ -43,7 +45,7 @@ public partial class KoreZeroNodeSphere : Node3D
     public override void _Process(double delta)
     {
         // If we're in a pos-change cycle, update the tile location
-        if (KoreRelocateOps.IsChangePeriod())
+        if (KoreMovingOrigin.IsChangePeriod())
             UpdateTileLocation();
     }
 
@@ -55,7 +57,7 @@ public partial class KoreZeroNodeSphere : Node3D
     {
         // So RW XYZ 0,0,0 is the center of the test sphere.
         // Set the local position from the parent object
-        Vector3 newRelocatedPos = KoreRelocateOps.RWtoGE(KoreXYZVector.Zero);
+        Godot.Vector3 newRelocatedPos = KoreMovingOrigin.RWtoRWOffsetG(KoreXYZVector.Zero);
 
         // Set the local position from the parent object
         var transform = GlobalTransform;

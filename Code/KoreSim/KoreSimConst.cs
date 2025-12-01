@@ -1,9 +1,8 @@
 // <fileheader>
 
-namespace KoreCommon;
+namespace KoreSim;
 
 public static class KoreSimConst
 {
-    // Usage: KoreSimConst.Version
-    public static string Version { get; } = "KoreSim // 2025-11-19 // v0001 // WIP";
+    public static string Version { get; } = "2025-12-01 // Build v0001 // Label 0.1";
 }

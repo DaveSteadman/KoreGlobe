@@ -3,6 +3,7 @@ using Godot;
 using System.Collections.Generic;
 
 using KoreCommon;
+using KoreGIS;
 
 namespace KoreSim;
 
@@ -127,7 +128,7 @@ public static class KoreQuadCubeTileFactory
                 // surfaceLL.LonDegs = KoreNumericRange<double>.ZeroTo360Degrees.Apply(surfaceLL.LonDegs);
 
                 // Grab the color for this lat long
-                colorlist[currVId, currUId] = KoreSimFactory.Instance.ImageManager.ColorForPoint(llpos);
+                colorlist[currVId, currUId] = KoreGISHub.ImageManager.ColorForPoint(llpos);
 
                 // Add the radius, to make an earth surface point
                 KoreLLAPoint surfacePoint = new(llpos, radius);
@@ -219,7 +220,7 @@ public static class KoreQuadCubeTileFactory
                 KoreLLPoint llpos = KoreLLPoint.FromXYZ(facepos);
 
                 // Grab the color for this lat long
-                colorlist[currVId, currUId] = KoreSimFactory.Instance.ImageManager.ColorForPoint(llpos);
+                colorlist[currVId, currUId] = KoreGISHub.ImageManager.ColorForPoint(llpos);
 
                 // Add the radius, to make an earth surface point
                 KoreLLAPoint surfacePoint = new(llpos, radius);

@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 
 using Godot;
 using KoreCommon;
+using KoreGIS;
 using KoreSim;
 
 #nullable enable

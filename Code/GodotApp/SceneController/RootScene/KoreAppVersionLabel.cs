@@ -17,8 +17,6 @@ public partial class KoreAppVersionLabel : Label
         Text += $"\n{KoreSimConst.Version}";
         Text += $"\n{KoreCommonConst.Version}";
 
-
-
         // Optionally, set the theme font size or other properties
         // ThemeFontSize = 16; // Example size, adjust as needed
     }

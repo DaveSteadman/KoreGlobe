@@ -31,9 +31,6 @@ public static class KoreSimCommands
         console.AddCommandHandler(new KoreCommandNetworkInjectIncoming());
         console.AddCommandHandler(new KoreCommandNetworkEndConnection());
 
-        //console.AddCommandHandler(new KoreCommandModelJsonRead());
-        //console.AddCommandHandler(new KoreCommandModelJsonWrite());
-
         // Entity control
         console.AddCommandHandler(new KoreCommandEntityTestScenario());
         console.AddCommandHandler(new KoreCommandEntityAdd());
@@ -52,26 +49,6 @@ public static class KoreSimCommands
 
         // Element Control
         //console.AddCommandHandler(new KoreCommandEntityDeleteAllEmitters());
-
-        // MapServer
-        console.AddCommandHandler(new KoreCommandElePrep());
-        console.AddCommandHandler(new KoreCommandEleLoadArc());
-        console.AddCommandHandler(new KoreCommandEleSaveTile());
-        console.AddCommandHandler(new KoreCommandEleSaveTileSet());
-        console.AddCommandHandler(new KoreCommandEleLoadTile());
-        console.AddCommandHandler(new KoreCommandEleForPos());
-        console.AddCommandHandler(new KoreCommandEleReport());
-        console.AddCommandHandler(new KoreCommandElePatchLoad());
-        console.AddCommandHandler(new KoreCommandElePatchSave());
-
-        // Tile Images
-        console.AddCommandHandler(new KoreCommandSatCollate());
-        console.AddCommandHandler(new KoreCommandSatDivide());
-        console.AddCommandHandler(new KoreCommandSatDivideTo());
-
-        console.AddCommandHandler(new KoreCommandSatLoadTile());
-        console.AddCommandHandler(new KoreCommandSatPosColor());
-
 
     }
 }

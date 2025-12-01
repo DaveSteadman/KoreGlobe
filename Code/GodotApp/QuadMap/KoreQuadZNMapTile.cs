@@ -7,6 +7,7 @@ using Godot.NativeInterop;
 using Godot;
 using KoreCommon;
 using KoreSim;
+using KoreGIS;
 
 #nullable enable
 
@@ -132,9 +133,9 @@ public partial class KoreQuadZNMapTile : Node3D
         // }
         // else
         {
-            // IF we're in a pos-change cycle, update the tile location
-            if (KoreRelocateOps.IsChangePeriod())
-                UpdateTileLocation();
+            // // IF we're in a pos-change cycle, update the tile location
+            // if (KoreRelocateOps.IsChangePeriod())
+            //     UpdateTileLocation();
         }
 
         //     // If we are still building the tile, progress that
@@ -297,7 +298,7 @@ public partial class KoreQuadZNMapTile : Node3D
     {
         // Set the local position from the parent object
         //Vector3 newPos = KoreGeoConvOps.RwToOffsetGe(RwTileCenterLLA);
-        var gePos = KoreRelocateOps.RWtoGE(RwTileCenterXYZ);
+        var gePos = KoreMovingOrigin.RWtoRWOffsetG(RwTileCenterXYZ);
 
         // Set the local position from the parent object
         var transform = GlobalTransform;

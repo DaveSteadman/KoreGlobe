@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 
 using KoreCommon;
+using KoreGIS;
 
 public class KoreEntityElementRoute : KoreEntityElement
 {

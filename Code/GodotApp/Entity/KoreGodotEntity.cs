@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Godot;
 
 using KoreCommon;
+using KoreGIS;
 using KoreSim;
 using SharpGLTF.Geometry.VertexTypes;
 
@@ -50,7 +51,7 @@ public partial class KoreGodotEntity : Node3D
         // Other nodes can QueueFree the node, but will do so once the model is deleted and on the same main-thread, so conflict is avoided there.
         if (!KoreEventDriver.HasEntity(EntityName))
             return;
-            
+
         if (KoreCentralTime.CheckTimer(ref TimerPollModel, TimerPollModelInterval) || KoreZeroOffset.IsPosChangeCycle)
         {
 

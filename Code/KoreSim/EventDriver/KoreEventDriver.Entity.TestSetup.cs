@@ -5,6 +5,7 @@ using System.Collections.Generic;
 #nullable enable
 
 using KoreCommon;
+using KoreGIS;
 
 namespace KoreSim;
 
