@@ -68,7 +68,7 @@ public partial class Kore3DRelocatableSceneNode : Node3D
             KoreLLAPoint camLLA = new KoreLLAPoint() {
                 LatDegs = camLLPos.LatDegs,
                 LonDegs = camLLPos.LonDegs,
-                RadiusM = KoreZeroOffset.GeEarthRadius };
+                RadiusM = Kore3DRelocatableSceneConsts.GeEarthRadius };
 
             GD.Print($"XYZOffset:{vecZeroPToCam.X:F2},{vecZeroPToCam.Y:F2},{vecZeroPToCam.Z:F2} // CamLLA:{camLLA.LatDegs:F2},{camLLA.LonDegs:F2},{camLLA.RadiusM:F2}");
 

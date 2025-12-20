@@ -197,7 +197,7 @@ public partial class KoreZeroNodeMapTile : Node3D
         {
             // If the tile is fully created, and we're in a cycle where the aero offset has moved, update the tile position.
             // Note that tile orientation is never changed, this is setup during the tile creation.
-            if (KoreZeroOffset.IsPosChangeCycle)
+            if (KoreMovingOrigin.IsChangePeriod())
             {
                 LocateTile();
             }

@@ -20,14 +20,12 @@ public enum KoreTestLogResult { Pass, Fail, Untested }
 
 // ------------------------------------------------------------------------
 
-
 public struct KoreTestLogEntry
 {
     public string Name;
     public KoreTestLogEntryType EntryType;
     public KoreTestLogResult Result;
     public string Comment;
-
 }
 
 public class KoreTestLog
@@ -146,13 +144,21 @@ public class KoreTestLog
                     break;
 
                 case KoreTestLogEntryType.Comment:
-                    sb.AppendLine($"COMMENT: {entry.Comment}");
+                    string commentSymbol = KoreEmojiSymbolOps.GetSymbol(KoreEmojiType.SpeechBubble);
+                    sb.AppendLine($"{commentSymbol} COMMENT: {entry.Comment}");
                     break;
 
                 case KoreTestLogEntryType.Test:
                     string resultStr = ResultToString(entry.Result);
                     string comment = string.IsNullOrEmpty(entry.Comment) ? "" : $" // {entry.Comment}";
-                    sb.AppendLine($"TEST: {resultStr} // {entry.Name}{comment}");
+
+                    string resultSymbol = KoreEmojiSymbolOps.GetSymbol(KoreEmojiType.TrafficLightOrange);
+                    if (entry.Result == KoreTestLogResult.Pass)
+                        resultSymbol = KoreEmojiSymbolOps.GetSymbol(KoreEmojiType.TrafficLightGreen);
+                    else if (entry.Result == KoreTestLogResult.Fail)
+                        resultSymbol = KoreEmojiSymbolOps.GetSymbol(KoreEmojiType.TrafficLightRed);
+
+                    sb.AppendLine($"{resultSymbol} TEST: {resultStr} // {entry.Name}{comment}");
                     break;
             }
         }

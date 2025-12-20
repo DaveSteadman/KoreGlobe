@@ -1,7 +1,7 @@
+// <fileheader>
 
 using System.Collections.Generic;
 using System.IO;
-using Godot;
 using KoreCommon;
 
 namespace KoreGIS;
@@ -45,7 +45,7 @@ public class KoreTerrainImageManager
         foreach (KoreTerrainImageTile tile in TerrainImageTileList)
         {
             string resStr = $"{tile.PixelsPerDegree:0.00} ppd - {tile.ImagePath}";
-            GD.Print(resStr);
+            KoreCentralLog.AddEntry(resStr);
         }
     }
 

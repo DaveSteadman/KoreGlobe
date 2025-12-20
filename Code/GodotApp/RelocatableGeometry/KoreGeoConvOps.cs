@@ -1,34 +1,35 @@
 
-// using Godot;
-// using KoreCommon;
-// using KoreSim;
+using Godot;
+using KoreCommon;
+using KoreGIS;
+using KoreSim;
 
-// // KoreGeoConvOps: Functions for converting between real-world values and the Godot GameEngine presentation.
-// // - Real world is in mainly SI units, with other accessor operations. The Godot World in is units of kilometers, to best suit the full world presentation.
-// // - The Godot axis system does not match the ECEF orientatino of teh Z axis, so this will see inverting.
+// KoreGeoConvOps: Functions for converting between real-world values and the Godot GameEngine presentation.
+// - Real world is in mainly SI units, with other accessor operations. The Godot World in is units of kilometers, to best suit the full world presentation.
+// - The Godot axis system does not match the ECEF orientatino of teh Z axis, so this will see inverting.
 
-// public struct KorePosV3
-// {
-//     public Vector3 Pos;
-//     public Vector3 PosAbove;
-//     public Vector3 PosNorth;
-//     public Vector3 VecUp;
-//     public Vector3 VecNorth;
-// }
+public struct KorePosV3
+{
+    public Vector3 Pos;
+    public Vector3 PosAbove;
+    public Vector3 PosNorth;
+    public Vector3 VecUp;
+    public Vector3 VecNorth;
+}
 
-// public struct KoreEntityV3
-// {
-//     public Vector3 Pos;
-//     public Vector3 PosAbove;
-//     public Vector3 PosAhead;
-//     public Vector3 PosNorth;
-//     public Vector3 VecUp;
-//     public Vector3 VecForward;
-//     public Vector3 VecNorth;
-// }
+public struct KoreEntityV3
+{
+    public Vector3 Pos;
+    public Vector3 PosAbove;
+    public Vector3 PosAhead;
+    public Vector3 PosNorth;
+    public Vector3 VecUp;
+    public Vector3 VecForward;
+    public Vector3 VecNorth;
+}
 
-// public static class KoreGeoConvOps
-// {
+public static class KoreGeoConvOps
+{
 //     // --------------------------------------------------------------------------------------------
 //     // MARK: Distance Scaling
 //     // --------------------------------------------------------------------------------------------
@@ -38,7 +39,7 @@
 //     public static double AheadDistGeM    = 2 * KoreZeroOffset.GeToRwDistanceMultiplier;
 
 //     private static double RwEarthRadiusM = KoreWorldConsts.EarthRadiusM; // Earth radius in meters
-//     private static double GeEarthRadius  = KoreZeroOffset.GeEarthRadius; // Earth radius in Game Engine units
+//     private static double GeEarthRadius  = Kore3DRelocatableSceneConsts.GeEarthRadius; // Earth radius in Game Engine units
 
 //     private static double ScaleMetersPerDisplayUnit = RwEarthRadiusM / GeEarthRadius;
 
@@ -53,28 +54,28 @@
 
 //     public static double ScaleDistance(double rwDistM) => (rwDistM / ScaleMetersPerDisplayUnit);
 
-//     // --------------------------------------------------------------------------------------------
-//     // MARK: Bare Position - No Zero offsets
-//     // --------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------
+    // MARK: Bare Position - No Zero offsets
+    // --------------------------------------------------------------------------------------------
 
-//     // KoreGeoConvOps.RwToGeStruct(pos);
-//     // public static Vector3 RwToGe(double radiusM, double latDegs, double lonDegs)
-//     // {
-//     //     // Scale the radius
-//     //     radiusM = radiusM * KoreZeroOffset.RwToGeDistanceMultiplier;
+    // KoreGeoConvOps.RwToGeStruct(pos);
+    // public static Vector3 RwToGe(double radiusM, double latDegs, double lonDegs)
+    // {
+    //     // Scale the radius
+    //     radiusM = radiusM * KoreZeroOffset.RwToGeDistanceMultiplier;
 
-//     //     // Convert the LLA to an XYZ - No offset for this function
-//     //     KoreLLAPoint llap = new KoreLLAPoint() { LatDegs = latDegs, LonDegs = lonDegs, RadiusM = radiusM };
-//     //     KoreXYZVector p = llap.ToXYZ();
+    //     // Convert the LLA to an XYZ - No offset for this function
+    //     KoreLLAPoint llap = new KoreLLAPoint() { LatDegs = latDegs, LonDegs = lonDegs, RadiusM = radiusM };
+    //     KoreXYZVector p = llap.ToXYZ();
 
-//     //     // Create a new vector3, with the Z axis inverted as Godot needs.
-//     //     return new Vector3((float)p.X, (float)p.Y, (float)-p.Z);
-//     // }
+    //     // Create a new vector3, with the Z axis inverted as Godot needs.
+    //     return new Vector3((float)p.X, (float)p.Y, (float)-p.Z);
+    // }
 
-//     // public static Vector3 RwToGe(KoreLLAPoint llap)
-//     // {
-//     //     return RwToGe(llap.RadiusM, llap.LatDegs, llap.LonDegs);
-//     // }
+    // public static Vector3 RwToGe(KoreLLAPoint llap)
+    // {
+    //     return RwToGe(llap.RadiusM, llap.LatDegs, llap.LonDegs);
+    // }
 
 //     // --------------------------------------------------------------------------------------------
 
@@ -342,4 +343,6 @@
 //         GD.Print($"V3Debug\n- Pos:{pos}\n- PosAbove:{posAbove} // DistUp:{distUp}\n- PosAhead:{posAhead} // DistAhead:{distAhead}");
 //     }
 
-// }
+}
+
+

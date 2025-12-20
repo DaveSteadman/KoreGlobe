@@ -31,7 +31,7 @@ public static class KoreMovingOriginOps
     // MARK: LLA Conv
     // --------------------------------------------------------------------------------------------
 
-    // Usage: Vector3 pos = KoreMovingOriginOps.RwLLAToGeOffset(MO, posLLA);
+    // Usage: Vector3 pos = KoreMovingOriginOps.RwLLAToGeOffset(posLLA);
     public static Vector3 RwLLAToGeOffset(KoreLLAPoint rwLLA)
     {
         KoreXYZVector rwXYZ = rwLLA.ToXYZ();
@@ -39,6 +39,13 @@ public static class KoreMovingOriginOps
 
         Vector3 godotPos = KoreConvPos.VecToV3(gePos);
         return godotPos;
+    }
+
+    // Usage: Vector3 pos = KoreMovingOriginOps.RwLLAToGeOffset(radiusM, latDegs, lonDegs);
+    public static Vector3 RwLLAToGeOffset(double radiusM, double latDegs, double lonDegs)
+    {
+        KoreLLAPoint rwLLA = new KoreLLAPoint() { RadiusM = radiusM, LatDegs = latDegs, LonDegs = lonDegs };
+        return RwLLAToGeOffset(rwLLA);
     }
 
 }

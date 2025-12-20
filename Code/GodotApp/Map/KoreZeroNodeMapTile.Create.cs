@@ -112,7 +112,7 @@ public partial class KoreZeroNodeMapTile : Node3D
             // create the color mesh
             // TileColorMesh = KoreColorMeshPrimitives.CenteredSphereSection(
             //         llBox: RwTileLLBox,
-            //         radius: 11, //KoreZeroOffset.GeEarthRadius,//(float)KoreWorldConsts.EarthRadiusM,
+            //         radius: 11, //Kore3DRelocatableSceneConsts.GeEarthRadius,//(float)KoreWorldConsts.EarthRadiusM,
             //         colormap: colorMap,
             //         tileEleData: eleData);
 
@@ -345,7 +345,7 @@ public partial class KoreZeroNodeMapTile : Node3D
         {
             for (int elIdx = 0; elIdx < elCount; elIdx++)
             {
-                xyzPoints[azIdx, elIdx] = KoreGeoConvOps.RwToGe(llPoints[azIdx, elIdx]);
+                xyzPoints[azIdx, elIdx] = KoreMovingOriginOps.RwLLAToGeOffset(llPoints[azIdx, elIdx]);
             }
         }
 
