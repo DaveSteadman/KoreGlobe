@@ -298,7 +298,7 @@ public partial class KoreQuadZNMapTile : Node3D
     {
         // Set the local position from the parent object
         //Vector3 newPos = KoreGeoConvOps.RwToOffsetGe(RwTileCenterLLA);
-        var gePos = KoreMovingOrigin.RWtoRWOffsetG(RwTileCenterXYZ);
+        var gePos = KoreMovingOrigin.RWtoGodotOffset(RwTileCenterXYZ);
 
         // Set the local position from the parent object
         var transform = GlobalTransform;

@@ -57,7 +57,7 @@ public partial class KoreZeroNodeSphere : Node3D
     {
         // So RW XYZ 0,0,0 is the center of the test sphere.
         // Set the local position from the parent object
-        Godot.Vector3 newRelocatedPos = KoreMovingOrigin.RWtoRWOffsetG(KoreXYZVector.Zero);
+        Godot.Vector3 newRelocatedPos = KoreMovingOrigin.RWtoGodotOffset(KoreXYZVector.Zero);
 
         // Set the local position from the parent object
         var transform = GlobalTransform;

@@ -1,11 +1,11 @@
-[gd_scene load_steps=2 format=3 uid="uid://jvojhc1rtps7"]
+[gd_scene format=3 uid="uid://jvojhc1rtps7"]
 
 [ext_resource type="Script" uid="uid://hobqwll0bcgn" path="res://Code/GodotApp/SceneController/RootScene/KoreGodotAppRoot.cs" id="1_kvlpo"]
 
-[node name="AppRoot" type="Node"]
+[node name="AppRoot" type="Node" unique_id=1115653911]
 script = ExtResource("1_kvlpo")
 
-[node name="RootUI" type="Control" parent="."]
+[node name="RootUI" type="Control" parent="." unique_id=2079233521]
 top_level = true
 layout_mode = 3
 anchors_preset = 15
@@ -14,11 +14,9 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Root2D" type="Node2D" parent="."]
+[node name="Root2D" type="Node2D" parent="." unique_id=1132901076]
 visible = false
 top_level = true
 
-[node name="Root3D" type="Node3D" parent="."]
+[node name="Root3D" type="Node3D" parent="." unique_id=546919065]
 top_level = true
-
-[node name="OmniLight3D" type="OmniLight3D" parent="."]

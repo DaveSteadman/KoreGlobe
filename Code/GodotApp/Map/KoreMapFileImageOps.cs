@@ -123,8 +123,8 @@ public static class KoreMapFileImageOps
         }
 
         // Save the working image for analysis
-        string worldTileFilepath = KoreMapTileFilepaths.WorldTileFilepath();
-        workingImage.SaveWebp(worldTileFilepath);
+        // string worldTileFilepath = KoreMapTileFilepaths.WorldTileFilepath();
+        // workingImage.SaveWebp(worldTileFilepath);
 
     }
 

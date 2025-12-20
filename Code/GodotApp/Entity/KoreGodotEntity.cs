@@ -52,7 +52,7 @@ public partial class KoreGodotEntity : Node3D
         if (!KoreEventDriver.HasEntity(EntityName))
             return;
 
-        if (KoreCentralTime.CheckTimer(ref TimerPollModel, TimerPollModelInterval) || KoreZeroOffset.IsPosChangeCycle)
+        if (KoreCentralTime.CheckTimer(ref TimerPollModel, TimerPollModelInterval) || KoreMovingOrigin.IsChangePeriod())
         {
 
             UpdateModelData();
@@ -151,29 +151,29 @@ public partial class KoreGodotEntity : Node3D
     public void UpdateEntityPosition()
     {
         // Convert the position
-        KoreEntityV3 entityVecs = KoreGeoConvOps.RwToGeStruct(CurrentPosition, CurrentCourse);
+        // KoreEntityV3 entityVecs = KoreGeoConvOps.RwToGeStruct(CurrentPosition, CurrentCourse);
 
-        // Position
-        Position = entityVecs.Pos;
-        LookAt(entityVecs.PosAhead, entityVecs.VecUp);
+        // // Position
+        // Position = entityVecs.Pos;
+        // LookAt(entityVecs.PosAhead, entityVecs.VecUp);
 
-        // Attitude smoothing - 1 degree per frame
-        CurrentSmoothedAttitude.PitchUpDegs =
-            KoreValueUtils.AdjustWithinBounds(CurrentSmoothedAttitude.PitchUpDegs, CurrentModelAttitude.PitchUpDegs, 1);
-        CurrentSmoothedAttitude.RollClockwiseDegs =
-            KoreValueUtils.AdjustWithinBounds(CurrentSmoothedAttitude.RollClockwiseDegs, CurrentModelAttitude.RollClockwiseDegs, 1);
-        CurrentSmoothedAttitude.YawClockwiseDegs =
-            KoreValueUtils.AdjustWithinBounds(CurrentSmoothedAttitude.YawClockwiseDegs, CurrentModelAttitude.YawClockwiseDegs, 1);
+        // // Attitude smoothing - 1 degree per frame
+        // CurrentSmoothedAttitude.PitchUpDegs =
+        //     KoreValueUtils.AdjustWithinBounds(CurrentSmoothedAttitude.PitchUpDegs, CurrentModelAttitude.PitchUpDegs, 1);
+        // CurrentSmoothedAttitude.RollClockwiseDegs =
+        //     KoreValueUtils.AdjustWithinBounds(CurrentSmoothedAttitude.RollClockwiseDegs, CurrentModelAttitude.RollClockwiseDegs, 1);
+        // CurrentSmoothedAttitude.YawClockwiseDegs =
+        //     KoreValueUtils.AdjustWithinBounds(CurrentSmoothedAttitude.YawClockwiseDegs, CurrentModelAttitude.YawClockwiseDegs, 1);
 
-        double pitchUpRads = CurrentSmoothedAttitude.PitchUpRads;
-        double rollClockwiseRads = CurrentSmoothedAttitude.RollClockwiseRads;
-        double yawClockwiseRads = CurrentSmoothedAttitude.YawClockwiseRads;
+        // double pitchUpRads = CurrentSmoothedAttitude.PitchUpRads;
+        // double rollClockwiseRads = CurrentSmoothedAttitude.RollClockwiseRads;
+        // double yawClockwiseRads = CurrentSmoothedAttitude.YawClockwiseRads;
 
-        float gePitchRads = (float)pitchUpRads;
-        float geRollRads = (float)rollClockwiseRads;
-        float geYawRads = (float)yawClockwiseRads;
+        // float gePitchRads = (float)pitchUpRads;
+        // float geRollRads = (float)rollClockwiseRads;
+        // float geYawRads = (float)yawClockwiseRads;
 
-        AttitudeNode.Rotation = new Vector3(gePitchRads, geYawRads, geRollRads);
+        // AttitudeNode.Rotation = new Vector3(gePitchRads, geYawRads, geRollRads);
     }
 
 

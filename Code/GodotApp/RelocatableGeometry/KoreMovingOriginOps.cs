@@ -34,11 +34,7 @@ public static class KoreMovingOriginOps
     // Usage: Vector3 pos = KoreMovingOriginOps.RwLLAToGeOffset(posLLA);
     public static Vector3 RwLLAToGeOffset(KoreLLAPoint rwLLA)
     {
-        KoreXYZVector rwXYZ = rwLLA.ToXYZ();
-        KoreXYZVector gePos = KoreMovingOrigin.RWtoGeOffset(rwXYZ);
-
-        Vector3 godotPos = KoreConvPos.VecToV3(gePos);
-        return godotPos;
+        return KoreMovingOrigin.RWtoGodotOffset(rwLLA.ToXYZ());
     }
 
     // Usage: Vector3 pos = KoreMovingOriginOps.RwLLAToGeOffset(radiusM, latDegs, lonDegs);

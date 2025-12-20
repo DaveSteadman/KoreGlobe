@@ -247,7 +247,7 @@ public partial class KoreRelocatableXYZMoverNode : Node3D
     void UpdateLocalPosition()
     {
         // Calculate offset from zero node using relocatable system
-        Vector3 offset = KoreRelocateOps.RWtoGE(RwPosition);
+        Vector3 offset = KoreMovingOrigin.RWtoGodotOffset(RwPosition);
 
         // Debug the relocatable system
         //var zeroPos = KoreZeroOffset.AppliedZeroPosXYZ;

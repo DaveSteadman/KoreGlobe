@@ -84,7 +84,7 @@ public partial class Kore3DRelocatableSceneNode : Node3D
 
             //DemoNode?.SetPosition(KoreConvPos.VecToV3(newZeroXYZ));
 
-            KoreRelocateOps.QueueNewOffset(newZeroXYZ);
+            //KoreRelocateOps.QueueNewOffset(newZeroXYZ);
 
 
             //KoreZeroOffset.SetLLA(newZeroPos);

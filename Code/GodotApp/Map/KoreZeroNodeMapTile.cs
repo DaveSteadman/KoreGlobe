@@ -310,7 +310,8 @@ public partial class KoreZeroNodeMapTile : Node3D
         //RwTileCenterLLA.RadiusM = 11;
 
         // Set the local position from the parent object
-        Vector3 newPos = KoreGeoConvOps.RwToOffsetGe(RwTileCenterLLA);
+        RwTileCenterXYZ = RwTileCenterLLA.ToXYZ();
+        Vector3 newPos = KoreMovingOrigin.RWtoGodotOffset(RwTileCenterXYZ);
 
         // Set the local position from the parent object
         var transform = GlobalTransform;
