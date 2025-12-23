@@ -33,8 +33,6 @@ public partial class KoreZeroNode : Node3D
     public override void _Ready()
     {
         Name = "ZeroNode";
-
-        CreateDebugMarker();
     }
 
     // --------------------------------------------------------------------------------------------
@@ -71,26 +69,4 @@ public partial class KoreZeroNode : Node3D
     private void ApplyOffsetDeferred() => KoreMovingOrigin.ApplyOffset();
     private void ClearUpdateDeferred() => KoreMovingOrigin.ClearChangePeriod();
 
-    // --------------------------------------------------------------------------------------------
-    // MARK: Internals
-    // --------------------------------------------------------------------------------------------
-
-    private void CreateDebugMarker()
-    {
-        float debugRadius = 0.25f;
-        // Core Sphere
-        {
-            KoreMiniMeshMaterial mat = KoreMiniMeshMaterialPalette.Find("MattYellow");
-            KoreColorRGB lineCol     = KoreColorRGB.White;
-            KoreMiniMesh sphereMesh  = KoreMiniMeshPrimitives.BasicSphere(KoreXYZVector.Zero, debugRadius, 16, mat, lineCol);
-
-            KoreMiniMeshGodotColoredSurface coloredMeshNode = new KoreMiniMeshGodotColoredSurface() { Name = "ZoneNodeMarker - Yellow" };
-            coloredMeshNode.UpdateMesh(sphereMesh, "All");
-            AddChild(coloredMeshNode);
-
-            KoreMiniMeshGodotLine lineMeshNode1 = new KoreMiniMeshGodotLine() { Name = "ZoneNodeMarker - Wire" };
-            lineMeshNode1.UpdateMesh(sphereMesh, "All");
-            AddChild(lineMeshNode1);
-        }
-    }
 }

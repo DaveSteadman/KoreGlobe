@@ -21,4 +21,5 @@ public class Kore3DRelocatableSceneObjects
     public KoreZeroNodeMapManager?      ZeroNodeMapManager { get; set; } = null;
     public KoreRelocatableXYZMoverNode? WorldCameraMount   { get; set; } = null;
     public KoreZeroNodeSphere?          ZeroNodeSphere     { get; set; } = null;
+    public Kore3DFrameworkObjectManager?  FrameworkManager { get; set; } = null;
 }

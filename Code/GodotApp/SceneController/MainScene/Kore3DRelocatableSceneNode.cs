@@ -25,7 +25,7 @@ public partial class Kore3DRelocatableSceneNode : Node3D
     private float UITimerInterval = 0.1f; // 100ms
 
     private float UISlowTimer = 0.0f;
-    private float UISlowTimerInterval = 0.1f;
+    private float UISlowTimerInterval = 1f;
 
     // ---------------------------------------------------------------------------------------------
     // MARK: Node3D
@@ -35,7 +35,10 @@ public partial class Kore3DRelocatableSceneNode : Node3D
     {
         ConstructNodes();
 
-        CreateDebugMarker();
+        // CreateDebugMarker();
+
+        SceneObjects.FrameworkManager = new Kore3DFrameworkObjectManager();
+        SceneObjects.FrameworkManager.CreateNodes(SceneObjects.ZeroNode!);
 
         // This method is called when the node is added to the scene.
         GD.Print("MainScene is ready!");
@@ -51,36 +54,53 @@ public partial class Kore3DRelocatableSceneNode : Node3D
 
         if (KoreCentralTime.CheckTimer(ref UISlowTimer, UISlowTimerInterval))
         {
-            // move the zero point a fraction of the way to the camera LLA
-            // KoreLLAPoint cameraLLA = KoreGodotMainSceneFactory.WorldCameraMount?.CurrLLA ?? KoreLLAPoint.Zero;
-            // KoreLLAPoint zeroPosLLA = KoreZeroOffset.AppliedZeroPosLLA;
+            // Debug placing of the zero offset - just for testing
+            // - Get the camera position in GE XYZ
+            // - If the magnitude is > 1 GE unit, move the zero offset to zero
+            // - else, move the zero offset to a magnitude of 1, in the direction of the camera position
+            // -    Note that the RW scale is 1:1 with GE units for now.
 
-
-            // Get the XYZ of the camera position
             Vector3 geXYZ = SceneObjects.WorldCameraMount!.Position;
-            KoreXYZVector geXYZ2 = KoreConvPos.V3ToVec(geXYZ);
 
-            // The camera is at an absolute position, so get the vector to the zero point
-            KoreXYZVector vecZeroPToCam = KoreXYZVector.Zero.XYZTo(geXYZ2);
+            if (geXYZ.Length() > 1.0f)
+            {
+                KoreXYZVector posVec = KoreConvPos.V3ToVec(geXYZ);
+                posVec.Magnitude = 1;
+                KoreMovingOrigin.QueueNewOffset(posVec);
 
-            // Turn that into a lat-long-alt
-            KoreLLPoint camLLPos = KoreLLPoint.FromXYZ(vecZeroPToCam);
-            KoreLLAPoint camLLA = new KoreLLAPoint() {
-                LatDegs = camLLPos.LatDegs,
-                LonDegs = camLLPos.LonDegs,
-                RadiusM = Kore3DRelocatableSceneConsts.GeEarthRadius };
+                GD.Print($"posVec: {posVec}");
+            }
+            else
+            {
+                KoreMovingOrigin.QueueNewOffset(KoreXYZVector.Zero);
 
-            GD.Print($"XYZOffset:{vecZeroPToCam.X:F2},{vecZeroPToCam.Y:F2},{vecZeroPToCam.Z:F2} // CamLLA:{camLLA.LatDegs:F2},{camLLA.LonDegs:F2},{camLLA.RadiusM:F2}");
+                GD.Print($"Zeroing origin");
+            }
 
-            // Lerp 10% of the way to the camera position, but fix the alt at 0
-            // KoreLLAPoint newZeroPos = KoreLLAPointOps.GreatCircleInterpolation(
-            //     KoreZeroOffset.AppliedZeroPosLLA, // current position
-            //     camLLA, // our target position
-            //     0.1);   // 10% of the way there
-            // newZeroPos.RadiusM = 10;
 
-            // Set the new position
-            KoreXYZVector newZeroXYZ = camLLA.ToXYZ();
+            // KoreXYZVector geXYZ2 = KoreConvPos.V3ToVec(geXYZ);
+
+            // // The camera is at an absolute position, so get the vector to the zero point
+            // KoreXYZVector vecZeroPToCam = KoreXYZVector.Zero.XYZTo(geXYZ2);
+
+            // // Turn that into a lat-long-alt
+            // KoreLLPoint camLLPos = KoreLLPoint.FromXYZ(vecZeroPToCam);
+            // KoreLLAPoint camLLA = new KoreLLAPoint() {
+            //     LatDegs = camLLPos.LatDegs,
+            //     LonDegs = camLLPos.LonDegs,
+            //     RadiusM = Kore3DRelocatableSceneConsts.GeEarthRadius };
+
+            // GD.Print($"XYZOffset:{vecZeroPToCam.X:F2},{vecZeroPToCam.Y:F2},{vecZeroPToCam.Z:F2} // CamLLA:{camLLA.LatDegs:F2},{camLLA.LonDegs:F2},{camLLA.RadiusM:F2}");
+
+            // // Lerp 10% of the way to the camera position, but fix the alt at 0
+            // // KoreLLAPoint newZeroPos = KoreLLAPointOps.GreatCircleInterpolation(
+            // //     KoreZeroOffset.AppliedZeroPosLLA, // current position
+            // //     camLLA, // our target position
+            // //     0.1);   // 10% of the way there
+            // // newZeroPos.RadiusM = 10;
+
+            // // Set the new position
+            // KoreXYZVector newZeroXYZ = camLLA.ToXYZ();
 
             //DemoNode?.SetPosition(KoreConvPos.VecToV3(newZeroXYZ));
 
@@ -196,7 +216,7 @@ public partial class Kore3DRelocatableSceneNode : Node3D
 
         // Core Sphere
         {
-            KoreMiniMeshMaterial mat = KoreMiniMeshMaterialPalette.Find("MattMagenta");
+            KoreMiniMeshMaterial mat = KoreMiniMeshMaterialPalette.Find("GreenGlass");
             KoreColorRGB lineCol = KoreColorRGB.White;
             KoreMiniMesh sphereMesh = KoreMiniMeshPrimitives.BasicSphere(KoreXYZVector.Zero, debugRadius, 16, mat, lineCol);
 
