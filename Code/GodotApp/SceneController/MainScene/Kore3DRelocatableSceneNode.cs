@@ -7,6 +7,7 @@ using Godot;
 using KoreCommon;
 using KoreGIS;
 using KoreSim;
+using SharpGLTF.Schema2;
 
 
 #nullable enable
@@ -37,6 +38,9 @@ public partial class Kore3DRelocatableSceneNode : Node3D
 
         SceneObjects.FrameworkManager = new Kore3DFrameworkObjectManager();
         SceneObjects.FrameworkManager.CreateNodes(SceneObjects.ZeroNode!);
+
+        SceneObjects.FlatMapManager = new KoreFlatMapManager();
+        SceneObjects.FlatMapManager.CreateTestTile(SceneObjects.ZeroNode!);
 
         // This method is called when the node is added to the scene.
         GD.Print("MainScene is ready!");

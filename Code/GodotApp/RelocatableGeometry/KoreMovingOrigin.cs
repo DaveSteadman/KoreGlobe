@@ -89,7 +89,7 @@ public static class KoreMovingOrigin
     // Translation only - no scale
 
     // Convert real-world position to offset position, applying the zero offset.
-    // Usage: var gePos = KoreMovingOrigin.RWtoOffset(vecPosXYZ);
+    // Usage: var gePos = KoreMovingOrigin.RWtoRWOffset(vecPosXYZ);
     public static KoreXYZVector RWtoRWOffset(KoreXYZVector rwPos)
     {
         // Apply the geo rw offset (still in double precision)
@@ -125,6 +125,8 @@ public static class KoreMovingOrigin
 
     // XYZ To Ge Units
 
+
+    // Usage: var gePos = KoreMovingOrigin.XYZtoGodot(koreXYZ);
     public static Godot.Vector3 XYZtoGodot(KoreXYZVector koreXYZ)
     {
         return new Godot.Vector3(
@@ -140,6 +142,27 @@ public static class KoreMovingOrigin
             (double)godotVec.X,
             (double)godotVec.Y,
             (double)godotVec.Z
+        );
+    }
+
+    // --------------------------------------------------------------------------------------------
+
+    // Usage: var gePos = KoreMovingOrigin.XYZtoScaledGodot(koreXYZ);
+    public static Godot.Vector3 XYZtoScaledGodot(KoreXYZVector koreXYZ)
+    {
+        return new Godot.Vector3(
+            (float)((koreXYZ.X + RwOrigin.X) * RwToGeScaleMultiplier),
+            (float)((koreXYZ.Y + RwOrigin.Y) * RwToGeScaleMultiplier),
+            (float)((koreXYZ.Z + RwOrigin.Z) * RwToGeScaleMultiplier)
+        );
+    }
+
+    public static KoreXYZVector ScaledGodottoXYZ(Godot.Vector3 godotVec)
+    {
+        return new KoreXYZVector(
+            ((double)godotVec.X) / RwToGeScaleMultiplier - RwOrigin.X,
+            ((double)godotVec.Y) / RwToGeScaleMultiplier - RwOrigin.Y,
+            ((double)godotVec.Z) / RwToGeScaleMultiplier - RwOrigin.Z
         );
     }
 
@@ -162,6 +185,17 @@ public static class KoreMovingOrigin
             (float)geOffset.Y,
             (float)geOffset.Z
         );
+    }
+
+    public static KoreXYZVector RWtoOffset(KoreXYZVector rwPos)
+    {
+        // Step 1 - RW to RWOffset
+        KoreXYZVector rwOffset = RWtoRWOffset(rwPos);
+
+        // Step 2 - RWOffset to GE Offset (scaling)
+        //KoreXYZVector geOffset = RWOffsettoGeOffset(rwOffset);
+
+        return rwOffset;
     }
 
     // --------------------------------------------------------------------------------------------
