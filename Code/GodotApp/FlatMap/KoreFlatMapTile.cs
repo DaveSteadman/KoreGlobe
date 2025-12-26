@@ -42,19 +42,25 @@ public partial class KoreFlatMapTile : Node3D
         KoreLLAPoint[,] tps = TilePoints(20);
         TileMesh = TileFromPoints(tps);
 
-
         var col = KoreColorPalette.Find("LightGray");
-        col = KoreColorOps.ColorWithRGBNoise(col, 0.5f);
+        col = KoreColorOps.ColorWithRGBNoise(col, 0.8f);
         var mat = new KoreMeshMaterial("TileMat", col, 0.0f, 0.7f);
+
+        var filename = "UnitTestArtefacts/world_map_world.png";
+        var matTex = new KoreMeshMaterial("TileMatTex", col, 0.0f, 0.7f, filename);
+
         TileMesh.AddGroupWithMaterial("AllTris", mat);
         TileMesh.AddAllTrianglesToGroup("AllTris");
+        TileMesh.AddGroupWithMaterial("AllTrisTex", matTex);
+        TileMesh.AddAllTrianglesToGroup("AllTrisTex");
+
 
         KoreGodotLineMesh lineMeshNode = new KoreGodotLineMesh() { Name = $"Wireframe" };
         lineMeshNode.UpdateMesh(TileMesh);
         AddChild(lineMeshNode);
 
         KoreGodotSurfaceMesh surfaceMeshNode = new KoreGodotSurfaceMesh() { Name = $"Surface" };
-        surfaceMeshNode.UpdateMesh(TileMesh, "AllTris");
+        surfaceMeshNode.UpdateMesh(TileMesh, "AllTrisTex");
         AddChild(surfaceMeshNode);
 
         // create a debug marker at the center of the tile
@@ -122,6 +128,7 @@ public partial class KoreFlatMapTile : Node3D
         int height = points.GetLength(0);
         KoreXYZVector[,] vertices = new KoreXYZVector[width, height];
 
+        KoreUVBox uvBox = KoreMapTileCodeOps.TileGlobalUVBox(TileCode);
 
         for (int y = 0; y < height; y++)
         {
@@ -140,7 +147,7 @@ public partial class KoreFlatMapTile : Node3D
             }
         }
 
-        KoreMeshData surfaceMesh = KoreMeshDataPrimitives.Surface(vertices, KoreUVBox.Full);
+        KoreMeshData surfaceMesh = KoreMeshDataPrimitives.Surface(vertices, uvBox);
 
         // Create and return the surface mesh
         return surfaceMesh;

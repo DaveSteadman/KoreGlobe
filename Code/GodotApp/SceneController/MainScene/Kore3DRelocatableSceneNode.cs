@@ -34,6 +34,9 @@ public partial class Kore3DRelocatableSceneNode : Node3D
 
     public override void _Ready()
     {
+        // Set the Central Log filename
+        KoreCentralLog.SetFilename($"Log/Log-{KoreCentralTime.RuntimeStartTimestampUTC}.log");
+
         ConstructNodes();
 
         SceneObjects.FrameworkManager = new Kore3DFrameworkObjectManager();
