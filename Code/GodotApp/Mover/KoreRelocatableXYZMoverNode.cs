@@ -58,6 +58,7 @@ public partial class KoreRelocatableXYZMoverNode : Node3D
         ProcessMouseInput();
         ProcessMovement(delta);
         ProcessRotation(delta);
+
         UpdateLocalPosition();
     }
 
@@ -142,7 +143,7 @@ public partial class KoreRelocatableXYZMoverNode : Node3D
 
         // Convert local movement direction into world space based on current rotation
         Vector3 worldMovement = GlobalTransform.Basis * totalMovement;
-        KoreXYZVector movementVector = new KoreXYZVector(worldMovement.X, worldMovement.Y, worldMovement.Z);
+        KoreXYZVector movementVector = KoreConvPos.V3ToVec(worldMovement);
 
         // Apply movement to real-world position
         RwPosition += movementVector * MoveSpeedUnitsPerSec * delta;

@@ -16,6 +16,7 @@ public class Kore3DFrameworkObjectManager
     public Node3D? MarkerZeroNodesParent = null;
 
     public Node3D? ZeroMarkerNode = null;
+    public Node3D? ZeroMarkerShellNode = null;
     public Node3D? ZeroOffsetMarkerNode = null;
 
     public Node3D? XAxisNode = null;
@@ -29,20 +30,32 @@ public class Kore3DFrameworkObjectManager
         MarkerZeroNodesParent = new Node3D() { Name = "FrameworkMarkers" };
         parentNode.AddChild(MarkerZeroNodesParent);
 
-        CreateMarkerNode(ref ZeroMarkerNode, "ZeroMarker", KoreColorPalette.Find("Cyan"), .5f);
+        // Zero - Earth Core
+        ZeroMarkerNode = KoreMiniMeshGodotNodeFactory.CreateMarker("ZeroMarker", KoreColorPalette.Find("Cyan"), 0.5f);
         if (ZeroMarkerNode != null) MarkerZeroNodesParent.AddChild(ZeroMarkerNode);
 
-        CreateMarkerNode(ref ZeroOffsetMarkerNode, "ZeroOffsetMarker", KoreColorPalette.Find("Red"), .5f);
+        // Zero - Earth Surface (Wireframe only)
+        ZeroMarkerShellNode = KoreMiniMeshGodotNodeFactory.CreateSphere(
+            "ZeroMarkerShell",
+            position: KoreXYZVector.Zero, radius: 1f, segments: 32,
+            KoreMiniMeshMaterialPalette.DefaultMaterial, KoreColorRGB.White,
+            includeSurface: false, includeWireframe: true);
+        if (ZeroMarkerShellNode != null) ZeroMarkerNode!.AddChild(ZeroMarkerShellNode);
+
+        // Zero Offset - Relocatable Origin
+        ZeroOffsetMarkerNode = KoreMiniMeshGodotNodeFactory.CreateMarker("ZeroOffsetMarker", KoreColorPalette.Find("Red"), 0.1f);
         if (ZeroOffsetMarkerNode != null) MarkerZeroNodesParent.AddChild(ZeroOffsetMarkerNode);
 
         if (ZeroMarkerNode != null)
         {
             // Create axis spheres - offset by 1 GE unit along each axis (XYZ => RBG)
-            CreateMarkerNode(ref XAxisNode, "XAxisMarker", KoreColorPalette.Find("Red"), .2f);
+            XAxisNode = KoreMiniMeshGodotNodeFactory.CreateMarker("XAxisMarker", KoreColorPalette.Find("Red"), 0.2f, alpha: 0.75f);
             if (XAxisNode != null) MarkerZeroNodesParent.AddChild(XAxisNode);
-            CreateMarkerNode(ref YAxisNode, "YAxisMarker", KoreColorPalette.Find("Green"), .2f);
+
+            YAxisNode = KoreMiniMeshGodotNodeFactory.CreateMarker("YAxisMarker", KoreColorPalette.Find("Green"), 0.2f, alpha: 0.75f);
             if (YAxisNode != null) MarkerZeroNodesParent.AddChild(YAxisNode);
-            CreateMarkerNode(ref ZAxisNode, "ZAxisMarker", KoreColorPalette.Find("Blue"), .2f);
+
+            ZAxisNode = KoreMiniMeshGodotNodeFactory.CreateMarker("ZAxisMarker", KoreColorPalette.Find("Blue"), 0.2f, alpha: 0.75f);
             if (ZAxisNode != null) MarkerZeroNodesParent.AddChild(ZAxisNode);
         }
         PlaceNodes();
@@ -53,7 +66,7 @@ public class Kore3DFrameworkObjectManager
     public void UpdateNodes()
     {
         // Are we in an update cycle?
-        if (!KoreMovingOrigin.IsNewOffsetPending()) return;
+        if (!KoreMovingOrigin.IsChangePeriod()) return;
 
         // calc and place the nodes
         PlaceNodes();
@@ -79,11 +92,14 @@ public class Kore3DFrameworkObjectManager
 
         if (ZeroMarkerNode != null)
         {
-            if (XAxisNode != null) XAxisNode.Position = new Godot.Vector3(1.0f, 0.0f, 0.0f);
-            if (YAxisNode != null) YAxisNode.Position = new Godot.Vector3(0.0f, 1.0f, 0.0f);
-            if (ZAxisNode != null) ZAxisNode.Position = new Godot.Vector3(0.0f, 0.0f, 1.0f);
-
+            if (XAxisNode != null) XAxisNode.Position = KoreMovingOrigin.RWtoGodotOffset(new KoreXYZVector(1.0f, 0.0f, 0.0f));
+            if (YAxisNode != null) YAxisNode.Position = KoreMovingOrigin.RWtoGodotOffset(new KoreXYZVector(0.0f, 1.0f, 0.0f));
+            if (ZAxisNode != null) ZAxisNode.Position = KoreMovingOrigin.RWtoGodotOffset(new KoreXYZVector(0.0f, 0.0f, 1.0f));
         }
+
+        string p1Str = KoreConvPos.Vector3Str(ZeroOffsetMarkerNode!.Position);
+        string p2Str = KoreConvPos.Vector3Str(ZeroMarkerNode!.Position);
+        GD.Print($"ZeroOffsetMarkerNode.Position {p1Str} // ZeroMarkerNode.Position {p2Str}");
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -92,29 +108,7 @@ public class Kore3DFrameworkObjectManager
     {
         if (nodeRef != null) return;
 
-        // Create a marker node using KoreMiniMesh (similar to CreateDebugMarker)
-        nodeRef = new Node3D() { Name = nodeName };
-
-        // Convert Godot Color to KoreColorRGB
-        // KoreColorRGB koreColor = new KoreColorRGB(color.R, color.G, color.B);
-
-        // Create material from color
-        koreColor.A = KoreColorIO.FloatToByte(0.75f);
-        KoreMiniMeshMaterial mat = new KoreMiniMeshMaterial("TempMaterial", koreColor, 0.4f, 0.4f);
-        KoreColorRGB lineCol = KoreColorRGB.White;
-
-        // Create sphere mesh using KoreMiniMesh primitives
-        KoreMiniMesh sphereMesh = KoreMiniMeshPrimitives.BasicSphere(KoreXYZVector.Zero, size, 16, mat, lineCol);
-
-        // Add colored surface
-        KoreMiniMeshGodotColoredSurface coloredMeshNode = new KoreMiniMeshGodotColoredSurface() { Name = nodeName + "_Surface" };
-        coloredMeshNode.UpdateMesh(sphereMesh, "All");
-        nodeRef.AddChild(coloredMeshNode);
-
-        // Add wireframe lines
-        KoreMiniMeshGodotLine lineMeshNode = new KoreMiniMeshGodotLine() { Name = nodeName + "_Wire" };
-        lineMeshNode.UpdateMesh(sphereMesh, "All");
-        nodeRef.AddChild(lineMeshNode);
+        nodeRef = KoreMiniMeshGodotNodeFactory.CreateMarker(nodeName, koreColor, size, alpha: 0.75f);
     }
 
 }

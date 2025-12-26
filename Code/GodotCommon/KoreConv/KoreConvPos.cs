@@ -67,4 +67,15 @@ public static class KoreConvPos
         };
         return points;
     }
+
+    // ---------------------------------------------------------------------------------------------------
+
+    // Custom string output of a godot vector3
+    // Usage: string posStr = KoreConvPos.Vector3Str(pos, dp);
+    public static string Vector3Str(Vector3 pos, int dp = 2)
+    {
+        string format = $"F{dp}";
+        return $"(X:{pos.X.ToString(format)}, Y:{pos.Y.ToString(format)}, Z:{pos.Z.ToString(format)})";
+    }
+
 }

@@ -21,10 +21,10 @@ public partial class Kore3DRelocatableSceneNode : Node3D
     Node3D? DebugMarkerNode = null;
 
     // UI Timers
-    private float UITimer = 0.0f;
+    private float UITimer         = 0.0f;
     private float UITimerInterval = 0.1f; // 100ms
 
-    private float UISlowTimer = 0.0f;
+    private float UISlowTimer         = 0.0f;
     private float UISlowTimerInterval = 1f;
 
     // ---------------------------------------------------------------------------------------------
@@ -34,8 +34,6 @@ public partial class Kore3DRelocatableSceneNode : Node3D
     public override void _Ready()
     {
         ConstructNodes();
-
-        // CreateDebugMarker();
 
         SceneObjects.FrameworkManager = new Kore3DFrameworkObjectManager();
         SceneObjects.FrameworkManager.CreateNodes(SceneObjects.ZeroNode!);
@@ -48,10 +46,6 @@ public partial class Kore3DRelocatableSceneNode : Node3D
 
     public override void _Process(double delta)
     {
-        // This method is called every frame.
-        // You can use 'delta' to make frame-rate independent calculations.
-        // GD.Print("Processing frame with delta: " + delta);
-
         if (KoreCentralTime.CheckTimer(ref UISlowTimer, UISlowTimerInterval))
         {
             // Debug placing of the zero offset - just for testing
@@ -62,60 +56,25 @@ public partial class Kore3DRelocatableSceneNode : Node3D
 
             Vector3 geXYZ = SceneObjects.WorldCameraMount!.Position;
 
+            KoreXYZVector newZeroOffsetVec;
+
             if (geXYZ.Length() > 1.0f)
             {
-                KoreXYZVector posVec = KoreConvPos.V3ToVec(geXYZ);
-                posVec.Magnitude = 1;
-                KoreMovingOrigin.QueueNewOffset(posVec);
+                newZeroOffsetVec = KoreConvPos.V3ToVec(geXYZ);
+                newZeroOffsetVec.Magnitude = 1;
 
-                GD.Print($"posVec: {posVec}");
+                GD.Print($"posVec: {newZeroOffsetVec}");
             }
             else
             {
-                KoreMovingOrigin.QueueNewOffset(KoreXYZVector.Zero);
+                newZeroOffsetVec = KoreXYZVector.Zero;
 
                 GD.Print($"Zeroing origin");
             }
+            KoreMovingOrigin.QueueNewOffset(newZeroOffsetVec);
 
-
-            // KoreXYZVector geXYZ2 = KoreConvPos.V3ToVec(geXYZ);
-
-            // // The camera is at an absolute position, so get the vector to the zero point
-            // KoreXYZVector vecZeroPToCam = KoreXYZVector.Zero.XYZTo(geXYZ2);
-
-            // // Turn that into a lat-long-alt
-            // KoreLLPoint camLLPos = KoreLLPoint.FromXYZ(vecZeroPToCam);
-            // KoreLLAPoint camLLA = new KoreLLAPoint() {
-            //     LatDegs = camLLPos.LatDegs,
-            //     LonDegs = camLLPos.LonDegs,
-            //     RadiusM = Kore3DRelocatableSceneConsts.GeEarthRadius };
-
-            // GD.Print($"XYZOffset:{vecZeroPToCam.X:F2},{vecZeroPToCam.Y:F2},{vecZeroPToCam.Z:F2} // CamLLA:{camLLA.LatDegs:F2},{camLLA.LonDegs:F2},{camLLA.RadiusM:F2}");
-
-            // // Lerp 10% of the way to the camera position, but fix the alt at 0
-            // // KoreLLAPoint newZeroPos = KoreLLAPointOps.GreatCircleInterpolation(
-            // //     KoreZeroOffset.AppliedZeroPosLLA, // current position
-            // //     camLLA, // our target position
-            // //     0.1);   // 10% of the way there
-            // // newZeroPos.RadiusM = 10;
-
-            // // Set the new position
-            // KoreXYZVector newZeroXYZ = camLLA.ToXYZ();
-
-            //DemoNode?.SetPosition(KoreConvPos.VecToV3(newZeroXYZ));
-
-            //KoreRelocateOps.QueueNewOffset(newZeroXYZ);
-
-
-            //KoreZeroOffset.SetLLA(newZeroPos);
-
-            // Get the camera string and save it to the config
-            // string cameraString = KoreGodotMainSceneFactory.WorldCameraMount?.GetMoverString() ?? string.Empty;
-            // KoreSimFactory.Instance.KoreConfig.Set("CameraPosition", cameraString);
-            // KoreSimFactory.Instance.SaveConfig();
-
-            //AggressiveMemoryCleanup();
         }
+        SceneObjects.FrameworkManager!.UpdateNodes();
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -180,54 +139,6 @@ public partial class Kore3DRelocatableSceneNode : Node3D
         // 5. Log memory usage
         long memoryAfter = GC.GetTotalMemory(false);
         //GD.Print($"Memory after aggressive cleanup: {memoryAfter / 1024 / 1024}MB");
-    }
-
-    // --------------------------------------------------------------------------------------------
-    // MARK: Resize
-    // --------------------------------------------------------------------------------------------
-
-    // Read basic information about the viewport
-
-    // public void UpdateCurrentViewportSize()
-    // {
-    //     Godot.Vector2 vSize = GetViewport().GetVisibleRect().Size;
-    //     KoreGodotMainSceneFactory.ViewSize.LatestValue = new KoreXYRect(0, 0, vSize.X, vSize.Y);
-
-    //     Camera3D? camera = GetViewport().GetCamera3D();
-    //     if (camera != null)
-    //         KoreGodotMainSceneFactory.CameraFOV.LatestValue = camera.Fov;
-
-    //     //GD.Print($"MainScene: Viewport size updated to: {KoreGodotMainSceneFactory.ViewSize.LatestValue} // Camera FOV: {KoreGodotMainSceneFactory.CameraFOV.LatestValue:F2}");
-    // }
-
-
-    // --------------------------------------------------------------------------------------------
-    // MARK: Debug Marker
-    // --------------------------------------------------------------------------------------------
-
-    // Create a debug Magenta sphere at the zero point
-
-    private void CreateDebugMarker()
-    {
-        float debugRadius = 0.25f;
-
-        DebugMarkerNode = new Node3D() { Name = "ZeroNodeDebugMarker - Magenta" };
-        AddChild(DebugMarkerNode);
-
-        // Core Sphere
-        {
-            KoreMiniMeshMaterial mat = KoreMiniMeshMaterialPalette.Find("GreenGlass");
-            KoreColorRGB lineCol = KoreColorRGB.White;
-            KoreMiniMesh sphereMesh = KoreMiniMeshPrimitives.BasicSphere(KoreXYZVector.Zero, debugRadius, 16, mat, lineCol);
-
-            KoreMiniMeshGodotColoredSurface coloredMeshNode = new KoreMiniMeshGodotColoredSurface() { Name = "ZoneNodeMarker" };
-            coloredMeshNode.UpdateMesh(sphereMesh, "All");
-            DebugMarkerNode.AddChild(coloredMeshNode);
-
-            KoreMiniMeshGodotLine lineMeshNode1 = new KoreMiniMeshGodotLine() { Name = "ZoneNodeMarker - Wire" };
-            lineMeshNode1.UpdateMesh(sphereMesh, "All");
-            DebugMarkerNode.AddChild(lineMeshNode1);
-        }
     }
 
 }

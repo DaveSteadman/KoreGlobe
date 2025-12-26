@@ -32,6 +32,15 @@ public struct KoreMiniMeshMaterial : IEquatable<KoreMiniMeshMaterial>
         Roughness = KoreNumericRange<float>.ZeroToOne.Apply(roughness);
     }
 
+    // Usage: new KoreMiniMeshMaterial(KoreColorRGB.Red, metallic: 1.0f, roughness: 0.2f);
+    public KoreMiniMeshMaterial(KoreColorRGB baseColor, float metallic = 0.0f, float roughness = 0.7f)
+    {
+        Name      = "UnnamedMaterial";
+        BaseColor = baseColor;
+        Metallic  = KoreNumericRange<float>.ZeroToOne.Apply(metallic);
+        Roughness = KoreNumericRange<float>.ZeroToOne.Apply(roughness);
+    }
+
     // --------------------------------------------------------------------------------------------
     // MARK: Default materials
     // --------------------------------------------------------------------------------------------

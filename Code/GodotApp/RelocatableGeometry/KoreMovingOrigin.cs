@@ -70,16 +70,16 @@ public static class KoreMovingOrigin
     {
         if (ChangePending)
         {
-            RwOrigin = PendingRwOrigin;
+            RwOrigin      = PendingRwOrigin;
             ChangePending = false;
-            ChangePeriod = true;
+            ChangePeriod  = true;
         }
     }
 
     // --------------------------------------------------------------------------------------------
 
     // Usage: if (KoreMovingOrigin.IsChangePeriod()) { ... }
-    public static bool IsChangePeriod() => ChangePeriod;
+    public static bool IsChangePeriod()    => ChangePeriod;
     public static void ClearChangePeriod() => ChangePeriod = false;
 
     // --------------------------------------------------------------------------------------------

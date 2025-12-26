@@ -108,7 +108,7 @@ public static class KoreMiniMeshMaterialPalette
     // --------------------------------------------------------------------------------------------
 
     // Find material by name, returns MattWhite if not found
-    // Usage: KoreMiniMeshMaterial mat = KoreMiniMeshMaterialPalette.Find("MattDarkGreen");
+    // Usage: KoreMiniMeshMaterial mat = KoreMiniMeshMaterialPalette.Find("SmokedGlass");
     public static KoreMiniMeshMaterial Find(string name)
     {
         foreach (var material in MaterialsList)
