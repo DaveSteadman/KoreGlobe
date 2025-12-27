@@ -157,7 +157,7 @@ public static class KoreNumericUtils
 
         return RandomInRange(min, max);
     }
-    
+
     // ---------------------------------------------------------------------------------------------
 
     // Usage: T e = KoreNumericUtils.Min3(1, 2, 3);
@@ -177,7 +177,7 @@ public static class KoreNumericUtils
         if (c > max) max = c;
         return max;
     }
-    
+
     public static T Mid3<T>(T a, T b, T c) where T : INumber<T>
     {
         if ((a < b && a > c) || (a > b && a < c)) return a;

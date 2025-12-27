@@ -35,10 +35,12 @@ public static class KoreMapTileCodeOps
         // Work out the UVs for the tile
         // Horizontally, U goes from 0.0 (west) to 1.0 (east)
         // Vertically, V goes from 0.0 (northpole) to 1.0 (southpole)
-        double northV = KoreNumericUtils.ScaleToRange(latMaxDegs, 90, -90, 0, 1);
-        double southV = KoreNumericUtils.ScaleToRange(latMinDegs, 90, -90, 0, 1);
+        double northV = 1 - KoreNumericUtils.ScaleToRange(latMaxDegs, -90, 90, 1, 0);
+        double southV = 1 - KoreNumericUtils.ScaleToRange(latMinDegs, -90, 90, 1, 0);
         double westU  = KoreNumericUtils.ScaleToRange(lonMinDegs, -180, 180, 0, 1);
         double eastU  = KoreNumericUtils.ScaleToRange(lonMaxDegs, -180, 180, 0, 1);
+
+        KoreCentralLog.AddEntry($"KoreMapTileCodeOps.TileGlobalUVBox: Tile {tileCode} UVs: W={westU:F4}, E={eastU:F4}, N={northV:F4}, S={southV:F4}");
 
         return new KoreUVBox(westU, northV, eastU, southV);
     }

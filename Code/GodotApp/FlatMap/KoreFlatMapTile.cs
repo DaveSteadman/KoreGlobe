@@ -1,4 +1,8 @@
+// <fileheader>
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 
 using Godot;
@@ -54,7 +58,6 @@ public partial class KoreFlatMapTile : Node3D
         TileMesh.AddGroupWithMaterial("AllTrisTex", matTex);
         TileMesh.AddAllTrianglesToGroup("AllTrisTex");
 
-
         KoreGodotLineMesh lineMeshNode = new KoreGodotLineMesh() { Name = $"Wireframe" };
         lineMeshNode.UpdateMesh(TileMesh);
         AddChild(lineMeshNode);
@@ -96,8 +99,8 @@ public partial class KoreFlatMapTile : Node3D
         KoreLLAPoint[,] points = new KoreLLAPoint[pointsPerSide, pointsPerSide];
 
         // Get the corner values and step sizes
-        double latMinDegs = boundsbox.MinLatDegs; // Southern edge
         double latMaxDegs = boundsbox.MaxLatDegs; // Northern edge
+        double latMinDegs = boundsbox.MinLatDegs; // Southern edge
         double lonMinDegs = boundsbox.MinLonDegs; // Western edge
         double lonMaxDegs = boundsbox.MaxLonDegs; // Eastern edge
 
@@ -109,7 +112,13 @@ public partial class KoreFlatMapTile : Node3D
         KoreNumeric1DArray<double> latVals = KoreNumeric1DArrayOps<double>.ListForRange(latMaxDegs, latMinDegs, pointsPerSide);
         KoreNumeric1DArray<double> lonVals = KoreNumeric1DArrayOps<double>.ListForRange(lonMinDegs, lonMaxDegs, pointsPerSide);
 
+
+        // List the latVals into a string for debugging
+        string latStr = string.Join(", ", latVals.Select(v => v.ToString("F2")));
+        KoreCentralLog.AddEntry($"KoreFlatMapTile.TilePoints: Tile {TileCode} latVals: {latStr}");
+
         // Iterate over the points, getting the LLA for each point
+        // So the TL is 0,0
         for (int y = 0; y < pointsPerSide; y++)
         {
             for (int x = 0; x < pointsPerSide; x++)
@@ -124,9 +133,9 @@ public partial class KoreFlatMapTile : Node3D
     public KoreMeshData TileFromPoints(KoreLLAPoint[,] points)
     {
         // Convert LLA points to XYZ vertices
-        int width = points.GetLength(1);
         int height = points.GetLength(0);
-        KoreXYZVector[,] vertices = new KoreXYZVector[width, height];
+        int width = points.GetLength(1);
+        KoreXYZVector[,] vertices = new KoreXYZVector[height, width];
 
         KoreUVBox uvBox = KoreMapTileCodeOps.TileGlobalUVBox(TileCode);
 
@@ -143,9 +152,13 @@ public partial class KoreFlatMapTile : Node3D
 
                 // Convert to GE Units and put into array
                 //KoreXYZVector currOffsetGeXYZ = currOffsetXYZ.Scale(KoreMovingOrigin.RwToGeScaleMultiplier);
-                vertices[x, y] = currOffsetXYZ;
+                vertices[y, x] = currOffsetXYZ;
             }
         }
+
+        // debug log to uvbox info
+        string uvboxstr = $"TL={uvBox.TopLeft}, BR={uvBox.BottomRight}";
+        KoreCentralLog.AddEntry($"KoreFlatMapTile.TileFromPoints: Tile {TileCode} UV Box: {uvboxstr}");
 
         KoreMeshData surfaceMesh = KoreMeshDataPrimitives.Surface(vertices, uvBox);
 

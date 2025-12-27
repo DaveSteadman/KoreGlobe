@@ -1,3 +1,4 @@
+// <fileheader>
 
 using System;
 using System.Collections.Generic;
@@ -24,18 +25,28 @@ public class KoreFlatMapManager
         ParentNode = parentNode;
         ParentNode.AddChild(FlatTileCollectionNode);
 
-        // Create the tilecode and tile mesh data
-        KoreMapTileCode tileCode = new KoreMapTileCode("BF");
-        KoreFlatMapTile tile = new KoreFlatMapTile(tileCode);
+        bool testOne = false;
 
-        List<KoreMapTileCode> lvl0Codes = KoreMapTileCode.Lvl0Codes();
-
-        foreach (KoreMapTileCode tc in lvl0Codes)
+        if (testOne)
         {
-            KoreFlatMapTile t = new KoreFlatMapTile(tc);
-            FlatTileCollectionNode.AddChild(t);
-        }
+            // Create the tilecode and tile mesh data
+            KoreMapTileCode tileCode1 = new KoreMapTileCode("BF");
+            KoreFlatMapTile tile1 = new KoreFlatMapTile(tileCode1);
+            FlatTileCollectionNode.AddChild(tile1);
 
+            KoreMapTileCode tileCode2 = new KoreMapTileCode("CG");
+            KoreFlatMapTile tile2 = new KoreFlatMapTile(tileCode2);
+            FlatTileCollectionNode.AddChild(tile2);
+        }
+        else
+        {
+            List<KoreMapTileCode> lvl0Codes = KoreMapTileCode.Lvl0Codes();
+            foreach (KoreMapTileCode tc in lvl0Codes)
+            {
+                KoreFlatMapTile t = new KoreFlatMapTile(tc);
+                FlatTileCollectionNode.AddChild(t);
+            }
+        }
 
     }
 }

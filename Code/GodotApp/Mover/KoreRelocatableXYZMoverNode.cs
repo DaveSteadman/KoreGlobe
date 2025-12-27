@@ -14,23 +14,23 @@ public partial class KoreRelocatableXYZMoverNode : Node3D
 {
     public bool IsEnabled = true;
 
-    Vector3 CamDirection = new Vector3();
-    Vector3 CamRotation = new Vector3();
+    Vector3 CamDirection  = new Vector3();
+    Vector3 CamRotation   = new Vector3();
     Vector3 MouseMovement = new Vector3(); // Accumulated mouse movement for this frame
     public float RotateSpeedDegsPerSec = 1.0f;
-    public float MoveSpeedUnitsPerSec = 15.0f;
+    public float MoveSpeedUnitsPerSec  = 15.0f;
 
-    KoreXYZVector RwPosition = KoreXYZVector.Zero;  // Real-world position in meters
+    KoreXYZVector RwPosition    = KoreXYZVector.Zero;  // Real-world position in meters
     KoreXYZVector RwOrientation = KoreXYZVector.Zero; // Real-world orientation (pitch, yaw, roll)
 
     // Mouse controls
-    public float MouseSensitivity = 0.002f; // Radians per pixel
-    public float MouseWheelSensitivity = 1.5f; // Units per wheel step
+    public float MouseSensitivity         = 0.002f; // Radians per pixel
+    public float MouseWheelSensitivity    = 1.5f; // Units per wheel step
     public float MouseMovementSensitivity = 0.1f; // Units per pixel for movement
 
-    private bool _isRightMouseDown = false;
+    private bool _isRightMouseDown  = false;
     private bool _isMiddleMouseDown = false;
-    private Vector2 _lastMousePosition = Vector2.Zero;
+    private Vector2 _lastMousePosition     = Vector2.Zero;
     private Vector2 _accumulatedMouseDelta = Vector2.Zero; // Accumulated mouse movement for this frame
 
     // Event-based key tracking (replaces global Input singleton polling)
