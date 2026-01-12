@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://ced7xhu6jah7w"]
+[gd_scene format=3 uid="uid://ced7xhu6jah7w"]
 
 [ext_resource type="Script" uid="uid://b5kqcrwbxflul" path="res://Code/GodotApp/SceneController/MainScene/Kore3DRelocatableSceneNode.cs" id="1_i0f6g"]
 
@@ -7,7 +7,7 @@
 [sub_resource type="Environment" id="Environment_8ju71"]
 sky = SubResource("Sky_8ju71")
 ambient_light_source = 2
-ambient_light_color = Color(0.7152497, 0.84563386, 0.87174547, 1)
+ambient_light_color = Color(0.7689767, 0.89221424, 0.9011172, 1)
 reflected_light_source = 2
 
 [sub_resource type="CameraAttributesPhysical" id="CameraAttributesPhysical_xb4mg"]

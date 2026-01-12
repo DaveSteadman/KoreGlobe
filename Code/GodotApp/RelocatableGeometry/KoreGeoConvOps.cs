@@ -17,16 +17,7 @@ public struct KorePosV3
     public Vector3 VecNorth;
 }
 
-public struct KoreEntityV3
-{
-    public Vector3 Pos;
-    public Vector3 PosAbove;
-    public Vector3 PosAhead;
-    public Vector3 PosNorth;
-    public Vector3 VecUp;
-    public Vector3 VecForward;
-    public Vector3 VecNorth;
-}
+
 
 public static class KoreGeoConvOps
 {

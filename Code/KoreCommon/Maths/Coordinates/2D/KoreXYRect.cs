@@ -6,6 +6,14 @@ using System;
 
 namespace KoreCommon;
 
+public enum KoreXYRectEdge
+{
+    Top,
+    Bottom,
+    Left,
+    Right
+};
+
 // enum to define rect positions
 public enum KoreXYRectPosition
 {
@@ -124,6 +132,22 @@ public struct KoreXYRect
             KoreXYRectPosition.LeftCenter   => LeftCenter,
             KoreXYRectPosition.RightCenter  => RightCenter,
             _ => throw new ArgumentOutOfRangeException(nameof(position), position, null)
+        };
+    }
+
+    // --------------------------------------------------------------------------------------------
+    // MARK: Edges
+    // --------------------------------------------------------------------------------------------
+
+    public KoreXYLine EdgeLine(KoreXYRectEdge edge)
+    {
+        return edge switch
+        {
+            KoreXYRectEdge.Top    => TopLine,
+            KoreXYRectEdge.Bottom => BottomLine,
+            KoreXYRectEdge.Left   => LeftLine,
+            KoreXYRectEdge.Right  => RightLine,
+            _ => throw new ArgumentOutOfRangeException(nameof(edge), edge, null)
         };
     }
 

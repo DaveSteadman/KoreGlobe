@@ -80,7 +80,7 @@ public partial class KoreZeroNodeMapTile : Node3D
 
     // private KoreMeshData TileMesh = new();
 
-    private Label3D TileCodeLabel;
+    private Label3D? TileCodeLabel;
     private List<Node3D> GEElements = new List<Node3D>();
 
     // Internal timings - list to add some randomness to the update process
@@ -146,6 +146,8 @@ public partial class KoreZeroNodeMapTile : Node3D
         // Set the core Tilecode and node name.
         TileCode = tileCode;
         Name     = tileCode.ToString();
+
+        Filepaths = new KoreMapTileFilepaths();
 
         KoreCentralLog.AddEntry($"Creating KoreZeroNodeMapTile: {TileCode}");
 

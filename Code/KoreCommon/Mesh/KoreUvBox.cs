@@ -210,6 +210,21 @@ public struct KoreUVBox
         return new KoreUVBox(new KoreXYVector(leftValue, topValue), new KoreXYVector(rightValue, bottomValue));
     }
 
+    public KoreUVBox BoxFromGrid(Kore2DGridPos gridPosWithUvBox)
+    {
+        // Get the fractional positions for the edges of this cell in the grid
+        var (leftFraction, rightFraction, topFraction, bottomFraction) = gridPosWithUvBox.CellEdgeFractions();
+
+        // Calculate the UV coordinates by interpolating within this UV box
+        double leftValue   = TopLeft.X + leftFraction   * (BottomRight.X - TopLeft.X);
+        double rightValue  = TopLeft.X + rightFraction  * (BottomRight.X - TopLeft.X);
+        double topValue    = TopLeft.Y + topFraction    * (BottomRight.Y - TopLeft.Y);
+        double bottomValue = TopLeft.Y + bottomFraction * (BottomRight.Y - TopLeft.Y);
+
+        // Return a new KoreUVBox using the calculated values
+        return new KoreUVBox(new KoreXYVector(leftValue, topValue), new KoreXYVector(rightValue, bottomValue));
+    }
+
 }
 
 

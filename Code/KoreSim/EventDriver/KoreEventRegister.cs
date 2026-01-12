@@ -35,10 +35,10 @@ public class KoreEventRegister
 
 
 
-    public const string KeyEntityName = "EntityName"; // KoreEventRegister.KeyEntityName
+    public const string KeyEntityName  = "EntityName"; // KoreEventRegister.KeyEntityName
     public const string KeyElementName = "ElementName"; // KoreEventRegister.KeyElementName
 
-    public const string KeyEventTime = "EventTime"; // KoreEventRegister.KeyEventTime
+    public const string KeyEventTime   = "EventTime"; // KoreEventRegister.KeyEventTime
 
 
     // --------------------------------------------------------------------------------------------
@@ -48,7 +48,7 @@ public class KoreEventRegister
     {
         [KeyEventType] = "EmptyEvent",
         [KeyEventTime] = KoreCentralTime.RuntimeSecs8Chars
-    };  
+    };
     public bool IsEmptyEvent(KoreStringDictionary ev) => ev.Count == 0;
 
     // --------------------------------------------------------------------------------------------

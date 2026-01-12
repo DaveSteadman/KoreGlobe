@@ -18,12 +18,18 @@ public class KoreFlatMapManager
     Node3D? ParentNode = null;
     Node3D FlatTileCollectionNode = new Node3D() { Name = "FlatTileCollection" };
 
+    public KoreMeshMaterial? GlobalTileMaterial = null;
+
     public static double GeRadius = 2;
+
+    // --------------------------------------------------------------------------------------------
 
     public void CreateTestTile(Node3D parentNode)
     {
         ParentNode = parentNode;
         ParentNode.AddChild(FlatTileCollectionNode);
+
+        CreateDefaultMaterial();
 
         bool testOne = false;
 
@@ -31,11 +37,11 @@ public class KoreFlatMapManager
         {
             // Create the tilecode and tile mesh data
             KoreMapTileCode tileCode1 = new KoreMapTileCode("BF");
-            KoreFlatMapTile tile1 = new KoreFlatMapTile(tileCode1);
+            KoreFlatMapTile tile1 = new KoreFlatMapTile(tileCode1, GlobalTileMaterial);
             FlatTileCollectionNode.AddChild(tile1);
 
             KoreMapTileCode tileCode2 = new KoreMapTileCode("CG");
-            KoreFlatMapTile tile2 = new KoreFlatMapTile(tileCode2);
+            KoreFlatMapTile tile2 = new KoreFlatMapTile(tileCode2, GlobalTileMaterial);
             FlatTileCollectionNode.AddChild(tile2);
         }
         else
@@ -43,10 +49,21 @@ public class KoreFlatMapManager
             List<KoreMapTileCode> lvl0Codes = KoreMapTileCode.Lvl0Codes();
             foreach (KoreMapTileCode tc in lvl0Codes)
             {
-                KoreFlatMapTile t = new KoreFlatMapTile(tc);
+                KoreFlatMapTile t = new KoreFlatMapTile(tc, GlobalTileMaterial);
                 FlatTileCollectionNode.AddChild(t);
             }
         }
+    }
 
+    // --------------------------------------------------------------------------------------------
+
+    public void CreateDefaultMaterial()
+    {
+        var col = KoreColorPalette.Find("LightGray");
+
+        var filename = "UnitTestArtefacts/world_map_world.png";
+        GlobalTileMaterial = new KoreMeshMaterial("TileMatTex", col, 0.0f, 0.7f, filename);
     }
 }
+
+

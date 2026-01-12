@@ -121,6 +121,17 @@ public static class KoreNumericUtils
         return ScaleToRange(val, sourceRange.Min, sourceRange.Max, targetRange.Min, targetRange.Max);
     }
 
+    // ScaleToUncheckedRange: Like ScaleToRange but does not check if val is within source range or if the
+    // output range is flipped from the min/max values.
+    // Usage: T e = KoreNumericUtils.ScaleToUncheckedRange(5, 0, 10, 200, 100); // Note descending target range
+    public static T ScaleToUncheckedRange<T>(T val, T sourcerangemin, T sourcerangemax, T targetrangemin, T targetrangemax) where T : INumber<T>
+    {
+        // Perform and return the scaling
+        T sourceRange = sourcerangemax - sourcerangemin;
+        T targetRange = targetrangemax - targetrangemin;
+
+        return ((val - sourcerangemin) / sourceRange) * targetRange + targetrangemin;
+    }
     // ---------------------------------------------------------------------------------------------
 
     // Fraction is the fraction of the max value to use: 0..1 (values beyond this extrapolate)

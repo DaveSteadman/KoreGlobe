@@ -17,15 +17,18 @@ public partial class KoreFlatMapTile : Node3D
 {
     public KoreMapTileCode TileCode;
     public KoreMeshData? TileMesh = null;
+    KoreMeshMaterial? TileMaterial = null;
 
     public KoreFlatMapTileMarkers Markers = new KoreFlatMapTileMarkers();
 
     KoreLLAPoint CenterLLA = new KoreLLAPoint();
     KoreXYZVector CenterXYZ = new KoreXYZVector();
 
-    public KoreFlatMapTile(KoreMapTileCode tileCode)
+    public KoreFlatMapTile(KoreMapTileCode tileCode, KoreMeshMaterial? globalTileMaterial)
     {
         TileCode = tileCode;
+        TileMaterial = globalTileMaterial;
+
         Name = $"FlatMapTile_{TileCode.ToString()}";
 
         CenterLLA = new KoreLLAPoint()
@@ -50,13 +53,14 @@ public partial class KoreFlatMapTile : Node3D
         col = KoreColorOps.ColorWithRGBNoise(col, 0.8f);
         var mat = new KoreMeshMaterial("TileMat", col, 0.0f, 0.7f);
 
-        var filename = "UnitTestArtefacts/world_map_world.png";
-        var matTex = new KoreMeshMaterial("TileMatTex", col, 0.0f, 0.7f, filename);
-
         TileMesh.AddGroupWithMaterial("AllTris", mat);
         TileMesh.AddAllTrianglesToGroup("AllTris");
-        TileMesh.AddGroupWithMaterial("AllTrisTex", matTex);
-        TileMesh.AddAllTrianglesToGroup("AllTrisTex");
+
+        if (TileMaterial is KoreMeshMaterial tileMat)
+        {
+            TileMesh.AddGroupWithMaterial("AllTrisTex", tileMat);
+            TileMesh.AddAllTrianglesToGroup("AllTrisTex");
+        }
 
         KoreGodotLineMesh lineMeshNode = new KoreGodotLineMesh() { Name = $"Wireframe" };
         lineMeshNode.UpdateMesh(TileMesh);

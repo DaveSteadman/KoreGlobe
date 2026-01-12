@@ -12,6 +12,7 @@ using Godot;
 public partial class KoreWorldPosNode : Node3D
 {
     private KoreLLAPoint CurrLLA  = KoreLLAPoint.Zero;
+    private KoreAzEl     CurrAzEl = KoreAzEl.Zero;
     private bool         PosMoved = false;
 
     // --------------------------------------------------------------------------------------------
@@ -42,18 +43,28 @@ public partial class KoreWorldPosNode : Node3D
         PosMoved = true;
     }
 
+    public void SetAngles(KoreAzEl newAzEl)
+    {
+        CurrAzEl = newAzEl;
+        PosMoved = true;
+    }
+
     public void UpdateOffsetPosition()
     {
         // // Set the local position from the parent object
         // Vector3 newPos = KoreGeoConvOps.RwToOffsetGe(CurrLLA);
+        // KoreXYZVector posXYZ = KoreMovingOrigin.RWtoOffset(CurrLLA.ToXYZ());
 
-        // // Set the local position from the parent object
-        // var transform    = GlobalTransform;
-        // transform.Origin = newPos;
-        // GlobalTransform  = transform;
+        var orientation = KoreMovingOriginOps.OrientationAtPoint(CurrLLA, CurrAzEl);
 
-        // // Clear the moved flag
-        // PosMoved = false;
+        Position = orientation.Pos;
+
+        Vector3 lookTarget = orientation.VecForward;
+        Vector3 upVector   = orientation.VecUp;
+        LookAt(lookTarget, upVector);
+
+        // Clear the moved flag
+        PosMoved = false;
     }
 
     // --------------------------------------------------------------------------------------------

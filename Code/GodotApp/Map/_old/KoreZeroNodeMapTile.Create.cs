@@ -131,7 +131,7 @@ public partial class KoreZeroNodeMapTile : Node3D
 
         // create the godot renderer for the color mesh
         ColorMeshNode = new KoreColorMeshGodot() { Visible = false, Name = "ColorMeshNode" };
-        ColorMeshNode.UpdateMeshBackground(TileColorMesh);
+        ColorMeshNode.UpdateMeshBackground(TileColorMesh!);
     }
 
     private void MainThreadColorMesh()
