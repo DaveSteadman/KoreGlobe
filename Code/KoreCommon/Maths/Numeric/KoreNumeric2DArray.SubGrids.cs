@@ -86,10 +86,10 @@ public partial class KoreNumeric2DArray<T> where T : struct, INumber<T>
 
     // --------------------------------------------------------------------------------------------
 
-    public KoreNumeric2DArray<T> GetInterpolatedSubgrid(Kore2DGridPos gridPos, int subgridWidth, int subgridHeight)
+    public KoreNumeric2DArray<T> GetInterpolatedSubgrid(KoreNumeric2DPosition<int> gridPos, int subgridWidth, int subgridHeight)
     {
-        int totalSubgridWidth  = gridPos.Width * subgridWidth;
-        int totalSubgridHeight = gridPos.Height * subgridHeight;
+        int totalSubgridWidth  = Convert.ToInt32(gridPos.ExtentX) * subgridWidth;
+        int totalSubgridHeight = Convert.ToInt32(gridPos.ExtentY) * subgridHeight;
 
         KoreNumeric2DArray<T> interpolatedGrid = GetInterpolatedGrid(totalSubgridWidth, totalSubgridHeight);
 

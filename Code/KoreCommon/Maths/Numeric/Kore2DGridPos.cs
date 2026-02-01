@@ -19,7 +19,7 @@ public struct Kore2DGridPos
     // Get the fractions across the box (starting in top left) for the edges of the Position
     public float TopEdgeFraction    => (float)(PosY)     / (float)Height;
     public float BottomEdgeFraction => (float)(PosY + 1) / (float)Height;
-    public float LeftEdgeFraction   => (float)(PosX)    / (float)Width;
+    public float LeftEdgeFraction   => (float)(PosX)     / (float)Width;
     public float RightEdgeFraction  => (float)(PosX + 1) / (float)Width;
 
     public Kore2DGridPos(int width, int height, int posX, int posY)
@@ -54,6 +54,8 @@ public struct Kore2DGridPos
                 CellEdgeFraction(posX, posY, KoreXYRectEdge.Top),
                 CellEdgeFraction(posX, posY, KoreXYRectEdge.Bottom));
     }
+
+    // --------------------------------------------------------------------------------------------
 
     // Override ToString to report the object content
     public override string ToString()

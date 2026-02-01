@@ -51,7 +51,7 @@ public class KoreUVBoxDropEdgeTile
 
     // Constructor that derives the UV box from a parent tile and subgrid position
 
-    public KoreUVBoxDropEdgeTile(KoreUVBoxDropEdgeTile parentBox, Kore2DGridPos gridPos)
+    public KoreUVBoxDropEdgeTile(KoreUVBoxDropEdgeTile parentBox, KoreNumeric2DPosition<int> gridPos)
     {
         // Calculate the new UV box from the parent box and grid position
         float minParentX = parentBox.TopLeft.X;
@@ -62,10 +62,10 @@ public class KoreUVBoxDropEdgeTile
         float diffParentX = maxParentX - minParentX;
         float diffParentY = maxParentY - minParentY;
 
-        float childMinX = minParentX + gridPos.LeftEdgeFraction * diffParentX;
-        float childMaxX = minParentX + gridPos.RightEdgeFraction * diffParentX;
-        float childMinY = minParentY + gridPos.TopEdgeFraction * diffParentY;
-        float childMaxY = minParentY + gridPos.BottomEdgeFraction * diffParentY;
+        float childMinX = minParentX + (float)gridPos.LeftEdgeFraction * diffParentX;
+        float childMaxX = minParentX + (float)gridPos.RightEdgeFraction * diffParentX;
+        float childMinY = minParentY + (float)gridPos.TopEdgeFraction * diffParentY;
+        float childMaxY = minParentY + (float)gridPos.BottomEdgeFraction * diffParentY;
 
         TopLeft = new Vector2(childMinX, childMinY);
         BottomRight = new Vector2(childMaxX, childMaxY);

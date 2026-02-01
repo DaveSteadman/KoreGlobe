@@ -156,10 +156,8 @@ public partial class KoreFlatLodMapTile : Node3D
 
         // Get the parent UV box
         KoreUVBox parentUVBox = ParentTile!.UVBox!.Value;
-
-
-BoxFromGrid(KoreNumeric2DPosition<int> innerBoxPos)
-
+        KoreNumeric2DPosition<int> gridPos = TileCode.GridPos;
+        UVBox = parentUVBox.BoxFromGrid(gridPos);
     }
 
     public void RefineParentTileMaterial()
@@ -169,11 +167,10 @@ BoxFromGrid(KoreNumeric2DPosition<int> innerBoxPos)
         if (ParentTile.TileMaterial == null) return;
 
         // Get the parent UV box
-        Kore2DGridPos GridPos = TileCode.GridPos;
+        KoreNumeric2DPosition<int> gridPos = TileCode.GridPos;
 
         KoreUVBox parentUVBox = KoreMapTileCodeOps.TileGlobalUVBox(ParentTile.TileCode);
-        KoreUVBox thisUVBox = parentUVBox.
-
+        UVBox = parentUVBox.BoxFromGrid(gridPos);
 
         TileMaterial = ParentTile.TileMaterial;
     }

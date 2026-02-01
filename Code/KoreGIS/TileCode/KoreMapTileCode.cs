@@ -69,7 +69,7 @@ public class KoreMapTileCode
     public int HorizIndex => CodeList[MapLvl].LonIndex;
     public int VertIndex  => CodeList[MapLvl].LatIndex;
 
-    public Kore2DGridPos GridPos => new Kore2DGridPos(HorizCount, VertCount, HorizIndex, VertIndex);
+    public KoreNumeric2DPosition<int> GridPos => new KoreNumeric2DPosition<int>(HorizIndex, VertIndex, HorizCount, VertCount);
 
     public KoreLLBox LLBox => LLBoxForCode(this);
     public string TileCode => ToString();
@@ -299,9 +299,9 @@ public class KoreMapTileCode
         return NumTilesVertPerLvl[MapLvl + 1];
     }
 
-    public Kore2DGridPos ChildPositionInParent()
+    public KoreNumeric2DPosition<int> ChildPositionInParent()
     {
-        return new Kore2DGridPos(HorizCount, VertCount, HorizIndex, VertIndex);
+        return new KoreNumeric2DPosition<int>(HorizIndex, VertIndex, HorizCount, VertCount);
     }
 
     // --------------------------------------------------------------------------------------------

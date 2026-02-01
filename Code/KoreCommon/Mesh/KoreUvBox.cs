@@ -194,23 +194,7 @@ public struct KoreUVBox
         return new KoreUVBox(new KoreXYVector(leftValue, topValue), new KoreXYVector(rightValue, botValue));
     }
 
-    public KoreUVBox BoxFromGrid(KoreNumeric2DPosition<int> innerBoxPos)
-    {
-        // Calculate the horizontal and vertical step sizes
-        double horizStep = (BottomRight.X - TopLeft.X) / innerBoxPos.ExtentX;
-        double vertStep  = (BottomRight.Y - TopLeft.Y) / innerBoxPos.ExtentY;
-
-        // Calculate the UV coordinates for the top-left corner of the inner box
-        double leftValue   = TopLeft.X + innerBoxPos.PosX * horizStep;
-        double rightValue  = TopLeft.X + (innerBoxPos.PosX + 1) * horizStep;
-        double topValue    = TopLeft.Y + innerBoxPos.PosY * vertStep;
-        double bottomValue = TopLeft.Y + (innerBoxPos.PosY + 1) * vertStep;
-
-        // Return a new KoreUVBox using the calculated values
-        return new KoreUVBox(new KoreXYVector(leftValue, topValue), new KoreXYVector(rightValue, bottomValue));
-    }
-
-    public KoreUVBox BoxFromGrid(Kore2DGridPos gridPosWithUvBox)
+    public KoreUVBox BoxFromGrid(KoreNumeric2DPosition<int> gridPosWithUvBox)
     {
         // Get the fractional positions for the edges of this cell in the grid
         var (leftFraction, rightFraction, topFraction, bottomFraction) = gridPosWithUvBox.CellEdgeFractions();

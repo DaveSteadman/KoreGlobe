@@ -66,7 +66,7 @@ public static class KoreMapFileImageOps
                     childTileImage!.Resize(workingTileSize, workingTileSize);
 
                     // Calculate the position to paste the child image
-                    Kore2DGridPos tilePos = currCode.ChildPositionInParent();
+                    KoreNumeric2DPosition<int> tilePos = currCode.ChildPositionInParent();
                     int topLeftX = tilePos.PosX * workingTileSize;
                     int topLeftY = tilePos.PosY * workingTileSize;
                     Vector2I pastePos = new Vector2I(topLeftX, topLeftY);
@@ -160,7 +160,7 @@ public static class KoreMapFileImageOps
             KoreMapTileFilepaths currFilepaths = new KoreMapTileFilepaths(currCode);
 
             // Calculate the position to paste the child image
-            Kore2DGridPos tilePos = currCode.ChildPositionInParent();
+            KoreNumeric2DPosition<int> tilePos = currCode.ChildPositionInParent();
             int topLeftX = tilePos.PosX * workingTileSize;
             int topLeftY = tilePos.PosY * workingTileSize;
             Rect2I copyRect = new Rect2I(topLeftX, topLeftY, workingTileSize, workingTileSize);
@@ -206,7 +206,7 @@ public static class KoreMapFileImageOps
                 KoreMapTileCode currCode = new KoreMapTileCode(currXIndex, currYIndex);
 
                 // Calculate the position to paste the child image
-                Kore2DGridPos tilePos = currCode.ChildPositionInParent();
+                KoreNumeric2DPosition<int> tilePos = currCode.ChildPositionInParent();
                 int topLeftX = tilePos.PosX * workingTileSize;
                 int topLeftY = tilePos.PosY * workingTileSize;
                 Rect2I copyRect = new Rect2I(topLeftX, topLeftY, workingTileSize, workingTileSize);
@@ -245,7 +245,7 @@ public static class KoreMapFileImageOps
         foreach (KoreMapTileCode currCode in childCodesList)
         {
             // Calculate the position to paste the child image
-            Kore2DGridPos tilePos = currCode.ChildPositionInParent();
+            KoreNumeric2DPosition<int> tilePos = currCode.ChildPositionInParent();
             int topLeftX = tilePos.PosX * workingTileSize;
             int topLeftY = tilePos.PosY * workingTileSize;
             Rect2I copyRect = new Rect2I(topLeftX, topLeftY, workingTileSize, workingTileSize);
